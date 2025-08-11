@@ -1,11 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-
-const images = [
-  "https://images.unsplash.com/photo-1615789885218-5d9292457126?q=80&w=1742&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-  "https://images.unsplash.com/photo-1657803778392-0274a0b81770?q=80&w=1887&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-  "https://images.unsplash.com/photo-1615789885218-5d9292457126?q=80&w=1742&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-];
+import { API_URL_base } from "src/api/data";
 
 const variants = {
   enter: (direction) => ({
@@ -22,7 +17,7 @@ const variants = {
   }),
 };
 
-export default function ImageCarousel({ height }) {
+export default function ImageCarousel({ height, images=[] }) {
   const [[index, direction], setIndex] = useState([0, 0]);
 
   // Auto slide every 5 seconds
@@ -53,7 +48,7 @@ export default function ImageCarousel({ height }) {
       <AnimatePresence initial={false} custom={direction}>
         <motion.img
           key={index}
-          src={images[index]}
+          src={`${API_URL_base}storage/${images[index]}`}
           custom={direction}
           variants={variants}
           initial="enter"

@@ -1,8 +1,7 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import { useParams } from "react-router-dom";
 import ImageCarousel from "./comp/image-carousel";
 import DetailsCard from "./comp/details-card";
-import logoD from "../../assets/logo-d.jpg";
-import InfoCard from "./comp/info-card";
 import Services from "./comp/services";
 import CarteCadeau from "./comp/carte-cadeau";
 import logoSpc from "../../assets/logo-small.png";
@@ -23,43 +22,92 @@ const criteria = [
 ];
 
 export default function SpaDetailsView() {
+  const { id } = useParams(); // Récupère le slug ou l'ID depuis l'URL
+  const [spaData, setSpaData] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+  const API_URL = "http://127.0.0.1:8000";
+
   const initialRatings = {};
   criteria.forEach((key) => {
     initialRatings[key] = 0;
   });
-
   const [ratings, setRatings] = useState(initialRatings);
 
+  // Récupération des données de l'établissement
+  useEffect(() => {
+    const fetchSpaData = async () => {
+      try {
+        const response = await fetch(`${API_URL}/api/etablissements/${id}`);
+        if (!response.ok) {
+          throw new Error("Établissement non trouvé");
+        }
+        const data = await response.json();
+        console.log("Spa data:", data);
+        setSpaData({
+          nom: data.nom,
+          logo: data.logo ? `${API_URL}/storage/${data.logo}` : null,
+          slug: data.slug,
+          description: data.description,
+          gallerie: data.gallerie || [],
+          adresse: data.adresse,
+          email: data.email,
+          telephone: data.telephone,
+          horaires_ouverture: data.horaires_ouverture,
+          image_avant: data.image_avant,
+          description_avant: data.description_avant,
+          portrait_equipe: data.portrait_equipe,
+          commission: data.commission,
+          avgRating: data.avg_rating || 4,
+        });
+        setLoading(false);
+      } catch (err) {
+        setError(err.message);
+        setLoading(false);
+      }
+    };
+    fetchSpaData();
+  }, [id, API_URL]);
+
+  // Gestion des changements de note
   const handleRatingChange = (category, value) => {
     setRatings((prev) => ({ ...prev, [category]: value }));
   };
-  return (
-    <div className="container">
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
-        <div className="">
-          <ImageCarousel />
-        </div>
-        <DetailsCard
-          details={{
-            name: "David Grand Spa – Villerest",
-            logo: logoD,
-            avgRating: 4,
-            description: `DaviD GranD Spa est un lieu de bien-être unique situé à Villerest, à proximité de Roanne. Il vous invite à vivre une véritable expérience de détente et de ressourcement, dans une parfaite harmonie entre le corps et l’esprit.
-                    Conçu pour ceux qui recherchent une pause régénérante, notre spa vous propose une large gamme de soins sur mesure, adaptés à vos besoins : massages relaxants, soins du visage, gommages, rituels personnalisés... le tout dans une atmosphère apaisante et chaleureuse.
-        
-                    Notre équipe d’expert(e)s est à votre écoute pour vous offrir une expérience de bien-être inégalée, en utilisant des produits haut de gamme comme ceux de la marque Altéarah.
-        
-                    Notre mission : vous accompagner dans un véritable lâcher-prise. Grâce à notre savoir-faire et notre attention portée aux moindres détails, nous vous aidons à éliminer le stress, revitaliser votre corps et nourrir votre bien-être intérieur.
-        
-                    Réservez dès maintenant votre moment d’évasion et découvrez l’expérience DaviD GranD Spa.`,
-          }}
-        />
-      </div>
-      {/* <InfoCard /> */}
-      <Services />
-      <div className="bg-white p-4 rounded-lg border max-w-6xl m-auto mt-8">
-        <h6 className="font-semibold text-lg mb-4">Laisser un avis</h6>
 
+  // Soumission des évaluations
+  const handleSubmitReview = async () => {
+    try {
+      const response = await fetch(`${API_URL}/api/etablissements/${id}/avis`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(ratings),
+      });
+      if (response.ok) {
+        alert("Avis envoyé avec succès !");
+        setRatings(initialRatings); // Réinitialiser les notes
+      } else {
+        alert("Erreur lors de l'envoi de l'avis.");
+      }
+    } catch (error) {
+      console.error("Erreur:", error);
+      alert("Une erreur est survenue.");
+    }
+  };
+
+  if (loading) return <div>Chargement...</div>;
+  if (error) return <div>Erreur : {error}</div>;
+
+  return (
+    <div className="container mx-auto px-4">
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+        <div>
+          <ImageCarousel images={spaData.gallerie} />
+        </div>
+        <DetailsCard details={spaData} />
+      </div>
+      <Services />
+      <div className="bg-white p-4 rounded-lg border max-w-6xl mx-auto mt-8">
+        <h6 className="font-semibold text-lg mb-4">Laisser un avis</h6>
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 mb-6">
           {criteria.map((criterion) => (
             <div key={criterion}>
@@ -73,35 +121,37 @@ export default function SpaDetailsView() {
             </div>
           ))}
         </div>
-
         <div className="flex justify-end">
-          <ButtonIcon title="Envoyer l'avis" />
+          <ButtonIcon title="Envoyer l'avis" onClick={handleSubmitReview} />
         </div>
       </div>
       <CarteCadeau />
       <div
         style={{
           backgroundImage:
-            "url(https://spa-prestige-collection.com/wp-content/uploads/2025/07/1.png)",
+            "ur[](https://spa-prestige-collection.com/wp-content/uploads/2025/07/1.png)",
         }}
         className="bg-primary w-screen relative left-[calc(-50vw+50%)] mb-16 min-h-32 overflow-hidden bg-center"
       >
-        <div className="flex flex-col items-center p-12 text-center bg-slate-300/80  w-[60%] my-36 mx-auto">
-          <img src={logoSpc} alt="" className="w-36 mb-4" />
+        <div className="flex flex-col items-center p-12 text-center bg-slate-300/80 w-[60%] my-36 mx-auto">
+          <img
+            src={logoSpc}
+            alt="Logo Spa & Prestige Collection"
+            className="w-36 mb-4"
+          />
           <h3 className="text-4xl font-bold mb-4">
             – Le conseil Spa & Prestige Collection –
           </h3>
           <p className="text-lg font-normal font-tahoma">
-            Le Domaine de Rymska incarne à merveille l’équilibre entre
-            raffinement, nature et quiétude. Nous vous recommandons d’y vivre
-            une parenthèse de détente à deux, en conjuguant un soin bien-être
-            personnalisé avec l’expérience gastronomique de la Table de Rymska,
-            pour savourer pleinement l’essence de la Bourgogne dans un cadre
-            confidentiel et inspirant.
+            {spaData?.name || "Cet établissement"} incarne à merveille
+            l’équilibre entre raffinement, nature et quiétude. Nous vous
+            recommandons d’y vivre une parenthèse de détente à deux, en
+            conjuguant un soin bien-être personnalisé avec une expérience
+            unique, pour savourer pleinement l’essence du bien-être dans un
+            cadre inspirant.
           </p>
         </div>
       </div>
-
       <LocationSection />
       <TestimonialsSection />
     </div>

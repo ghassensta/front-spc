@@ -10,8 +10,16 @@ import { Autoplay, Navigation } from "swiper/modules";
 import "swiper/css";
 import { paths } from "../../router/paths";
 import Card from "../../components/card/card";
+import { useEtablissement } from "src/hooks/useEtablissement";
+import { useActualites } from "src/hooks/useActualite";
+import { useMarquePartenaires } from "src/hooks/useMarquePartenaire";
 
 export default function HomeView() {
+  const { etablissements } = useEtablissement();
+  const { actualites } = useActualites();
+  const { marques, loading, error } = useMarquePartenaires();
+  const API_URL = "http://127.0.0.1:8000";
+
   const prevRef = useRef(null);
   const nextRef = useRef(null);
   const renderMiniCard = (
@@ -26,6 +34,8 @@ export default function HomeView() {
       </span>
     </div>
   );
+  const logoUrl =
+    "https://swissline-cosmetics.com/cdn/shop/files/swissline-logo.svg?v=1706103369&width=180";
 
   return (
     <>
@@ -39,38 +49,17 @@ export default function HomeView() {
           </div>
         </h2>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-16">
-          <Card
-            type="large"
-            to="/spa/paris"
-            title="Le Spa by Sothys Paris République 5*"
-            description="Le Spa Sothys, niché au sein du Renaissance Paris République Hotel, incarne l’exclusivité et le raffinement des rituels de bien-être."
-            image="https://spa-prestige-collection.com/wp-content/uploads/2025/03/SPC-Essence-1975x1318-02.jpg"
-            location="75011 PARIS - ÎLE-DE-FRANCE - FRANCE"
-          />
-          <Card
-            type="large"
-            to="/spa/paris"
-            title="Le Spa by Sothys Paris République 5*"
-            description="Le Spa Sothys, niché au sein du Renaissance Paris République Hotel, incarne l’exclusivité et le raffinement des rituels de bien-être."
-            image="https://spa-prestige-collection.com/wp-content/uploads/2025/03/SPC-Essence-1975x1318-02.jpg"
-            location="75011 PARIS - ÎLE-DE-FRANCE - FRANCE"
-          />
-          <Card
-            type="large"
-            to="/spa/paris"
-            title="Le Spa by Sothys Paris République 5*"
-            description="Le Spa Sothys, niché au sein du Renaissance Paris République Hotel, incarne l’exclusivité et le raffinement des rituels de bien-être."
-            image="https://spa-prestige-collection.com/wp-content/uploads/2025/03/SPC-Essence-1975x1318-02.jpg"
-            location="75011 PARIS - ÎLE-DE-FRANCE - FRANCE"
-          />
-          <Card
-            type="large"
-            to="/spa/paris"
-            title="Le Spa by Sothys Paris République 5*"
-            description="Le Spa Sothys, niché au sein du Renaissance Paris République Hotel, incarne l’exclusivité et le raffinement des rituels de bien-être."
-            image="https://spa-prestige-collection.com/wp-content/uploads/2025/03/SPC-Essence-1975x1318-02.jpg"
-            location="75011 PARIS - ÎLE-DE-FRANCE - FRANCE"
-          />
+          {etablissements.map((etablissement) => (
+            <Card
+              key={etablissement.id}
+              type="large"
+              to={`/spa/${etablissement.slug || etablissement.id}`}
+              title={etablissement.nom || etablissement.id}
+              description={etablissement.description}
+              image={`${API_URL}/storage/${etablissement.logo}`}
+              location={etablissement.adresse}
+            />
+          ))}
         </div>
         <div className="text-center">
           <ButtonIcon title="Découvrir toutes les offres" />
@@ -148,41 +137,33 @@ export default function HomeView() {
           </div>
         </div>
       </div>
-     
+
       <div className="bg-primary rounded-lg my-12 left-[calc(-50vw+50%)] relative w-screen">
         <div className="max-w-6xl mx-auto py-4">
           <h2 className="text-4xl font-bold text-center">
             Actualités
-            <div className="text-[#777676]">
-             Nos derniers articles
-            </div>
+            <div className="text-[#777676]">Nos derniers articles</div>
           </h2>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-8">
-            <Card
-              type="news"
-              to="/spa/paris"
-              title="Le Spa by Sothys Paris République 5*"
-              description="Le Spa Sothys, niché au sein du Renaissance Paris République Hotel, incarne l’exclusivité et le raffinement des rituels de bien-être."
-              image="https://spa-prestige-collection.com/wp-content/uploads/2025/03/SPC-Essence-1975x1318-02.jpg"
-              date="20 avril 2025"
-            />
-            <Card
-              type="news"
-              to="/spa/paris"
-              title="Le Spa by Sothys Paris République 5*"
-              description="Le Spa Sothys, niché au sein du Renaissance Paris République Hotel, incarne l’exclusivité et le raffinement des rituels de bien-être."
-              image="https://spa-prestige-collection.com/wp-content/uploads/2025/03/SPC-Essence-1975x1318-02.jpg"
-              date="20 avril 2025"
-            />
-            <Card
-              type="news"
-              to="/spa/paris"
-              title="Le Spa by Sothys Paris République 5*"
-              description="Le Spa Sothys, niché au sein du Renaissance Paris République Hotel, incarne l’exclusivité et le raffinement des rituels de bien-être."
-              image="https://spa-prestige-collection.com/wp-content/uploads/2025/03/SPC-Essence-1975x1318-02.jpg"
-              date="20 avril 2025"
-            />
+            {actualites.map((actualite) => (
+              <Card
+                key={actualite.id}
+                type="news"
+                to={`/actualites/${actualite.slug || actualite.id}`}
+                title={actualite.title}
+                description={actualite.petit_description}
+                image={`${API_URL}/storage/${actualite.image}`}
+                date={new Date(actualite.created_at).toLocaleDateString(
+                  "fr-FR",
+                  {
+                    day: "numeric",
+                    month: "long",
+                    year: "numeric",
+                  }
+                )}
+              />
+            ))}
           </div>
           <div className="text-center">
             <ButtonIcon title="Tous nos articles" />
@@ -191,9 +172,12 @@ export default function HomeView() {
       </div>
 
       <div className="bg-white my-12 rounded-lg">
-        <h2 className="text-4xl font-bold text-center">Nos marques partenaires</h2>
+        <h2 className="text-4xl font-bold text-center">
+          Nos marques partenaires
+        </h2>
         <div className="max-w-6xl m-auto py-12 flex justify-between">
           <Swiper
+            spaceBetween={20}
             breakpoints={{
               320: { slidesPerView: 1 },
               640: { slidesPerView: 2 },
@@ -201,41 +185,18 @@ export default function HomeView() {
               1024: { slidesPerView: 4 },
             }}
           >
-            <SwiperSlide className="">
-              <img
-                className="mx-auto"
-                src="https://swissline-cosmetics.com/cdn/shop/files/swissline-logo.svg?v=1706103369&width=180"
-                alt=""
-              />
-            </SwiperSlide>
-            <SwiperSlide className="">
-              <img
-                className="mx-auto"
-                src="https://swissline-cosmetics.com/cdn/shop/files/swissline-logo.svg?v=1706103369&width=180"
-                alt=""
-              />
-            </SwiperSlide>
-            <SwiperSlide className="">
-              <img
-                className="mx-auto"
-                src="https://swissline-cosmetics.com/cdn/shop/files/swissline-logo.svg?v=1706103369&width=180"
-                alt=""
-              />
-            </SwiperSlide>
-            <SwiperSlide className="">
-              <img
-                className="mx-auto"
-                src="https://swissline-cosmetics.com/cdn/shop/files/swissline-logo.svg?v=1706103369&width=180"
-                alt=""
-              />
-            </SwiperSlide>
-            <SwiperSlide className="">
-              <img
-                className="mx-auto"
-                src="https://swissline-cosmetics.com/cdn/shop/files/swissline-logo.svg?v=1706103369&width=180"
-                alt=""
-              />
-            </SwiperSlide>
+            {marques.map((marque, i) => (
+              <SwiperSlide
+                key={marque.id ?? i}
+                className="flex justify-center w-full h-48"
+              >
+                <img
+                  className="mx-auto max-h-full object-contain"
+                  src={`${API_URL}/storage/${marque.logo}`}
+                  alt={marque.name || "Marque partenaire"}
+                />
+              </SwiperSlide>
+            ))}
           </Swiper>
         </div>
       </div>

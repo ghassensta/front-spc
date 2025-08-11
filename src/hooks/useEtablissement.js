@@ -1,19 +1,19 @@
 import { useEffect, useState } from "react";
-import { fetchCategories } from "../api/data";
+import { fetchEtablissements } from "../api/data";
 
-export function useCategories() {
-  const [categories, setCategories] = useState([]);
+export function useEtablissement() {
+  const [etablissements, setEtablissements] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
   useEffect(() => {
     let isMounted = true;
 
-    fetchCategories()
+    fetchEtablissements()
       .then((data) => {
         if (isMounted) {
           // Assure-toi que c'est bien un tableau
-          setCategories(Array.isArray(data) ? data : []);
+          setEtablissements(Array.isArray(data) ? data : []);
           setLoading(false);
         }
       })
@@ -29,5 +29,5 @@ export function useCategories() {
     };
   }, []);
 
-  return { categories, loading, error };
+  return { etablissements, loading, error };
 }

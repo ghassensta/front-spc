@@ -1,7 +1,6 @@
 import React from "react";
 import Navbar from "../components/navbar/navbar";
 import Footer from "../components/footer/footer";
-/* import { categories } from "../hooks/useCategories"; */
 import CategoryPuce from "../components/category-puce/categoryPuce";
 import { useCategories } from "src/hooks/useCategories";
 

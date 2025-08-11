@@ -27,12 +27,9 @@ export const routes = [
     ),
     children: [
       { element: <Index />, index: true },
+     
       {
         element: <Details />,
-        path: "spa",
-      },
-      {
-        element: <ViewProduct />,
         path: "spa/:id",
       },
       {

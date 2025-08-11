@@ -13,7 +13,7 @@ export default function TemplateRestaurant() {
       
       {/* Carousel Section */}
       <div className="w-full md:w-1/2 relative">
-        <ImageCarousel height="280px"/>
+        <ImageCarousel height="280px" images={sp}/>
       </div>
 
       {/* Content Section */}

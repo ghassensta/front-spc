@@ -2,7 +2,7 @@ import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Star, ChevronDown, ChevronUp } from "lucide-react";
 
-export default function ServiceCard({ details }) {
+export default function ServiceCard({ details  }) {
   const [isExpanded, setIsExpanded] = useState(false);
   const [openSection, setOpenSection] = useState(null); // 'general', 'utiles', 'partenaire'
 
