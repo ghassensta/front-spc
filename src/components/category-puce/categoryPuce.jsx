@@ -17,9 +17,15 @@ export default function CategoryPuce({
         className="group inline-block rounded-full min-w-24 bg-[#B6B499] px-2 py-1"
       >
         <div className="flex items-center gap-2 text-center text-white relative">
-          <span className="rounded-full p-0 max-w-8">
-            {icon}
-          </span>
+          {icon && (
+            <span className="rounded-full p-0">
+              <img
+                src={icon}
+                alt={name}
+                className="w-8 h-8 object-contain"
+              />
+            </span>
+          )}
           <div className="relative">
             <span className="text-white text-lg">{name}</span>
             {/* Underline animation */}

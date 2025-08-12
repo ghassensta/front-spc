@@ -1,8 +1,9 @@
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Star, ChevronDown, ChevronUp } from "lucide-react";
+import { API_URL_base } from "src/api/data";
 
-export default function ServiceCard({ details  }) {
+export default function ServiceCard({ details }) {
   const [isExpanded, setIsExpanded] = useState(false);
   const [openSection, setOpenSection] = useState(null); // 'general', 'utiles', 'partenaire'
 
@@ -22,7 +23,7 @@ export default function ServiceCard({ details  }) {
       <div className="flex flex-col mb-4">
         <img src={details?.logo} alt="" className="max-w-24 mr-2" />
         <div>
-          <h4 className="font-black text-5xl">{details?.name}</h4>
+          <h4 className="font-black text-5xl">{details?.nom}</h4>
           <div className="flex items-center gap-1 mt-1">
             {[1, 2, 3, 4, 5].map((i) => (
               <Star
@@ -39,7 +40,7 @@ export default function ServiceCard({ details  }) {
               />
             ))}
             <span className="text-sm text-gray-600 ml-2">
-              ({details?.avgRating?.toFixed(1)})
+              ({parseFloat(details?.avgRating)?.toFixed(1)})
             </span>
           </div>
         </div>
@@ -71,15 +72,16 @@ export default function ServiceCard({ details  }) {
             content: (
               <ul>
                 <li className="mb-2">
-                  <span className="font-bold">Adresse :</span> 100 chemin de la
-                  chapelle – 42300 Villerest
+                  <span className="font-bold">Adresse :</span>{" "}
+                  {details?.adresse}
                 </li>
                 <li className="mb-2">
                   <span className="font-bold">Email :</span>{" "}
-                  contact@davidgrandspa.fr
+                  {details?.email || "Non renseigné"}
                 </li>
                 <li>
-                  <span className="font-bold">Tél. :</span> +33 (0)4 77 23 01 98
+                  <span className="font-bold">Tél. :</span>{" "}
+                  {details?.telephone || "Non renseigné"}
                 </li>
               </ul>
             ),
@@ -89,9 +91,8 @@ export default function ServiceCard({ details  }) {
             title: "Inf. Utiles",
             content: (
               <p>
-                <strong>Jours et Horaires d’ouverture :</strong> Lundi : fermé ; mardi à jeudi :
-                9h à 19h ; Vendredi : 9 à 20h ; Samedi 9h à 20h; dimanche de 9h
-                à 14h (sur réservation).
+                <strong>Jours et Horaires d’ouverture :</strong>{" "}
+                {details?.horaires || "Non renseigné"}
               </p>
             ),
           },
@@ -99,16 +100,34 @@ export default function ServiceCard({ details  }) {
             key: "partenaire",
             title: "Marque(s) Partenaire(s)",
             content: (
-              <div className="flex justify-start items-center gap-4">
-                <img
-                  src="https://spa-prestige-collection.com/wp-content/uploads/2025/02/SPC-Eva-Maison-Blanche-portrait.jpg"
-                  alt=""
-                  className="rounded-full w-20 h-20"
-                />
-                <div>
-                  <h6 className="text-2xl font-bold">David Grand</h6>
-                  <span>Spa Manager et fondateur du Spa.</span>
-                </div>
+              <div className="flex flex-col gap-4">
+                {details.portrait_equipe?.map((person, index) => (
+                  <div
+                    key={index}
+                    className="flex justify-start items-center gap-4"
+                  >
+                    <img
+                      src={
+                        person.image
+                          ? `${API_URL_base}storage/${person.image}`
+                          : "/images/default-avatar.png"
+                      }
+                      alt={person.nom} loading="lazy"
+                      className="rounded-full w-20 h-20 object-cover"
+                    />
+                    <div>
+                      <h6 className="text-2xl font-bold">{person.nom}</h6>
+                      <span className="block text-gray-500">
+                        {person.poste}
+                      </span>
+                      {person.description && (
+                        <p className="text-sm text-gray-600">
+                          {person.description}
+                        </p>
+                      )}
+                    </div>
+                  </div>
+                ))}
               </div>
             ),
           },

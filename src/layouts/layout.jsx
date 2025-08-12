@@ -3,6 +3,7 @@ import Navbar from "../components/navbar/navbar";
 import Footer from "../components/footer/footer";
 import CategoryPuce from "../components/category-puce/categoryPuce";
 import { useCategories } from "src/hooks/useCategories";
+import { API_URL_base } from "src/api/data";
 
 export default function LayoutTheme({ children }) {
   const { categories } = useCategories();
@@ -15,7 +16,7 @@ export default function LayoutTheme({ children }) {
             <CategoryPuce
               key={index}
               name={category.name}
-              icon={category.id}
+              icon={API_URL_base/`storage/${category.image}`}
               slug={category.slug}
             />
           ))}
