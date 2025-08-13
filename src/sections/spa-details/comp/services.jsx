@@ -1,20 +1,54 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import TabButton from "../../../components/tabs/tab-button";
 import TabPanel from "../../../components/tabs/tab-panel";
 import TemplateBienEtre from "./template-bien-etre";
 import TemplateRestaurant from "./template-restaurant";
 import ServicesTemplates from "./services-templates";
-const tabs = [
-  { label: "Bien-Être", content: <TemplateBienEtre /> },
-  { label: "Hôtellerie", content: <TemplateRestaurant /> },
-  { label: "Restauration", content: <TemplateRestaurant /> },
-  { label: "Services et équipements", content: <ServicesTemplates /> },
-  { label: "Séjour", content: <TemplateBienEtre /> },
-];
 
-export default function Tabs() {
-  const [active, setActive] = useState(tabs[0]);
+export default function Tabs({ data = [] }) {
+  const [tabs, setTabs] = useState([]);
+  const [active, setActive] = useState(null);
+
+  useEffect(() => {
+    if (data.length > 0) {
+      // Crée les tabs dynamiquement à partir des type_soin
+      const dynamicTabs = data.map((type) => {
+        let content;
+
+        switch (type.type_soin.name) {
+          case "Bien-être":
+            content = <TemplateBienEtre data={type} />;
+            break;
+          case "Hôtellerie":
+            content = <TemplateRestaurant data={type} />;
+            break;
+          case "Restauration":
+            content = <TemplateRestaurant data={type} />;
+            break;
+          case "Services et équipements":
+            content = <ServicesTemplates data={type} />;
+            break;
+          case "Séjour":
+            content = <TemplateBienEtre data={type} />;
+            break;
+          default:
+            content = <div>Aucun template disponible</div>;
+        }
+
+        return {
+          id: type.type_soin.id,
+          label: type.type_soin.name,
+          content,
+        };
+      });
+
+      setTabs(dynamicTabs);
+      setActive(dynamicTabs[0]); // Active par défaut le premier
+    }
+  }, [data]);
+
+  if (!active) return null;
 
   return (
     <div className="w-full max-w-7xl mx-auto mt-10">

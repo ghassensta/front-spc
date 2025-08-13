@@ -14,11 +14,13 @@ export default function CardItem({
   spaNote,
   price,
   exclusiveExist,
-  flashDeadline, // <-- Expecting full date + time like: "2025-05-01T18:00:00"
+  flashDeadline, // expecting full date + time
 }) {
   const [remaining, setRemaining] = useState("");
 
   useEffect(() => {
+    if (!flashDeadline) return;
+
     const updateCountdown = () => {
       const now = new Date();
       const end = new Date(flashDeadline);
@@ -37,20 +39,18 @@ export default function CardItem({
       setRemaining(`${days}j ${hours}h ${minutes}m ${seconds}s`);
     };
 
-    updateCountdown(); // initial run
-    const interval = setInterval(updateCountdown, 1000); // update every second
+    updateCountdown();
+    const interval = setInterval(updateCountdown, 1000);
 
     return () => clearInterval(interval);
   }, [flashDeadline]);
 
   return (
-    <motion.div
-      className="flex flex-col md:flex-row gap-4 py-6 border-b border-gray-300"
-    >
+    <motion.div className="flex flex-col md:flex-row gap-4 py-6 border-b border-gray-300">
       {/* Image */}
       <div className="flex-shrink-0 w-full md:w-1/3">
         <img
-          src={image}
+          src={image ? image : "/images/default-product.jpg"}
           alt={title}
           className="w-full h-auto object-cover rounded"
         />
@@ -63,10 +63,11 @@ export default function CardItem({
             <h3 className="text-3xl font-normal text-gray-900">{title}</h3>
             <p className="text-base font-normal font-tahoma text-gray-800 mt-1">
               {description}
-              <span className="font-bold text-black cursor-pointer">
-                {" "}
-                (Lire la suite)
-              </span>
+              {description && description.length > 100 && (
+                <span className="font-bold text-black cursor-pointer">
+                  {" "} (Lire la suite)
+                </span>
+              )}
             </p>
           </div>
           <div className="flex text-sm font-normal font-tahoma items-center mt-4 text-gray-600 gap-2">
@@ -77,31 +78,30 @@ export default function CardItem({
           </div>
         </div>
 
-        <span className="text-base font-tahoma flex items-center text-gray-900 font-base">
-          {price}
-        </span>
-
         {/* Right section */}
         <div className="flex flex-col items-center justify-between min-w-[120px]">
-          <div className="">
-            {flashDeadline && (
-              <div className="flex flex-col items-center p-2 border-dashed rounded-lg border-2">
-                <span className="text-sm font-medium text-red-600">
-                  Offre flash
-                </span>
-
-                <div className="text-lg font-bold text-gray-800 mt-1">
-                  {remaining}
-                </div>
+          {flashDeadline && (
+            <div className="flex flex-col items-center p-2 border-dashed rounded-lg border-2">
+              <span className="text-sm font-medium text-red-600">
+                Offre flash
+              </span>
+              <div className="text-lg font-bold text-gray-800 mt-1">
+                {remaining}
               </div>
-            )}{" "}
-          </div>
+            </div>
+          )}
 
           {exclusiveExist && (
             <img src={exclusive} alt="" className="w-16 h-auto" />
           )}
-          <ButtonIcon title="Offrir" icon={<FaShoppingBag />} link={paths.spa.details(id)}/>
-         
+
+          {id && (
+            <ButtonIcon
+              title="Offrir"
+              icon={<FaShoppingBag />}
+              link={paths.spa.details(id)}
+            />
+          )}
         </div>
       </div>
     </motion.div>

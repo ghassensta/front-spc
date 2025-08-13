@@ -67,10 +67,11 @@ export default function SpaDetailsView() {
           portrait_equipe: data.etablissement.portrait_equipe,
           commission: data.etablissement.commission,
           avgRating: data.etablissement.avg_rating || 4,
-          types: data.etablissement.types,
+          types: data.types,
           simlairesEtablissment: data.simlairesEtablissment || [],
         });
         setLoading(false);
+        console.log("SPA Data:", data.types);
       } catch (err) {
         setError(err.message);
         setLoading(false);
