@@ -30,7 +30,7 @@ export default function Tabs({ data = [] }) {
             content = <ServicesTemplates data={type} />;
             break;
           case "Séjour":
-            content = <TemplateBienEtre data={type} />;
+            content = <TemplateRestaurant data={type} />;
             break;
           default:
             content = <div>Aucun template disponible</div>;

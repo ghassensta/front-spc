@@ -1,6 +1,7 @@
 import React from "react";
 import logo from "../../assets/SPC-logo-cercle-blanc.png";
 import { FaFacebookF, FaTiktok, FaInstagram, FaLinkedinIn } from "react-icons/fa";
+import { Link } from "react-router-dom";
 
 export default function Footer() {
   return (
@@ -19,14 +20,14 @@ export default function Footer() {
         <div>
           <h4 className="text-base font-semibold mb-3">À PROPOS</h4>
           <ul className="space-y-2 text-sm font-roboto">
-            <li><a href="#">Qui sommes nous</a></li>
-            <li><a href="#">Book Collection & Prestige</a></li>
-            <li><a href="#">Carte Cadeau</a></li>
-            <li><a href="#">Glossaire des termes utilisés</a></li>
-            <li><a href="#">Actualités</a></li>
-            <li><a href="#">Parrainage</a></li>
-            <li><a href="#">Fidélité</a></li>
-            <li><a href="#">Aide et contact</a></li>
+            <li><Link to="#">Qui sommes nous</Link></li>
+            <li><Link to="#">Book Collection & Prestige</Link></li>
+            <li><Link to="#">Carte Cadeau</Link></li>
+            <li><Link to="#">Glossaire des termes utilisés</Link></li>
+            <li><Link to="#">Actualités</Link></li>
+            <li><Link to="#">Parrainage</Link></li>
+            <li><Link to="#">Fidélité</Link></li>
+            <li><Link to="#">Aide et contact</Link></li>
           </ul>
         </div>
 
@@ -34,10 +35,10 @@ export default function Footer() {
         <div>
           <h4 className="text-base font-semibold mb-3">PROFESSIONNEL</h4>
           <ul className="space-y-2 text-sm font-roboto">
-            <li><a href="#">Devenir partenaire</a></li>
-            <li><a href="#">Référentiel de candidature</a></li>
-            <li><a href="#">Solutions pour entreprises</a></li>
-            <li><a href="#">Collaboration avec les marques</a></li>
+            <li><Link to="#">Devenir partenaire</Link></li>
+            <li><Link to="#">Référentiel de candidature</Link></li>
+            <li><Link to="#">Solutions pour entreprises</Link></li>
+            <li><Link to="#">Collaboration avec les marques</Link></li>
           </ul>
         </div>
 
@@ -80,9 +81,9 @@ export default function Footer() {
     © 2025 – Réalisation <span className="font-semibold">ÉCOM Design</span>
   </p>
   <div className="flex gap-4">
-    <a href="#" className="hover:underline">Mentions légales</a>
+    <Link to="#" className="hover:underline">Mentions légales</Link>
     <span>•</span>
-    <a href="#" className="hover:underline">CGV</a>
+    <Link to="#" className="hover:underline">CGV</Link>
   </div>
 </div>
     </footer>

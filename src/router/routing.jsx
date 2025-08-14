@@ -3,6 +3,7 @@ import { Outlet } from "react-router-dom";
 import LayoutTheme from "../layouts/layout";
 import LoadingScreen from "../components/loading-screen/loading-screen";
 import DashboardLayout from "src/layouts/dashboardLayout";
+import ProductDetailsView from "src/sections/product-details/product-details-view";
 
 const Index = lazy(() => import("../pages/home/index"));
 const Details = lazy(() => import("../pages/details/index"));
@@ -32,6 +33,11 @@ export const routes = [
         element: <Details />,
         path: "spa/:id",
       },
+      {
+        element: <ProductDetailsView />,
+        path: "produit/:slug",
+      },
+      
       {
         element: <Chekckout />,
         path: "checkout",

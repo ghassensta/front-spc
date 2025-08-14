@@ -11,7 +11,7 @@ import LocationSection from "./comp/location-section";
 import TestimonialsSection from "./comp/others-section";
 import StarRatingInput from "src/components/star-rating-input/star-rating-input";
 import ButtonIcon from "src/components/button-icon/button-icon";
-
+import { API_URL_base } from "src/api/data";
 const criteria = [
   "Practicien(ne)",
   "Accueil",
@@ -50,7 +50,7 @@ export default function SpaDetailsView() {
           id: data.etablissement.id,
           nom: data.etablissement.nom,
           logo: data.etablissement.logo
-            ? `${API_URL}/storage/${data.etablissement.logo}`
+            ? `${API_URL_base}storage/${data.etablissement.logo}`
             : null,
           slug: data.etablissement.slug,
           iframeUrl:
@@ -67,9 +67,16 @@ export default function SpaDetailsView() {
           portrait_equipe: data.etablissement.portrait_equipe,
           commission: data.etablissement.commission,
           avgRating: data.etablissement.avg_rating || 4,
-          types: data.types,
-          simlairesEtablissment: data.simlairesEtablissment || [],
+          types: data.types.map((type) => ({
+            ...type,
+            type_soin: type.type_soin || null,
+            type_equipement: type.type_equipement || [],
+            type_media: type.type_media || [],
+            type_produit: type.type_produit || [],
+          })),
+          similairesEtablissement: data.simlairesEtablissment || [],
         });
+
         setLoading(false);
         console.log("SPA Data:", data.types);
       } catch (err) {
@@ -117,14 +124,11 @@ export default function SpaDetailsView() {
     };
 
     try {
-      const response = await fetch(
-        `${API_URL}/api/etablissements/avis`,
-        {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(reviewData),
-        }
-      );
+      const response = await fetch(`${API_URL}/api/etablissements/avis`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(reviewData),
+      });
 
       if (response.ok) {
         toast.success("Avis envoyé avec succès !");
@@ -146,7 +150,7 @@ export default function SpaDetailsView() {
     }
   };
 
-  if (loading) return <div>Chargement...</div>;
+  if (loading) return ;
   if (error) return <div>Erreur : {error}</div>;
 
   return (
