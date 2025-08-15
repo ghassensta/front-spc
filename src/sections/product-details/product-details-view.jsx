@@ -7,6 +7,8 @@ import { useParams, useNavigate } from "react-router-dom";
 import { paths } from "../../router/paths";
 import { Star } from "lucide-react";
 import StarRatingInput from "src/components/star-rating-input/star-rating-input";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 import { API_URL_base } from "src/api/data";
 
 export default function ProductDetailsView() {
@@ -15,9 +17,13 @@ export default function ProductDetailsView() {
   const checkout = useCheckoutContext();
 
   const [product, setProduct] = useState(null);
+  const [aviss, setAvis] = useState([]);
   const [loading, setLoading] = useState(true);
   const [rating, setRating] = useState(0);
-  const [activeTab, setActiveTab] = useState("description");
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
+  const [comment, setComment] = useState("");
+  const [activeTab, setActiveTab] = useState("reviews");
 
   useEffect(() => {
     if (!slug) return;
@@ -26,9 +32,8 @@ export default function ProductDetailsView() {
         const res = await fetch(`${API_URL_base}api/produit/${slug}`);
         if (!res.ok) throw new Error("Produit non trouvé");
         const data = await res.json();
-        console.log("Product data:", data);
-        // Ici, on prend bien data.product
         setProduct(data.product);
+        setAvis(data.avis || []);
       } catch (err) {
         console.error(err);
       } finally {
@@ -39,7 +44,6 @@ export default function ProductDetailsView() {
   }, [slug]);
 
   const addProductToCheckout = () => {
-    console.log("Adding product to checkout:", product);
     if (!product) return;
 
     checkout.onAddToCart({
@@ -55,22 +59,62 @@ export default function ProductDetailsView() {
     navigate(paths.checkout);
   };
 
-  // Calcul pour les étoiles
+  const handleSubmitReview = async () => {
+    if (!product || !name || !email || !comment || !rating) {
+      toast.error("Veuillez remplir tous les champs obligatoires.");
+      return;
+    }
+
+    const newAvis = {
+      type_produit_id: product.id,
+      ratings: rating,
+      name,
+      email,
+      comment,
+    };
+
+    try {
+      const res = await fetch(`${API_URL_base}api/produit/avis`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(newAvis),
+      });
+
+      if (res.ok) {
+        const responseData = await res.json();
+        const avisAjoute = responseData.avis || responseData;
+        setName("");
+        setEmail("");
+        setComment("");
+        setRating(0);
+        toast.success("Avis envoyé avec succès");
+      } else {
+        throw new Error("Erreur lors de l'envoi de l'avis");
+      }
+    } catch (err) {
+      console.error(err);
+      toast.error("Une erreur est survenue lors de l'envoi de l'avis.");
+    }
+  };
+
   const stars = product?.avg_rating || 0;
   const roundedRating = Math.round(stars * 2) / 2;
 
   return (
     <div className="container max-w-6xl mx-auto px-4">
+      <ToastContainer />
       <h4 className="font-semibold text-4xl mb-4">
         {product ? product.nom : "Chargement..."}
       </h4>
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        <img
-          className="rounded-lg"
-          src={product ? `${API_URL_base}storage/${product.image}` : ""}
-          alt={product ? product.nom : ""}
-        />
+        {product?.image && (
+          <img
+            className="rounded-lg"
+            src={`${API_URL_base}storage/${product.image}`}
+            alt={product.nom}
+          />
+        )}
         <div className="bg-white p-8 rounded-2xl">
           <div className="flex flex-wrap gap-2 mb-4">
             {[
@@ -95,9 +139,9 @@ export default function ProductDetailsView() {
                 key={i}
                 size={18}
                 fill={
-                  i <= roundedRating
+                  i <= Math.floor(roundedRating)
                     ? "#facc15"
-                    : i - 0.5 === roundedRating
+                    : i === Math.ceil(roundedRating) && roundedRating % 1 !== 0
                     ? "#facc15"
                     : "none"
                 }
@@ -113,15 +157,14 @@ export default function ProductDetailsView() {
             {product?.prix} €
           </div>
 
-          <p className="leading-base text-base font-tahoma">
+          <div className="leading-base text-base font-tahoma">
             {product?.description || "Aucune description disponible."}
-          </p>
+          </div>
         </div>
       </div>
 
-      {/* Forms */}
+      {/* Forms destinataire/expéditeur */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-6">
-        {/* Destinataire */}
         <div className="bg-white p-6 rounded-xl shadow-md">
           <h5 className="text-xl font-semibold mb-4">
             Destinataire (carte cadeau)
@@ -154,7 +197,6 @@ export default function ProductDetailsView() {
           </div>
         </div>
 
-        {/* Expéditeur */}
         <div className="bg-white p-6 rounded-xl shadow-md">
           <h5 className="text-xl font-semibold mb-4">Expéditeur</h5>
           <div className="space-y-4">
@@ -186,23 +228,18 @@ export default function ProductDetailsView() {
         </div>
 
         <div className="col-span-2 flex justify-end">
-          <ButtonIcon title="Offrir" onClick={addProductToCheckout} />
+          <button
+            onClick={addProductToCheckout}
+            className="px-4 py-2 bg-black text-white rounded-md hover:bg-gray-800 transition"
+          >
+            <span>Offrir</span>
+          </button>
         </div>
       </div>
 
-      {/* Tabs */}
+      {/* Tabs avis */}
       <div className="mt-10 bg-white p-3 font-tahoma rounded-xl shadow-sm">
         <div className="flex gap-4 border-b border-gray-200">
-          <button
-            className={`px-4 py-2 font-semibold ${
-              activeTab === "description"
-                ? "border-b-2 border-secondary text-secondary"
-                : "text-gray-600"
-            }`}
-            onClick={() => setActiveTab("description")}
-          >
-            Description
-          </button>
           <button
             className={`px-4 py-2 font-semibold ${
               activeTab === "reviews"
@@ -217,18 +254,6 @@ export default function ProductDetailsView() {
 
         <div className="mt-6 min-h-[150px]">
           <AnimatePresence mode="wait">
-            {activeTab === "description" && (
-              <motion.div
-                key="description"
-                initial={{ opacity: 0, y: 10 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: -10 }}
-                transition={{ duration: 0.3 }}
-              >
-                Accès à l’espace Réveil des Sens et au Concept du Bonheur...
-              </motion.div>
-            )}
-
             {activeTab === "reviews" && (
               <motion.div
                 key="reviews"
@@ -238,29 +263,61 @@ export default function ProductDetailsView() {
                 transition={{ duration: 0.3 }}
               >
                 <div className="space-y-4">
-                  <div className="bg-gray-100 p-4 rounded-md">
-                    <p className="font-semibold">Marie D.</p>
-                    <div className="text-yellow-500 flex gap-1">
-                      {[...Array(5)].map((_, i) => (
-                        <FaStar key={i} />
-                      ))}
-                    </div>
-                    <p className="text-sm text-gray-600">
-                      "Très belle expérience !"
-                    </p>
-                  </div>
+                  {aviss.length > 0 ? (
+                    aviss.map((avis, index) => (
+                      <div key={index} className="bg-gray-100 p-4 rounded-md">
+                        <p className="font-semibold">{avis.name}</p>
+                        <div className="text-yellow-500 flex gap-1">
+                          {[1, 2, 3, 4, 5].map((i) => (
+                            <FaStar
+                              key={i}
+                              fill={i <= avis.ratings ? "#facc15" : "none"}
+                              stroke="#facc15"
+                            />
+                          ))}
+                        </div>
+                        <p className="text-sm text-gray-600">{avis.comment}</p>
+                      </div>
+                    ))
+                  ) : (
+                    <p className="text-gray-600">Aucun avis pour le moment.</p>
+                  )}
+
+                  {/* Formulaire ajouter avis */}
                   <div className="bg-white p-4 rounded-lg border">
                     <h6 className="font-semibold text-lg mb-2">
                       Laisser un avis
                     </h6>
+                    <input
+                      type="text"
+                      className="w-full border border-gray-300 rounded-lg p-2 mb-3"
+                      placeholder="Votre nom"
+                      value={name}
+                      onChange={(e) => setName(e.target.value)}
+                    />
+                    <input
+                      type="email"
+                      className="w-full border border-gray-300 rounded-lg p-2 mb-3"
+                      placeholder="Votre email"
+                      value={email}
+                      onChange={(e) => setEmail(e.target.value)}
+                    />
                     <textarea
                       rows={4}
                       className="w-full border border-gray-300 rounded-lg p-2 mb-3"
                       placeholder="Partagez votre expérience..."
+                      value={comment}
+                      onChange={(e) => setComment(e.target.value)}
                     />
                     <StarRatingInput value={rating} onChange={setRating} />
                     <div className="flex justify-end mt-3">
-                      <ButtonIcon title="Envoyer l'avis" />
+                      <button
+                        onClick={handleSubmitReview}
+                        className="px-4 py-2 bg-black text-white rounded-md hover:bg-gray-800 transition"
+                        type="button"
+                      >
+                        Envoyer l'avis
+                      </button>
                     </div>
                   </div>
                 </div>

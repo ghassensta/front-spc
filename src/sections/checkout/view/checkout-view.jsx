@@ -4,6 +4,7 @@ import { Link } from "react-router-dom";
 import { paths } from "../../../router/paths";
 import ButtonIcon from "../../../components/button-icon/button-icon";
 import { FaRegTrashAlt } from "react-icons/fa";
+import { API_URL_base } from "src/api/data";
 
 export default function CheckoutView() {
   const checkout = useCheckoutContext();
@@ -53,16 +54,19 @@ export default function CheckoutView() {
                       <td className="py-3">
                         <div className="flex gap-2 items-start">
                           <img
-                            src="https://spa-prestige-collection.com/wp-content/uploads/2025/02/SPC-Massage-Duo-1975x1318-01-600x400.jpg"
-                            alt=""
+                            src={`${API_URL_base}storage/${item.image}`} // template literal correct
+                            alt={item.name} // pas de quotes autour de item.name
                             className="w-20 rounded"
                           />
+
                           <Link to={paths.spa.details(item.id)}>
                             {item.name}
                           </Link>
                         </div>
                       </td>
-                      <td className="py-3">{item.price.toFixed(2)} €</td>
+                      <td className="py-3">
+                        {parseFloat(item.price || 0).toFixed(2)} €
+                      </td>
                       <td className="py-3">
                         <div className="flex items-center gap-2">
                           <button
@@ -152,7 +156,7 @@ export default function CheckoutView() {
                 <span className="font-medium">Nom:</span>{" "}
                 {checkout.billing.fullName}
               </div>
-              
+
               <div>
                 <span className="font-medium">Email:</span>{" "}
                 {checkout.billing.email}
@@ -185,10 +189,8 @@ export default function CheckoutView() {
             </div>
           )}
         </div>
-        <ButtonIcon title="Commander" size="" link={paths.payment}/>
+        <ButtonIcon title="Commander" size="" link={paths.payment} />
       </div>
-
-      
     </div>
   );
 }
