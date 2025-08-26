@@ -1,5 +1,5 @@
-const API_URL = "http://127.0.0.1:8000/api";
-export const API_URL_base = "http://127.0.0.1:8000/";
+const API_URL = "https://spc.emc1001.online/api";
+export const API_URL_base = "https://spc.emc1001.online/";
 
 /**
  * Récupère la liste des catégories depuis l'API Laravel

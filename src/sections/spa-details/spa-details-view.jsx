@@ -28,7 +28,7 @@ export default function SpaDetailsView() {
   const [spaData, setSpaData] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const API_URL = "http://127.0.0.1:8000";
+  const API_URL = "https://spc.emc1001.online/";
   const initialRatings = {};
   criteria.forEach((key) => {
     initialRatings[key] = 0;
