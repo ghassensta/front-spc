@@ -18,7 +18,7 @@ export default function HomeView() {
   const { etablissements } = useEtablissement();
   const { actualites } = useActualites();
   const { marques, loading, error } = useMarquePartenaires();
-  const API_URL = "https://spc.emc1001.online/";
+  const API_URL = "https://spc.emc1001.online";
 
   const prevRef = useRef(null);
   const nextRef = useRef(null);
