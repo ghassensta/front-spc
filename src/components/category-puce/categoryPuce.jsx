@@ -2,28 +2,20 @@ import React from "react";
 import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
 
-export default function CategoryPuce({
-  slug = "#",
-  icon = null,
-  name = "",
-}) {
+export default function CategoryPuce({ slug = "#", icon = null, name = "" }) {
   return (
     <motion.div
       whileHover={{ scale: 1.05 }}
       transition={{ type: "spring", stiffness: 300 }}
     >
       <Link
-        to={slug}
+        to={`/categories/${slug}`}
         className="group inline-block rounded-full min-w-24 bg-[#B6B499] px-2 py-1"
       >
         <div className="flex items-center gap-2 text-center text-white relative">
           {icon && (
             <span className="rounded-full p-0">
-              <img
-                src={icon}
-                alt={name}
-                className="w-8 h-8 object-contain"
-              />
+              <img src={icon} alt={name} className="w-8 h-8 object-contain" />
             </span>
           )}
           <div className="relative">

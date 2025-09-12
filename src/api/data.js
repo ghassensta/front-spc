@@ -79,4 +79,89 @@ export async function fetchMarquePartenaire() {
   }
 }
 
+/**
+ * Récupère la liste des éléments de menu depuis l'API Laravel
+ * @returns {Promise<Array>} Liste des éléments de menu
+ */
+export async function fetchMenuSidebar() {
+  try {
+    const response = await fetch(`${API_URL}/menu-sidebar`);
 
+    if (!response.ok) {
+      throw new Error(
+        `Erreur lors du chargement des menus : ${response.status} ${response.statusText}`
+      );
+    }
+
+    const data = await response.json();
+    console.log("fetchMenuSidebar response:", data);
+
+    return data.data ?? [];
+  } catch (error) {
+    console.error("fetchMenuSidebar error:", error);
+    throw error;
+  }
+}
+/**
+ * Récupère la liste des éléments de menu depuis l'API Laravel
+ * @returns {Promise<Array>} Liste des éléments de menu
+ */
+export async function fetchMenuFooter() {
+  try {
+    const response = await fetch(`${API_URL}/menu-footer`);
+
+    if (!response.ok) {
+      throw new Error(
+        `Erreur lors du chargement des menus : ${response.status} ${response.statusText}`
+      );
+    }
+
+    const data = await response.json();
+    console.log("fetchMenuFooter response:", data);
+
+    if (!data.success) {
+      console.error("Erreur API:", data.message);
+      return { footer_about: [], footer_pro: [], social_links: [] };
+    }
+
+    // Retourne les données ou un tableau vide si absent
+    return {
+      settings: data.data.settings ?? [],
+      footer_about: data.data.footer_about ?? [],
+      footer_pro: data.data.footer_pro ?? [],
+      social_links: data.data.social_links ?? [],
+    };
+  } catch (error) {
+    console.error("fetchMenuFooter error:", error);
+    return { settings: [], footer_about: [], footer_pro: [], social_links: [] };
+  }
+}
+
+/**
+ * Récupère la section Carte depuis l'API Laravel
+ * @returns {Promise<Object|null>} Section carte ou null
+ */
+export async function fetchSectionCarte() {
+  try {
+    const response = await fetch(`${API_URL}/section-carte`);
+
+    if (!response.ok) {
+      throw new Error(
+        `Erreur lors du chargement de la section carte : ${response.status} ${response.statusText}`
+      );
+    }
+
+    const data = await response.json();
+    console.log("fetchSectionCarte response:", data);
+
+    if (!data.success) {
+      console.error("Erreur API:", data.message);
+      return null;
+    }
+
+    return data.data ?? null;
+  } catch (error) {
+    console.error("fetchSectionCarte error:", error);
+    return null;
+  }
+}

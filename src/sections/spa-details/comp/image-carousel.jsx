@@ -17,7 +17,7 @@ const variants = {
   }),
 };
 
-export default function ImageCarousel({ height, images=[] }) {
+export default function ImageCarousel({ height, images = [] }) {
   const [[index, direction], setIndex] = useState([0, 0]);
 
   // Auto slide every 5 seconds
@@ -41,14 +41,17 @@ export default function ImageCarousel({ height, images=[] }) {
     }
   };
 
-  const heightValue = height ? `h-[320px]` : "h-[700px]" ;
+  const heightValue = height ? `h-[320px]` : "h-[700px]";
 
   return (
-    <div className={`relative w-full mx-auto overflow-hidden rounded-sm shadow-lg`} style={{ height: height?? "700px", width: height*1.5}}>
+    <div
+      className={`relative w-full mx-auto overflow-hidden rounded-sm shadow-lg`}
+      style={{ height: height ?? "700px", width: height * 1.5 }}
+    >
       <AnimatePresence initial={false} custom={direction}>
         <motion.img
           key={index}
-          src={images[index]}
+          src={`${API_URL_base}storage/${images[index]}`}
           custom={direction}
           variants={variants}
           initial="enter"

@@ -13,12 +13,14 @@ import Card from "../../components/card/card";
 import { useEtablissement } from "src/hooks/useEtablissement";
 import { useActualites } from "src/hooks/useActualite";
 import { useMarquePartenaires } from "src/hooks/useMarquePartenaire";
+import { useSectionCarte } from "src/hooks/useSectionCarte";
+import { API_URL_base } from "src/api/data";
 
 export default function HomeView() {
   const { etablissements } = useEtablissement();
   const { actualites } = useActualites();
   const { marques, loading, error } = useMarquePartenaires();
-  const API_URL = "http://127.0.0.1:8000";
+  const { sectionCarte } = useSectionCarte();
 
   const prevRef = useRef(null);
   const nextRef = useRef(null);
@@ -55,8 +57,8 @@ export default function HomeView() {
               type="large"
               to={`/spa/${etablissement.slug || etablissement.id}`}
               title={etablissement.nom || etablissement.id}
-              description={etablissement.description}
-              image={`${API_URL}/storage/${etablissement.logo}`}
+              description={etablissement.description_avant}
+              image={`${API_URL_base}storage/${etablissement.image_avant}`}
               location={etablissement.adresse}
             />
           ))}
@@ -67,22 +69,40 @@ export default function HomeView() {
       </div>
       <div
         style={{
-          backgroundImage:
-            "url(https://spa-prestige-collection.com/wp-content/uploads/2025/01/Piscine2.jpg)",
+          backgroundImage: `url("https://spa-prestige-collection.com/wp-content/uploads/2025/01/Piscine2.jpg")`,
         }}
         className="bg-primary w-screen relative bg-center left-[calc(-50vw+50%)] mt-16 min-h-32 overflow-hidden"
       >
         <div className="w-full flex flex-col z-10 relative items-center p-4 lg:p-16">
-          <div className="bg-white/80 text-center flex flex-col items-center py-8">
-            <img src={carteCadeau} alt="" className="mb-4" />
-            <p className="text-secondary font-tahoma text-base font-medium lg:w-1/2 uppercase mb-4">
-              JE COMMANDE une CARTE cadeau à utiliser dans un établissement SPA
-              & PRESTIGE COLLECTION et je cumule des avantages
-            </p>
-            <ButtonIcon title="OFFRIR" icon={<FaHandHoldingHeart />} />
+          <div className="bg-white/80 text-center flex flex-col items-center py-8 px-6 rounded-xl shadow-lg">
+            {/* Vérifier que sectionCarte existe avant de lire ses propriétés */}
+            {sectionCarte && sectionCarte.image && (
+              <img
+                src={`${API_URL_base}storage/${sectionCarte.image}`}
+                alt={sectionCarte.title || "Carte Cadeau"}
+                className="mb-4 max-h-32 object-contain"
+              />
+            )}
+
+            {/* Description (si sectionCarte existe) */}
+            {sectionCarte && sectionCarte.description && (
+              <p className="text-secondary font-tahoma text-base font-medium lg:w-1/2 uppercase mb-4">
+                {sectionCarte.description}
+              </p>
+            )}
+
+            {/* Bouton (si sectionCarte existe) */}
+            {sectionCarte && sectionCarte.button_url && (
+              <ButtonIcon
+                title={sectionCarte.button_text || "DÉCOUVRIR"}
+                to={sectionCarte.button_url}
+                icon={<FaHandHoldingHeart />}
+              />
+            )}
           </div>
         </div>
       </div>
+
       <div className="bg-primary mb-12 left-[calc(-50vw+50%)] relative w-screen">
         <div className="max-w-6xl mx-auto py-4">
           <h2 className="text-4xl font-bold text-center">
@@ -153,7 +173,7 @@ export default function HomeView() {
                 to={`/actualites/${actualite.slug || actualite.id}`}
                 title={actualite.title}
                 description={actualite.petit_description}
-                image={`${API_URL}/storage/${actualite.image}`}
+                image={`${API_URL_base}storage/${actualite.image}`}
                 date={new Date(actualite.created_at).toLocaleDateString(
                   "fr-FR",
                   {
@@ -192,7 +212,7 @@ export default function HomeView() {
               >
                 <img
                   className="mx-auto max-h-full object-contain"
-                  src={`${API_URL}/storage/${marque.logo}`}
+                  src={`${API_URL_base}storage/${marque.logo}`}
                   alt={marque.name || "Marque partenaire"}
                 />
               </SwiperSlide>

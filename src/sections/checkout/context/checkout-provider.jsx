@@ -1,5 +1,4 @@
 import { useMemo, Suspense, useEffect, useCallback, createContext } from 'react';
-
 import { useRouter } from '../../../hooks';
 import { getStorage, useLocalStorage } from '../../../hooks/use-local-storage';
 
@@ -19,7 +18,6 @@ const initialState = {
   expediteur: {},
   totalItems: 0,
 };
-
 
 // ----------------------------------------------------------------------
 
@@ -59,55 +57,47 @@ function Container({ children }) {
 
   const onAddToCart = useCallback(
     (newItem) => {
-      const updatedItems = state.items.map((item) => {
-        if (item.id === newItem.id) {
+      const updatedItems = [...state.items];
+      const existingItemIndex = updatedItems.findIndex((item) => item.id === newItem.id);
 
-          return { ...item, quantity: item.quantity + 1 };
-        }
-        return item;
-      });
+      // Filter out duplicate destinataires based on email
+      const newDestinataires = newItem.destinataires.filter(
+        (newDest) => !updatedItems.some((item) =>
+          item.destinataires?.some((dest) => dest.email.toLowerCase() === newDest.email.toLowerCase())
+        )
+      );
 
-      if (!updatedItems.some((item) => item.id === newItem.id)) {
-        updatedItems.push({...newItem, quantity: 1});
+      if (existingItemIndex !== -1) {
+        // Item exists, append new unique destinataires and update quantity
+        const existingItem = updatedItems[existingItemIndex];
+        const updatedDestinataires = [...existingItem.destinataires, ...newDestinataires];
+        updatedItems[existingItemIndex] = {
+          ...existingItem,
+          destinataires: updatedDestinataires,
+          quantity: updatedDestinataires.length, // Quantity is number of destinataires
+        };
+      } else {
+        // New item, add with unique destinataires list
+        updatedItems.push({
+          ...newItem,
+          destinataires: newDestinataires,
+          quantity: newDestinataires.length, // Quantity is number of destinataires
+        });
       }
 
       setField('items', updatedItems);
+      updateTotalField();
     },
-    [setField, state.items]
+    [setField, state.items, updateTotalField]
   );
 
   const onDeleteCart = useCallback(
     (itemId) => {
       const updatedItems = state.items.filter((item) => item.id !== itemId);
       setField('items', updatedItems);
+      updateTotalField();
     },
-    [setField, state.items]
-  );
-
-  const onIncreaseQuantity = useCallback(
-    (itemId) => {
-      const updatedItems = state.items.map((item) => {
-        if (item.id === itemId) {
-          return { ...item, quantity: item.quantity + 1 };
-        }
-        return item;
-      });
-      setField('items', updatedItems);
-    },
-    [setField, state.items]
-  );
-
-  const onDecreaseQuantity = useCallback(
-    (itemId) => {
-      const updatedItems = state.items.map((item) => {
-        if (item.id === itemId) {
-          return { ...item, quantity: item.quantity - 1 };
-        }
-        return item;
-      });
-      setField('items', updatedItems);
-    },
-    [setField, state.items]
+    [setField, state.items, updateTotalField]
   );
 
   const onCreateExpediteur = useCallback(
@@ -127,15 +117,17 @@ function Container({ children }) {
   const onApplyDiscount = useCallback(
     (discount) => {
       setField('discount', discount);
+      updateTotalField();
     },
-    [setField]
+    [setField, updateTotalField]
   );
 
   const onApplyShipping = useCallback(
     (shipping) => {
       setField('shipping', shipping);
+      updateTotalField();
     },
-    [setField]
+    [setField, updateTotalField]
   );
 
   const onReset = useCallback(() => {
@@ -151,10 +143,8 @@ function Container({ children }) {
       onUpdateField: setField,
       onAddToCart,
       onDeleteCart,
-      onIncreaseQuantity,
-      onDecreaseQuantity,
       onCreateBilling,
-      onCreateExpediteur, // <-- add here
+      onCreateExpediteur,
       onApplyDiscount,
       onApplyShipping,
     }),
@@ -166,15 +156,12 @@ function Container({ children }) {
       setField,
       onAddToCart,
       onDeleteCart,
-      onIncreaseQuantity,
-      onDecreaseQuantity,
       onCreateBilling,
-      onCreateExpediteur, // <-- and here
+      onCreateExpediteur,
       onApplyDiscount,
       onApplyShipping,
     ]
   );
-  
 
   return <CheckoutContext.Provider value={memoizedValue}>{children}</CheckoutContext.Provider>;
 }

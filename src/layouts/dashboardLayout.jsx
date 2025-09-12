@@ -9,6 +9,7 @@ export default function DashboardLayout({ children }) {
   const links = [
     { label: "Tableau du bord", to: paths.dashboard.root },
     { label: "Commandes", to: paths.dashboard.commandes.root },
+    { label: "Wishlists", to: paths.dashboard.wishlist.index },
     { label: "Détails du compte", to: paths.dashboard.details },
     { label: "Se déconnecter", to: paths.main },
   ];
