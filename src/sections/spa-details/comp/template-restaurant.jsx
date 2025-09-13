@@ -4,12 +4,11 @@ import ImageCarousel from "./image-carousel";
 import CardItem from "../../../components/card-item/card-item";
 import { API_URL_base } from "src/api/data";
 
-const API_URL = "http://ton-domaine.com"; // Remplacer par ton URL
 
 export default function TemplateRestaurant({ data=[] }) {
-  console.log("xxxxxxxxxxxxxxxxxxxxxxxxxxxxxx", data);
+  console.log("xxxxxxxxxxxxxxxxxxxxxxxssssssxxxxxxx", data);
   const imagesCarousel = data.type_media.map(
-    (media) => `${API_URL_base}storage/${media.path}`
+    (media) => `${media.path}`
   );
 console.log("imagesCarousel", imagesCarousel);
   const [expanded, setExpanded] = useState(false);

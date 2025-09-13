@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import ButtonIcon from "../../components/button-icon/button-icon";
+// import ButtonIcon from "../../components/button-icon/button-icon";
 import { motion, AnimatePresence } from "framer-motion";
 import { FaStar } from "react-icons/fa";
 import { useCheckoutContext } from "../checkout/context/use-checkout-context";
@@ -18,12 +18,15 @@ export default function ProductDetailsView() {
 
   const [product, setProduct] = useState(null);
   const [aviss, setAvis] = useState([]);
-  const [loading, setLoading] = useState(true);
+  // const [loading, setLoading] = useState(true);
   const [rating, setRating] = useState(0);
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [comment, setComment] = useState("");
   const [activeTab, setActiveTab] = useState("reviews");
+
+  // State for multiple recipients (repeater)
+  const [recipients, setRecipients] = useState([{ fullName: "", email: "" }]);
 
   useEffect(() => {
     if (!slug) return;
@@ -46,17 +49,60 @@ export default function ProductDetailsView() {
   const addProductToCheckout = () => {
     if (!product) return;
 
+    // Check for required fields
+    if (recipients.some(r => !r.fullName || !r.email)) {
+      toast.error("Veuillez remplir tous les champs pour chaque destinataire.");
+      return;
+    }
+
+    // Check for duplicate emails
+    const emailSet = new Set(recipients.map(r => r.email.toLowerCase()));
+    if (emailSet.size !== recipients.length) {
+      toast.error("Emails en double détectés. Chaque destinataire doit avoir un email unique.");
+      return;
+    }
+
+    // Get unique recipients
+    const uniqueRecipients = Array.from(
+      new Map(recipients.map(r => [r.email.toLowerCase(), r])).values()
+    );
+
+    // Add all recipients to checkout in a single call
+    const existingItem = checkout.items.find(item => item.id === product.id);
     checkout.onAddToCart({
       id: product.id,
       name: product.nom,
       price: product.prix,
       image: product.image,
       description: product.description,
-      destinataire: checkout.billing,
-      expediteur: checkout.expediteur,
+      destinataires: existingItem
+        ? [...existingItem.destinataires, ...uniqueRecipients]
+        : uniqueRecipients,
+      expediteur: {}, // Empty here, handled in next step
+      quantity: existingItem
+        ? existingItem.destinataires.length + uniqueRecipients.length
+        : uniqueRecipients.length,
     });
 
+    // Clear repeater state after adding
+    setRecipients([{ fullName: "", email: "" }]);
+
     navigate(paths.checkout);
+  };
+
+  const handleAddRecipient = () => {
+    setRecipients([...recipients, { fullName: "", email: "" }]);
+  };
+
+  const handleRemoveRecipient = (index) => {
+    const newRecipients = recipients.filter((_, i) => i !== index);
+    setRecipients(newRecipients.length > 0 ? newRecipients : [{ fullName: "", email: "" }]);
+  };
+
+  const handleRecipientChange = (index, field, value) => {
+    const newRecipients = [...recipients];
+    newRecipients[index][field] = value;
+    setRecipients(newRecipients);
   };
 
   const handleSubmitReview = async () => {
@@ -82,7 +128,7 @@ export default function ProductDetailsView() {
 
       if (res.ok) {
         const responseData = await res.json();
-        const avisAjoute = responseData.avis || responseData;
+        // const avisAjoute = responseData.avis || responseData;
         setName("");
         setEmail("");
         setComment("");
@@ -163,71 +209,55 @@ export default function ProductDetailsView() {
         </div>
       </div>
 
-      {/* Forms destinataire/expéditeur */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-6">
-        <div className="bg-white p-6 rounded-xl shadow-md">
-          <h5 className="text-xl font-semibold mb-4">
-            Destinataire (carte cadeau)
-          </h5>
-          <div className="space-y-4">
-            <input
-              type="text"
-              className="w-full border border-gray-300 rounded-lg p-2"
-              placeholder="Nom et prénom"
-              value={checkout.billing.fullName}
-              onChange={(e) =>
-                checkout.onCreateBilling({
-                  ...checkout.billing,
-                  fullName: e.target.value,
-                })
-              }
-            />
-            <input
-              type="email"
-              className="w-full border border-gray-300 rounded-lg p-2"
-              placeholder="Email du destinataire"
-              value={checkout.billing.email}
-              onChange={(e) =>
-                checkout.onCreateBilling({
-                  ...checkout.billing,
-                  email: e.target.value,
-                })
-              }
-            />
+      {/* Repeater for multiple recipients */}
+      <div className="mt-6">
+        <h5 className="text-2xl font-semibold mb-4">Ajouter des destinataires pour les cartes cadeaux</h5>
+        {recipients.map((recipient, index) => (
+          <div key={index} className="bg-white p-6 rounded-xl shadow-md mb-4">
+            <h6 className="text-lg font-semibold mb-2">Destinataire {index + 1}</h6>
+            <div className="space-y-4">
+              <input
+                type="text"
+                className="w-full border border-gray-300 rounded-lg p-2"
+                placeholder="Nom et prénom"
+                value={recipient.fullName}
+                onChange={(e) => handleRecipientChange(index, "fullName", e.target.value)}
+              />
+              <input
+                type="email"
+                className="w-full border border-gray-300 rounded-lg p-2"
+                placeholder="Email du destinataire"
+                value={recipient.email}
+                onChange={(e) => handleRecipientChange(index, "email", e.target.value)}
+              />
+              <div className="flex items-center gap-2">
+                <span>Quantité :</span>
+                <input
+                  type="number"
+                  className="w-16 border border-gray-300 rounded-lg p-2"
+                  value={1}
+                  disabled
+                />
+              </div>
+            </div>
+            {recipients.length > 1 && (
+              <button
+                onClick={() => handleRemoveRecipient(index)}
+                className="mt-2 text-red-500 hover:text-red-700"
+              >
+                Supprimer ce destinataire
+              </button>
+            )}
           </div>
-        </div>
+        ))}
+        <button
+          onClick={handleAddRecipient}
+          className="px-4 py-2 bg-gray-200 text-black rounded-md hover:bg-gray-300 transition mb-4"
+        >
+          Ajouter un autre destinataire
+        </button>
 
-        <div className="bg-white p-6 rounded-xl shadow-md">
-          <h5 className="text-xl font-semibold mb-4">Expéditeur</h5>
-          <div className="space-y-4">
-            <input
-              type="text"
-              className="w-full border border-gray-300 rounded-lg p-2"
-              placeholder="Nom et prénom"
-              value={checkout.expediteur.fullName}
-              onChange={(e) =>
-                checkout.onCreateExpediteur({
-                  ...checkout.expediteur,
-                  fullName: e.target.value,
-                })
-              }
-            />
-            <textarea
-              rows={3}
-              className="w-full border border-gray-300 rounded-lg p-2"
-              placeholder="Message personnalisé (optionnel)"
-              value={checkout.expediteur.message}
-              onChange={(e) =>
-                checkout.onCreateExpediteur({
-                  ...checkout.expediteur,
-                  message: e.target.value,
-                })
-              }
-            ></textarea>
-          </div>
-        </div>
-
-        <div className="col-span-2 flex justify-end">
+        <div className="flex justify-end">
           <button
             onClick={addProductToCheckout}
             className="px-4 py-2 bg-black text-white rounded-md hover:bg-gray-800 transition"

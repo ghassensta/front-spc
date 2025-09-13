@@ -1,18 +1,9 @@
 import React from "react";
 import { IoMdClose } from "react-icons/io";
 import { motion, AnimatePresence } from "framer-motion";
-
+import { useMenuSidebar } from "src/hooks/useDataMenu";
 export default function Menu({ show, onClose }) {
-  const items = [
-    "Accueil",
-    "Offrir une carte cadeau",
-    "Mon Compte / Commandes",
-    "Favoris",
-    "Avantages : Parrainage, fidélité, communauté privée",
-    "Actualités",
-    "Book Collection Prestige",
-    "Aide et Contact",
-  ];
+  const { menus, loading, error } = useMenuSidebar();
 
   const menuVariants = {
     hidden: { x: "-100%" },
@@ -68,20 +59,37 @@ export default function Menu({ show, onClose }) {
               </button>
 
               <ul className="mt-8 space-y-6 text-center text-secondary">
-                {items.map((item, index) => (
-                  <motion.li
-                    key={index}
-                    variants={itemVariants}
-                    className="text-xl font-bold"
-                  >
-                    <a
-                      href={`#${item.toLowerCase().replace(/\s+/g, "")}`}
-                      className="relative inline-block after:block after:h-[2px] after:w-0 after:bg-secondary after:transition-all after:duration-300 hover:after:w-full"
-                    >
-                      {item}
-                    </a>
-                  </motion.li>
-                ))}
+                {loading ? (
+                  <li className="text-xl font-bold text-center">
+                    Chargement...
+                  </li>
+                ) : error ? (
+                  <li className="text-xl font-bold text-center text-red-500">
+                    Erreur : {error.message}
+                  </li>
+                ) : menus && menus.length > 0 ? (
+                  menus
+                    .filter((item) => item.is_active)
+                    .sort((a, b) => a.order - b.order)
+                    .map((item) => (
+                      <motion.li
+                        key={item.id}
+                        variants={itemVariants}
+                        className="text-xl font-bold"
+                      >
+                        <a
+                          href={item.url}
+                          className="relative inline-block after:block after:h-[2px] after:w-0 after:bg-secondary after:transition-all after:duration-300 hover:after:w-full"
+                        >
+                          {item.title}
+                        </a>
+                      </motion.li>
+                    ))
+                ) : (
+                  <li className="text-xl font-bold text-center">
+                    Aucun élément de menu disponible
+                  </li>
+                )}
               </ul>
             </div>
           </motion.div>

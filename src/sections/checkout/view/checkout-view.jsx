@@ -8,16 +8,26 @@ import { API_URL_base } from "src/api/data";
 
 export default function CheckoutView() {
   const checkout = useCheckoutContext();
-
-  const itemsFiltered = checkout.items?.filter(item => item.quantity > 0) || [];
+  console.log("Checkout data:", checkout.items); // Debug log
+  const itemsFiltered = checkout.items?.filter((item) => item.quantity > 0) || [];
   const TAX_RATE = 0.2;
 
-  const handleIncrease = (productId) => checkout.onIncreaseQuantity(productId);
-  const handleDecrease = (productId) => {
-    const item = checkout.items.find(i => i.id === productId);
-    if (!item) return;
-    item.quantity <= 1 ? checkout.onDeleteCart(productId) : checkout.onDecreaseQuantity(productId);
+  // State for expéditeur input fields
+  const [expediteurFullName, setExpediteurFullName] = React.useState(
+    checkout.expediteur?.fullName || ""
+  );
+  const [expediteurMessage, setExpediteurMessage] = React.useState(
+    checkout.expediteur?.message || ""
+  );
+
+  // Update expéditeur in checkout context when inputs change
+  const handleExpediteurChange = (field, value) => {
+    checkout.onCreateExpediteur({
+      ...checkout.expediteur,
+      [field]: value,
+    });
   };
+
   const handleDelete = (productId) => checkout.onDeleteCart(productId);
 
   const subtotal = itemsFiltered.reduce(
@@ -38,7 +48,7 @@ export default function CheckoutView() {
             <thead className="uppercase text-gray-600 border-b text-xs">
               <tr>
                 <th className="py-2">Produit</th>
-                <th className="py-2">Destinataire</th>
+                <th className="py-2">Destinataires</th>
                 <th className="py-2">Prix</th>
                 <th className="py-2">Quantité</th>
                 <th className="py-2">Total</th>
@@ -47,7 +57,7 @@ export default function CheckoutView() {
             </thead>
             <tbody>
               {itemsFiltered.length > 0 ? (
-                itemsFiltered.map(item => (
+                itemsFiltered.map((item) => (
                   <tr key={item.id} className="border-b">
                     <td className="py-3">
                       <div className="flex gap-2 items-start">
@@ -56,32 +66,45 @@ export default function CheckoutView() {
                           alt={item.name}
                           className="w-16 h-16 object-cover rounded"
                         />
-                        <Link to={paths.spa.details(item.id)} className="hover:underline">
+                        <Link
+                          to={paths.spa.details(item.id)}
+                          className="hover:underline"
+                        >
                           {item.name}
                         </Link>
                       </div>
                     </td>
-                    <td className="py-3">{item.destinataire?.fullName + "—" + item.destinataire.email}</td>
-                    <td className="py-3">{Number(item.price || 0).toFixed(2)} €</td>
+                    <td className="py-3">
+                      {item.destinataires?.length > 0 ? (
+                        <ul className="list-disc pl-4">
+                          {item.destinataires.map((dest, index) => (
+                            <li key={index}>
+                              {dest.fullName && dest.email
+                                ? `${dest.fullName} — ${dest.email}`
+                                : "Destinataire non défini"}
+                            </li>
+                          ))}
+                        </ul>
+                      ) : (
+                        "Aucun destinataire défini"
+                      )}
+                    </td>
+                    <td className="py-3">
+                      {Number(item.price || 0).toFixed(2)} €
+                    </td>
                     <td className="py-3">
                       <div className="flex items-center gap-2">
-                        <button
-                          onClick={() => handleDecrease(item.id)}
-                          className="px-2 py-1 bg-gray-200 rounded hover:bg-gray-300"
-                        >-</button>
                         <input
                           type="number"
                           readOnly
                           value={item.quantity}
                           className="w-12 text-center border border-gray-300 rounded-md"
                         />
-                        <button
-                          onClick={() => handleIncrease(item.id)}
-                          className="px-2 py-1 bg-gray-200 rounded hover:bg-gray-300"
-                        >+</button>
                       </div>
                     </td>
-                    <td className="py-3">{(Number(item.price || 0) * item.quantity).toFixed(2)} €</td>
+                    <td className="py-3">
+                      {(Number(item.price || 0) * item.quantity).toFixed(2)} €
+                    </td>
                     <td className="py-3">
                       <button
                         onClick={() => handleDelete(item.id)}
@@ -106,7 +129,9 @@ export default function CheckoutView() {
           <div className="flex flex-col items-end mt-6 space-y-1 text-sm font-medium">
             <div>Sous-total HT : {subtotal.toFixed(2)} €</div>
             <div>Taxe 20 % : {tax.toFixed(2)} €</div>
-            <div className="text-base font-bold">Total TTC : {grandTotal.toFixed(2)} €</div>
+            <div className="text-base font-bold">
+              Total TTC : {grandTotal.toFixed(2)} €
+            </div>
           </div>
         </div>
 
@@ -114,23 +139,34 @@ export default function CheckoutView() {
         <div className="w-full lg:w-80 flex flex-col gap-6">
           <div className="bg-white p-4 rounded-lg shadow-sm">
             <h4 className="text-xl font-semibold mb-4">Expéditeur</h4>
-            {checkout.expediteur ? (
-              <div className="text-sm space-y-2">
-                <div><span className="font-medium">Nom :</span> {checkout.expediteur.fullName}</div>
-                {checkout.expediteur.message && (
-                  <div><span className="font-medium">Message :</span> {checkout.expediteur.message}</div>
-                )}
-              </div>
-            ) : (
-              <div className="text-gray-400 text-sm">Aucun expéditeur défini.</div>
-            )}
+            <div className="space-y-4">
+              <input
+                type="text"
+                className="w-full border border-gray-300 rounded-lg p-2"
+                placeholder="Nom et prénom"
+                value={expediteurFullName}
+                onChange={(e) => {
+                  setExpediteurFullName(e.target.value);
+                  handleExpediteurChange("fullName", e.target.value);
+                }}
+              />
+              <textarea
+                rows={4}
+                className="w-full border border-gray-300 rounded-lg p-2"
+                placeholder="Message (optionnel)"
+                value={expediteurMessage}
+                onChange={(e) => {
+                  setExpediteurMessage(e.target.value);
+                  handleExpediteurChange("message", e.target.value);
+                }}
+              />
+            </div>
           </div>
-
           <ButtonIcon
             title="Commander"
             size=""
             link={paths.payment}
-            disabled={isCartEmpty}
+            disabled={isCartEmpty || !expediteurFullName}
           />
         </div>
       </div>
