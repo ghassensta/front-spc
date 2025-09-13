@@ -23,11 +23,11 @@ export default function ProfileDetails() {
   
         {/* Password Fields (Full Width) */}
         <div className="col-span-2 mt-4 grid grid-cols-2 gap-2 border p-4">
-          <div className="flex flex-col">
+          <div className="flex flex-col col-span-2 md:col-span-1">
             <label htmlFor="currentPassword" className="text-sm text-secondary">Mot de passe actuel</label>
             <input type="password" id="currentPassword" className="border rounded p-1" />
           </div>
-          <div className="flex flex-col">
+          <div className="flex flex-col col-span-2 md:col-span-1">
             <label htmlFor="newPassword" className="text-sm text-secondary">Nouveau mot de passe</label>
             <input type="password" id="newPassword" className="border rounded p-1" />
           </div>

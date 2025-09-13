@@ -10,7 +10,7 @@ export default function Wishlist() {
       id: 1,
       name: "Massage Relaxant aux Huiles Essentielles",
       price: 120,
-      image: `${API_URL_base}storage/spa-treatments/massage-relaxant.jpg`,
+      image: `https://images.unsplash.com/photo-1600334089648-b0d9d3028eb2?q=80&w=1170&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D`,
       category: "Soins",
       duration: "60 min",
       isLiked: true,
@@ -20,7 +20,7 @@ export default function Wishlist() {
       id: 2,
       name: "Soin Visage Anti-Âge Prestige",
       price: 180,
-      image: `${API_URL_base}storage/spa-treatments/soin-anti-age.jpg`,
+      image: `https://images.unsplash.com/photo-1600334089648-b0d9d3028eb2?q=80&w=1170&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D`,
       category: "Soins Visage",
       duration: "90 min",
       isLiked: true,
@@ -30,7 +30,7 @@ export default function Wishlist() {
       id: 3,
       name: "Pack Détente Complète - Journée Spa",
       price: 350,
-      image: `${API_URL_base}storage/spa-treatments/journee-spa.jpg`,
+      image: `https://images.unsplash.com/photo-1600334089648-b0d9d3028eb2?q=80&w=1170&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D`,
       category: "Forfaits",
       duration: "6 heures",
       isLiked: true,
@@ -40,7 +40,7 @@ export default function Wishlist() {
       id: 4,
       name: "Coffret Cadeau Évasion Romantique",
       price: 250,
-      image: `${API_URL_base}storage/spa-treatments/evasion-romantique.jpg`,
+      image: `https://images.unsplash.com/photo-1600334089648-b0d9d3028eb2?q=80&w=1170&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D`,
       category: "Coffrets Cadeaux",
       duration: "",
       isLiked: true,
@@ -61,7 +61,7 @@ export default function Wishlist() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 py-8">
+    <div className="min-h-screen py-8">
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* En-tête */}
         <div className="mb-8">
@@ -69,36 +69,6 @@ export default function Wishlist() {
           <p className="text-gray-600 mt-2">
             Retrouvez tous vos soins et forfaits spa favoris
           </p>
-        </div>
-
-        {/* Navigation secondaire */}
-        <div className="bg-white rounded-lg shadow-sm p-4 mb-6">
-          <nav className="flex space-x-6">
-            <Link 
-              to="/dashboard" 
-              className="text-gray-500 hover:text-gray-700 font-medium"
-            >
-              Tableau de bord
-            </Link>
-            <Link 
-              to="/dashboard/commandes" 
-              className="text-gray-500 hover:text-gray-700 font-medium"
-            >
-              Mes commandes
-            </Link>
-            <Link 
-              to="/dashboard/wishlist" 
-              className="text-primary font-medium border-b-2 border-primary"
-            >
-              Ma wishlist
-            </Link>
-            <Link 
-              to="/dashboard/parametres" 
-              className="text-gray-500 hover:text-gray-700 font-medium"
-            >
-              Paramètres
-            </Link>
-          </nav>
         </div>
 
         {/* Contenu de la wishlist */}
@@ -201,7 +171,7 @@ export default function Wishlist() {
               {/* Exemple de suggestion */}
               <div className="bg-white rounded-lg shadow-sm overflow-hidden">
                 <img 
-                  src={`${API_URL_base}storage/spa-treatments/suggestion-1.jpg`} 
+                  src={`https://images.unsplash.com/photo-1600334089648-b0d9d3028eb2?q=80&w=1170&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D`} 
                   alt="Soin Détente"
                   className="w-full h-40 object-cover"
                 />
@@ -219,7 +189,7 @@ export default function Wishlist() {
               
               <div className="bg-white rounded-lg shadow-sm overflow-hidden">
                 <img 
-                  src={`${API_URL_base}storage/spa-treatments/suggestion-2.jpg`} 
+                  src={`https://images.unsplash.com/photo-1600334089648-b0d9d3028eb2?q=80&w=1170&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D`} 
                   alt="Soin Détente"
                   className="w-full h-40 object-cover"
                 />
@@ -237,7 +207,7 @@ export default function Wishlist() {
               
               <div className="bg-white rounded-lg shadow-sm overflow-hidden">
                 <img 
-                  src={`${API_URL_base}storage/spa-treatments/suggestion-3.jpg`} 
+                  src={`https://images.unsplash.com/photo-1600334089648-b0d9d3028eb2?q=80&w=1170&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D`} 
                   alt="Soin Détente"
                   className="w-full h-40 object-cover"
                 />
@@ -255,7 +225,7 @@ export default function Wishlist() {
               
               <div className="bg-white rounded-lg shadow-sm overflow-hidden">
                 <img 
-                  src={`${API_URL_base}storage/spa-treatments/suggestion-4.jpg`} 
+                  src={`https://images.unsplash.com/photo-1600334089648-b0d9d3028eb2?q=80&w=1170&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D`} 
                   alt="Soin Détente"
                   className="w-full h-40 object-cover"
                 />

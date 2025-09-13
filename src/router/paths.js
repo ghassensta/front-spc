@@ -29,7 +29,11 @@ export const paths = {
       view: (id) => `/dashboard/commandes/${id}/view`,
     },
     details: "/dashboard/details",
-    wishlist: "/dashboard/wishlist/",
+    wishlist: "/dashboard/wishlist",
+    aide: "/dashboard/aide",
+    cadeau: "/dashboard/cadeau",
+    parrainage: "/dashboard/parrainage",
+    fidelite: "/dashboard/fidelite",
   },
   auth: {
     root: "/auth",

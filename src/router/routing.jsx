@@ -18,6 +18,11 @@ const DashboardMain = lazy(() => import("../pages/dashboard/index"));
 const DashboardCommandes = lazy(() => import("../pages/dashboard/commandes"));
 const ViewCommandes = lazy(() => import("../pages/dashboard/viewCommandes"));
 const DashboardDetails = lazy(() => import("../pages/dashboard/details"));
+const DashboardWishlist = lazy(() => import("../pages/dashboard/wishlist"));
+const DashboardAide = lazy(() => import("../pages/dashboard/aide"));
+const DashboardCadeaux = lazy(() => import("../pages/dashboard/cadeaux"));
+const DashboardParrainage = lazy(() => import("../pages/dashboard/parrainage"));
+const DashboardFidelite = lazy(() => import("../pages/dashboard/fidelite"));
 
 // Nouvelles pages
 const Categories = lazy(() => import("../pages/categories"));
@@ -77,7 +82,9 @@ export const routes = [
       {
         element: (
           <DashboardLayout>
+            <Suspense fallback={<LoadingScreen />}>
             <Outlet />
+            </Suspense>
           </DashboardLayout>
         ),
         path: "dashboard",
@@ -91,6 +98,12 @@ export const routes = [
             ],
           },
           { path: "details", element: <DashboardDetails /> },
+          { path: "wishlist", element: <DashboardWishlist />},
+          { path: "aide", element: <DashboardAide />},
+          { path: "cadeau", element: <DashboardCadeaux />},
+          { path: "parrainage", element: <DashboardParrainage />},
+          { path: "fidelite", element: <DashboardFidelite />},
+          { path: "*", element: <DashboardMain /> },
         ],
       },
     ],
