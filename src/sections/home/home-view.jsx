@@ -20,6 +20,7 @@ export default function HomeView() {
   const { etablissements } = useEtablissement();
   const { actualites } = useActualites();
   const { marques, loading, error } = useMarquePartenaires();
+
   const { sectionCarte } = useSectionCarte();
 
   const prevRef = useRef(null);

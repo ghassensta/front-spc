@@ -5,7 +5,7 @@ import { STORAGE_KEY } from "../constants";
 // ----------------------------------------------------------------------
 
 const axiosInstance = axios.create({
-  baseURL: CONFIG.serverUrl || "http://127.0.0.1:8000/api/",
+  baseURL: CONFIG.serverUrl || "https://spc.emc1001.online/api/",
 });
 
 axiosInstance.interceptors.response.use(
