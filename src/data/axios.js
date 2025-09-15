@@ -26,6 +26,7 @@ export const blobFetcher = (url) =>
       Authorization: `Bearer ${localStorage.getItem(STORAGE_KEY)}`,
     },
   }).then((res) => res.data);
+  
 export const fetcher = async (args) => {
   try {
     const [url, config] = Array.isArray(args) ? args : [args];
