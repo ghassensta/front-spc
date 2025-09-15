@@ -165,3 +165,19 @@ export async function fetchSectionCarte() {
     return null;
   }
 }
+
+export async function fetchProchaimentDisponible() {
+  try {
+    const response = await fetch(`${API_URL}/prochainement-disponible`);
+    if (!response.ok) {
+      throw new Error("Erreur lors du chargement des éléments");
+    }
+    const data = await response.json();
+    console.log("fetchProchaimentDisponible response:", data);
+    return data.items || data;
+  } catch (error) {
+    console.error("fetchProchaimentDisponible error:", error);
+    throw error;
+  }
+  
+}

@@ -153,6 +153,7 @@ export default function CardItem({
 
           {slug && (
             <ButtonIcon
+            class
               title="Offrir"
               icon={<FaShoppingBag />}
               link={`/produit/${slug}`}
