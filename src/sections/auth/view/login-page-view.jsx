@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import { API_URL_base } from "src/api/data";
 
 export default function LoginPageView() {
   const [email, setEmail] = useState("");
@@ -14,8 +15,6 @@ export default function LoginPageView() {
     setLoading(true);
     setError("");
 
-    const API_URL_base = "http://localhost:8000";
-
 
     try {
       const response = await axios.post(`${API_URL_base}/api/auth/login`, {
@@ -23,6 +22,7 @@ export default function LoginPageView() {
         password,
       });
       localStorage.setItem("token", response.data.access_token);
+      localStorage.setItem("user_id", JSON.stringify(response.data.user.id));
       navigate("/dashboard");
     } catch (err) {
       console.error(err.response); // Affiche toutes les infos de l'erreur

@@ -2,26 +2,35 @@ import { useEffect, useState } from "react";
 import { fetchMarquePartenaire } from "../api/data";
 
 export function useMarquePartenaires() {
-  const [marques, setMarques] = useState([]); // cohérence nommage
+  const [marques, setMarques] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
   useEffect(() => {
     let isMounted = true;
 
-    fetchMarquePartenaire()
-      .then((data) => {
+    const fetchData = async () => {
+      try {
+        const response = await fetchMarquePartenaire();
+        // Assure-toi que la structure est correcte
+        const data =
+          response?.data?.extra_data?.logos && Array.isArray(response.data.extra_data.logos)
+            ? response.data.extra_data.logos
+            : [];
+
         if (isMounted) {
-          setMarques(Array.isArray(data) ? data : []); // cohérence ici aussi
+          setMarques(data);
           setLoading(false);
         }
-      })
-      .catch((err) => {
+      } catch (err) {
         if (isMounted) {
           setError(err);
           setLoading(false);
         }
-      });
+      }
+    };
+
+    fetchData();
 
     return () => {
       isMounted = false;

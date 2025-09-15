@@ -63,7 +63,7 @@ export default function Footer() {
           {siteLogoPath ? (
             <img
 
-              src={`${API_URL_base}storage/${siteLogoPath}`} 
+              src={`${API_URL_base}/storage/${siteLogoPath}`} 
               alt="SPC Logo"
               className="w-24 mb-4 d-block"
               width={150}

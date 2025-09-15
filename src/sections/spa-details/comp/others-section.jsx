@@ -79,7 +79,7 @@ export default function TestimonialsSection({ testimonials = [] }) {
                 <img
                   src={
                     testimonial.logo
-                      ? `${API_URL_base}storage/${testimonial.logo}`
+                      ? `${API_URL_base}/storage/${testimonial.logo}`
                       : "/images/default-logo.png"
                   }
                   alt={testimonial.slug}

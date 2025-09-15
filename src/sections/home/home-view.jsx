@@ -15,11 +15,18 @@ import { useActualites } from "src/hooks/useActualite";
 import { useMarquePartenaires } from "src/hooks/useMarquePartenaire";
 import { useSectionCarte } from "src/hooks/useSectionCarte";
 import { API_URL_base } from "src/api/data";
+import { useSectionProchainementDisponible } from "src/hooks/useProchainementDisponible";
 
 export default function HomeView() {
   const { etablissements } = useEtablissement();
   const { actualites } = useActualites();
   const { marques, loading, error } = useMarquePartenaires();
+  console.log("Marques partenaires data:", marques);
+  const {
+    section,
+    loading: loadingSection,
+    error: errorSection,
+  } = useSectionProchainementDisponible();
 
   const { sectionCarte } = useSectionCarte();
 
@@ -59,7 +66,7 @@ export default function HomeView() {
               to={`/spa/${etablissement.slug || etablissement.id}`}
               title={etablissement.nom || etablissement.id}
               description={etablissement.description_avant}
-              image={`${API_URL_base}storage/${etablissement.image_avant}`}
+              image={`${API_URL_base}/storage/${etablissement.image_avant}`}
               location={etablissement.adresse}
             />
           ))}
@@ -79,7 +86,7 @@ export default function HomeView() {
             {/* Vérifier que sectionCarte existe avant de lire ses propriétés */}
             {sectionCarte && sectionCarte.image && (
               <img
-                src={`${API_URL_base}storage/${sectionCarte.image}`}
+                src={`${API_URL_base}/storage/${sectionCarte.image}`}
                 alt={sectionCarte.title || "Carte Cadeau"}
                 className="mb-4 max-h-32 object-contain"
               />
@@ -104,30 +111,32 @@ export default function HomeView() {
         </div>
       </div>
 
-      <div className="bg-primary mb-12 left-[calc(-50vw+50%)] relative w-screen">
+      <div
+        className="mb-12 relative w-screen left-[calc(-50vw+50%)]"
+        style={{ backgroundColor: section?.extra_data?.background || "beige" }}
+      >
         <div className="max-w-6xl mx-auto py-4">
           <h2 className="text-4xl font-bold text-center">
-            Prochainement disponible.{" "}
-            <div className="text-[#777676]">
-              Une parenthèse de quiétude au cœur d’un écrin de verdure...
+            {section?.title || "L’univers Spa & Prestige Collection."}
+            <div className="text-[#777676] mt-2">
+              {section?.description ||
+                "Un réseau confidentiel dédié aux lieux d’exception."}
             </div>
           </h2>
+
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-16">
-            <Card
-              to="/spa/paris"
-              title="Le Spa by Sothys Paris République 5*"
-              image="https://spa-prestige-collection.com/wp-content/uploads/2025/03/SPC-Essence-1975x1318-02.jpg"
-            />
-            <Card
-              to="/spa/paris"
-              title="Le Spa by Sothys Paris République 5*"
-              image="https://spa-prestige-collection.com/wp-content/uploads/2025/03/SPC-Essence-1975x1318-02.jpg"
-            />
-            <Card
-              to="/spa/paris"
-              title="Le Spa by Sothys Paris République 5*"
-              image="https://spa-prestige-collection.com/wp-content/uploads/2025/03/SPC-Essence-1975x1318-02.jpg"
-            />
+            {section?.extra_data?.cards?.map((item, index) => (
+              <Card
+                key={index} // React nécessite une clé unique
+                to={item.link ? `/produit/${item.link}` : "#"}
+                title={item.title || "Sans titre"}
+                image={
+                  item.image
+                    ? `${API_URL_base}${item.image}`
+                    : "/assets/img/placeholder.png"
+                }
+              />
+            ))}
           </div>
         </div>
       </div>
@@ -174,7 +183,7 @@ export default function HomeView() {
                 to={`/actualites/${actualite.slug || actualite.id}`}
                 title={actualite.title}
                 description={actualite.petit_description}
-                image={`${API_URL_base}storage/${actualite.image}`}
+                image={`${API_URL_base}/storage/${actualite.image}`}
                 date={new Date(actualite.created_at).toLocaleDateString(
                   "fr-FR",
                   {
@@ -193,32 +202,65 @@ export default function HomeView() {
       </div>
 
       <div className="bg-white my-12 rounded-lg">
-        <h2 className="text-4xl font-bold text-center">
-          Nos marques partenaires
-        </h2>
-        <div className="max-w-6xl m-auto py-12 flex justify-between">
-          <Swiper
-            spaceBetween={20}
-            breakpoints={{
-              320: { slidesPerView: 1 },
-              640: { slidesPerView: 2 },
-              768: { slidesPerView: 3 },
-              1024: { slidesPerView: 4 },
-            }}
-          >
-            {marques.map((marque, i) => (
-              <SwiperSlide
-                key={marque.id ?? i}
-                className="flex justify-center w-full h-48"
-              >
-                <img
-                  className="mx-auto max-h-full object-contain"
-                  src={`${API_URL_base}storage/${marque.logo}`}
-                  alt={marque.name || "Marque partenaire"}
-                />
-              </SwiperSlide>
-            ))}
-          </Swiper>
+        <div className="max-w-6xl mx-auto py-12">
+          <h2 className="text-4xl font-bold text-center">
+            {marques.title || "Nos marques partenaires"}
+          </h2>
+          <p className="text-center text-gray-500 mt-2 mb-8">
+            {marques.description || "Découvrez les marques prestigieuses que nous avons sélectionnées pour vous."}
+          </p>
+
+          {/* Gestion du loading et erreur */}
+          {loading && <p className="text-center">Chargement...</p>}
+          {error && <p className="text-center text-red-500">Erreur: {error}</p>}
+
+          {!loading && !error && marques?.length > 0 && (
+            <Swiper
+              spaceBetween={20}
+              modules={[Autoplay, Navigation]}
+              autoplay={{ delay: 3000 }}
+              navigation={{
+                prevEl: ".swiper-button-prev",
+                nextEl: ".swiper-button-next",
+              }}
+              breakpoints={{
+                320: { slidesPerView: 1 },
+                640: { slidesPerView: 2 },
+                768: { slidesPerView: 3 },
+                1024: { slidesPerView: 4 },
+              }}
+            >
+              {marques.map((marque, i) => (
+                <SwiperSlide
+                  key={i}
+                  className="flex justify-center w-full h-48"
+                >
+                  <a
+                    href={marque.link || "#"}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="flex items-center justify-center w-full h-full"
+                  >
+                    <img
+                      className="mx-auto max-h-full object-contain"
+                      src={
+                        marque.image
+                          ? `${API_URL_base}/storage/${marque.image}`
+                          : "/assets/img/placeholder.png"
+                      }
+                      alt={`Logo partenaire ${i + 1}`}
+                    />
+                  </a>
+                </SwiperSlide>
+              ))}
+            </Swiper>
+          )}
+
+          {!loading && !error && (!marques || marques.length === 0) && (
+            <p className="text-center text-gray-400">
+              Aucune marque partenaire disponible pour le moment.
+            </p>
+          )}
         </div>
       </div>
     </>

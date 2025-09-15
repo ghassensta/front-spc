@@ -3,10 +3,16 @@ import Navbar from "../components/navbar/navbar";
 import Footer from "../components/footer/footer";
 import CategoryPuce from "../components/category-puce/categoryPuce";
 import { useCategories } from "src/hooks/useCategories";
-import { API_URL_base } from "src/api/data";
+import { API_URL_base, GetUser } from "src/api/data";
+import { UseUser } from "src/hooks/use-auth";
 
 export default function LayoutTheme({ children }) {
   const { categories } = useCategories();
+
+  const { user } = UseUser();
+
+  console.log(user.id, 'FROM LAYOUT');
+
   return (
     <div className="min-h-screen bg-background ">
       <div className="container min-h-screen m-auto flex flex-col">
@@ -17,7 +23,7 @@ export default function LayoutTheme({ children }) {
               <CategoryPuce
                 key={index}
                 name={category.name}
-                icon={API_URL_base / `storage/${category.image}`}
+                icon={`${API_URL_base}/storage/${category.image}`}
                 slug={category.slug}
               />
             ))}

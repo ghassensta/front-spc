@@ -51,7 +51,7 @@ export default function ImageCarousel({ height, images = [] }) {
       <AnimatePresence initial={false} custom={direction}>
         <motion.img
           key={index}
-          src={`${API_URL_base}storage/${images[index]}`}
+          src={`${API_URL_base}/storage/${images[index]}`}
           custom={direction}
           variants={variants}
           initial="enter"

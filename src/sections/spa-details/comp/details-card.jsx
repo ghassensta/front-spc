@@ -109,7 +109,7 @@ export default function ServiceCard({ details }) {
                     <img
                       src={
                         person.image
-                          ? `${API_URL_base}storage/${person.image}`
+                          ? `${API_URL_base}/storage/${person.image}`
                           : "/images/default-avatar.png"
                       }
                       alt={person.nom} loading="lazy"

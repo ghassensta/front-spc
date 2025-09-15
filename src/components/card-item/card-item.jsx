@@ -64,7 +64,7 @@ export default function CardItem({
         <img
           src={
             image
-              ? `${API_URL_base}storage/${image}`
+              ? `${API_URL_base}/storage/${image}`
               : "/images/default-product.jpg"
           }
           alt={nom}

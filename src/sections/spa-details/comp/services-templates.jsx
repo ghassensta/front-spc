@@ -24,7 +24,7 @@ export default function ServicesTemplates({ data = {} }) {
               <CategoryPuce
                 key={equip.id}
                 name={`${equip.name}`} 
-                icon={`${API_URL_base}storage/${equip.image}`} // concaténation correcte
+                icon={`${API_URL_base}/storage/${equip.image}`} // concaténation correcte
                 link="#"
               />
             ))}

@@ -32,7 +32,7 @@ export default function ProductDetailsView() {
     if (!slug) return;
     const fetchProduct = async () => {
       try {
-        const res = await fetch(`${API_URL_base}api/produit/${slug}`);
+        const res = await fetch(`${API_URL_base}/api/produit/${slug}`);
         if (!res.ok) throw new Error("Produit non trouvé");
         const data = await res.json();
         setProduct(data.product);
@@ -120,7 +120,7 @@ export default function ProductDetailsView() {
     };
 
     try {
-      const res = await fetch(`${API_URL_base}api/produit/avis`, {
+      const res = await fetch(`${API_URL_base}/api/produit/avis`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(newAvis),
@@ -157,7 +157,7 @@ export default function ProductDetailsView() {
         {product?.image && (
           <img
             className="rounded-lg"
-            src={`${API_URL_base}storage/${product.image}`}
+            src={`${API_URL_base}/storage/${product.image}`}
             alt={product.nom}
           />
         )}

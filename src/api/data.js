@@ -182,3 +182,25 @@ export async function fetchProchainementDisponible() {
     throw error;
   }
 }
+
+
+export async function GetUser() {
+  try {
+    const token = localStorage.getItem("token");
+    if (!token) throw new Error("No token found");
+    const response = await fetch(`${API_URL}/auth/me`, {
+      headers: { Authorization: `Bearer ${token}` },
+    });
+    if (!response.ok) {
+      throw new Error("Erreur lors du chargement de l'utilisateur");
+    }
+
+    const data = await response.json();
+    console.log("GetUser response:", data);
+    return data.user || null;
+  }catch (error) {
+    console.error("GetUser error:", error);
+    throw error;
+  }
+
+}
