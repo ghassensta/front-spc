@@ -15,15 +15,15 @@ import { useActualites } from "src/hooks/useActualite";
 import { useMarquePartenaires } from "src/hooks/useMarquePartenaire";
 import { useSectionCarte } from "src/hooks/useSectionCarte";
 import { API_URL_base } from "src/api/data";
-import { useSectionProchainmentDisponible } from "src/hooks/useProchainementDisponible";
 
 export default function HomeView() {
   const { etablissements } = useEtablissement();
-  const { sectionProchainementDisponible } = useSectionProchainmentDisponible();
   const { actualites } = useActualites();
   const { marques, loading, error } = useMarquePartenaires();
   const { sectionCarte } = useSectionCarte();
 
+  const prevRef = useRef(null);
+  const nextRef = useRef(null);
   const renderMiniCard = (
     <div className="flex flex-col items-center">
       <img
@@ -106,20 +106,27 @@ export default function HomeView() {
       <div className="bg-primary mb-12 left-[calc(-50vw+50%)] relative w-screen">
         <div className="max-w-6xl mx-auto py-4">
           <h2 className="text-4xl font-bold text-center">
-            {sectionProchainementDisponible.title}{" "}
+            Prochainement disponible.{" "}
             <div className="text-[#777676]">
-             {sectionProchainementDisponible.description}
+              Une parenthèse de quiétude au cœur d’un écrin de verdure...
             </div>
           </h2>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-16">
-            {sectionProchainementDisponible.cards.map((item) => (
-              <Card
-                key={item.id} // important pour React
-                to={`/produit/${item.link || item.id}`}
-                title={item.title || item.id}
-                image={item.image || item.id}
-              />
-            ))}
+            <Card
+              to="/spa/paris"
+              title="Le Spa by Sothys Paris République 5*"
+              image="https://spa-prestige-collection.com/wp-content/uploads/2025/03/SPC-Essence-1975x1318-02.jpg"
+            />
+            <Card
+              to="/spa/paris"
+              title="Le Spa by Sothys Paris République 5*"
+              image="https://spa-prestige-collection.com/wp-content/uploads/2025/03/SPC-Essence-1975x1318-02.jpg"
+            />
+            <Card
+              to="/spa/paris"
+              title="Le Spa by Sothys Paris République 5*"
+              image="https://spa-prestige-collection.com/wp-content/uploads/2025/03/SPC-Essence-1975x1318-02.jpg"
+            />
           </div>
         </div>
       </div>

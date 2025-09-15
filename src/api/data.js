@@ -166,18 +166,19 @@ export async function fetchSectionCarte() {
   }
 }
 
-export async function fetchProchaimentDisponible() {
+// src/api/data.js
+export async function fetchProchainementDisponible() {
   try {
-    const response = await fetch(`${API_URL}/prochainement-disponible`);
+    const response = await fetch(`${API_URL}/section-prochainement-disponible`);
     if (!response.ok) {
       throw new Error("Erreur lors du chargement des éléments");
     }
     const data = await response.json();
-    console.log("fetchProchaimentDisponible response:", data);
-    return data.items || data;
+    console.log("fetchProchainementDisponible response:", data);
+    // Retourner directement la section principale
+    return data.data;
   } catch (error) {
-    console.error("fetchProchaimentDisponible error:", error);
+    console.error("fetchProchainementDisponible error:", error);
     throw error;
   }
-  
 }

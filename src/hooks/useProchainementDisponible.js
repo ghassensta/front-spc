@@ -1,36 +1,27 @@
+// src/hooks/useProchainementDisponible.js
 import { useEffect, useState } from "react";
-import { fetchProchaimentDisponible } from "src/api/data";
+import { fetchProchainementDisponible } from "src/api/data";
 
-/**
- * Hook personnalisé pour récupérer la section Carte
- */
-export function useSectionProchainmentDisponible() {
-  const [sectionCarte, setSectionCarte] = useState(null);
+export function useSectionProchainementDisponible() {
+  const [section, setSection] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
   useEffect(() => {
     let isMounted = true;
-
     const fetchData = async () => {
       try {
-        const data = await fetchSectionCarte();
-        if (isMounted) {
-          setSectionCarte(data); // un seul objet attendu
-        }
+        const data = await fetchProchainementDisponible();
+        if (isMounted) setSection(data);
       } catch (err) {
         if (isMounted) setError(err);
       } finally {
         if (isMounted) setLoading(false);
       }
     };
-
     fetchData();
-
-    return () => {
-      isMounted = false;
-    };
+    return () => { isMounted = false; };
   }, []);
 
-  return { sectionCarte, loading, error };
+  return { section, loading, error };
 }
