@@ -15,69 +15,97 @@ import {
 } from "lucide-react";
 
 const NavLink = ({ link, isActive, toggleMenu, openMenus, isMobile = false, menuRef }) => {
+  const [showPopover, setShowPopover] = useState(false);
   const Icon = link.icon;
-  const anyChildActive = link.children?.some((child) => location.pathname.startsWith(child.to));
+  const hasChildren = link.children && link.children.length > 0;
+  const anyChildActive = hasChildren && link.children.some((child) =>
+    location.pathname === child.to || location.pathname.startsWith(child.to)
+  );
+  const { push } = useRouter();
 
-  // Handle submenu link clicks
-  const handleSubmenuClick = (e) => {
-    e.stopPropagation(); // Prevent bubbling to parent or document
-    if (isMobile) {
-      toggleMenu(link.label); // Close submenu on mobile after click
-    }
-    // Do not toggleMenu for desktop to keep submenu open
-  };
-
-  // Handle top-level link clicks
-  const handleTopLevelClick = (e) => {
-    if (isMobile) {
-      e.stopPropagation();
-      toggleMenu(link.label); // Close any open menus on mobile
+  const handleClick = (e) => {
+    e.stopPropagation();
+    if (hasChildren) {
+      toggleMenu(link.label);
+    } else if (link.to && isMobile) {
+      push(link.to); // Navigate using router for mobile
+      toggleMenu(link.label); // Close menu on mobile
     }
   };
 
-  return (
-    <li className="relative list-none" ref={menuRef}>
-      {link.children ? (
-        <>
-          <button
-            onClick={(e) => {
-              e.stopPropagation();
-              toggleMenu(link.label);
-            }}
-            className={`flex items-center gap-2 px-3 py-2 w-full text-left rounded transition-colors ${
-              isMobile
-                ? `justify-center ${openMenus[link.label] || anyChildActive ? "text-blue-600 font-semibold" : "text-gray-600"}`
-                : `hover:bg-gray-100 ${anyChildActive ? "text-blue-600 font-semibold" : "text-gray-800"}`
-            }`}
-            aria-expanded={openMenus[link.label] || anyChildActive}
-            aria-label={link.label}
-            title={isMobile ? link.label : undefined}
-          >
-            {Icon && <Icon className={isMobile ? "w-6 h-6" : "w-5 h-5"} />}
-            {!isMobile && <span className="text-sm">{link.label}</span>}
-            {!isMobile && <ChevronDown className={`w-4 h-4 transition-transform ${openMenus[link.label] ? "rotate-180" : ""}`} />}
-          </button>
-          {(openMenus[link.label] || (!isMobile && anyChildActive)) && (
-            <motion.ul
-              initial={{ opacity: 0, height: 0 }}
-              animate={{ opacity: 1, height: "auto" }}
-              exit={{ opacity: 0, height: 0 }}
-              transition={{ duration: 0.2 }}
-              className={`${
-                isMobile
-                  ? "absolute top-full left-1/2 -translate-x-1/2 mt-2 w-48 bg-white shadow-lg rounded z-10"
-                  : "ml-6 mt-1 flex flex-col gap-1"
+  const handleSubmenuClick = () => {
+    if (isMobile) {
+      toggleMenu(link.label); // Close submenu on mobile after selection
+    }
+  };
+
+  if (isMobile) {
+    return (
+      <li className="relative list-none" ref={menuRef}>
+        <motion.div
+          whileHover={{ scale: 1.05 }}
+          whileTap={{ scale: 0.95 }}
+          onHoverStart={() => setShowPopover(true)}
+          onHoverEnd={() => setShowPopover(false)}
+          className="relative"
+        >
+          {hasChildren ? (
+            <button
+              onClick={handleClick}
+              className={`flex items-center justify-center rounded-lg  transition-all duration-200  ${
+                isActive || anyChildActive || openMenus[link.label]
+                  ? "text-blue-600 bg-blue-50 border-blue-200"
+                  : "text-gray-700 hover:bg-gray-50"
               }`}
+              aria-label={link.label}
+              aria-expanded={hasChildren ? openMenus[link.label] : undefined}
+              aria-controls={hasChildren ? `submenu-${link.label}` : undefined}
             >
-              {link.children.map((child, cIndex) => {
-                const isChildActive = location.pathname.startsWith(child.to);
+              {Icon && <Icon className="w-6 h-6" />}
+            </button>
+          ) : (
+            <Link
+              to={link.to}
+              onClick={() => toggleMenu(link.label)}
+              className={`flex items-center justify-center rounded-lg  transition-all duration-200  ${
+                isActive ? "text-blue-600 bg-blue-50 border-blue-200" : "text-gray-700 hover:bg-gray-50"
+              }`}
+              aria-label={link.label}
+            >
+              {Icon && <Icon className="w-6 h-6" />}
+            </Link>
+          )}
+          {showPopover && (
+            <motion.div
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: 10 }}
+              className="absolute top-full left-1/2 transform -translate-x-1/2 -translate-y-full z-50"
+            >
+              <div className="bg-gray-900 text-white px-3 py-2 rounded-lg text-sm whitespace-nowrap shadow-lg">
+                {link.label}
+                <div className="absolute bottom-full left-1/2 transform -translate-x-1/2 w-0 h-0 border-l-4 border-r-4 border-b-4 border-transparent border-b-gray-900"></div>
+              </div>
+            </motion.div>
+          )}
+          {hasChildren && openMenus[link.label] && (
+            <motion.ul
+              initial={{ opacity: 0, y: 10, scale: 0.95 }}
+              animate={{ opacity: 1, y: 0, scale: 1 }}
+              exit={{ opacity: 0, y: 10, scale: 0.95 }}
+              transition={{ duration: 0.2 }}
+              id={`submenu-${link.label}`}
+              className="absolute top-full left-1/2 transform -translate-x-1/2 mt-2 bg-white rounded-lg shadow-xl border border-gray-200 min-w-48 z-40"
+            >
+              {link.children.map((child, index) => {
+                const isChildActive = location.pathname === child.to || location.pathname.startsWith(child.to);
                 return (
-                  <li key={cIndex} className="list-none">
+                  <li key={index} className="list-none">
                     <Link
                       to={child.to}
                       onClick={handleSubmenuClick}
-                      className={`block px-3 py-1.5 text-sm rounded hover:bg-gray-100 ${
-                        isChildActive ? "text-blue-600 font-semibold" : "text-gray-600"
+                      className={`flex items-center px-4 py-2 text-sm hover:bg-gray-50 transition-colors duration-150 ${
+                        isChildActive ? "text-blue-600 font-semibold" : "text-gray-700"
                       }`}
                     >
                       {child.label}
@@ -87,25 +115,158 @@ const NavLink = ({ link, isActive, toggleMenu, openMenus, isMobile = false, menu
               })}
             </motion.ul>
           )}
-        </>
+        </motion.div>
+      </li>
+    );
+  }
+
+  return (
+    <li className="list-none" ref={menuRef}>
+      {hasChildren ? (
+        <div>
+          <motion.button
+            whileHover={{ scale: 1.02, backgroundColor: "#f9fafb" }}
+            whileTap={{ scale: 0.98 }}
+            onClick={handleClick}
+            className={`w-full flex items-center px-4 py-3 text-left rounded-lg group transition-all duration-200 ${
+              anyChildActive || openMenus[link.label]
+                ? "text-blue-600 bg-blue-50 font-semibold"
+                : "text-gray-700 hover:bg-gray-50"
+            }`}
+            aria-expanded={openMenus[link.label]}
+            aria-controls={`submenu-${link.label}`}
+            aria-label={link.label}
+          >
+            {Icon && (
+              <Icon
+                className={`mr-3 w-5 h-5 transition-colors duration-200 ${
+                  anyChildActive || openMenus[link.label] ? "text-blue-600" : "text-gray-500 group-hover:text-blue-600"
+                }`}
+              />
+            )}
+            <span className="flex-1 text-sm group-hover:text-gray-900">{link.label}</span>
+            <ChevronDown
+              className={`w-4 h-4 transition-transform duration-200 ${
+                openMenus[link.label] ? "rotate-180" : ""
+              } ${anyChildActive || openMenus[link.label] ? "text-blue-600" : "text-gray-400 group-hover:text-gray-600"}`}
+            />
+          </motion.button>
+          {openMenus[link.label] && (
+            <motion.ul
+              initial={{ opacity: 0, height: 0 }}
+              animate={{ opacity: 1, height: "auto" }}
+              exit={{ opacity: 0, height: 0 }}
+              transition={{ duration: 0.2 }}
+              id={`submenu-${link.label}`}
+              className="mt-1 ml-6 space-y-1 list-none"
+            >
+              {link.children.map((child, index) => {
+                const isChildActive = location.pathname === child.to || location.pathname.startsWith(child.to);
+                return (
+                  <li key={index} className="list-none">
+                    <motion.div
+                      whileHover={{ scale: 1.02, backgroundColor: "#f9fafb" }}
+                      whileTap={{ scale: 0.98 }}
+                    >
+                      <Link
+                        to={child.to}
+                        className={`flex items-center px-4 py-2 text-sm rounded-lg transition-all duration-200 ${
+                          isChildActive ? "text-blue-600 bg-blue-50 font-semibold" : "text-gray-600 hover:text-gray-900 hover:bg-gray-50"
+                        }`}
+                      >
+                        {child.label}
+                      </Link>
+                    </motion.div>
+                  </li>
+                );
+              })}
+            </motion.ul>
+          )}
+        </div>
       ) : (
         <motion.div
-          whileHover={{ scale: 1.03, backgroundColor: "#f3f4f6" }}
+          whileHover={{ scale: 1.02, backgroundColor: "#f9fafb" }}
           whileTap={{ scale: 0.98 }}
-          className={`rounded transition-colors duration-200 ${isActive ? "text-blue-600 font-semibold" : "text-gray-800"}`}
+          className="rounded-lg transition-colors duration-200"
         >
           <Link
             to={link.to}
-            onClick={handleTopLevelClick}
-            className={`flex items-center gap-2 px-3 py-2 rounded ${isMobile ? "justify-center" : ""}`}
-            aria-label={link.label}
-            title={isMobile ? link.label : undefined}
+            className={`flex items-center px-4 py-3 rounded-lg group transition-all duration-200 ${
+              isActive ? "text-blue-600 bg-blue-50 font-semibold" : "text-gray-700 hover:bg-gray-50"
+            }`}
+            onClick={() => isMobile && toggleMenu(link.label)}
           >
-            {Icon && <Icon className={isMobile ? "w-6 h-6" : "w-5 h-5"} />}
-            {!isMobile && <span className="text-sm">{link.label}</span>}
+            {Icon && (
+              <Icon
+                className={`mr-3 w-5 h-5 transition-colors duration-200 ${
+                  isActive ? "text-blue-600" : "text-gray-500 group-hover:text-blue-600"
+                }`}
+              />
+            )}
+            <span className="text-sm group-hover:text-gray-900">{link.label}</span>
           </Link>
         </motion.div>
       )}
+    </li>
+  );
+};
+
+const LogoutButton = ({ isMobile }) => {
+  const [showPopover, setShowPopover] = useState(false);
+  const { push } = useRouter();
+
+  const handleLogout = () => {
+    localStorage.removeItem("token");
+    push("/");
+  };
+
+  if (isMobile) {
+    return (
+      <li className="list-none">
+        <motion.div
+          whileHover={{ scale: 1.05 }}
+          whileTap={{ scale: 0.95 }}
+          onHoverStart={() => setShowPopover(true)}
+          onHoverEnd={() => setShowPopover(false)}
+          className="relative"
+        >
+          <button
+            onClick={handleLogout}
+            className="fflex items-center justify-center rounded-lg  transition-all duration-200 text-red-600"
+            aria-label="Se déconnecter"
+          >
+            <LogOut className="w-6 h-6" />
+          </button>
+          {showPopover && (
+            <motion.div
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: 10 }}
+              className="absolute top-full left-1/2 transform -translate-x-1/2 -translate-y-full z-50"
+            >
+              <div className="bg-gray-900 text-white px-3 py-2 rounded-lg text-sm whitespace-nowrap shadow-lg">
+                Déconnexion
+                <div className="absolute bottom-full left-1/2 transform -translate-x-1/2 w-0 h-0 border-l-4 border-r-4 border-b-4 border-transparent border-b-gray-900"></div>
+              </div>
+            </motion.div>
+          )}
+        </motion.div>
+      </li>
+    );
+  }
+
+  return (
+    <li className="list-none">
+      <motion.button
+        whileHover={{ scale: 1.02, backgroundColor: "#fee2e2" }}
+        whileTap={{ scale: 0.98 }}
+        onClick={handleLogout}
+        className="flex items-center px-4 py-3 text-red-600 hover:bg-red-50 transition-all duration-200 rounded-lg group font-semibold w-full text-left"
+        aria-label="Se déconnecter"
+      >
+        <LogOut className="w-5 h-5 mr-3 group-hover:text-red-700 transition-colors duration-200" />
+        <span className="text-sm group-hover:text-red-700">Se déconnecter</span>
+      </motion.button>
     </li>
   );
 };
@@ -114,23 +275,38 @@ export default function DashboardLayout({ children }) {
   const location = useLocation();
   const router = useRouter();
   const [openMenus, setOpenMenus] = useState({});
+  const [isMobile, setIsMobile] = useState(false);
   const menuRefs = useRef({});
 
-  const toggleMenu = (key) => {
-    setOpenMenus((prev) => ({ ...prev, [key]: !prev[key] }));
-  };
+  useEffect(() => {
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth < 768);
+    };
+    checkMobile();
+    window.addEventListener("resize", checkMobile);
+    return () => window.removeEventListener("resize", checkMobile);
+  }, []);
 
   useEffect(() => {
     const handleClickOutside = (event) => {
-      Object.entries(menuRefs.current).forEach(([key, ref]) => {
-        if (ref && !ref.contains(event.target)) {
-          setOpenMenus((prev) => ({ ...prev, [key]: false }));
-        }
-      });
+      if (isMobile) {
+        Object.entries(menuRefs.current).forEach(([key, ref]) => {
+          if (ref && !ref.contains(event.target)) {
+            setOpenMenus((prev) => ({ ...prev, [key]: false }));
+          }
+        });
+      }
     };
     document.addEventListener("mousedown", handleClickOutside);
     return () => document.removeEventListener("mousedown", handleClickOutside);
-  }, []);
+  }, [isMobile]);
+
+  const toggleMenu = (menuLabel) => {
+    setOpenMenus((prev) => ({
+      ...prev,
+      [menuLabel]: !prev[menuLabel],
+    }));
+  };
 
   const links = [
     { label: "Tableau du bord", to: paths.dashboard.root, icon: Home },
@@ -149,11 +325,6 @@ export default function DashboardLayout({ children }) {
     { label: "Aide", to: paths.dashboard.aide, icon: HelpCircle },
   ];
 
-  const handleLogout = () => {
-    localStorage.removeItem("token");
-    router.push("/");
-  };
-
   return (
     <div className="max-w-6xl mx-auto font-tahoma py-8 px-4 sm:px-6 lg:px-8">
       <div className="grid grid-cols-1 md:grid-cols-5 gap-6">
@@ -164,50 +335,58 @@ export default function DashboardLayout({ children }) {
           animate={{ opacity: 1, x: 0 }}
           transition={{ duration: 0.3 }}
         >
+          <div className="mb-4">
+            <h1 className="text-xl font-bold text-gray-900">Menu</h1>
+          </div>
           <ul className="flex flex-col gap-2 list-none">
             {links.map((link, index) => {
               const isActive =
                 link.to &&
-                (link.to === "/dashboard"
+                (link.to === paths.dashboard.root
                   ? location.pathname === link.to
                   : location.pathname.startsWith(link.to));
               return (
-                <NavLink
+                <motion.div
                   key={index}
-                  link={link}
-                  isActive={isActive}
-                  toggleMenu={toggleMenu}
-                  openMenus={openMenus}
-                  menuRef={(el) => (menuRefs.current[link.label] = el)}
-                />
+                  initial={{ opacity: 0, x: -20 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  transition={{ duration: 0.3, delay: 0.1 * index }}
+                >
+                  <NavLink
+                    link={link}
+                    isActive={isActive}
+                    toggleMenu={toggleMenu}
+                    openMenus={openMenus}
+                    isMobile={false}
+                    menuRef={(el) => (menuRefs.current[link.label] = el)}
+                  />
+                </motion.div>
               );
             })}
-            <motion.li
-              whileHover={{ scale: 1.03, backgroundColor: "#fee2e2" }}
-              whileTap={{ scale: 0.98 }}
-              className="rounded mt-4 list-none"
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ duration: 0.3, delay: 0.4 }}
             >
-              <button
-                onClick={handleLogout}
-                className="flex items-center gap-2 px-3 py-2 w-full text-left text-red-600 font-semibold rounded hover:bg-red-50"
-                aria-label="Se déconnecter"
-              >
-                <LogOut className="w-5 h-5" />
-                Se déconnecter
-              </button>
-            </motion.li>
+              <LogoutButton isMobile={false} />
+            </motion.div>
           </ul>
         </motion.aside>
 
         {/* Main Content */}
-        <main className="col-span-1 md:col-span-4 bg-white rounded-md p-6 shadow-sm">
+        <main className="col-span-1 md:col-span-4 bg-white rounded-md p-1 shadow-sm">
           {/* Mobile Top Nav */}
-          <nav className="md:hidden sticky top-0 z-10 bg-white border-b shadow-sm py-3 px-4 mb-6">
+          <motion.nav
+            className="md:hidden sticky top-0 z-30 bg-white border-b shadow-sm py-3 px-1 mb-6"
+            initial={{ y: 100, opacity: 0 }}
+            animate={{ y: 0, opacity: 1 }}
+            transition={{ duration: 0.3 }}
+          >
             <ul className="flex justify-between items-center gap-2 list-none">
               {links.map((link, index) => {
                 const isActive =
                   link.to &&
-                  (link.to === "/dashboard"
+                  (link.to === paths.dashboard.root
                     ? location.pathname === link.to
                     : location.pathname.startsWith(link.to));
                 return (
@@ -217,22 +396,14 @@ export default function DashboardLayout({ children }) {
                     isActive={isActive}
                     toggleMenu={toggleMenu}
                     openMenus={openMenus}
-                    isMobile
+                    isMobile={true}
                     menuRef={(el) => (menuRefs.current[link.label] = el)}
                   />
                 );
               })}
-              <li className="list-none">
-                <button
-                  onClick={handleLogout}
-                  className="flex items-center justify-center text-red-600"
-                  aria-label="Se déconnecter"
-                >
-                  <LogOut className="w-6 h-6" />
-                </button>
-              </li>
+              <LogoutButton isMobile={true} />
             </ul>
-          </nav>
+          </motion.nav>
 
           {/* Page Content */}
           {children}

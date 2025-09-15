@@ -22,6 +22,7 @@ export default function HomeView() {
   const { sectionProchainementDisponible } = useSectionProchainmentDisponible();
   const { actualites } = useActualites();
   const { marques, loading, error } = useMarquePartenaires();
+
   const { sectionCarte } = useSectionCarte();
 
   const renderMiniCard = (
