@@ -24,8 +24,6 @@ export default function HomeView() {
   const { marques, loading, error } = useMarquePartenaires();
   const { sectionCarte } = useSectionCarte();
 
-  const prevRef = useRef(null);
-  const nextRef = useRef(null);
   const renderMiniCard = (
     <div className="flex flex-col items-center">
       <img
@@ -108,13 +106,13 @@ export default function HomeView() {
       <div className="bg-primary mb-12 left-[calc(-50vw+50%)] relative w-screen">
         <div className="max-w-6xl mx-auto py-4">
           <h2 className="text-4xl font-bold text-center">
-            Prochainement disponible.{" "}
+            {sectionProchainementDisponible.title}{" "}
             <div className="text-[#777676]">
-              Une parenthèse de quiétude au cœur d’un écrin de verdure...
+             {sectionProchainementDisponible.description}
             </div>
           </h2>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-16">
-            {sectionProchainementDisponible.map((item) => (
+            {sectionProchainementDisponible.cards.map((item) => (
               <Card
                 key={item.id} // important pour React
                 to={`/produit/${item.link || item.id}`}
