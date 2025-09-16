@@ -14,10 +14,13 @@ export default function Navbar() {
 
   return (
     <div className="w-full container md:px-16 py-8 flex justify-between relative">
-      <IoMdMenu className="text-2xl cursor-pointer" onClick={() => setShow(true)} />
+      <button className="text-base cursor-pointer flex items-center h-max p-1 gap-2 text-[#33373d] bg-black/5 font-arial font-sans font-medium" onClick={() => setShow(true)}>
+        <IoMdMenu className='text-2xl' />
+          <span>Menu</span>
+      </button>
       <Menu show={show} onClose={() => setShow(false)} />
 
-      <Logo className="max-w-60" />
+      <Logo className="max-w-full" />
 
       <div className="flex gap-3">
         <Link to={paths.auth.root} className="relative">
