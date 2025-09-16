@@ -3,8 +3,7 @@ import { motion } from "framer-motion";
 import { FaShoppingBag } from "react-icons/fa";
 import exclusive from "../../assets/exclusive.png";
 import ButtonIcon from "../button-icon/button-icon";
-import { paths } from "../../router/paths";
-import { API_URL_base } from "src/api/data";
+import { CONFIG } from "src/config-global";
 
 export default function CardItem({
   id,
@@ -64,7 +63,7 @@ export default function CardItem({
         <img
           src={
             image
-              ? `${API_URL_base}/storage/${image}`
+              ? `${CONFIG.serverUrl}/storage/${image}`
               : "/images/default-product.jpg"
           }
           alt={nom}

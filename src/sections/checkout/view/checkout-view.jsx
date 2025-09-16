@@ -4,7 +4,7 @@ import { Link } from "react-router-dom";
 import { paths } from "../../../router/paths";
 import ButtonIcon from "../../../components/button-icon/button-icon";
 import { FaRegTrashAlt } from "react-icons/fa";
-import { API_URL_base } from "src/api/data";
+import { CONFIG } from "src/config-global";
 
 export default function CheckoutView() {
   const checkout = useCheckoutContext();
@@ -62,7 +62,7 @@ export default function CheckoutView() {
                     <td className="py-3">
                       <div className="flex gap-2 items-start">
                         <img
-                          src={`${API_URL_base}/storage/${item.image}`}
+                          src={`${CONFIG.serverUrl}/storage/${item.image}`}
                           alt={item.name}
                           className="w-16 h-16 object-cover rounded"
                         />

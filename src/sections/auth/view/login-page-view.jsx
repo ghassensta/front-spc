@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
-import { API_URL_base } from "src/api/data";
+import { CONFIG } from "src/config-global";
 
 export default function LoginPageView() {
   const [email, setEmail] = useState("");
@@ -17,7 +17,7 @@ export default function LoginPageView() {
 
 
     try {
-      const response = await axios.post(`${API_URL_base}/api/auth/login`, {
+      const response = await axios.post(`${CONFIG.serverUrl}/api/auth/login`, {
         email,
         password,
       });

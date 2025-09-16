@@ -4,8 +4,8 @@ import axios, { endpoints } from "src/data/axios";
 
 import { AuthContext } from "../auth-context";
 import { useSetState } from "../../../hooks/use-set-state";
-import { STORAGE_KEY } from "../../../constants";
 import { setSession } from "./utils";
+import { CONFIG } from "src/config-global";
 
 
 // ----------------------------------------------------------------------
@@ -18,7 +18,7 @@ export function AuthProvider({ children }) {
 
   const checkUserSession = useCallback(async () => {
     try {
-      const accessToken = localStorage.getItem(STORAGE_KEY);
+      const accessToken = localStorage.getItem(CONFIG.storageKey);
 
       if (accessToken) {
         setSession(accessToken);

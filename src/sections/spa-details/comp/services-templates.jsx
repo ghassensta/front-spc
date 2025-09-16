@@ -1,7 +1,7 @@
 import React from "react";
 import CategoryPuce from "../../../components/category-puce/categoryPuce";
 import CardItem from "src/components/card-item/card-item";
-import { API_URL_base } from "src/api/data";
+import { CONFIG } from "src/config-global";
 
 export default function ServicesTemplates({ data = {} }) {
   // Sécurité pour éviter les erreurs si data est vide
@@ -24,7 +24,7 @@ export default function ServicesTemplates({ data = {} }) {
               <CategoryPuce
                 key={equip.id}
                 name={`${equip.name}`} 
-                icon={`${API_URL_base}/storage/${equip.image}`} // concaténation correcte
+                icon={`${CONFIG.serverUrl}/storage/${equip.image}`} // concaténation correcte
                 link="#"
               />
             ))}

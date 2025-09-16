@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Star, ChevronDown, ChevronUp } from "lucide-react";
-import { API_URL_base } from "src/api/data";
+import { CONFIG } from "src/config-global";
 
 export default function ServiceCard({ details }) {
   const [isExpanded, setIsExpanded] = useState(false);
@@ -109,7 +109,7 @@ export default function ServiceCard({ details }) {
                     <img
                       src={
                         person.image
-                          ? `${API_URL_base}/storage/${person.image}`
+                          ? `${CONFIG.serverUrl}/storage/${person.image}`
                           : "/images/default-avatar.png"
                       }
                       alt={person.nom} loading="lazy"

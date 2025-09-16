@@ -1,8 +1,13 @@
 import React from "react";
-import { FaFacebookF, FaInstagram, FaTiktok, FaLinkedinIn } from "react-icons/fa";
+import {
+  FaFacebookF,
+  FaInstagram,
+  FaTiktok,
+  FaLinkedinIn,
+} from "react-icons/fa";
 import { paths } from "src/router/paths";
-import { useMenuFooter } from "src/hooks/useMenuFooter"; 
-import { API_URL_base } from "src/api/data";
+import { useLayout } from "src/actions/layout";
+import { CONFIG } from "src/config-global";
 const iconMap = {
   "ti ti-brand-facebook": FaFacebookF,
   "ti ti-brand-instagram": FaInstagram,
@@ -11,31 +16,15 @@ const iconMap = {
 };
 
 export default function Footer() {
-  const { menus, loading, error } = useMenuFooter();
+  const { footer } = useLayout();
 
-  if (loading) {
-    return (
-      <footer className="bg-[#2c2b29] text-white pt-12 left-[calc(-50vw+50%)] relative w-screen">
-        <div className="max-w-7xl mx-auto px-6 py-12 text-center">Chargement du footer...</div>
-      </footer>
-    );
-  }
-
-  if (error) {
-    console.error("Erreur lors du chargement des données du footer:", error);
-    return (
-      <footer className="bg-[#2c2b29] text-white pt-12 left-[calc(-50vw+50%)] relative w-screen">
-        <div className="max-w-7xl mx-auto px-6 py-12 text-center">Erreur de chargement du footer.</div>
-      </footer>
-    );
-  }
-
-  const { settings, footer_about, footer_pro, social_links } = menus || {};
+  const { settings, footer_about, footer_pro, social_links } = footer || {};
 
   const siteLogoPath = settings?.site_logo?.value || "";
-  console.log("Footer menus data:aaaaaaaaa", siteLogoPath);
+  console.log("Footer menus data:aaaaaaaaa", footer);
 
-  const siteDescription = settings?.site_description?.value || "Description par défaut du site.";
+  const siteDescription =
+    settings?.site_description?.value || "Description par défaut du site.";
 
   const aboutLinks = footer_about
     ? footer_about
@@ -62,21 +51,22 @@ export default function Footer() {
         <div className="lg:col-span-2 text-center flex flex-col items-center max-w-3xl mx-auto">
           {siteLogoPath ? (
             <img
-
-              src={`${API_URL_base}/storage/${siteLogoPath}`} 
+              src={`${CONFIG.serverUrl}/storage/${siteLogoPath}`}
               alt="SPC Logo"
               className="w-24 mb-4 d-block"
               width={150}
-              onError={(e) => {
-              }}
+              onError={(e) => {}}
             />
           ) : (
             <div className="w-24 h-24 bg-gray-600 mb-4 rounded-full flex items-center justify-center">
               Logo
             </div>
           )}
-          <p className="text-sm leading-relaxed font-roboto mb-4">{siteDescription}</p>
-          <p className="text-sm">Tél. 01 82 35 01 26</p> {/* Statique pour l'instant, rendez dynamique si besoin */}
+          <p className="text-sm leading-relaxed font-roboto mb-4">
+            {siteDescription}
+          </p>
+          <p className="text-sm">Tél. 01 82 35 01 26</p>{" "}
+          {/* Statique pour l'instant, rendez dynamique si besoin */}
         </div>
 
         {/* Colonne 2: À PROPOS - Dynamique */}
@@ -93,8 +83,12 @@ export default function Footer() {
             {/* Fallback si pas de liens dynamiques, ajoutez les statiques manquants si nécessaire */}
             {aboutLinks.length === 0 && (
               <>
-                <li><a href={paths.who}>Qui sommes nous</a></li>
-                <li><a href={paths.collection}>Book Collection & Prestige</a></li>
+                <li>
+                  <a href={paths.who}>Qui sommes nous</a>
+                </li>
+                <li>
+                  <a href={paths.collection}>Book Collection & Prestige</a>
+                </li>
                 {/* Ajoutez les autres */}
               </>
             )}
@@ -115,8 +109,12 @@ export default function Footer() {
             {/* Fallback si pas de liens dynamiques */}
             {proLinks.length === 0 && (
               <>
-                <li><a href={paths.partenaire}>Devenir partenaire</a></li>
-                <li><a href={paths.referentiel}>Référentiel de candidature</a></li>
+                <li>
+                  <a href={paths.partenaire}>Devenir partenaire</a>
+                </li>
+                <li>
+                  <a href={paths.referentiel}>Référentiel de candidature</a>
+                </li>
                 {/* Ajoutez les autres */}
               </>
             )}
@@ -163,7 +161,7 @@ export default function Footer() {
                   target="_blank"
                   rel="noopener noreferrer"
                   className="hover:text-gray-300 transition-colors"
-                  style={{ color: item.color || 'inherit' }} // Utilise la couleur si fournie
+                  style={{ color: item.color || "inherit" }} // Utilise la couleur si fournie
                 >
                   <IconComponent size={20} />
                 </a>
@@ -172,10 +170,22 @@ export default function Footer() {
             {/* Fallback statique si pas de liens dynamiques */}
             {socialLinksFiltered.length === 0 && (
               <>
-                <FaFacebookF size={20} className="hover:text-gray-300 transition-colors" />
-                <FaTiktok size={20} className="hover:text-gray-300 transition-colors" />
-                <FaInstagram size={20} className="hover:text-gray-300 transition-colors" />
-                <FaLinkedinIn size={20} className="hover:text-gray-300 transition-colors" />
+                <FaFacebookF
+                  size={20}
+                  className="hover:text-gray-300 transition-colors"
+                />
+                <FaTiktok
+                  size={20}
+                  className="hover:text-gray-300 transition-colors"
+                />
+                <FaInstagram
+                  size={20}
+                  className="hover:text-gray-300 transition-colors"
+                />
+                <FaLinkedinIn
+                  size={20}
+                  className="hover:text-gray-300 transition-colors"
+                />
               </>
             )}
           </div>

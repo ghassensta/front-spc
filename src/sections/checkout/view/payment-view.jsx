@@ -3,7 +3,7 @@ import { useCheckoutContext } from "../context";
 import { useNavigate } from "react-router-dom";
 import ButtonIcon from "src/components/button-icon/button-icon";
 import axios from "axios";
-import { API_URL_base } from "src/api/data";
+import { CONFIG } from "src/config-global";
 
 export default function PaymentView() {
   const checkout = useCheckoutContext();
@@ -47,7 +47,7 @@ export default function PaymentView() {
     };
 
     try {
-      const response = await axios.post(`${API_URL_base}/api/commandes`, data);
+      const response = await axios.post(`${CONFIG.serverUrl}/api/commandes`, data);
       console.log("Commande envoyée :", response.data);
 
       navigate("/checkout/details"); // navigue vers la page suivante
@@ -277,7 +277,7 @@ export default function PaymentView() {
               className="flex gap-4 items-center border-b pb-2"
             >
               <img
-                src={`${API_URL_base}/storage/${item.image}`}
+                src={`${CONFIG.serverUrl}/storage/${item.image}`}
                 alt={item.name}
                 className="w-16 h-16 object-cover rounded"
               />

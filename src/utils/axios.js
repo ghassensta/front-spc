@@ -1,11 +1,10 @@
 import axios from "axios";
-import { CONFIG } from "../config-global";
-import { STORAGE_KEY } from "../constants";
+import { CONFIG } from "src/config-global";
 
 // ----------------------------------------------------------------------
 
 const axiosInstance = axios.create({
-  baseURL: CONFIG.serverUrl || "http://127.0.0.1:8000/api/",
+  baseURL: CONFIG.serverUrl || "http://127.0.0.1:8000",
 });
 
 axiosInstance.interceptors.response.use(
@@ -20,13 +19,15 @@ export default axiosInstance;
 
 // ----------------------------------------------------------------------
 export const blobFetcher = (url) =>
-  axios.get(url, {
-    responseType: "blob",
-    headers: {
-      Authorization: `Bearer ${localStorage.getItem(STORAGE_KEY)}`,
-    },
-  }).then((res) => res.data);
-  
+  axios
+    .get(url, {
+      responseType: "blob",
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem(CONFIG.storageKey)}`,
+      },
+    })
+    .then((res) => res.data);
+
 export const fetcher = async (args) => {
   try {
     const [url, config] = Array.isArray(args) ? args : [args];
@@ -93,36 +94,33 @@ export const endpoints = {
     signUp: "/api/auth/register",
     logout: "/api/auth/logout",
   },
+  categories: {
+    list: "/api/categories",
+  },
+  etablissements: {
+    list: "/api/etablissements",
+    detail: (slug) => `/api/etablissements/${slug}`,
+    avis: "/api/etablissements/avis",
+  },
+  actualites: {
+    list: "/api/actualites",
+    detail: (slug) => `/api/actualites/${slug}`,
+    getLast: "/api/last-actualites",
+  },
+  product: {
+    list: '/api/produit',
+    detail: (slug) => `/api/produit/${slug}`,
+    avis : '/api/produit/avis',
+  },
   orders: {
-    submit: "/api/create-checkout-session",
-    getMine: "/api/orders",
-    all: "/api/orders/all",
-    get: (id) => `/api/order/${id}`,
-    delete: (id) => `/api/order/${id}`,
-    changeStatus: (id) => `/api/order/change-status/${id}`,
-    invoice: (ref) => `/api/invoice/${ref}`,
+    list: '/api/commandes',
+    detail: (id) => `/api/commandes/${id}`,
   },
-  users: {
-    updateMe: "/api/update-me",
-    changePassword: "/api/change-password",
-    all: "/api/users",
-    get: (id) => `/api/users/${id}`,
-    delete: (id) => `/api/users/${id}`,
-    sendMessage: `/api/users/send-message`,
-  },
-  cards: {
-    profile: (id) => `/api/profile/${id}`,
-    getMine: "/api/cards",
-    submit: "/api/submit-card",
-    all: "/api/cards/all",
-    delete: (id) => `/api/cards/${id}`,
-    changeStatus: (id) => `/api/cards/change-status/${id}`,
-  },
-  products: {
-    getAll: "/api/products",
-    get: (id) => `/api/products/${id}`,
-    delete: (id) => `/api/products/${id}`,
-    add: "/api/products",
-    edit: (id) => `/api/products/${id}`
-  },
+  layout: {
+    sidebar : '/api/menu-sidebar',
+    footer : '/api/menu-footer',
+    carte: '/api/section-carte',
+    prochainement: '/api/section-prochainement-disponible',
+    marques: '/api/marques-partenaires',
+  }
 };

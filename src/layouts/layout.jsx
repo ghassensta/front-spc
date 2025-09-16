@@ -2,16 +2,11 @@ import React from "react";
 import Navbar from "../components/navbar/navbar";
 import Footer from "../components/footer/footer";
 import CategoryPuce from "../components/category-puce/categoryPuce";
-import { useCategories } from "src/hooks/useCategories";
-import { API_URL_base, GetUser } from "src/api/data";
-import { UseUser } from "src/hooks/use-auth";
+import { useGetCategories } from "src/actions/categories";
+import { CONFIG } from "src/config-global";
 
 export default function LayoutTheme({ children }) {
-  const { categories } = useCategories();
-
-  const { user } = UseUser();
-
-  console.log(user.id, 'FROM LAYOUT');
+  const { categories } = useGetCategories();
 
   return (
     <div className="min-h-screen bg-background ">
@@ -23,7 +18,7 @@ export default function LayoutTheme({ children }) {
               <CategoryPuce
                 key={index}
                 name={category.name}
-                icon={`${API_URL_base}/storage/${category.image}`}
+                icon={`${CONFIG.serverUrl}/storage/${category.image}`}
                 slug={category.slug}
               />
             ))}

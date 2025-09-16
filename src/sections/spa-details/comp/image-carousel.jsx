@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { API_URL_base } from "src/api/data";
+import { CONFIG } from "src/config-global";
 
 const variants = {
   enter: (direction) => ({
@@ -51,7 +51,7 @@ export default function ImageCarousel({ height, images = [] }) {
       <AnimatePresence initial={false} custom={direction}>
         <motion.img
           key={index}
-          src={`${API_URL_base}/storage/${images[index]}`}
+          src={`${CONFIG.serverUrl}/storage/${images[index]}`}
           custom={direction}
           variants={variants}
           initial="enter"

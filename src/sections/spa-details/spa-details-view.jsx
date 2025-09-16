@@ -11,7 +11,7 @@ import LocationSection from "./comp/location-section";
 import TestimonialsSection from "./comp/others-section";
 import StarRatingInput from "src/components/star-rating-input/star-rating-input";
 import ButtonIcon from "src/components/button-icon/button-icon";
-import { API_URL_base } from "src/api/data";
+import { CONFIG } from "src/config-global";
 const criteria = [
   "Practicien(ne)",
   "Accueil",
@@ -50,7 +50,7 @@ export default function SpaDetailsView() {
           id: data.etablissement.id,
           nom: data.etablissement.nom,
           logo: data.etablissement.logo
-            ? `${API_URL_base}/storage/${data.etablissement.logo}`
+            ? `${CONFIG.serverUrl}/storage/${data.etablissement.logo}`
             : null,
           slug: data.etablissement.slug,
           iframeUrl:

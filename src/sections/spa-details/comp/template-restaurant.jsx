@@ -2,7 +2,6 @@ import React, { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import ImageCarousel from "./image-carousel";
 import CardItem from "../../../components/card-item/card-item";
-import { API_URL_base } from "src/api/data";
 
 
 export default function TemplateRestaurant({ data=[] }) {

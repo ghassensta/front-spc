@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { FaHeart, FaRegHeart, FaShoppingCart, FaEye, FaTimes } from 'react-icons/fa';
-import { API_URL_base } from 'src/api/data';
 
 export default function Wishlist() {
   // Données de démonstration pour les favoris

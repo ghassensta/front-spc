@@ -1,9 +1,12 @@
 import React from "react";
 import { IoMdClose } from "react-icons/io";
 import { motion, AnimatePresence } from "framer-motion";
-import { useMenuSidebar } from "src/hooks/useDataMenu";
+import { useLayout } from "src/actions/layout";
+import { Link } from "react-router-dom";
 export default function Menu({ show, onClose }) {
-  const { menus, loading, error } = useMenuSidebar();
+  const { sidebar } = useLayout();
+
+  console.log(sidebar);
 
   const menuVariants = {
     hidden: { x: "-100%" },
@@ -59,16 +62,8 @@ export default function Menu({ show, onClose }) {
               </button>
 
               <ul className="mt-8 space-y-6 text-center text-secondary">
-                {loading ? (
-                  <li className="text-xl font-bold text-center">
-                    Chargement...
-                  </li>
-                ) : error ? (
-                  <li className="text-xl font-bold text-center text-red-500">
-                    Erreur : {error.message}
-                  </li>
-                ) : menus && menus.length > 0 ? (
-                  menus
+                {sidebar && sidebar.length > 0 ? (
+                  sidebar
                     .filter((item) => item.is_active)
                     .sort((a, b) => a.order - b.order)
                     .map((item) => (
@@ -77,12 +72,13 @@ export default function Menu({ show, onClose }) {
                         variants={itemVariants}
                         className="text-xl font-bold"
                       >
-                        <a
-                          href={item.url}
+                        <Link
+                          to={item.url}
+                          onClick={onClose} // 👈 close menu on link click
                           className="relative inline-block after:block after:h-[2px] after:w-0 after:bg-secondary after:transition-all after:duration-300 hover:after:w-full"
                         >
                           {item.title}
-                        </a>
+                        </Link>
                       </motion.li>
                     ))
                 ) : (

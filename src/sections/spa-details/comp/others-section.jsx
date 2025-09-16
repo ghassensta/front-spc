@@ -1,8 +1,8 @@
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { FaArrowLeft, FaArrowRight } from "react-icons/fa";
-import { API_URL_base } from "src/api/data";
 import { Link } from "react-router-dom";
+import { CONFIG } from "src/config-global";
 
 // Définis bien ta constante API_URL ici ou importe-la depuis ta config
 
@@ -79,7 +79,7 @@ export default function TestimonialsSection({ testimonials = [] }) {
                 <img
                   src={
                     testimonial.logo
-                      ? `${API_URL_base}/storage/${testimonial.logo}`
+                      ? `${CONFIG.serverUrl}/storage/${testimonial.logo}`
                       : "/images/default-logo.png"
                   }
                   alt={testimonial.slug}
