@@ -31,6 +31,8 @@ export function useGetEtablissement(slug) {
     const memoizedValue = useMemo(
         () => ({
             etablissement: data?.etablissement || null,
+            types: data?.types || [],
+            simlairesEtablissment: data?.simlairesEtablissment || [],
         }),
         [data]
     );

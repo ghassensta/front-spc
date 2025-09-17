@@ -23,11 +23,11 @@ export default function Card({
         whileInView={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.6, ease: "easeOut" }}
         viewport={{ once: true }}
-        className="relative rounded-xl shadow-lg mb-6 bg-white cursor-pointer hover:shadow-xl transition-all duration-300"
+        className="relative  mb-6 cursor-pointer transition-all duration-300"
       >
         {/* Location badge */}
         {(type === "large" || type === "price") && location && (
-          <span className="bg-secondary text-white font-roboto flex items-center justify-start w-max py-2 px-4 gap-2 absolute left-4 -top-5 font-medium text-xs md:text-sm rounded-lg shadow">
+          <span className="bg-[#020100C9] text-white font-tahoma uppercase flex items-center justify-start w-max py-3 px-6 gap-2 absolute left-4 -top-1 font-medium text-xs tracking-[2px]">
             <FiMapPin className="text-white" />
             {location}
           </span>
@@ -38,21 +38,21 @@ export default function Card({
           <img
             src={image}
             alt="spa"
-            className="w-full h-72 rounded-t-xl object-cover overflow-hidden"
+            className="w-full h-72 rounded-none object-cover overflow-hidden"
           />
         )}
 
         {/* Content */}
-        <div className={`p-6 ${type === "news" ? "p-3" : ""} space-y-2`}>
-          <h5 className={`font-bold ${type === "news" || type === "price" ? "text-secondary" : "text-gray-800"} text-xl md:text-2xl`}>
+        <div className={`p-2 ${type === "news" ? "p-3" : ""} space-y-1`}>
+          <h5 className={`font-bold text-center ${type === "news" || type === "price" ? "text-secondary" : "text-gray-800"} text-xl md:text-2xl`}>
             {title}
           </h5>
 
           {prestation && (
-            <span className="text-lg md:text-lg font-bold">{prestation}</span>
+            <span className="text-lg md:text-lg font-bold m-0">{prestation}</span>
           )}
 
-          <p className="text-gray-600 text-sm md:text-base leading-relaxed font-tahoma">
+          <p className="text-gray-800 text-center text-sm md:text-base leading-relaxed font-tahoma m-0">
             {description}
           </p>
 
@@ -72,7 +72,7 @@ export default function Card({
               <ButtonIcon
                 title="Réserver"
                 icon={<FaBagShopping className="text-lg" />}
-                size="sm"
+                size="lg"
               />
             </div>
           )}

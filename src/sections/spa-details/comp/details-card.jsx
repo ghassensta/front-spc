@@ -11,7 +11,7 @@ export default function ServiceCard({ details }) {
     setOpenSection((prev) => (prev === key ? null : key));
   };
 
-  const roundedRating = Math.round(details.avgRating * 2) / 2;
+  const roundedRating = Math.round(details?.avgRating * 2) / 2;
   const DESCRIPTION_LIMIT = 200;
   const shouldTruncate = details?.description?.length > DESCRIPTION_LIMIT;
   const shortText = details?.description?.slice(0, DESCRIPTION_LIMIT) + "...";
@@ -101,7 +101,7 @@ export default function ServiceCard({ details }) {
             title: "Marque(s) Partenaire(s)",
             content: (
               <div className="flex flex-col gap-4">
-                {details.portrait_equipe?.map((person, index) => (
+                {details?.portrait_equipe?.map((person, index) => (
                   <div
                     key={index}
                     className="flex justify-start items-center gap-4"

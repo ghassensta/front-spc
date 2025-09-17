@@ -15,7 +15,7 @@ export default function LocationSection({ data }) {
         viewport={{ once: true }}
       >
         <iframe
-          src={data.iframeUrl}
+          src={data?.iframeUrl}
           width="100%"
           height="100%"
           style={{ border: 0 }}
@@ -35,24 +35,24 @@ export default function LocationSection({ data }) {
         viewport={{ once: true }}
       >
         <div className="text-gray-800 space-y-4">
-          <h2 className="text-2xl font-semibold">{data.nom}</h2>
+          <h2 className="text-2xl font-semibold">{data?.nom}</h2>
           <div className="flex items-start gap-3 font-roboto border-b pb-2">
             <FaMapMarkerAlt className="text-secondary mt-1" />
-            <p className="text-sm font-medium">{data.adresse}</p>
+            <p className="text-sm font-medium">{data?.adresse}</p>
           </div>
           <div className="flex items-start gap-3 font-roboto border-b pb-2">
             <MdAccessTime className="text-secondary mt-1" />
             <p className="text-sm font-medium">
-              {data.horaires_ouverture || "Horaires non spécifiés"}
+              {data?.horaires_ouverture || "Horaires non spécifiés"}
             </p>
           </div>
           <div className="flex items-start gap-3 font-roboto border-b pb-2">
             <FaPhone className="text-secondary mt-1" />
-            <p className="text-sm font-medium">{data.telephone}</p>
+            <p className="text-sm font-medium">{data?.telephone}</p>
           </div>
           <div className="flex items-start gap-3 font-roboto border-b pb-2">
             <FaEnvelope className="text-secondary mt-1" />
-            <p className="text-sm font-medium">{data.email}</p>
+            <p className="text-sm font-medium">{data?.email}</p>
           </div>
         </div>
       </motion.div>

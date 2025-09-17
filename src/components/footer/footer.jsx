@@ -8,11 +8,12 @@ import {
 import { paths } from "src/router/paths";
 import { useLayout } from "src/actions/layout";
 import { CONFIG } from "src/config-global";
+import { IconBrandFacebookFilled, IconBrandInstagramFilled, IconBrandLinkedinFilled, IconBrandTiktokFilled } from "@tabler/icons-react";
 const iconMap = {
-  "ti ti-brand-facebook": FaFacebookF,
-  "ti ti-brand-instagram": FaInstagram,
-  "ti ti-brand-tiktok": FaTiktok,
-  "ti ti-brand-linkedin": FaLinkedinIn,
+  "ti ti-brand-facebook": IconBrandFacebookFilled,
+  "ti ti-brand-instagram": IconBrandInstagramFilled,
+  "ti ti-brand-tiktok": IconBrandTiktokFilled,
+  "ti ti-brand-linkedin": IconBrandLinkedinFilled,
 };
 
 export default function Footer() {
@@ -44,16 +45,18 @@ export default function Footer() {
         .sort((a, b) => a.order - b.order)
     : [];
 
+    console.log(socialLinksFiltered)
+
   return (
-    <footer className="bg-[#2c2b29] text-white pt-12 left-[calc(-50vw+50%)] relative w-screen">
-      <div className="max-w-7xl mx-auto px-6 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-8 pb-12">
+    <footer className="bg-secondary text-white pt-8 md:pt-12 left-[calc(-50vw+50%)] relative w-screen font-roboto">
+      <div className="max-w-6xl mx-auto px-6 flex flex-col md:flex-row gap-10 md:gap-2 lg:gap-8 md:py-12">
         {/* Colonne 1: Logo + Description */}
-        <div className="lg:col-span-2 text-center flex flex-col items-center max-w-3xl mx-auto">
+        <div className="text-center flex flex-col items-center mx-auto lg:mr-12">
           {siteLogoPath ? (
             <img
               src={`${CONFIG.serverUrl}/storage/${siteLogoPath}`}
               alt="SPC Logo"
-              className="w-24 mb-4 d-block"
+              className="w-32 md:w-60 mb-4 d-block"
               width={150}
               onError={(e) => {}}
             />
@@ -62,7 +65,7 @@ export default function Footer() {
               Logo
             </div>
           )}
-          <p className="text-sm leading-relaxed font-roboto mb-4">
+          <p className="text-sm leading-relaxed font-roboto mb-4 font-[300]">
             {siteDescription}
           </p>
           <p className="text-sm">Tél. 01 82 35 01 26</p>{" "}
@@ -70,12 +73,12 @@ export default function Footer() {
         </div>
 
         {/* Colonne 2: À PROPOS - Dynamique */}
-        <div>
-          <h4 className="text-base font-semibold mb-3">À PROPOS</h4>
+        <div className="w-full">
+          <h4 className="text-lg font-light mb-3">À PROPOS</h4>
           <ul className="space-y-2 text-sm font-roboto">
             {aboutLinks.map((item) => (
               <li key={item.id}>
-                <a href={item.url} className="hover:underline">
+                <a href={item.url} className="duration-300 border-0 hover:border-b-2 hover:border-primary hover:text-primary hover:font-bold">
                   {item.title}
                 </a>
               </li>
@@ -84,10 +87,10 @@ export default function Footer() {
             {aboutLinks.length === 0 && (
               <>
                 <li>
-                  <a href={paths.who}>Qui sommes nous</a>
+                  <a href={paths.who} className="duration-300 border-0 hover:border-b-2 hover:border-primary hover:text-primary hover:font-bold">Qui sommes nous</a>
                 </li>
                 <li>
-                  <a href={paths.collection}>Book Collection & Prestige</a>
+                  <a href={paths.collection} className="duration-300 border-0 hover:border-b-2 hover:border-primary hover:text-primary hover:font-bold">Book Collection & Prestige</a>
                 </li>
                 {/* Ajoutez les autres */}
               </>
@@ -96,12 +99,12 @@ export default function Footer() {
         </div>
 
         {/* Colonne 3: PROFESSIONNEL - Dynamique */}
-        <div>
-          <h4 className="text-base font-semibold mb-3">PROFESSIONNEL</h4>
+        <div className="w-full">
+          <h4 className="text-lg font-light mb-3">PROFESSIONNEL</h4>
           <ul className="space-y-2 text-sm font-roboto">
             {proLinks.map((item) => (
               <li key={item.id}>
-                <a href={item.url} className="hover:underline">
+                <a href={item.url} className="duration-300 border-0 hover:border-b-2 hover:border-primary hover:text-primary hover:font-bold">
                   {item.title}
                 </a>
               </li>
@@ -110,10 +113,10 @@ export default function Footer() {
             {proLinks.length === 0 && (
               <>
                 <li>
-                  <a href={paths.partenaire}>Devenir partenaire</a>
+                  <a href={paths.partenaire} className="duration-300 border-0 hover:border-b-2 hover:border-primary hover:text-primary hover:font-bold">Devenir partenaire</a>
                 </li>
                 <li>
-                  <a href={paths.referentiel}>Référentiel de candidature</a>
+                  <a href={paths.referentiel} className="duration-300 border-0 hover:border-b-2 hover:border-primary hover:text-primary hover:font-bold">Référentiel de candidature</a>
                 </li>
                 {/* Ajoutez les autres */}
               </>
@@ -122,8 +125,8 @@ export default function Footer() {
         </div>
 
         {/* Colonne 4: Newsletter - Statique pour l'instant */}
-        <div>
-          <h4 className="text-base font-semibold mb-3">NEWSLETTER</h4>
+        <div className="w-full">
+          <h4 className="text-lg font-light mb-3">NEWSLETTER</h4>
           <div className="bg-[#f4efe5] p-4 rounded">
             <label className="block text-sm mb-1 text-black">Email</label>
             <input
@@ -144,13 +147,7 @@ export default function Footer() {
               </button>
             </div>
           </div>
-        </div>
-      </div>
-
-      {/* Icônes Sociales - Dynamiques */}
-      {socialLinksFiltered.length > 0 && (
-        <div className="border-t border-gray-700 py-4">
-          <div className="flex justify-center gap-6 text-white text-lg">
+          <div className="flex justify-start gap-2 mt-10 text-white text-lg">
             {socialLinksFiltered.map((item) => {
               const IconComponent = iconMap[item.icon];
               if (!IconComponent) return null;
@@ -163,49 +160,30 @@ export default function Footer() {
                   className="hover:text-gray-300 transition-colors"
                   style={{ color: item.color || "inherit" }} // Utilise la couleur si fournie
                 >
-                  <IconComponent size={20} />
+                  <i className={item.icon} ></i>
                 </a>
               );
             })}
-            {/* Fallback statique si pas de liens dynamiques */}
-            {socialLinksFiltered.length === 0 && (
-              <>
-                <FaFacebookF
-                  size={20}
-                  className="hover:text-gray-300 transition-colors"
-                />
-                <FaTiktok
-                  size={20}
-                  className="hover:text-gray-300 transition-colors"
-                />
-                <FaInstagram
-                  size={20}
-                  className="hover:text-gray-300 transition-colors"
-                />
-                <FaLinkedinIn
-                  size={20}
-                  className="hover:text-gray-300 transition-colors"
-                />
-              </>
-            )}
           </div>
         </div>
-      )}
+      </div>
 
       {/* Bottom bar - Statique */}
-      <div className="bg-[#d6d4b4] text-sm text-black px-6 py-3 flex flex-col md:flex-row items-center justify-between font-roboto">
-        <p className="mb-2 md:mb-0">
-          © 2025 – Réalisation{" "}
-          <span className="font-semibold">ÉCOM Design</span>
-        </p>
-        <div className="flex gap-4">
-          <a href={paths.mentions} className="hover:underline">
-            Mentions légales
-          </a>
-          <span>•</span>
-          <a href={paths.conditions} className="hover:underline">
-            CGV
-          </a>
+      <div className="bg-[#B6B498] text-base  text-black  font-roboto">
+        <div className="max-w-6xl mx-auto p-6 flex flex-col md:flex-row items-center justify-between">
+          <p className="mb-2 md:mb-0">
+            © 2025 – Réalisation{" "}
+            <span className="font-semibold">éCOM Design</span>
+          </p>
+          <div className="flex gap-4">
+            <a href={paths.mentions} className="hover:underline">
+              Mentions légales
+            </a>
+            <span>•</span>
+            <a href={paths.conditions} className="hover:underline">
+              CGV
+            </a>
+          </div>
         </div>
       </div>
     </footer>

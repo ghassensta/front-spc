@@ -61,7 +61,7 @@ export default function Menu({ show, onClose }) {
                 <IoMdClose size={28} />
               </button>
 
-              <ul className="mt-8 space-y-6 text-center text-secondary">
+              <ul className="mt-8 space-y-0 text-base font-normal text-secondary font-tahoma">
                 {sidebar && sidebar.length > 0 ? (
                   sidebar
                     .filter((item) => item.is_active)
@@ -70,12 +70,11 @@ export default function Menu({ show, onClose }) {
                       <motion.li
                         key={item.id}
                         variants={itemVariants}
-                        className="text-xl font-bold"
                       >
                         <Link
                           to={item.url}
                           onClick={onClose} // 👈 close menu on link click
-                          className="relative inline-block after:block after:h-[2px] after:w-0 after:bg-secondary after:transition-all after:duration-300 hover:after:w-full"
+                          className="relative inline-block  hover:bg-[#B6B498] hover:text-white w-full p-2"
                         >
                           {item.title}
                         </Link>

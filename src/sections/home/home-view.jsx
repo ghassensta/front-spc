@@ -12,6 +12,7 @@ import { useGetEtablissements } from "src/actions/etablissements";
 import { useGetLastNews } from "src/actions/actualites";
 import { useLayout } from "src/actions/layout";
 import { CONFIG } from "src/config-global";
+import SpaCard from "src/components/spa-card/spa-card";
 
 export default function HomeView() {
   const { etablissements } = useGetEtablissements();
@@ -34,9 +35,8 @@ export default function HomeView() {
         </h2>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-16">
           {etablissements.slice(0, 4).map((etablissement) => (
-            <Card
+            <SpaCard
               key={etablissement.id}
-              type="large"
               to={`/spa/${etablissement.slug || etablissement.id}`}
               title={etablissement.nom || etablissement.id}
               description={etablissement.description_avant}
@@ -89,15 +89,15 @@ export default function HomeView() {
 
       {/* PROCHAINEMENT & CARDS SECTION  */}
       <div
-        className="mb-12 relative w-screen left-[calc(-50vw+50%)]"
+        className=" relative w-screen left-[calc(-50vw+50%)]"
         style={{
-          backgroundColor: prochainement?.extra_data?.background || "beige",
+          backgroundColor: prochainement?.extra_data?.background || "#F6F5E9",
         }}
       >
         <div className="max-w-6xl mx-auto py-4">
           <h2 className="text-4xl font-bold text-center">
             {prochainement?.title || "L’univers Spa & Prestige Collection."}
-            <div className="text-[#777676] mt-2">
+            <div className="text-[#B6B499] mt-2">
               {prochainement?.description ||
                 "Un réseau confidentiel dédié aux lieux d’exception."}
             </div>
@@ -121,15 +121,15 @@ export default function HomeView() {
       </div>
 
       {/* L'UNIVERS SECTION  */}
-      <div className="mb-12">
+      <div className="">
         <div className="max-w-6xl mx-auto py-4">
           <h2 className="text-4xl font-bold text-center">
             L’univers Spa & Prestige Collection.{" "}
-            <div className="text-[#777676]">
+            <div className="text-[#B6B499]">
               Un réseau confidentiel dédié aux lieux d’exception.
             </div>
           </h2>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-16">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-6">
             <Card
               to="/spa/paris"
               title="Qui sommes-nous ?"
@@ -151,31 +151,39 @@ export default function HomeView() {
 
       {/* ACTUALITES SECTION  */}
       {actualites.length > 0 && (
-        <div className="bg-primary rounded-lg my-12 left-[calc(-50vw+50%)] relative w-screen">
+        <div className="bg-[#F6F5E9] rounded-lg  left-[calc(-50vw+50%)] relative w-screen">
           <div className="max-w-6xl mx-auto py-4">
             <h2 className="text-4xl font-bold text-center">
               Actualités
-              <div className="text-[#777676]">Nos derniers articles</div>
+              <div className="text-[#B6B499]">Nos derniers articles</div>
             </h2>
 
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-8">
               {actualites.map((actualite) => (
-                <Card
-                  key={actualite.id}
-                  type="news"
-                  to={paths.actualitesDetails(actualite.slug)}
-                  title={actualite.title}
-                  description={actualite.petit_description}
-                  image={`${CONFIG.serverUrl}/storage/${actualite.image}`}
-                  date={new Date(actualite.created_at).toLocaleDateString(
-                    "fr-FR",
-                    {
-                      day: "numeric",
-                      month: "long",
-                      year: "numeric",
-                    }
-                  )}
-                />
+                // <Card
+                //   key={actualite.id}
+                //   type="news"
+                //   to={paths.actualitesDetails(actualite.slug)}
+                //   title={actualite.title}
+                //   description={actualite.petit_description}
+                //   image={`${CONFIG.serverUrl}/storage/${actualite.image}`}
+                //   date={new Date(actualite.created_at).toLocaleDateString(
+                //     "fr-FR",
+                //     {
+                //       day: "numeric",
+                //       month: "long",
+                //       year: "numeric",
+                //     }
+                //   )}
+                // />
+                <div className="mb-3 relative cursor-pointer" key={actualite.id}>
+                  <img
+                    src={`${CONFIG.serverUrl}/storage/${actualite.image}`}
+                    alt={actualite.title}
+                    />
+                    <span className="absolute bg-black/25 w-full h-full top-0 left-0"/>
+                    <span className="absolute bottom-0 text-white text-2xl p-2 pb-5 font-bold">{actualite.title}</span>
+                </div>
               ))}
             </div>
             <div className="text-center">
@@ -186,7 +194,7 @@ export default function HomeView() {
       )}
 
       {/* MARQUES PARTENAIRES SECTION  */}
-      <div className="bg-white my-12 rounded-lg">
+      <div className="bg-white rounded-lg">
         <div className="max-w-6xl mx-auto py-12">
           <h2 className="text-4xl font-bold text-center">
             {marques.title || "Nos marques partenaires"}

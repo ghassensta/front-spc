@@ -1,5 +1,4 @@
-import React, { useState, useEffect } from "react";
-import { useParams } from "react-router-dom";
+import React, { useState } from "react";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import ImageCarousel from "./comp/image-carousel";
@@ -10,8 +9,8 @@ import logoSpc from "../../assets/logo-small.png";
 import LocationSection from "./comp/location-section";
 import TestimonialsSection from "./comp/others-section";
 import StarRatingInput from "src/components/star-rating-input/star-rating-input";
-import ButtonIcon from "src/components/button-icon/button-icon";
 import { CONFIG } from "src/config-global";
+
 const criteria = [
   "Practicien(ne)",
   "Accueil",
@@ -23,71 +22,23 @@ const criteria = [
   "Boutique",
 ];
 
-export default function SpaDetailsView() {
-  const { id } = useParams();
-  const [spaData, setSpaData] = useState(null);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
-  const API_URL = "http://127.0.0.1:8000";
+export default function SpaDetailsView({
+  spaData,
+  types,
+  simlairesEtablissment,
+}) {
   const initialRatings = {};
   criteria.forEach((key) => {
     initialRatings[key] = 0;
   });
   const [ratings, setRatings] = useState(initialRatings);
+
+  console.log(ratings)
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [comment, setComment] = useState("");
 
-  useEffect(() => {
-    const fetchSpaData = async () => {
-      try {
-        const response = await fetch(`${API_URL}/api/etablissements/${id}`);
-        if (!response.ok) {
-          throw new Error("Établissement non trouvé");
-        }
-        const data = await response.json();
-        setSpaData({
-          id: data.etablissement.id,
-          nom: data.etablissement.nom,
-          logo: data.etablissement.logo
-            ? `${CONFIG.serverUrl}/storage/${data.etablissement.logo}`
-            : null,
-          slug: data.etablissement.slug,
-          iframeUrl:
-            data.etablissement.iframe_url ||
-            "https://www.google.com/maps/embed?pb=!1m14!1m8!1m3!1d354763.3592293863!2d4.01975!3d45.99944!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x47f405246498f805%3A0x7566dacf927d37de!2sDavid%20GRAND!5e0!3m2!1sen!2us!4v1745410814942!5m2!1sen!2sus",
-          description: data.etablissement.description,
-          gallerie: data.etablissement.gallerie || [],
-          adresse: data.etablissement.adresse,
-          email: data.etablissement.email,
-          telephone: data.etablissement.telephone,
-          horaires_ouverture: data.etablissement.horaires_ouverture,
-          image_avant: data.etablissement.image_avant,
-          description_avant: data.etablissement.description_avant,
-          portrait_equipe: data.etablissement.portrait_equipe,
-          commission: data.etablissement.commission,
-          avgRating: data.etablissement.avg_rating || 4,
-          types: data.types.map((type) => ({
-            ...type,
-            type_soin: type.type_soin || null,
-            type_equipement: type.type_equipement || [],
-            type_media: type.type_media || [],
-            type_produit: type.type_produit || [],
-          })),
-          similairesEtablissement: data.simlairesEtablissment || [],
-        });
-
-        setLoading(false);
-        console.log("SPA Data:", data.types);
-      } catch (err) {
-        setError(err.message);
-        setLoading(false);
-      }
-    };
-    fetchSpaData();
-  }, [id, API_URL]);
-
-  const handleRatingChange = (category, value) => {
+   const handleRatingChange = (category, value) => {
     setRatings((prev) => ({ ...prev, [category]: value }));
   };
 
@@ -99,7 +50,7 @@ export default function SpaDetailsView() {
       return;
     }
 
-    if (!spaData || !spaData.id) {
+    if (!spaData || !spaData?.id) {
       toast.error("Erreur : Données de l'établissement non disponibles.");
       return;
     }
@@ -116,7 +67,7 @@ export default function SpaDetailsView() {
     }
 
     const reviewData = {
-      id: spaData.id,
+      id: spaData?.id,
       name,
       email,
       comment,
@@ -124,11 +75,14 @@ export default function SpaDetailsView() {
     };
 
     try {
-      const response = await fetch(`${API_URL}/api/etablissements/avis`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(reviewData),
-      });
+      const response = await fetch(
+        `${CONFIG.serverUrl}/api/etablissements/avis`,
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(reviewData),
+        }
+      );
 
       if (response.ok) {
         toast.success("Avis envoyé avec succès !");
@@ -150,9 +104,6 @@ export default function SpaDetailsView() {
     }
   };
 
-  if (loading) return ;
-  if (error) return <div>Erreur : {error}</div>;
-
   return (
     <div className="container mx-auto px-4">
       <ToastContainer
@@ -164,11 +115,11 @@ export default function SpaDetailsView() {
       />
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
         <div>
-          <ImageCarousel images={spaData.gallerie} />
+          <ImageCarousel images={spaData?.gallerie} />
         </div>
         <DetailsCard details={spaData} />
       </div>
-      <Services data={spaData.types} />
+      <Services data={types} />
       <div className="bg-white p-4 rounded-lg border max-w-6xl mx-auto mt-8">
         <h6 className="font-semibold text-lg mb-4">Laisser un avis</h6>
 
@@ -265,7 +216,7 @@ export default function SpaDetailsView() {
         </div>
       </div>
       <LocationSection data={spaData} />
-      <TestimonialsSection testimonials={spaData.simlairesEtablissment} />
+      <TestimonialsSection testimonials={simlairesEtablissment} />
     </div>
   );
 }
