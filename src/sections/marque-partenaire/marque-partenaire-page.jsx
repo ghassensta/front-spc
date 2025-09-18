@@ -34,7 +34,6 @@ export default function MarquePartenairePage() {
       formPayload.append(key, formData[key]);
     }
 
-    console.log("Form data:", formData);
     alert("Formulaire soumis !");
     // Here you could send formPayload via fetch or axios
   };

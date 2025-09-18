@@ -17,7 +17,6 @@ export default function ServiceCard({ details, avisTotals=0 }) {
   const shortText = details?.description?.slice(0, DESCRIPTION_LIMIT) + "...";
   const fullText = details?.description;
 
-  console.log("DETAILS =W",details)
 
   return (
     <div className="p-4 bg-white">

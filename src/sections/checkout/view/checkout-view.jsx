@@ -8,7 +8,6 @@ import { CONFIG } from "src/config-global";
 
 export default function CheckoutView() {
   const checkout = useCheckoutContext();
-  console.log("Checkout data:", checkout.items); // Debug log
   const itemsFiltered = checkout.items?.filter((item) => item.quantity > 0) || [];
   const TAX_RATE = 0.2;
 

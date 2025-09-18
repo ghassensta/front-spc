@@ -66,14 +66,6 @@ export default function SpaDetailsView({
     e.preventDefault();
     if (!validateForm()) return;
 
-    console.log("SUBMITTING REVIEW WITH DATA => ", {
-      name,
-      email,
-      comment,
-      ratings,
-      id: spaData.id,
-    });
-
     toast
       .promise(
         usePostEtablissementsAvis({

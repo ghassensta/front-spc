@@ -2,14 +2,13 @@ import React, { useState, useEffect } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import TabButton from "../../../components/tabs/tab-button";
 import TabPanel from "../../../components/tabs/tab-panel";
-import TemplateBienEtre from "./template-bien-etre";
 import TemplateRestaurant from "./template-restaurant";
 import ServicesTemplates from "./services-templates";
 
 export default function Tabs({ data = [] }) {
   const [tabs, setTabs] = useState([]);
   const [active, setActive] = useState(null);
-
+  console.log("SERVICES DATA",data)
   useEffect(() => {
     if (data.length > 0) {
       // Crée les tabs dynamiquement à partir des type_soin
@@ -18,7 +17,7 @@ export default function Tabs({ data = [] }) {
 
         switch (type.type_soin.name) {
           case "Bien-être":
-            content = <TemplateBienEtre data={type} />;
+            content = <ServicesTemplates data={type} />;
             break;
           case "Hôtellerie":
             content = <TemplateRestaurant data={type} />;
@@ -39,6 +38,7 @@ export default function Tabs({ data = [] }) {
         return {
           id: type.type_soin.id,
           label: type.type_soin.name,
+          visible: !!type.title && !!type.description,
           content,
         };
       });
@@ -54,14 +54,14 @@ export default function Tabs({ data = [] }) {
     <div className="w-full max-w-7xl mx-auto mt-10">
       {/* Tab Buttons */}
       <div className="relative flex flex-wrap justify-between items-center space-x-1 max-w-[75%] mx-auto">
-        {tabs.map((tab, index) => (
+        {tabs.filter((tab) => tab.visible).map((tab, index) => (
           <React.Fragment key={tab.label}>
             <TabButton
               label={tab.label}
               active={active.label === tab.label}
               onClick={() => setActive(tab)}
             />
-            {index < tabs.length - 1 && (
+            {index < tabs.filter((tab) => tab.visible).length - 1 && (
               <span className="text-secondary text-2xl font-medium">/</span>
             )}
           </React.Fragment>

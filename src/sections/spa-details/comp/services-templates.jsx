@@ -10,7 +10,6 @@ export default function ServicesTemplates({ data = {} }) {
     (pivot) => pivot.service_equipement || []
   );
 
-  console.log("PRODUITS => ",produits)
 
   return (
     <div className="max-w-6xl mx-auto flex flex-col md:flex-row gap-6 items-start ">

@@ -28,7 +28,6 @@ export default function DevenirPartnerView() {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    console.log("Form data:", formData);
     alert("Formulaire soumis !");
   };
 

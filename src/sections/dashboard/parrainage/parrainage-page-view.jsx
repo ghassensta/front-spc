@@ -28,7 +28,6 @@ export default function ParrainagePageView() {
   const addEmailField = () => setEmails([...emails, ""]);
 
   const handleSendInvites = () => {
-    console.log("Inviting:", emails.filter((e) => e.trim() !== ""));
     alert("Invitations envoyées ✅");
   };
 

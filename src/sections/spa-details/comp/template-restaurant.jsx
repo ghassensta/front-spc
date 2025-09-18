@@ -5,27 +5,25 @@ import CardItem from "../../../components/card-item/card-item";
 
 
 export default function TemplateRestaurant({ data=[] }) {
-  console.log("xxxxxxxxxxxxxxxxxxxxxxxssssssxxxxxxx", data);
   const imagesCarousel = data.type_media.map(
     (media) => `${media.path}`
   );
-console.log("imagesCarousel", imagesCarousel);
   const [expanded, setExpanded] = useState(false);
   const toggleText = () => setExpanded(!expanded);
 
   return (
     <>
       {/* Bloc principal */}
-      <div className="bg-[#f9f7ed] p-6 max-w-6xl mx-auto flex flex-col md:flex-row gap-6 items-start rounded-lg shadow">
+      <div className="bg-[#f9f7ed] p-6 max-w-7xl mx-auto flex flex-col md:flex-row gap-6 items-start ">
         {/* Carousel Section */}
         {imagesCarousel.length > 0 && (
-          <div className="w-full md:w-1/2 relative">
+          <div className="w-full relative">
             <ImageCarousel height="280px" images={imagesCarousel} />
           </div>
         )}
 
         {/* Content Section */}
-        <div className="w-full md:w-1/2">
+        <div className="w-full">
           <h3 className="text-lg md:text-xl font-bold text-gray-900 mb-2">
             {data.title || "Nom du Restaurant"}
           </h3>
@@ -35,7 +33,7 @@ console.log("imagesCarousel", imagesCarousel);
           </p>
 
           <AnimatePresence initial={false}>
-            {expanded && extra_description && (
+            {expanded && data?.extra_description && (
               <motion.div
                 key="expandedText"
                 initial={{ height: 0, opacity: 0 }}
@@ -45,7 +43,7 @@ console.log("imagesCarousel", imagesCarousel);
                 className="overflow-hidden"
               >
                 <p className="text-base font-normal font-tahoma text-gray-800 mt-1">
-                  {extra_description}
+                  {data?.extra_description}
                 </p>
               </motion.div>
             )}

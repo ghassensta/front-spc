@@ -22,7 +22,6 @@ export default function Footer() {
   const { settings, footer_about, footer_pro, social_links } = footer || {};
 
   const siteLogoPath = settings?.site_logo?.value || "";
-  console.log("Footer menus data:aaaaaaaaa", footer);
 
   const siteDescription =
     settings?.site_description?.value || "Description par défaut du site.";
@@ -44,8 +43,6 @@ export default function Footer() {
         .filter((item) => item.is_active)
         .sort((a, b) => a.order - b.order)
     : [];
-
-    console.log(socialLinksFiltered)
 
   return (
     <footer className="bg-secondary text-white pt-8 md:pt-12 left-[calc(-50vw+50%)] relative w-screen font-roboto">

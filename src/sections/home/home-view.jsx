@@ -18,7 +18,6 @@ export default function HomeView() {
   const { etablissements } = useGetEtablissements();
   const { actualites } = useGetLastNews(3);
   const { marques, prochainement, carte } = useLayout();
-  console.log("Marques partenaires data:", actualites);
 
   return (
     <>

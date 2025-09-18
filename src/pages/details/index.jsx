@@ -10,12 +10,7 @@ export default function Page() {
 
   const { etablissement, types, simlairesEtablissment, avis } = useGetEtablissement(id)
 
-  console.log("avis", avis);
-  console.log("simlairesEtablissment", simlairesEtablissment);
-  console.log("types", types);
-  console.log("etablissement", etablissement);
-
-
+  console.log(etablissement)
 
   return (
     <>
