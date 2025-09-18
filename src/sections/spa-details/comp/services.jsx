@@ -62,7 +62,7 @@ export default function Tabs({ data = [] }) {
               onClick={() => setActive(tab)}
             />
             {index < tabs.length - 1 && (
-              <span className="text-gray-400 font-medium">/</span>
+              <span className="text-secondary text-2xl font-medium">/</span>
             )}
           </React.Fragment>
         ))}

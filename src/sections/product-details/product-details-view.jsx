@@ -7,7 +7,7 @@ import { useParams, useNavigate } from "react-router-dom";
 import { paths } from "../../router/paths";
 import { Star } from "lucide-react";
 import StarRatingInput from "src/components/star-rating-input/star-rating-input";
-import { ToastContainer, toast } from "react-toastify";
+import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { CONFIG } from "src/config-global";
 
@@ -148,7 +148,7 @@ export default function ProductDetailsView() {
 
   return (
     <div className="container max-w-6xl mx-auto px-4">
-      <ToastContainer />
+     
       <h4 className="font-semibold text-4xl mb-4">
         {product ? product.nom : "Chargement..."}
       </h4>

@@ -10,6 +10,8 @@ export default function TestimonialsSection({ testimonials = [] }) {
   const [index, setIndex] = useState(0);
   const [direction, setDirection] = useState(1); // 1 pour next, -1 pour prev
 
+  if (testimonials.length === 0) return null;
+
   const length = testimonials.length;
 
   const handlePrev = () => {

@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Star, ChevronDown, ChevronUp } from "lucide-react";
+import { Star, ChevronDown, ChevronUp, Minus, Plus } from "lucide-react";
 import { CONFIG } from "src/config-global";
 
 export default function ServiceCard({ details }) {
@@ -12,13 +12,15 @@ export default function ServiceCard({ details }) {
   };
 
   const roundedRating = Math.round(details?.avgRating * 2) / 2;
-  const DESCRIPTION_LIMIT = 200;
+  const DESCRIPTION_LIMIT = 300;
   const shouldTruncate = details?.description?.length > DESCRIPTION_LIMIT;
   const shortText = details?.description?.slice(0, DESCRIPTION_LIMIT) + "...";
   const fullText = details?.description;
 
+  console.log("DETAILS =W",details)
+
   return (
-    <div className="border rounded-sm p-4 shadow-sm hover:shadow-md transition duration-200 bg-white">
+    <div className="p-4 bg-white">
       {/* Header */}
       <div className="flex flex-col mb-4">
         <img src={details?.logo} alt="" className="max-w-24 mr-2" />
@@ -53,17 +55,19 @@ export default function ServiceCard({ details }) {
         </p>
       </motion.div>
 
-      {shouldTruncate && (
-        <button
-          onClick={() => setIsExpanded((prev) => !prev)}
-          className="font-roboto text-sm text-blue-600 hover:underline"
-        >
-          {isExpanded ? "Voir moins" : "Voir plus"}
-        </button>
-      )}
+      <div className="flex w-full justify-center items-center">
+        {shouldTruncate && (
+          <button
+            onClick={() => setIsExpanded((prev) => !prev)}
+            className="font-roboto text-base font-bold text-gray-700 uppercase "
+          >
+            {isExpanded ? "Voir moins" : "Voir plus"}
+          </button>
+        )}
+      </div>
 
       {/* Accordion Sections */}
-      <div className="mt-6 flex flex-col gap-4 font-roboto">
+      <div className="mt-6 flex flex-col gap-0 font-roboto">
         {/* Section Template */}
         {[
           {
@@ -92,7 +96,7 @@ export default function ServiceCard({ details }) {
             content: (
               <p>
                 <strong>Jours et Horaires d’ouverture :</strong>{" "}
-                {details?.horaires || "Non renseigné"}
+                {details?.horaires_ouverture || "Non renseigné"}
               </p>
             ),
           },
@@ -100,11 +104,11 @@ export default function ServiceCard({ details }) {
             key: "partenaire",
             title: "Marque(s) Partenaire(s)",
             content: (
-              <div className="flex flex-col gap-4">
+              <div className="flex border bg-white shadow-md rounded-xl flex-col gap-4">
                 {details?.portrait_equipe?.map((person, index) => (
                   <div
                     key={index}
-                    className="flex justify-start items-center gap-4"
+                    className="flex justify-start items-center gap-4 p-1"
                   >
                     <img
                       src={
@@ -112,14 +116,15 @@ export default function ServiceCard({ details }) {
                           ? `${CONFIG.serverUrl}/storage/${person.image}`
                           : "/images/default-avatar.png"
                       }
-                      alt={person.nom} loading="lazy"
+                      alt={person.nom}
+                      loading="lazy"
                       className="rounded-full w-20 h-20 object-cover"
                     />
                     <div>
-                      <h6 className="text-2xl font-bold">{person.nom}</h6>
-                      <span className="block text-gray-500">
+                      <h6 className="text-2xl font-normal">{person.nom} <span className="text-base text-gray-500">
                         {person.poste}
-                      </span>
+                      </span></h6>
+                      
                       {person.description && (
                         <p className="text-sm text-gray-600">
                           {person.description}
@@ -135,18 +140,18 @@ export default function ServiceCard({ details }) {
           <motion.div
             key={section.key}
             layout
-            className="border rounded-xl overflow-hidden"
+            className="border overflow-hidden"
           >
             <button
               onClick={() => toggleSection(section.key)}
-              className="w-full text-left px-4 py-3 flex justify-between items-center bg-gray-100"
+              className="w-full text-left text-base px-3 py-2 flex gap-3 items-center font-roboto"
             >
-              <span className="font-semibold text-base">{section.title}</span>
               {openSection === section.key ? (
-                <ChevronUp size={18} />
+                <Minus size={18} />
               ) : (
-                <ChevronDown size={18} />
+                <Plus size={18} />
               )}
+              <span className="font-light uppercase">{section.title}</span>
             </button>
             <AnimatePresence initial={false}>
               {openSection === section.key && (

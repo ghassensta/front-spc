@@ -110,7 +110,7 @@ export const endpoints = {
   product: {
     list: '/api/produit',
     detail: (slug) => `/api/produit/${slug}`,
-    avis : '/api/produit/avis',
+    avis: '/api/produit/avis',
   },
   orders: {
     list: '/api/commandes',

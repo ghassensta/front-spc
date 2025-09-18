@@ -6,9 +6,8 @@ export default function TemplateBienEtre({ data=[] }) {
   console.log("data all bookes", data);
 
   return (
-    <div className="bg-[#f6f4ec] p-6">
+    <div className="p-6">
       <ServicesTemplates data={data} />
-
     </div>
   );
 }

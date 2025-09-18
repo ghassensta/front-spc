@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { ToastContainer, toast } from "react-toastify";
+import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import ImageCarousel from "./comp/image-carousel";
 import DetailsCard from "./comp/details-card";
@@ -10,6 +10,7 @@ import LocationSection from "./comp/location-section";
 import TestimonialsSection from "./comp/others-section";
 import StarRatingInput from "src/components/star-rating-input/star-rating-input";
 import { CONFIG } from "src/config-global";
+import { usePostEtablissementsAvis } from "src/actions/etablissements";
 
 const criteria = [
   "Practicien(ne)",
@@ -31,170 +32,178 @@ export default function SpaDetailsView({
   criteria.forEach((key) => {
     initialRatings[key] = 0;
   });
-  const [ratings, setRatings] = useState(initialRatings);
+  const avis = spaData?.avis || [];
 
-  console.log(ratings)
+  const [ratings, setRatings] = useState(initialRatings);
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [comment, setComment] = useState("");
 
-   const handleRatingChange = (category, value) => {
+  const handleRatingChange = (category, value) => {
     setRatings((prev) => ({ ...prev, [category]: value }));
   };
 
-  const handleSubmitReview = async () => {
+  const validateForm = () => {
     if (!name || !email || !comment) {
       toast.error(
         "Veuillez remplir tous les champs (nom, email et commentaire) !"
       );
-      return;
-    }
-
-    if (!spaData || !spaData?.id) {
-      toast.error("Erreur : Données de l'établissement non disponibles.");
-      return;
+      return false;
     }
 
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!emailRegex.test(email)) {
       toast.error("Veuillez entrer un email valide.");
-      return;
+      return false;
     }
 
-    if (Object.values(ratings).every((value) => value === 0)) {
-      toast.error("Veuillez attribuer au moins une note.");
-      return;
-    }
+    return true;
+  };
 
-    const reviewData = {
-      id: spaData?.id,
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    if (!validateForm()) return;
+
+    console.log("SUBMITTING REVIEW WITH DATA => ", {
       name,
       email,
       comment,
       ratings,
-    };
+      id: spaData.id,
+    });
 
-    try {
-      const response = await fetch(
-        `${CONFIG.serverUrl}/api/etablissements/avis`,
+    toast
+      .promise(
+        usePostEtablissementsAvis({
+          name,
+          email,
+          comment,
+          ratings,
+          id: spaData.id,
+        }),
         {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(reviewData),
+          pending: "Envoi de votre avis...",
+          success: "Avis envoyé avec succès !",
+          error: "Erreur lors de l'envoi de l'avis.",
         }
-      );
-
-      if (response.ok) {
-        toast.success("Avis envoyé avec succès !");
+      )
+      .then(() => {
         setRatings(initialRatings);
         setName("");
         setEmail("");
         setComment("");
-      } else {
-        const errorData = await response.json();
-        toast.error(
-          `Erreur lors de l'envoi de l'avis : ${
-            errorData.error || response.statusText
-          }`
-        );
-      }
-    } catch (error) {
-      console.error("Erreur:", error);
-      toast.error("Une erreur est survenue.");
-    }
+      })
+      .catch((error) => {
+        console.error("Erreur lors de l'envoi de l'avis:", error);
+      });
   };
 
   return (
     <div className="container mx-auto px-4">
-      <ToastContainer
-        position="top-right"
-        autoClose={3000}
-        hideProgressBar={false}
-        closeOnClick
-        pauseOnHover
-      />
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
-        <div>
+      <div className="flex gap-12">
+        <div className="w-full ">
           <ImageCarousel images={spaData?.gallerie} />
         </div>
-        <DetailsCard details={spaData} />
+        <div className="max-w-[40%]">
+          <DetailsCard details={spaData} />
+        </div>
       </div>
       <Services data={types} />
-      <div className="bg-white p-4 rounded-lg border max-w-6xl mx-auto mt-8">
-        <h6 className="font-semibold text-lg mb-4">Laisser un avis</h6>
-
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-6">
-          <div>
-            <label className="block text-sm font-medium mb-1 font-roboto">
-              Nom et prénom
-            </label>
-            <input
-              type="text"
-              className="w-full p-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-black"
-              placeholder="Votre nom et prénom"
-              value={name}
-              onChange={(e) => setName(e.target.value)}
-            />
-          </div>
-          <div>
-            <label className="block text-sm font-medium mb-1 font-roboto">
-              Email
-            </label>
-            <input
-              type="email"
-              className="w-full p-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-black"
-              placeholder="Votre email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-            />
-          </div>
+      <div className="space-y-4 max-w-6xl mx-auto font-roboto">
+        <div className="flex gap-4 border-b border-gray-200">
+          <span className="font-semibold uppercase">Les avis</span>
         </div>
+        {avis.length > 0 ? (
+          avis.map((avis, index) => (
+            <div key={index} className="bg-gray-100 p-4 rounded-md">
+              <p className="font-semibold">{avis.name}</p>
+              <div className="text-yellow-500 flex gap-1">
+                {[1, 2, 3, 4, 5].map((i) => (
+                  <FaStar
+                    key={i}
+                    fill={i <= avis.ratings ? "#facc15" : "none"}
+                    stroke="#facc15"
+                  />
+                ))}
+              </div>
+              <p className="text-sm text-gray-600">{avis.comment}</p>
+            </div>
+          ))
+        ) : (
+          <p className="text-gray-600">Aucun avis pour le moment.</p>
+        )}
+        <div className="bg-white p-4 rounded-lg border mt-8 ">
+          <h6 className="font-semibold text-lg mb-4">Laisser un avis</h6>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 mb-6">
-          {criteria.map((criterion) => (
-            <div key={criterion}>
-              <label className="block text-sm font-medium mb-1 font-roboto">
-                {criterion}
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-6">
+            <div>
+              <label className="block text-sm font-medium mb-1 ">
+                Nom et prénom
               </label>
-              <StarRatingInput
-                value={ratings[criterion]}
-                onChange={(value) => handleRatingChange(criterion, value)}
+              <input
+                type="text"
+                className="w-full p-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-black"
+                placeholder="Votre nom et prénom"
+                value={name}
+                onChange={(e) => setName(e.target.value)}
               />
             </div>
-          ))}
-        </div>
+            <div>
+              <label className="block text-sm font-medium mb-1 ">Email</label>
+              <input
+                type="email"
+                className="w-full p-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-black"
+                placeholder="Votre email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+              />
+            </div>
+          </div>
 
-        <div className="mb-6">
-          <label className="block text-sm font-medium mb-1 font-roboto">
-            Commentaire
-          </label>
-          <textarea
-            className="w-full p-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-black"
-            rows="4"
-            placeholder="Votre commentaire..."
-            value={comment}
-            onChange={(e) => setComment(e.target.value)}
-          />
-        </div>
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 mb-6">
+            {criteria.map((criterion) => (
+              <div key={criterion}>
+                <label className="block text-sm font-medium mb-1 ">
+                  {criterion}
+                </label>
+                <StarRatingInput
+                  value={ratings[criterion]}
+                  onChange={(value) => handleRatingChange(criterion, value)}
+                />
+              </div>
+            ))}
+          </div>
 
-        <div className="flex justify-end">
-          <button
-            onClick={handleSubmitReview}
-            className="px-4 py-2 bg-black text-white rounded-md hover:bg-gray-800 transition"
-            type="button"
-          >
-            Envoyer l'avis
-          </button>
+          <div className="mb-6">
+            <label className="block text-sm font-medium mb-1 ">
+              Commentaire
+            </label>
+            <textarea
+              className="w-full p-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-black"
+              rows="4"
+              placeholder="Votre commentaire..."
+              value={comment}
+              onChange={(e) => setComment(e.target.value)}
+            />
+          </div>
+
+          <div className="flex justify-end">
+            <button
+              onClick={(e) => handleSubmit(e)}
+              className="w-max px-4 py-3 bg-black leading-4 text-white uppercase font-normal text-xs tracking-[3px] hover:bg-gray-800 transition font-tahoma flex items-center justify-center gap-2"
+            >
+              envoyer l'avis
+            </button>
+          </div>
         </div>
       </div>
-
       <CarteCadeau />
       <div
         style={{
           backgroundImage:
             "url(https://spa-prestige-collection.com/wp-content/uploads/2025/07/1.png)",
         }}
-        className="bg-primary w-screen relative left-[calc(-50vw+50%)] mb-16 min-h-32 overflow-hidden bg-center"
+        className="bg-primary w-screen relative left-[calc(-50vw+50%)] mb-8 min-h-32 overflow-hidden bg-center"
       >
         <div className="flex flex-col items-center p-12 text-center bg-slate-300/80 w-[60%] my-36 mx-auto">
           <img

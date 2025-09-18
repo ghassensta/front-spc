@@ -9,48 +9,54 @@ const swrOptions = {
 };
 
 export function useGetEtablissements() {
-    const url = endpoints.etablissements.list;
+  const url = endpoints.etablissements.list;
 
-    const { data } = useSWR(url, fetcher, swrOptions);
+  const { data } = useSWR(url, fetcher, swrOptions);
 
-    const memoizedValue = useMemo(
-        () => ({
-            etablissements: data?.etablissements || [],
-        }),
-        [data]
-    );
+  const memoizedValue = useMemo(
+    () => ({
+      etablissements: data?.etablissements || [],
+    }),
+    [data]
+  );
 
-    return memoizedValue;
+  return memoizedValue;
 }
 
 export function useGetEtablissement(slug) {
-    const url = endpoints.etablissements.detail(slug);
+  const url = endpoints.etablissements.detail(slug);
 
-    const { data } = useSWR(url, fetcher, swrOptions);
+  const { data } = useSWR(url, fetcher, swrOptions);
 
-    const memoizedValue = useMemo(
-        () => ({
-            etablissement: data?.etablissement || null,
-            types: data?.types || [],
-            simlairesEtablissment: data?.simlairesEtablissment || [],
-        }),
-        [data]
-    );
+  const memoizedValue = useMemo(
+    () => ({
+      etablissement: data?.etablissement || null,
+      types: data?.types || [],
+      simlairesEtablissment: data?.simlairesEtablissment || [],
+    }),
+    [data]
+  );
 
-    return memoizedValue;
+  return memoizedValue;
 }
 
-export function usePostEtablissementsAvis() {
+export const usePostEtablissementsAvis = async ({
+  name,
+  email,
+  comment,
+  ratings,
+  id,
+}) => {
+  try {
     const url = endpoints.etablissements.avis;
+    const params = { name, email, comment, ratings, id };
 
-    const { data } = useSWR(url, poster, swrOptions);
+    const res = await poster(url, params);
 
-    const memoizedValue = useMemo(
-        () => ({
-            avis: data?.avis || []
-        }),
-        [data]
-    );
+    return res;
+  } catch (error) {
+    console.error("❌ Erreur lors de la mise à jour du profil:", error);
+    throw error;
+  }
 
-    return memoizedValue;
-}
+};

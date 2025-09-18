@@ -5,9 +5,7 @@ export default function TabButton({ label, active, onClick }) {
   return (
     <button
       onClick={onClick}
-      className={`relative px-4 py-2 text-xl font-semibold italic transition-colors duration-300 ${
-        active ? "text-secondary" : "text-gray-500"
-      }`}
+      className={`relative px-4 py-2 text-2xl font-semibold italic transition-colors duration-300 text-secondary`}
     >
       {label}
       {active && (
