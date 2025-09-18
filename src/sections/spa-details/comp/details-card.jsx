@@ -3,7 +3,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { Star, ChevronDown, ChevronUp, Minus, Plus } from "lucide-react";
 import { CONFIG } from "src/config-global";
 
-export default function ServiceCard({ details }) {
+export default function ServiceCard({ details, avisTotals=0 }) {
   const [isExpanded, setIsExpanded] = useState(false);
   const [openSection, setOpenSection] = useState(null); // 'general', 'utiles', 'partenaire'
 
@@ -11,7 +11,7 @@ export default function ServiceCard({ details }) {
     setOpenSection((prev) => (prev === key ? null : key));
   };
 
-  const roundedRating = Math.round(details?.avgRating * 2) / 2;
+  const roundedRating = Math.round(details?.avg_rating * 2) / 2;
   const DESCRIPTION_LIMIT = 300;
   const shouldTruncate = details?.description?.length > DESCRIPTION_LIMIT;
   const shortText = details?.description?.slice(0, DESCRIPTION_LIMIT) + "...";
@@ -41,8 +41,8 @@ export default function ServiceCard({ details }) {
                 stroke="#facc15"
               />
             ))}
-            <span className="text-sm text-gray-600 ml-2">
-              ({parseFloat(details?.avgRating)?.toFixed(1)})
+            <span className="text-sm text-gray-600 ml-2 font-roboto">
+              ({avisTotals} avis)
             </span>
           </div>
         </div>
@@ -102,7 +102,7 @@ export default function ServiceCard({ details }) {
           },
           {
             key: "partenaire",
-            title: "Marque(s) Partenaire(s)",
+            title: "PORTRAIT DE L'EQUIPE",
             content: (
               <div className="flex border bg-white shadow-md rounded-xl flex-col gap-4">
                 {details?.portrait_equipe?.map((person, index) => (
@@ -133,6 +133,23 @@ export default function ServiceCard({ details }) {
                     </div>
                   </div>
                 ))}
+              </div>
+            ),
+          },
+          {
+            key: "marques",
+            title: "Marques Partenaires",
+            content: (
+              <div className="flex flex-wrap gap-4">
+                {details?.marques_partenaires?.length > 0 ? (
+                  details.marques_partenaires.map((marque, index) => (
+                    <div key={index} className="border p-2 rounded-md">
+                      {marque.nom}
+                    </div>
+                  ))
+                ) : (
+                  <p className="text-gray-600">Aucune marque partenaire</p>
+                )}
               </div>
             ),
           },

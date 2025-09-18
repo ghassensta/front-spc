@@ -78,9 +78,9 @@ export default function HomeView() {
             {/* Bouton (si carte existe) */}
             {carte && carte.button_url && (
               <ButtonIcon
-                title={carte.button_text || "DÉCOUVRIR"}
+                title={carte.button_text || "OFFRIR"}
                 to={carte.button_url}
-                icon={<FaHandHoldingHeart />}
+                // icon={<FaHandHoldingHeart />}
               />
             )}
           </div>
@@ -206,7 +206,7 @@ export default function HomeView() {
 
           {/* Gestion du loading et erreur */}
 
-          {marques?.extra_data?.logos.length > 0 ? (
+          {marques?.extra_data?.logos?.length > 0 ? (
             <Swiper
               spaceBetween={20}
               modules={[Autoplay, Navigation]}

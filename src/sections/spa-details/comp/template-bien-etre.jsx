@@ -6,7 +6,7 @@ export default function TemplateBienEtre({ data=[] }) {
   console.log("data all bookes", data);
 
   return (
-    <div className="p-6">
+    <div className="">
       <ServicesTemplates data={data} />
     </div>
   );

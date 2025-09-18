@@ -11,6 +11,7 @@ import TestimonialsSection from "./comp/others-section";
 import StarRatingInput from "src/components/star-rating-input/star-rating-input";
 import { CONFIG } from "src/config-global";
 import { usePostEtablissementsAvis } from "src/actions/etablissements";
+import { FaStar } from "react-icons/fa";
 
 const criteria = [
   "Practicien(ne)",
@@ -27,12 +28,13 @@ export default function SpaDetailsView({
   spaData,
   types,
   simlairesEtablissment,
+  avis,
 }) {
   const initialRatings = {};
   criteria.forEach((key) => {
     initialRatings[key] = 0;
   });
-  const avis = spaData?.avis || [];
+  // const avis = spaData?.avis || [];
 
   const [ratings, setRatings] = useState(initialRatings);
   const [name, setName] = useState("");
@@ -99,13 +101,13 @@ export default function SpaDetailsView({
   };
 
   return (
-    <div className="container mx-auto px-4">
-      <div className="flex gap-12">
+    <div className="mx-auto px-4">
+      <div className="flex flex-col md:flex-row gap-12">
         <div className="w-full ">
           <ImageCarousel images={spaData?.gallerie} />
         </div>
-        <div className="max-w-[40%]">
-          <DetailsCard details={spaData} />
+        <div className="w-full">
+          <DetailsCard details={spaData} avisTotals={avis.length} />
         </div>
       </div>
       <Services data={types} />
@@ -121,7 +123,7 @@ export default function SpaDetailsView({
                 {[1, 2, 3, 4, 5].map((i) => (
                   <FaStar
                     key={i}
-                    fill={i <= avis.ratings ? "#facc15" : "none"}
+                    fill={i <= avis.average_rating ? "#facc15" : "none"}
                     stroke="#facc15"
                   />
                 ))}

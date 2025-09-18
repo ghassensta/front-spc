@@ -33,7 +33,7 @@ export default function Tabs({ data = [] }) {
             content = <TemplateRestaurant data={type} />;
             break;
           default:
-            content = <div>Aucun template disponible</div>;
+            content = <p>Aucun template disponible</p>;
         }
 
         return {

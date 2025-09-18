@@ -8,13 +8,18 @@ import { useGetEtablissement } from "src/actions/etablissements";
 export default function Page() {
   const { id } =useParams();
 
-  const { etablissement, types, simlairesEtablissment } = useGetEtablissement(id)
+  const { etablissement, types, simlairesEtablissment, avis } = useGetEtablissement(id)
 
-  // console.log(etablissement.types)
+  console.log("avis", avis);
+  console.log("simlairesEtablissment", simlairesEtablissment);
+  console.log("types", types);
+  console.log("etablissement", etablissement);
+
+
 
   return (
     <>
-     <SpaDetailsView spaData={etablissement} types={types} simlairesEtablissment={simlairesEtablissment} />
+     <SpaDetailsView spaData={etablissement} types={types} simlairesEtablissment={simlairesEtablissment} avis={avis}/>
     </>
   );
 }

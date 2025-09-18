@@ -33,6 +33,7 @@ export function useGetEtablissement(slug) {
       etablissement: data?.etablissement || null,
       types: data?.types || [],
       simlairesEtablissment: data?.simlairesEtablissment || [],
+      avis: data?.avis || [],
     }),
     [data]
   );
