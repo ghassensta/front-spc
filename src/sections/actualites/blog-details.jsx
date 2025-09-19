@@ -47,7 +47,7 @@ export default function BlogDetails() {
         </div>
       </div>
       <div className="max-w-4xl mx-auto my-8">
-        <img
+        <img lazyload="lazy"
           src="https://spa-prestige-collection.com/wp-content/uploads/2025/06/59.png"
           alt=""
           className="mb-12"
@@ -128,12 +128,12 @@ export default function BlogDetails() {
             </button>
           </div>
           <div className="grid grid-cols-1 md:grid-cols-2 justify-around gap-6">
-            <img
+            <img lazyload="lazy"
               src="https://spa-prestige-collection.com/wp-content/uploads/2025/06/58-1024x683.png"
               className="w-full"
               alt=""
             />
-            <img
+            <img lazyload="lazy"
               src="https://spa-prestige-collection.com/wp-content/uploads/2025/06/61-1024x683.png"
               className="w-full"
               alt=""
@@ -282,7 +282,7 @@ export default function BlogDetails() {
               key={index}
               className="bg-[#FBF6EC] shadow rounded overflow-hidden flex flex-col font-roboto"
             >
-              <img
+              <img lazyload="lazy"
                 src={article.image}
                 alt={article.title}
                 className="w-full h-48 object-cover"

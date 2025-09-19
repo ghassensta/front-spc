@@ -3,7 +3,6 @@ import { Outlet } from "react-router-dom";
 import LayoutTheme from "../layouts/layout";
 import LoadingScreen from "../components/loading-screen/loading-screen";
 import DashboardLayout from "src/layouts/dashboardLayout";
-import ProductDetailsView from "src/sections/product-details/product-details-view";
 
 // Pages principales
 const Index = lazy(() => import("../pages/home/index"));
@@ -55,13 +54,13 @@ export const routes = [
       // === Anciennes routes dynamiques ===
       { element: <Index />, index: true },
       { element: <Details />, path: "spa/:id" },
-      { element: <ProductDetailsView />, path: "produit/:slug" },
+      { element: <ViewProduct />, path: "produit/:slug" },
       { element: <Chekckout />, path: "checkout" },
       { element: <ChekckoutPayement />, path: "payment" },
       { element: <CheckoutDetails />, path: "checkout/details" },
 
       // === Nouvelles routes statiques ===
-      { element: <ViewProduct />, path: "spa" },
+      // { element: <ViewProduct />, path: "spa" },
       { element: <Categories />, path: "categories/:slog" },
       { element: <Actualites />, path: "actualites" },
       { element: <ActualitesDetails />, path: "actualites/:title" },

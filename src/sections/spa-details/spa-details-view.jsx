@@ -29,6 +29,7 @@ export default function SpaDetailsView({
   types,
   simlairesEtablissment,
   avis,
+  marquesPartenaires
 }) {
   const initialRatings = {};
   criteria.forEach((key) => {
@@ -46,9 +47,9 @@ export default function SpaDetailsView({
   };
 
   const validateForm = () => {
-    if (!name || !email || !comment) {
+    if (!name || !email) {
       toast.error(
-        "Veuillez remplir tous les champs (nom, email et commentaire) !"
+        "Veuillez remplir tous les champs (nom, email) !"
       );
       return false;
     }
@@ -99,7 +100,7 @@ export default function SpaDetailsView({
           <ImageCarousel images={spaData?.gallerie} />
         </div>
         <div className="w-full">
-          <DetailsCard details={spaData} avisTotals={avis.length} />
+          <DetailsCard details={spaData} avisTotals={avis.length} marquesPartenaires={marquesPartenaires}/>
         </div>
       </div>
       <Services data={types} />
@@ -200,7 +201,7 @@ export default function SpaDetailsView({
         className="bg-primary w-screen relative left-[calc(-50vw+50%)] mb-8 min-h-32 overflow-hidden bg-center"
       >
         <div className="flex flex-col items-center p-12 text-center bg-slate-300/80 w-[60%] my-36 mx-auto">
-          <img
+          <img lazyload="lazy"
             src={logoSpc}
             alt="Logo Spa & Prestige Collection"
             className="w-36 mb-4"

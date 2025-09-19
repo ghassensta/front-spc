@@ -276,7 +276,7 @@ export default function PaymentView() {
               key={item.id}
               className="flex gap-4 items-center border-b pb-2"
             >
-              <img
+              <img lazyload="lazy"
                 src={`${CONFIG.serverUrl}/storage/${item.image}`}
                 alt={item.name}
                 className="w-16 h-16 object-cover rounded"

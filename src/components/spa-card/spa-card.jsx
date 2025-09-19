@@ -8,7 +8,7 @@ export default function SpaCard({ to, image, title, description, location }) {
   const renderLocation = () => {
     if (!location) return null;
     return (
-      <span className="bg-[#020100C9] text-white font-tahoma uppercase flex items-center justify-start w-max py-3 px-6 gap-2 absolute left-4 -top-1 font-medium text-xs tracking-[2px]">
+      <span className="bg-[#020100C9] text-white font-tahoma uppercase flex items-center justify-start w-max py-3 px-6 gap-2 absolute left-4 -top-1 font-medium text-xs tracking-[2px] max-w-[90%] -mr-6">
         <FiMapPin className="text-white" />
         {location}
       </span>
@@ -18,7 +18,7 @@ export default function SpaCard({ to, image, title, description, location }) {
   const renderImage = () => {
     if (!image) return null;
     return (
-      <img
+      <img lazyload="lazy"
         src={image}
         alt={title}
         className="w-full h-72 rounded-3xl object-cover overflow-hidden"
@@ -60,7 +60,7 @@ export default function SpaCard({ to, image, title, description, location }) {
         {renderDescription()}
 
         <div className="mt-2 w-full flex justify-center items-center">
-            <ButtonIcon title="Offrir une expérience" sx="mx-auto"/>
+            <ButtonIcon link={to} title="Offrir une expérience" sx="mx-auto"/>
         </div>
       </motion.div>
     </Link>

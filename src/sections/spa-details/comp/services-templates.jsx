@@ -27,7 +27,7 @@ export default function ServicesTemplates({ data = {} }) {
               {equipements.map((equip) => (
                 <div className="flex items-center gap-1" key={equip.id}>
                   <div className="rounded-full w-8 h-8 ">
-                    <img
+                    <img lazyload="lazy"
                       src={CONFIG.serverUrl+"/storage/"+equip.image}
                       alt={equip.name}
                       className="object-contain"

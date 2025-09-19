@@ -32,7 +32,7 @@ export default function CarteCadeau() {
               </p>
             </div>
             <div className="md:w-1/2">
-              <img
+              <img lazyload="lazy"
                 src="https://spa-prestige-collection.com/wp-content/uploads/2025/05/SPC-carte-cadeau-montant-3.jpg"
                 alt="Carte Cadeau Spa & Prestige"
                 className="w-full h-auto object-cover rounded"
@@ -80,7 +80,7 @@ export default function CarteCadeau() {
         </h2>
 
         <div className="flex gap-6">
-          <img
+          <img lazyload="lazy"
             src="https://spa-prestige-collection.com/wp-content/uploads/2025/05/SPC-Femme-cartes-square.jpg"
             alt=""
           />

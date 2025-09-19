@@ -10,6 +10,7 @@ export default function TestimonialsSection({ testimonials = [] }) {
   const [index, setIndex] = useState(0);
   const [direction, setDirection] = useState(1); // 1 pour next, -1 pour prev
 
+  console.log(testimonials)
   if (testimonials.length === 0) return null;
 
   const length = testimonials.length;
@@ -69,7 +70,7 @@ export default function TestimonialsSection({ testimonials = [] }) {
           {visibleTestimonials.map((testimonial) => (
             <motion.div
               key={testimonial.id}
-              className="w-full p-6 rounded-2xl border"
+              className="w-1/3 p-6 rounded-2xl border"
               custom={direction}
               variants={cardVariants}
               initial="initial"
@@ -77,8 +78,8 @@ export default function TestimonialsSection({ testimonials = [] }) {
               exit="exit"
               transition={{ duration: 0.4, ease: "easeInOut" }}
             >
-              <div className="flex flex-col items-center">
-                <img
+              <div className="flex  flex-col items-center">
+                <img lazyload="lazy"
                   src={
                     testimonial.logo
                       ? `${CONFIG.serverUrl}/storage/${testimonial.logo}`
@@ -86,7 +87,7 @@ export default function TestimonialsSection({ testimonials = [] }) {
                   }
                   alt={testimonial.slug}
                   style={{
-                    width: "120px",
+                    // width: "120px",
                     height: "120px",
                     objectFit: "cover",
                     borderRadius: "12px",

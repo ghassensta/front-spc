@@ -50,7 +50,7 @@ export default function Footer() {
         {/* Colonne 1: Logo + Description */}
         <div className="text-center flex flex-col items-center mx-auto lg:mr-12">
           {siteLogoPath ? (
-            <img
+            <img lazyload="lazy"
               src={`${CONFIG.serverUrl}/storage/${siteLogoPath}`}
               alt="SPC Logo"
               className="w-32 md:w-60 mb-4 d-block"

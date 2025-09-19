@@ -32,8 +32,9 @@ export function useGetEtablissement(slug) {
     () => ({
       etablissement: data?.etablissement || null,
       types: data?.types || [],
-      simlairesEtablissment: data?.simlairesEtablissment || [],
+      simlairesEtablissment: data?.similairesEtablissement || [],
       avis: data?.avis || [],
+      marquesPartenaires: data?.marquesPartenaires || [],
     }),
     [data]
   );
@@ -58,7 +59,7 @@ export const usePostEtablissementsAvis = async ({
 
     return res;
   } catch (error) {
-    console.error("❌ Erreur lors de la mise à jour du profil:", error);
+    console.error("❌ Erreur lors de la soumission de l'avis:", error);
     throw error;
   }
 

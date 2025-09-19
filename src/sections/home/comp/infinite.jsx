@@ -5,7 +5,7 @@ import { MdOutlineNavigateBefore, MdOutlineNavigateNext } from "react-icons/md";
 // Reuse this miniCard component
 const MiniCard = ({ title, img }) => (
   <div className="flex flex-col items-center min-w-[14rem] mx-2">
-    <img
+    <img lazyload="lazy"
       className="h-60 w-56 object-cover rounded-xl mb-2"
       src={img}
       alt=""

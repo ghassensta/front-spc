@@ -13,16 +13,19 @@ import { useGetLastNews } from "src/actions/actualites";
 import { useLayout } from "src/actions/layout";
 import { CONFIG } from "src/config-global";
 import SpaCard from "src/components/spa-card/spa-card";
+import { Link } from "react-router-dom";
 
 export default function HomeView() {
   const { etablissements } = useGetEtablissements();
   const { actualites } = useGetLastNews(3);
   const { marques, prochainement, carte } = useLayout();
 
+  console.log("carte url:", carte.button_url); 
+
   return (
     <>
       <Header />
-      
+
       {/* ETABLISSEMENT SECTION  */}
       <div className="max-w-6xl mx-auto">
         <h2 className="text-4xl font-bold text-center">
@@ -45,7 +48,7 @@ export default function HomeView() {
           ))}
         </div>
         <div className="text-center">
-          <ButtonIcon title="Découvrir toutes les offres" />
+          <ButtonIcon link={paths.spa.list} title="Découvrir toutes les offres" />
         </div>
       </div>
 
@@ -61,6 +64,7 @@ export default function HomeView() {
             {/* Vérifier que sectionCarte existe avant de lire ses propriétés */}
             {carte && carte.image && (
               <img
+                lazyload="lazy"
                 src={`${CONFIG.serverUrl}/storage/${carte.image}`}
                 alt={carte.title || "Carte Cadeau"}
                 className="mb-4 max-h-32 object-contain"
@@ -78,7 +82,7 @@ export default function HomeView() {
             {carte && carte.button_url && (
               <ButtonIcon
                 title={carte.button_text || "OFFRIR"}
-                to={carte.button_url}
+                link={carte?.button_url || paths.cadeau}
                 // icon={<FaHandHoldingHeart />}
               />
             )}
@@ -106,7 +110,7 @@ export default function HomeView() {
             {prochainement?.extra_data?.cards?.map((item, index) => (
               <Card
                 key={index} // React nécessite une clé unique
-                to={item.link ? `/produit/${item.link}` : "#"}
+                to={paths.spa.list}
                 title={item.title || "Sans titre"}
                 image={
                   item.image
@@ -159,99 +163,92 @@ export default function HomeView() {
 
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-8">
               {actualites.map((actualite) => (
-                // <Card
-                //   key={actualite.id}
-                //   type="news"
-                //   to={paths.actualitesDetails(actualite.slug)}
-                //   title={actualite.title}
-                //   description={actualite.petit_description}
-                //   image={`${CONFIG.serverUrl}/storage/${actualite.image}`}
-                //   date={new Date(actualite.created_at).toLocaleDateString(
-                //     "fr-FR",
-                //     {
-                //       day: "numeric",
-                //       month: "long",
-                //       year: "numeric",
-                //     }
-                //   )}
-                // />
-                <div className="mb-3 relative cursor-pointer" key={actualite.id}>
+              
+                <div
+                  className="mb-3 relative cursor-pointer"
+                  key={actualite.id}
+                >
                   <img
+                    lazyload="lazy"
                     src={`${CONFIG.serverUrl}/storage/${actualite.image}`}
                     alt={actualite.title}
-                    />
-                    <span className="absolute bg-black/25 w-full h-full top-0 left-0"/>
-                    <span className="absolute bottom-0 text-white text-2xl p-2 pb-5 font-bold">{actualite.title}</span>
+                  />
+                  <span className="absolute bg-black/25 w-full h-full top-0 left-0" />
+                  <Link to={paths.actualitesDetails(actualite.slug)} className="absolute bottom-0 text-white text-2xl p-2 pb-5 font-bold">
+                    {actualite.title}
+                  </Link>
                 </div>
               ))}
             </div>
             <div className="text-center">
-              <ButtonIcon title="Tous nos articles" />
+              <ButtonIcon link={paths.actualites} title="Tous nos articles" />
             </div>
           </div>
         </div>
       )}
 
       {/* MARQUES PARTENAIRES SECTION  */}
-      <div className="bg-white rounded-lg">
-        <div className="max-w-6xl mx-auto py-12">
-          <h2 className="text-4xl font-bold text-center">
-            {marques.title || "Nos marques partenaires"}
-          </h2>
-          <p className="text-center text-gray-500 mt-2 mb-8">
-            {marques.description ||
-              "Découvrez les marques prestigieuses que nous avons sélectionnées pour vous."}
-          </p>
-
-          {/* Gestion du loading et erreur */}
-
-          {marques?.extra_data?.logos?.length > 0 ? (
-            <Swiper
-              spaceBetween={20}
-              modules={[Autoplay, Navigation]}
-              autoplay={{ delay: 3000 }}
-              navigation={{
-                prevEl: ".swiper-button-prev",
-                nextEl: ".swiper-button-next",
-              }}
-              breakpoints={{
-                320: { slidesPerView: 1 },
-                640: { slidesPerView: 2 },
-                768: { slidesPerView: 3 },
-                1024: { slidesPerView: 4 },
-              }}
-            >
-              {marques?.extra_data?.logos.map((marque, i) => (
-                <SwiperSlide
-                  key={i}
-                  className="flex justify-center w-full h-48"
-                >
-                  <a
-                    href={marque.link || "#"}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="flex items-center justify-center w-full h-full"
-                  >
-                    <img
-                      className="mx-auto max-h-full object-contain"
-                      src={
-                        marque.image
-                          ? `${CONFIG.serverUrl}/storage/${marque.image}`
-                          : "/assets/img/placeholder.png"
-                      }
-                      alt={`Logo partenaire ${i + 1}`}
-                    />
-                  </a>
-                </SwiperSlide>
-              ))}
-            </Swiper>
-          ) : (
-            <p className="text-center text-gray-400">
-              Aucune marque partenaire disponible pour le moment.
+      {marques?.extra_data?.logos?.length > 0 && (
+        <div className="bg-white rounded-lg">
+          <div className="max-w-6xl mx-auto py-12">
+            <h2 className="text-4xl font-bold text-center">
+              {marques.title || "Nos marques partenaires"}
+            </h2>
+            <p className="text-center text-gray-500 mt-2 mb-8">
+              {marques.description}
             </p>
-          )}
+
+            {/* Gestion du loading et erreur */}
+
+            {marques?.extra_data?.logos?.length > 0 ? (
+              <Swiper
+                spaceBetween={20}
+                modules={[Autoplay, Navigation]}
+                autoplay={{ delay: 3000 }}
+                navigation={{
+                  prevEl: ".swiper-button-prev",
+                  nextEl: ".swiper-button-next",
+                }}
+                breakpoints={{
+                  320: { slidesPerView: 1 },
+                  640: { slidesPerView: 2 },
+                  768: { slidesPerView: 3 },
+                  1024: { slidesPerView: 4 },
+                }}
+              >
+                {marques?.extra_data?.logos.map((marque, i) => (
+                  <SwiperSlide
+                    key={i}
+                    className="flex justify-center w-full h-48"
+                  >
+                    <a
+                      href={marque.link || "#"}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="flex items-center justify-center w-full h-full"
+                    >
+                      <img
+                        lazyload="lazy"
+                        className="mx-auto max-h-full object-contain"
+                        src={
+                          marque.image
+                            ? `${CONFIG.serverUrl}/storage/${marque.image}`
+                            : "/assets/img/placeholder.png"
+                        }
+                        alt={`Logo partenaire ${i + 1}`}
+                      />
+                    </a>
+                  </SwiperSlide>
+                ))}
+              </Swiper>
+            ) : (
+              <p className="text-center text-gray-400">
+                Aucune marque partenaire disponible pour le moment.
+              </p>
+            )}
+          </div>
         </div>
-      </div>
+      )}
     </>
   );
 }

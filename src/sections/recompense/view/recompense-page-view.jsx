@@ -34,7 +34,7 @@ export default function RecompensePageView() {
 
       <div className="bg-[#FBF6EC] w-screen relative left-[calc(-50vw+50%)] mb-4">
         <div className="flex flex-col md:flex-row gap-4 max-w-6xl mx-auto px-4 py-6">
-          <img
+          <img lazyload="lazy"
             src="https://spa-prestige-collection.com/wp-content/uploads/2025/02/SPC-images-1975x1318-Programme-Parrainage-01-1024x683.jpg"
             alt=""
             className="md:w-1/2"
@@ -126,7 +126,7 @@ export default function RecompensePageView() {
                 </div>
 
                 <button className="bg-[#b6b499] rounded-full text-white w-max mx-auto px-8 py-2 mb-4">Valider</button>
-                <img src="https://assets.mailjet.com/lib/images/passport/mailjet-brand/logo1.png" alt="" className="w-48 mb-12"/>
+                <img lazyload="lazy" src="https://assets.mailjet.com/lib/images/passport/mailjet-brand/logo1.png" alt="" className="w-48 mb-12"/>
                 <a href={paths.main} className="bg-[#b6b499] rounded-full text-white w-max mx-auto px-8 py-2 mb-4 uppercase">Accueil</a>
 
             </div>

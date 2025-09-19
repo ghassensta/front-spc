@@ -1,24 +1,19 @@
-import React, { useEffect, useState } from "react";
-// import ButtonIcon from "../../components/button-icon/button-icon";
+import React, { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { FaStar } from "react-icons/fa";
 import { useCheckoutContext } from "../checkout/context/use-checkout-context";
-import { useParams, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { paths } from "../../router/paths";
 import { Star } from "lucide-react";
 import StarRatingInput from "src/components/star-rating-input/star-rating-input";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { CONFIG } from "src/config-global";
+import { usePostProductAvis } from "src/actions/products";
 
-export default function ProductDetailsView() {
-  const { slug } = useParams();
+export default function ProductDetailsView({ product, avis = [] }) {
   const navigate = useNavigate();
   const checkout = useCheckoutContext();
-
-  const [product, setProduct] = useState(null);
-  const [aviss, setAvis] = useState([]);
-  // const [loading, setLoading] = useState(true);
   const [rating, setRating] = useState(0);
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
@@ -28,47 +23,31 @@ export default function ProductDetailsView() {
   // State for multiple recipients (repeater)
   const [recipients, setRecipients] = useState([{ fullName: "", email: "" }]);
 
-  useEffect(() => {
-    if (!slug) return;
-    const fetchProduct = async () => {
-      try {
-        const res = await fetch(`${CONFIG.serverUrl}/api/produit/${slug}`);
-        if (!res.ok) throw new Error("Produit non trouvé");
-        const data = await res.json();
-        setProduct(data.product);
-        setAvis(data.avis || []);
-      } catch (err) {
-        console.error(err);
-      } finally {
-        setLoading(false);
-      }
-    };
-    fetchProduct();
-  }, [slug]);
-
   const addProductToCheckout = () => {
     if (!product) return;
 
     // Check for required fields
-    if (recipients.some(r => !r.fullName || !r.email)) {
+    if (recipients.some((r) => !r.fullName || !r.email)) {
       toast.error("Veuillez remplir tous les champs pour chaque destinataire.");
       return;
     }
 
     // Check for duplicate emails
-    const emailSet = new Set(recipients.map(r => r.email.toLowerCase()));
+    const emailSet = new Set(recipients.map((r) => r.email.toLowerCase()));
     if (emailSet.size !== recipients.length) {
-      toast.error("Emails en double détectés. Chaque destinataire doit avoir un email unique.");
+      toast.error(
+        "Emails en double détectés. Chaque destinataire doit avoir un email unique."
+      );
       return;
     }
 
     // Get unique recipients
     const uniqueRecipients = Array.from(
-      new Map(recipients.map(r => [r.email.toLowerCase(), r])).values()
+      new Map(recipients.map((r) => [r.email.toLowerCase(), r])).values()
     );
 
     // Add all recipients to checkout in a single call
-    const existingItem = checkout.items.find(item => item.id === product.id);
+    const existingItem = checkout.items.find((item) => item.id === product.id);
     checkout.onAddToCart({
       id: product.id,
       name: product.nom,
@@ -96,7 +75,9 @@ export default function ProductDetailsView() {
 
   const handleRemoveRecipient = (index) => {
     const newRecipients = recipients.filter((_, i) => i !== index);
-    setRecipients(newRecipients.length > 0 ? newRecipients : [{ fullName: "", email: "" }]);
+    setRecipients(
+      newRecipients.length > 0 ? newRecipients : [{ fullName: "", email: "" }]
+    );
   };
 
   const handleRecipientChange = (index, field, value) => {
@@ -105,58 +86,103 @@ export default function ProductDetailsView() {
     setRecipients(newRecipients);
   };
 
-  const handleSubmitReview = async () => {
-    if (!product || !name || !email || !comment || !rating) {
-      toast.error("Veuillez remplir tous les champs obligatoires.");
-      return;
+  // const handleSubmitReview = async () => {
+  //   if (!product || !name || !email) {
+  //     toast.error("Veuillez remplir tous les champs obligatoires.");
+  //     return;
+  //   }
+
+  //   const newAvis = {
+  //     type_produit_id: product.id,
+  //     ratings: rating,
+  //     name,
+  //     email,
+  //     comment,
+  //   };
+
+  //   console.log(newAvis);
+
+  //   try {
+  //     const res = await fetch(`${CONFIG.serverUrl}/api/produit/avis`, {
+  //       method: "POST",
+  //       headers: { "Content-Type": "application/json" },
+  //       body: JSON.stringify(newAvis),
+  //     });
+
+  //     if (res.ok) {
+  //       const responseData = await res.json();
+  //       // const avisAjoute = responseData.avis || responseData;
+  //       setName("");
+  //       setEmail("");
+  //       setComment("");
+  //       setRating(0);
+  //       toast.success("Avis envoyé avec succès");
+  //     } else {
+  //       throw new Error("Erreur lors de l'envoi de l'avis");
+  //     }
+  //   } catch (err) {
+  //     console.error(err);
+  //     toast.error("Une erreur est survenue lors de l'envoi de l'avis.");
+  //   }
+  // };
+
+const validateForm = () => {
+    if (!name || !email) {
+      toast.error(
+        "Veuillez remplir tous les champs (nom, email) !"
+      );
+      return false;
     }
 
-    const newAvis = {
-      type_produit_id: product.id,
-      ratings: rating,
-      name,
-      email,
-      comment,
-    };
-
-    try {
-      const res = await fetch(`${CONFIG.serverUrl}/api/produit/avis`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(newAvis),
-      });
-
-      if (res.ok) {
-        const responseData = await res.json();
-        // const avisAjoute = responseData.avis || responseData;
-        setName("");
-        setEmail("");
-        setComment("");
-        setRating(0);
-        toast.success("Avis envoyé avec succès");
-      } else {
-        throw new Error("Erreur lors de l'envoi de l'avis");
-      }
-    } catch (err) {
-      console.error(err);
-      toast.error("Une erreur est survenue lors de l'envoi de l'avis.");
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(email)) {
+      toast.error("Veuillez entrer un email valide.");
+      return false;
     }
+
+    return true;
   };
 
+  
+  const handleSubmit = async (e) => {
+      e.preventDefault();
+      if (!validateForm()) return;
+  
+      toast
+        .promise(
+          usePostProductAvis({
+            name,
+            email,
+            comment,
+            ratings: rating,
+            id: product.id,
+          }),
+          {
+            pending: "Envoi de votre avis...",
+            success: "Avis envoyé avec succès !",
+            error: "Erreur lors de l'envoi de l'avis.",
+          }
+        )
+        .then(() => {
+          setRating(0);
+          setName("");
+          setEmail("");
+          setComment("");
+        })
+        .catch((error) => {
+          console.error("Erreur lors de l'envoi de l'avis:", error);
+        });
+    };
   const stars = product?.avg_rating || 0;
   const roundedRating = Math.round(stars * 2) / 2;
 
   return (
-    <div className="container max-w-6xl mx-auto px-4">
-     
-      <h4 className="font-semibold text-4xl mb-4">
-        {product ? product.nom : "Chargement..."}
-      </h4>
-
+    <div className="max-w-6xl mx-auto px-4 font-tahoma">
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         {product?.image && (
-          <img
-            className="rounded-lg"
+          <img lazyload="lazy"
+          
+            className=""
             src={`${CONFIG.serverUrl}/storage/${product.image}`}
             alt={product.nom}
           />
@@ -164,10 +190,9 @@ export default function ProductDetailsView() {
         <div className="bg-white p-8 rounded-2xl">
           <div className="flex flex-wrap gap-2 mb-4">
             {[
-              "David Grand Spa - Villerest",
-              "100 chemin de la chapelle",
-              "42300 VILLEREST",
-              "Loire",
+              product?.type?.etablissement?.nom+" - Tél. :"+product?.type?.etablissement?.telephone,
+              " - Email:"+product?.type?.etablissement?.email,
+              product?.type?.etablissement?.adresse,
               "France",
             ].map((text, i) => (
               <div
@@ -178,7 +203,9 @@ export default function ProductDetailsView() {
               </div>
             ))}
           </div>
-
+          <h4 className="font-semibold text-4xl mb-4">
+            {product ? product.nom : "Chargement..."}
+          </h4>
           <div className="flex items-center gap-1 mb-2">
             {[1, 2, 3, 4, 5].map((i) => (
               <Star
@@ -199,71 +226,85 @@ export default function ProductDetailsView() {
             </span>
           </div>
 
-          <div className="font-bold text-secondary text-3xl font-tahoma mb-2">
+          <div className="font-normal text-[#958e09] text-lg font-tahoma mb-2">
             {product?.prix} €
           </div>
 
           <div className="leading-base text-base font-tahoma">
             {product?.description || "Aucune description disponible."}
           </div>
-        </div>
-      </div>
-
-      {/* Repeater for multiple recipients */}
-      <div className="mt-6">
-        <h5 className="text-2xl font-semibold mb-4">Ajouter des destinataires pour les cartes cadeaux</h5>
-        {recipients.map((recipient, index) => (
-          <div key={index} className="bg-white p-6 rounded-xl shadow-md mb-4">
-            <h6 className="text-lg font-semibold mb-2">Destinataire {index + 1}</h6>
-            <div className="space-y-4">
-              <input
-                type="text"
-                className="w-full border border-gray-300 rounded-lg p-2"
-                placeholder="Nom et prénom"
-                value={recipient.fullName}
-                onChange={(e) => handleRecipientChange(index, "fullName", e.target.value)}
-              />
-              <input
-                type="email"
-                className="w-full border border-gray-300 rounded-lg p-2"
-                placeholder="Email du destinataire"
-                value={recipient.email}
-                onChange={(e) => handleRecipientChange(index, "email", e.target.value)}
-              />
-              <div className="flex items-center gap-2">
-                <span>Quantité :</span>
-                <input
-                  type="number"
-                  className="w-16 border border-gray-300 rounded-lg p-2"
-                  value={1}
-                  disabled
-                />
-              </div>
+          {product?.conditions_utilisation && (
+            <div className="leading-base text-base font-tahoma">
+              {product?.conditions_utilisation}
             </div>
-            {recipients.length > 1 && (
-              <button
-                onClick={() => handleRemoveRecipient(index)}
-                className="mt-2 text-red-500 hover:text-red-700"
-              >
-                Supprimer ce destinataire
-              </button>
-            )}
-          </div>
-        ))}
-        <button
-          onClick={handleAddRecipient}
-          className="px-4 py-2 bg-gray-200 text-black rounded-md hover:bg-gray-300 transition mb-4"
-        >
-          Ajouter un autre destinataire
-        </button>
+          )}
+          {/* Repeater for multiple recipients */}
+          <div className="mt-6">
+            <h5 className="text-xl font-semibold mb-4">
+              Ajouter des destinataires pour les cartes cadeaux
+            </h5>
+            {recipients.map((recipient, index) => (
+              <div key={index} className="mb-4">
+                <div className="flex justify-between items-center mb-2">
+                  <h6 className="text-sm font-normal">
+                    Destinataire {index + 1}
+                  </h6>
+                  {recipients.length > 1 && (
+                    <button
+                      onClick={() => handleRemoveRecipient(index)}
+                      className="mt-2 text-xs text-red-500 hover:text-red-700"
+                    >
+                      Supprimer ce destinataire
+                    </button>
+                  )}
+                </div>
+                <div className="space-y-4">
+                  <input
+                    type="text"
+                    className="w-full border border-gray-300 p-2"
+                    placeholder="Nom et prénom"
+                    value={recipient.fullName}
+                    onChange={(e) =>
+                      handleRecipientChange(index, "fullName", e.target.value)
+                    }
+                  />
+                  <input
+                    type="email"
+                    className="w-full border border-gray-300 p-2"
+                    placeholder="Email du destinataire"
+                    value={recipient.email}
+                    onChange={(e) =>
+                      handleRecipientChange(index, "email", e.target.value)
+                    }
+                  />
+                  <div className="flex items-center gap-2 text-xs">
+                    <span>Quantité :</span>
+                    <input
+                      type="number"
+                      className="w-16 border border-gray-300 p-2"
+                      value={1}
+                      disabled
+                    />
+                  </div>
+                </div>
+              </div>
+            ))}
+            <button
+              onClick={handleAddRecipient}
+              className="px-4 py-2 bg-gray-200 text-black text-sm rounded-md hover:bg-gray-300 transition mb-4"
+            >
+              Ajouter un autre destinataire
+            </button>
 
-        <div className="flex justify-end">
-          <button
-            onClick={addProductToCheckout}
-            className="px-4 py-2 bg-black text-white rounded-md hover:bg-gray-800 transition"
-          >
-            <span>Offrir</span>
-          </button>
+            <div className="flex justify-end">
+              <button
+                onClick={addProductToCheckout}
+                className="w-max px-4 py-3 bg-black leading-4 text-white uppercase font-normal text-xs tracking-[3px] hover:bg-gray-800 transition font-tahoma flex items-center justify-center gap-2"
+              >
+                <span>Offrir</span>
+              </button>
+            </div>
+          </div>
         </div>
       </div>
 
@@ -293,8 +334,8 @@ export default function ProductDetailsView() {
                 transition={{ duration: 0.3 }}
               >
                 <div className="space-y-4">
-                  {aviss.length > 0 ? (
-                    aviss.map((avis, index) => (
+                  {avis.length > 0 ? (
+                    avis.map((avis, index) => (
                       <div key={index} className="bg-gray-100 p-4 rounded-md">
                         <p className="font-semibold">{avis.name}</p>
                         <div className="text-yellow-500 flex gap-1">
@@ -310,7 +351,19 @@ export default function ProductDetailsView() {
                       </div>
                     ))
                   ) : (
-                    <p className="text-gray-600">Aucun avis pour le moment.</p>
+                    <>
+                      <p className="text-gray-600">
+                        Aucun avis pour le moment.
+                      </p>
+                      <p className="text-gray-600">
+                        Soyez le premier à laisser votre avis sur "
+                        {product?.nom}" !
+                      </p>
+                      <p className="text-gray-600">
+                        Votre adresse e-mail ne sera pas publiée. Les champs
+                        obligatoires sont indiqués avec *
+                      </p>
+                    </>
                   )}
 
                   {/* Formulaire ajouter avis */}
@@ -321,14 +374,14 @@ export default function ProductDetailsView() {
                     <input
                       type="text"
                       className="w-full border border-gray-300 rounded-lg p-2 mb-3"
-                      placeholder="Votre nom"
+                      placeholder="Votre nom*"
                       value={name}
                       onChange={(e) => setName(e.target.value)}
                     />
                     <input
                       type="email"
                       className="w-full border border-gray-300 rounded-lg p-2 mb-3"
-                      placeholder="Votre email"
+                      placeholder="Votre email*"
                       value={email}
                       onChange={(e) => setEmail(e.target.value)}
                     />
@@ -342,7 +395,7 @@ export default function ProductDetailsView() {
                     <StarRatingInput value={rating} onChange={setRating} />
                     <div className="flex justify-end mt-3">
                       <button
-                        onClick={handleSubmitReview}
+                        onClick={handleSubmit}
                         className="px-4 py-2 bg-black text-white rounded-md hover:bg-gray-800 transition"
                         type="button"
                       >

@@ -35,7 +35,7 @@ export default function Card({
 
         {/* Image */}
         {image && (
-          <img
+          <img lazyload="lazy"
             src={image}
             alt="spa"
             className="w-full h-72 rounded-none object-cover overflow-hidden"

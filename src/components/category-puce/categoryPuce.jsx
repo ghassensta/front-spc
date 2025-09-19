@@ -15,7 +15,7 @@ export default function CategoryPuce({ slug = "#", icon = null, name = "" }) {
         <div className="flex items-center gap-1 text-center text-white relative">
           {icon && (
             <span className="rounded-full p-0">
-              <img src={icon} alt={name} className="w-8 h-8 object-contain" />
+              <img lazyload="lazy" src={icon} alt={name} className="w-8 h-8 object-contain" />
             </span>
           )}
           <div className="relative">

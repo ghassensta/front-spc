@@ -73,7 +73,7 @@ export default function BlogPage() {
               key={index}
               className="bg-[#FBF6EC] shadow rounded overflow-hidden flex flex-col font-roboto"
             >
-              <img
+              <img lazyload="lazy"
                 src={article.image}
                 alt={article.title}
                 className="w-full h-48 object-cover"

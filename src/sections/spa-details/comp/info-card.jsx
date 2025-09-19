@@ -21,7 +21,7 @@ export default function InfoCard() {
         <div className="bg-primary text-secondary relative rounded-xl">
             <span className='absolute bg-secondary px-3 rounded text-primary left-2 -top-3'>Marque(s) Partenaire(s)</span>
             <div className="p-8 flex justify-center items-center gap-4">
-                <img src="https://spa-prestige-collection.com/wp-content/uploads/2025/02/SPC-Eva-Maison-Blanche-portrait.jpg" alt="" className="rounded-full w-20 h-20" />
+                <img lazyload="lazy" src="https://spa-prestige-collection.com/wp-content/uploads/2025/02/SPC-Eva-Maison-Blanche-portrait.jpg" alt="" className="rounded-full w-20 h-20" />
                 <div>
                     <h6 className='text-2xl font-bold'>David Grand</h6>
                     <span>Spa Manager et fondateur du Spa.</span>

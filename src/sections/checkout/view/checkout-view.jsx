@@ -60,7 +60,7 @@ export default function CheckoutView() {
                   <tr key={item.id} className="border-b">
                     <td className="py-3">
                       <div className="flex gap-2 items-start">
-                        <img
+                        <img lazyload="lazy"
                           src={`${CONFIG.serverUrl}/storage/${item.image}`}
                           alt={item.name}
                           className="w-16 h-16 object-cover rounded"

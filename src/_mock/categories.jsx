@@ -14,8 +14,8 @@ export const CATEGORIES = [
 ]
 
 export const SERVICES_LIST = [
-    {title: "Sauna", icon: <img src={sauna} />},
-    {title: "Piscine", icon: <img src={pool} />},
-    {title: "Treatement", icon: <img src={treatement} />},
-    {title: "Hammam", icon: <img src={drops} />},
+    {title: "Sauna", icon: <img lazyload="lazy" src={sauna} />},
+    {title: "Piscine", icon: <img lazyload="lazy" src={pool} />},
+    {title: "Treatement", icon: <img lazyload="lazy" src={treatement} />},
+    {title: "Hammam", icon: <img lazyload="lazy" src={drops} />},
 ]

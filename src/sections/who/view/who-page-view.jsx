@@ -35,7 +35,7 @@ export default function WhoPageView() {
               </p>
             </p>
             <div className="md:w-1/2">
-              <img
+              <img lazyload="lazy"
                 src="https://spa-prestige-collection.com/wp-content/uploads/2025/03/SPC-Essence-1975x1318-02.jpg"
                 alt="Spa & Prestige"
                 className="w-full h-auto object-cover"
@@ -103,7 +103,7 @@ export default function WhoPageView() {
             </p>
           </div>
           <div className="flex items-center justify-center">
-            <img
+            <img lazyload="lazy"
               src="https://spa-prestige-collection.com/wp-content/uploads/2025/05/SPC-carte-cadeau-montant-3.jpg"
               alt="Carte Cadeau Spa & Prestige"
               className="max-w-full h-auto"

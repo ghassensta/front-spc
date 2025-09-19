@@ -1,5 +1,6 @@
 import React from "react";
 import ButtonIcon from "../../../components/button-icon/button-icon";
+import { paths } from "src/router/paths";
 
 export default function Header() {
   return (
@@ -13,7 +14,7 @@ export default function Header() {
       </p>
 
       {/* Bouton vers la page carte cadeau */}
-      <ButtonIcon title="CARTE CADEAU" to="/carte-cadeau" variant="filled" size="md" />
+      <ButtonIcon title="CARTE CADEAU" link={paths.cadeau} variant="filled" size="md" />
     </div>
   );
 }

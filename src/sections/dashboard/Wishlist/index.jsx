@@ -94,7 +94,7 @@ export default function Wishlist() {
             {wishlistItems.map((item) => (
               <div key={item.id} className="bg-white rounded-lg shadow-sm overflow-hidden hover:shadow-md transition-shadow duration-300">
                 <div className="relative">
-                  <img 
+                  <img lazyload="lazy" 
                     src={item.image} 
                     alt={item.name}
                     className="w-full h-48 object-cover"
@@ -169,7 +169,7 @@ export default function Wishlist() {
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
               {/* Exemple de suggestion */}
               <div className="bg-white rounded-lg shadow-sm overflow-hidden">
-                <img 
+                <img lazyload="lazy" 
                   src={`https://images.unsplash.com/photo-1600334089648-b0d9d3028eb2?q=80&w=1170&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D`} 
                   alt="Soin Détente"
                   className="w-full h-40 object-cover"
@@ -187,7 +187,7 @@ export default function Wishlist() {
               </div>
               
               <div className="bg-white rounded-lg shadow-sm overflow-hidden">
-                <img 
+                <img lazyload="lazy" 
                   src={`https://images.unsplash.com/photo-1600334089648-b0d9d3028eb2?q=80&w=1170&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D`} 
                   alt="Soin Détente"
                   className="w-full h-40 object-cover"
@@ -205,7 +205,7 @@ export default function Wishlist() {
               </div>
               
               <div className="bg-white rounded-lg shadow-sm overflow-hidden">
-                <img 
+                <img lazyload="lazy" 
                   src={`https://images.unsplash.com/photo-1600334089648-b0d9d3028eb2?q=80&w=1170&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D`} 
                   alt="Soin Détente"
                   className="w-full h-40 object-cover"
@@ -223,7 +223,7 @@ export default function Wishlist() {
               </div>
               
               <div className="bg-white rounded-lg shadow-sm overflow-hidden">
-                <img 
+                <img lazyload="lazy" 
                   src={`https://images.unsplash.com/photo-1600334089648-b0d9d3028eb2?q=80&w=1170&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D`} 
                   alt="Soin Détente"
                   className="w-full h-40 object-cover"

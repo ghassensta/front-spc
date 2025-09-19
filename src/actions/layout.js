@@ -76,6 +76,8 @@ export function useGetMarques() {
         [data]
     );
 
+    console.log("Marques data:", memoizedValue);
+
     return memoizedValue;
 }
 

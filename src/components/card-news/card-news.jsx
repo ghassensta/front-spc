@@ -23,7 +23,7 @@ export default function CardNews() {
       >
        
         {/* Image */}
-        <img
+        <img lazyload="lazy"
           src="https://spa-prestige-collection.com/wp-content/uploads/2025/03/SPC-Essence-1975x1318-02.jpg"
           alt="spa"
           className="w-full h-72 rounded-t-xl object-cover overflow-hidden"

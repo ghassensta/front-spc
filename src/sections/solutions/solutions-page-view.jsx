@@ -104,7 +104,7 @@ export default function SolutionsPageView() {
 
           {/* Image Column */}
           <div>
-            <img
+            <img lazyload="lazy"
               src="https://spa-prestige-collection.com/wp-content/uploads/2025/05/SPC-equipe-ce-1975x1318-1-768x513.jpg"
               alt="Réunion d'équipe"
               className="w-full h-auto object-cover rounded-lg shadow-lg"

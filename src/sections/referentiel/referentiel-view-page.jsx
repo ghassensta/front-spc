@@ -109,7 +109,7 @@ export default function ReferentielViewPage() {
               </button>
             </div>
           </div>
-          <img
+          <img lazyload="lazy"
             src="https://spa-prestige-collection.com/wp-content/uploads/2025/05/SPC-Catalogue-1975x1318-1-1024x683.jpg"
             alt="Spa & Prestige Collection"
             className="w-full mb-6 rounded shadow"

@@ -61,7 +61,7 @@ export default function CardItem({
     <motion.div className="flex flex-col md:flex-row gap-4 py-6 border-b border-gray-400 ">
       {/* Image */}
       <div className="flex-shrink-0 w-full md:w-1/3">
-        <img
+        <img lazyload="lazy"
           src={
             image
               ? `${CONFIG.serverUrl}/storage/${image}`
@@ -126,7 +126,7 @@ export default function CardItem({
           </div>
           <div className="flex min-w-[100px] flex-col h-full justify-between items-center gap-4 md:gap-2">
             {exclusivite_spc === 1 && (
-              <img
+              <img lazyload="lazy"
                 src={exclusive}
                 alt="Exclusivité"
                 className="w-16 h-auto my-2"

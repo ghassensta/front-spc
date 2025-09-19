@@ -8,13 +8,13 @@ import { useGetEtablissement } from "src/actions/etablissements";
 export default function Page() {
   const { id } =useParams();
 
-  const { etablissement, types, simlairesEtablissment, avis } = useGetEtablissement(id)
+  const { etablissement, types, simlairesEtablissment, avis, marquesPartenaires } = useGetEtablissement(id)
 
   console.log(etablissement)
 
   return (
     <>
-     <SpaDetailsView spaData={etablissement} types={types} simlairesEtablissment={simlairesEtablissment} avis={avis}/>
+     <SpaDetailsView spaData={etablissement} types={types} simlairesEtablissment={simlairesEtablissment} avis={avis} marquesPartenaires={marquesPartenaires}/>
     </>
   );
 }
