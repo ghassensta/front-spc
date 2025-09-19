@@ -79,15 +79,15 @@ export default function CardItem({
             <h3 className="text-2xl text-left font-normal text-gray-900">
               {nom}
             </h3>
-            <p className="text-left font-normal font-tahoma text-gray-800 mt-1">
+            <p className="text-left font-normal font-tahoma text-black mt-1">
               {showFullDescription
                 ? description
                 : description?.length > 150
-                ? description.slice(0, 500) + "..."
+                ? description.slice(0, 200) + "..."
                 : description}
               {description && description.length > 150 && (
                 <span
-                  className="font-bold text-black cursor-pointer"
+                  className="font-semibold font-tahoma text-black cursor-pointer"
                   onClick={toggleDescription}
                 >
                   {showFullDescription ? " (Voir moins)" : " (Lire la suite)"}
@@ -100,7 +100,7 @@ export default function CardItem({
               parseFloat(prix) !== 0 &&
               parseFloat(prix_barre) !== 0 &&
               parseFloat(prix_au_lieu_de) !== 0 && (
-                <span className="text-lg font-bold text-gray-900">
+                <span className="text-lg font-normal text-gray-900">
                   {parseFloat(prix).toFixed(2)}€
                 </span>
               )}

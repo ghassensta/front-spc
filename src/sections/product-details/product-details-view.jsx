@@ -203,7 +203,7 @@ const validateForm = () => {
               </div>
             ))}
           </div>
-          <h4 className="font-semibold text-4xl mb-4">
+          <h4 className="font-semibold text-[#333] text-4xl mb-4">
             {product ? product.nom : "Chargement..."}
           </h4>
           <div className="flex items-center gap-1 mb-2">
@@ -230,7 +230,7 @@ const validateForm = () => {
             {product?.prix} €
           </div>
 
-          <div className="leading-base text-base font-tahoma">
+          <div className="leading-base text-base font-light font-tahoma text-[#333]">
             {product?.description || "Aucune description disponible."}
           </div>
           {product?.conditions_utilisation && (
