@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { CONFIG } from "src/config-global";
+import { toast } from "react-toastify";
 
 export default function LoginPageView() {
   const [email, setEmail] = useState("");
@@ -26,11 +27,7 @@ export default function LoginPageView() {
       navigate("/dashboard");
     } catch (err) {
       console.error(err.response); // Affiche toutes les infos de l'erreur
-      setError(
-        err.response?.data?.error ||
-          err.message ||
-          "Erreur lors de la connexion"
-      );
+      toast.error('Erreur lors de la connexion')
     } finally {
       setLoading(false);
     }

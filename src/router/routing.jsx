@@ -3,10 +3,12 @@ import { Outlet } from "react-router-dom";
 import LayoutTheme from "../layouts/layout";
 import LoadingScreen from "../components/loading-screen/loading-screen";
 import DashboardLayout from "src/layouts/dashboardLayout";
+import { AuthGuard } from "src/auth/guard/auth-guard";
 
 // Pages principales
 const Index = lazy(() => import("../pages/home/index"));
 const Details = lazy(() => import("../pages/details/index"));
+const SpaList = lazy(() => import("../pages/spa-list/index"));
 const ViewProduct = lazy(() => import("../pages/product/index"));
 const Chekckout = lazy(() => import("../pages/checkout/index"));
 const ChekckoutPayement = lazy(() => import("../pages/checkout/checkout"));
@@ -30,6 +32,7 @@ const ActualitesDetails = lazy(() => import("../pages/actualites/details"));
 const Who = lazy(() => import("../pages/who"));
 const CarteCadeau = lazy(() => import("../pages/carte-cadeau"));
 const Recompense = lazy(() => import("../pages/recompense"));
+const Programme = lazy(() => import("../pages/programme"));
 const CollectionPrestige = lazy(() => import("../pages/collection-prestige"));
 const Referentiel = lazy(() => import("../pages/referentiel"));
 const Contact = lazy(() => import("../pages/contact"));
@@ -54,6 +57,7 @@ export const routes = [
       // === Anciennes routes dynamiques ===
       { element: <Index />, index: true },
       { element: <Details />, path: "spa/:id" },
+      { element: <SpaList />, path: "spa-list" },
       { element: <ViewProduct />, path: "produit/:slug" },
       { element: <Chekckout />, path: "checkout" },
       { element: <ChekckoutPayement />, path: "payment" },
@@ -61,7 +65,7 @@ export const routes = [
 
       // === Nouvelles routes statiques ===
       // { element: <ViewProduct />, path: "spa" },
-      { element: <Categories />, path: "categories/:slog" },
+      { element: <Categories />, path: "categories/:slug" },
       { element: <Actualites />, path: "actualites" },
       { element: <ActualitesDetails />, path: "actualites/:title" },
       { element: <CollectionPrestige />, path: "collection-prestige" },
@@ -73,6 +77,7 @@ export const routes = [
       { element: <Referentiel />, path: "referentiel-de-candidature" },
       { element: <CarteCadeau />, path: "carte-cadeau" },
       { element: <Recompense />, path: "recompense" },
+      { element: <Programme />, path: "programme-de-parrainage" },
       { element: <Contact />, path: "assistance-contact" },
       { element: <Mentions />, path: "mentions-legales" },
       { element: <Conditions />, path: "conditions" },
@@ -80,11 +85,13 @@ export const routes = [
       // === Dashboard ===
       {
         element: (
-          <DashboardLayout>
-            <Suspense fallback={<LoadingScreen />}>
-            <Outlet />
-            </Suspense>
-          </DashboardLayout>
+          <AuthGuard>
+            <DashboardLayout>
+              <Suspense fallback={<LoadingScreen />}>
+                <Outlet />
+              </Suspense>
+            </DashboardLayout>
+          </AuthGuard>
         ),
         path: "dashboard",
         children: [
@@ -97,11 +104,11 @@ export const routes = [
             ],
           },
           { path: "details", element: <DashboardDetails /> },
-          { path: "wishlist", element: <DashboardWishlist />},
-          { path: "aide", element: <DashboardAide />},
-          { path: "cadeau", element: <DashboardCadeaux />},
-          { path: "parrainage", element: <DashboardParrainage />},
-          { path: "fidelite", element: <DashboardFidelite />},
+          { path: "wishlist", element: <DashboardWishlist /> },
+          { path: "aide", element: <DashboardAide /> },
+          { path: "cadeau", element: <DashboardCadeaux /> },
+          { path: "parrainage", element: <DashboardParrainage /> },
+          { path: "fidelite", element: <DashboardFidelite /> },
           { path: "*", element: <DashboardMain /> },
         ],
       },

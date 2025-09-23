@@ -96,11 +96,14 @@ export const endpoints = {
   },
   categories: {
     list: "/api/categories",
+    byCategory: (category) => `/api/etablissements/by-categories/${category}`,
   },
   etablissements: {
     list: "/api/etablissements",
+    getAll: "/api/all-etablissements",
     detail: (slug) => `/api/etablissements/${slug}`,
     avis: "/api/etablissements/avis",
+    filters: "/api/filters/etablissements",
   },
   actualites: {
     list: "/api/actualites",

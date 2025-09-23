@@ -20,7 +20,7 @@ export default function HomeView() {
   const { actualites } = useGetLastNews(3);
   const { marques, prochainement, carte } = useLayout();
 
-  console.log("carte url:", carte.button_url); 
+  console.log("eta", carte.button_url); 
 
   return (
     <>
@@ -42,7 +42,7 @@ export default function HomeView() {
               to={`/spa/${etablissement.slug || etablissement.id}`}
               title={etablissement.nom || etablissement.id}
               description={etablissement.description_avant}
-              image={`${CONFIG.serverUrl}/storage/${etablissement.image_avant}`}
+              image={etablissement.image_avant}
               location={etablissement.adresse}
             />
           ))}

@@ -54,7 +54,7 @@ const NavLink = ({ link, isActive, toggleMenu, openMenus, isMobile = false, menu
               onClick={handleClick}
               className={`flex items-center justify-center rounded-lg  transition-all duration-200  ${
                 isActive || anyChildActive || openMenus[link.label]
-                  ? "text-blue-600 bg-blue-50 border-blue-200"
+                  ? "text-[#b6b499] bg-blue-50 border-blue-200"
                   : "text-gray-700 hover:bg-gray-50"
               }`}
               aria-label={link.label}
@@ -68,7 +68,7 @@ const NavLink = ({ link, isActive, toggleMenu, openMenus, isMobile = false, menu
               to={link.to}
               onClick={() => toggleMenu(link.label)}
               className={`flex items-center justify-center rounded-lg  transition-all duration-200  ${
-                isActive ? "text-blue-600 bg-blue-50 border-blue-200" : "text-gray-700 hover:bg-gray-50"
+                isActive ? "text-[#b6b499] bg-blue-50 border-blue-200" : "text-gray-700 hover:bg-gray-50"
               }`}
               aria-label={link.label}
             >
@@ -105,7 +105,7 @@ const NavLink = ({ link, isActive, toggleMenu, openMenus, isMobile = false, menu
                       to={child.to}
                       onClick={handleSubmenuClick}
                       className={`flex items-center px-4 py-2 text-sm hover:bg-gray-50 transition-colors duration-150 ${
-                        isChildActive ? "text-blue-600 font-semibold" : "text-gray-700"
+                        isChildActive ? "text-[#b6b499] font-semibold" : "text-gray-700"
                       }`}
                     >
                       {child.label}
@@ -130,7 +130,7 @@ const NavLink = ({ link, isActive, toggleMenu, openMenus, isMobile = false, menu
             onClick={handleClick}
             className={`w-full flex items-center px-4 py-3 text-left rounded-lg group transition-all duration-200 ${
               anyChildActive || openMenus[link.label]
-                ? "text-blue-600 bg-blue-50 font-semibold"
+                ? "text-[#b6b499] bg-blue-50 font-semibold"
                 : "text-gray-700 hover:bg-gray-50"
             }`}
             aria-expanded={openMenus[link.label]}
@@ -140,7 +140,7 @@ const NavLink = ({ link, isActive, toggleMenu, openMenus, isMobile = false, menu
             {Icon && (
               <Icon
                 className={`mr-3 w-5 h-5 transition-colors duration-200 ${
-                  anyChildActive || openMenus[link.label] ? "text-blue-600" : "text-gray-500 group-hover:text-blue-600"
+                  anyChildActive || openMenus[link.label] ? "text-[#b6b499]" : "text-gray-500 group-hover:text-[#b6b499]"
                 }`}
               />
             )}
@@ -148,7 +148,7 @@ const NavLink = ({ link, isActive, toggleMenu, openMenus, isMobile = false, menu
             <ChevronDown
               className={`w-4 h-4 transition-transform duration-200 ${
                 openMenus[link.label] ? "rotate-180" : ""
-              } ${anyChildActive || openMenus[link.label] ? "text-blue-600" : "text-gray-400 group-hover:text-gray-600"}`}
+              } ${anyChildActive || openMenus[link.label] ? "text-[#b6b499]" : "text-gray-400 group-hover:text-gray-600"}`}
             />
           </motion.button>
           {openMenus[link.label] && (
@@ -171,7 +171,7 @@ const NavLink = ({ link, isActive, toggleMenu, openMenus, isMobile = false, menu
                       <Link
                         to={child.to}
                         className={`flex items-center px-4 py-2 text-sm rounded-lg transition-all duration-200 ${
-                          isChildActive ? "text-blue-600 bg-blue-50 font-semibold" : "text-gray-600 hover:text-gray-900 hover:bg-gray-50"
+                          isChildActive ? "text-[#b6b499] bg-blue-50 font-semibold" : "text-gray-600 hover:text-gray-900 hover:bg-gray-50"
                         }`}
                       >
                         {child.label}
@@ -192,14 +192,14 @@ const NavLink = ({ link, isActive, toggleMenu, openMenus, isMobile = false, menu
           <Link
             to={link.to}
             className={`flex items-center px-4 py-3 rounded-lg group transition-all duration-200 ${
-              isActive ? "text-blue-600 bg-blue-50 font-semibold" : "text-gray-700 hover:bg-gray-50"
+              isActive ? "text-[#b6b499] bg-blue-50 font-semibold" : "text-gray-700 hover:bg-gray-50"
             }`}
             onClick={() => isMobile && toggleMenu(link.label)}
           >
             {Icon && (
               <Icon
                 className={`mr-3 w-5 h-5 transition-colors duration-200 ${
-                  isActive ? "text-blue-600" : "text-gray-500 group-hover:text-blue-600"
+                  isActive ? "text-[#b6b499]" : "text-gray-500 group-hover:text-[#b6b499]"
                 }`}
               />
             )}

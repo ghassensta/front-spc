@@ -26,6 +26,8 @@ export function useGetFooter() {
 
     const { data } = useSWR(url, fetcher, swrOptions);
 
+    console.log("footer", data)
+
     const memoizedValue = useMemo(
         () => ({
             footer: data?.data || [],

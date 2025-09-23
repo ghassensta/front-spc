@@ -1,11 +1,12 @@
 import { useMemo, useEffect, useCallback } from "react";
 
-import axios, { endpoints } from "src/data/axios";
+// import  { endpoints } from "src/data/axios";
 
 import { AuthContext } from "../auth-context";
 import { useSetState } from "../../../hooks/use-set-state";
 import { setSession } from "./utils";
 import { CONFIG } from "src/config-global";
+import axios, { endpoints } from "src/utils/axios";
 
 
 // ----------------------------------------------------------------------

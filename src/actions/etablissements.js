@@ -23,6 +23,18 @@ export function useGetEtablissements() {
   return memoizedValue;
 }
 
+export function useGetAllEtablissements() {
+  const url = endpoints.etablissements.getAll;
+  const { data } = useSWR(url, fetcher, swrOptions);
+  const memoizedValue = useMemo(
+    () => ({
+      etablissements: data?.etablissements || [],
+    }), [data]
+  );
+
+  return memoizedValue;
+}
+
 export function useGetEtablissement(slug) {
   const url = endpoints.etablissements.detail(slug);
 
@@ -64,3 +76,19 @@ export const usePostEtablissementsAvis = async ({
   }
 
 };
+
+export function useGetFiltersEtablissements() {
+    const url = endpoints.etablissements.filters;
+
+    const { data } = useSWR(url, fetcher, swrOptions);
+
+    const memoizedValue = useMemo(
+        () => ({
+            villes: data?.region_villes || [],
+            types: data?.types_etablissements || [],
+            services: data?.services_equipements || [],
+        }),
+        [data]
+    ); 
+    return memoizedValue;
+}

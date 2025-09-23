@@ -4,12 +4,15 @@ import "swiper/css";
 import { CheckoutProvider } from "./sections/checkout/context/checkout-provider";
 import { useScrollToTop } from "./hooks/use-scroll-to-top";
 import { ToastContainer } from "react-toastify";
+import { AuthProvider } from "./auth/context/jwt/auth-provider";
+// import { AuthProvider } from "./auth/context/jwt/auth-provider";
 
 function App() {
   useScrollToTop();
 
   return (
     <CheckoutProvider>
+      <AuthProvider>
       <ToastContainer
         position="top-right"
         autoClose={3000}
@@ -18,6 +21,7 @@ function App() {
         pauseOnHover
       />
       <Router />
+      </AuthProvider>
     </CheckoutProvider>
   );
 }

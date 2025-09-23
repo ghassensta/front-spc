@@ -1,11 +1,13 @@
 import React, { useState } from "react";
-import { useParams } from "react-router-dom";
-import { categoriesCards } from "src/_mock/data";
-import Card from "src/components/card/card";
+import SpaCard from "src/components/spa-card/spa-card";
+import { paths } from "src/router/paths";
 
-export default function CategoriesPageView() {
-  const { slog } = useParams(); // <-- get the slug from the URL
-
+export default function CategoriesPageView({
+  cardsByCategory = [],
+  villes = [],
+  types = [],
+  services = [],
+}) {
   const [filters, setFilters] = useState({
     etablissement: "",
     region: "",
@@ -16,24 +18,26 @@ export default function CategoriesPageView() {
     setFilters({ ...filters, [e.target.name]: e.target.value });
   };
 
-  // Step 1: filter by slug (category)
-  const cardsByCategory = categoriesCards.filter(
-    (card) => card.category?.toLowerCase() === slog.toLowerCase()
-  );
-
-  // Step 2: apply the dropdown filters
+  // Apply filters
   const filteredCards = cardsByCategory.filter((card) => {
     return (
-      (filters.etablissement ? card.etablissement === filters.etablissement : true) &&
-      (filters.region ? card.region === filters.region : true) &&
-      (filters.service ? card.service === filters.service : true)
+      (filters.etablissement
+        ? card.types_etablissement_ids?.includes(parseInt(filters.etablissement))
+        : true) &&
+      (filters.region
+        ? card.region_ids?.includes(parseInt(filters.region))
+        : true) &&
+      (filters.service
+        ? card.type_equipement_ids?.includes(parseInt(filters.service))
+        : true)
     );
   });
 
   return (
-    <div className="max-w-6xl mx-auto">
+    <div className="max-w-6xl mx-auto p-1">
       {/* Filters */}
       <div className="grid grid-cols-3 gap-4 font-roboto mb-16">
+        {/* Types (Établissements) */}
         <div className="border rounded-lg">
           <select
             className="w-full p-2 border-none focus:outline-none"
@@ -42,13 +46,15 @@ export default function CategoriesPageView() {
             onChange={handleChange}
           >
             <option value="">Sélectionnez type d'établissement</option>
-            {[...new Set(cardsByCategory.map((c) => c.etablissement))].map((etablissement) => (
-              <option key={etablissement} value={etablissement}>
-                {etablissement}
+            {types.map((type) => (
+              <option key={type.id} value={type.id}>
+                {type.name}
               </option>
             ))}
           </select>
         </div>
+
+        {/* Villes */}
         <div className="border rounded-lg">
           <select
             className="w-full p-2 border-none focus:outline-none"
@@ -57,13 +63,15 @@ export default function CategoriesPageView() {
             onChange={handleChange}
           >
             <option value="">Région ou ville</option>
-            {[...new Set(cardsByCategory.map((c) => c.region))].map((region) => (
-              <option key={region} value={region}>
-                {region}
+            {villes.map((ville) => (
+              <option key={ville.id} value={ville.id}>
+                {ville.name}
               </option>
             ))}
           </select>
         </div>
+
+        {/* Services / Équipements */}
         <div className="border rounded-lg">
           <select
             className="w-full p-2 border-none focus:outline-none"
@@ -72,9 +80,9 @@ export default function CategoriesPageView() {
             onChange={handleChange}
           >
             <option value="">Services et équipements</option>
-            {[...new Set(cardsByCategory.map((c) => c.service))].map((service) => (
-              <option key={service} value={service}>
-                {service}
+            {services.map((service) => (
+              <option key={service.id} value={service.id}>
+                {service.name}
               </option>
             ))}
           </select>
@@ -82,9 +90,17 @@ export default function CategoriesPageView() {
       </div>
 
       {/* Cards */}
-      <div className="grid grid-cols-3 gap-x-4 gap-y-12">
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-x-4 gap-y-12">
         {filteredCards.length > 0 ? (
-          filteredCards.map((card, index) => <Card key={index} {...card} />)
+          filteredCards.map((card) => (
+            <SpaCard
+              key={card.id}
+              to={paths.spa.details(card.slug)}
+              title={card.nom}
+              image={card.image_avant}
+              description={card.description_avant}
+            />
+          ))
         ) : (
           <p className="col-span-3 text-center">Aucun résultat trouvé.</p>
         )}

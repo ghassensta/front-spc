@@ -29,7 +29,7 @@ export default function Navbar() {
   );
 
   return (
-    <div className="w-full px-2 md:px-6 py-8 flex flex-col md:flex-row justify-between relative">
+    <div className="w-full px-2 md:px-6 py-8 flex flex-col md:flex-row justify-between relative gap-6">
       <div className="flex justify-between">
         <button
           className="text-base cursor-pointer flex items-center h-max p-1 gap-2 text-[#33373d] bg-black/5 font-arial font-sans font-medium"

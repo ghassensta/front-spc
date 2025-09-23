@@ -38,6 +38,7 @@ export default function CheckoutDetails() {
             <ButtonIcon
               title="Mon Tableau de bord"
               icon={<MdDashboard />}
+              link={paths.dashboard.root}
               variant=""
               size="sm"
             />

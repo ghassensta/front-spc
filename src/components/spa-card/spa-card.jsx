@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import ButtonIcon from "../button-icon/button-icon";
 import { motion } from "framer-motion";
 import { FiMapPin } from "react-icons/fi";
+import { CONFIG } from "src/config-global";
 
 export default function SpaCard({ to, image, title, description, location }) {
   const renderLocation = () => {
@@ -19,7 +20,7 @@ export default function SpaCard({ to, image, title, description, location }) {
     if (!image) return null;
     return (
       <img lazyload="lazy"
-        src={image}
+        src={CONFIG.serverUrl+'/storage/'+image}
         alt={title}
         className="w-full h-72 rounded-3xl object-cover overflow-hidden"
       />

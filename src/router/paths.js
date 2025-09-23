@@ -9,9 +9,10 @@ export const paths = {
   actualites: "/actualites",/*DONE */
   actualitesDetails: (slug) => `/actualites/${slug}`,
   who: "/qui-somme-nous", /*DONE */
-  categories: (slog) => `/categories/${slog}`,
+  categories: (slug) => `/categories/${slug}`,
   payment: "/payment",
   recompense: "/recompense",  /*DONE */
+  programme: "/programme-de-parrainage",  /*DONE */
   referentiel: "/referentiel-de-candidature",/*DONE */
   cadeau: "/carte-cadeau",  /*DONE */
   collection: "/collection-prestige", /*DONE */

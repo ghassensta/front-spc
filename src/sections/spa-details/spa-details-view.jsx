@@ -37,6 +37,8 @@ export default function SpaDetailsView({
   });
   // const avis = spaData?.avis || [];
 
+  console.log(spaData)
+
   const [ratings, setRatings] = useState(initialRatings);
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");

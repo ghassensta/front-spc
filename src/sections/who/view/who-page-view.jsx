@@ -1,10 +1,12 @@
 import React from "react";
+import ButtonIcon from "src/components/button-icon/button-icon";
+import { paths } from "src/router/paths";
 
 export default function WhoPageView() {
   return (
-    <>
-      <div className="flex bg-[#FBF6EC] w-screen relative left-[calc(-50vw+50%)]">
-        <div className="max-w-6xl mx-auto py-6">
+    <div className="">
+      <div className="flex bg-[#FBF6EC] w-screen relative left-[calc(-50vw+50%)] ">
+        <div className="max-w-6xl mx-auto py-6 px-1">
           <h2 className="text-4xl font-bold mb-4">
             L'Essence de Spa & Prestige Collection
           </h2>
@@ -35,7 +37,8 @@ export default function WhoPageView() {
               </p>
             </p>
             <div className="md:w-1/2">
-              <img lazyload="lazy"
+              <img
+                lazyload="lazy"
                 src="https://spa-prestige-collection.com/wp-content/uploads/2025/03/SPC-Essence-1975x1318-02.jpg"
                 alt="Spa & Prestige"
                 className="w-full h-auto object-cover"
@@ -45,7 +48,7 @@ export default function WhoPageView() {
         </div>
       </div>
 
-      <div className="max-w-6xl mx-auto py-6">
+      <div className="max-w-6xl mx-auto py-6 px-1">
         <h2 className="text-4xl font-bold text-center mb-6">Nos valeurs</h2>
         <div className="text-base font-roboto font-normal text-center mb-10">
           Les valeurs de Spa & Prestige Collection guident chacune de nos
@@ -103,7 +106,8 @@ export default function WhoPageView() {
             </p>
           </div>
           <div className="flex items-center justify-center">
-            <img lazyload="lazy"
+            <img
+              lazyload="lazy"
               src="https://spa-prestige-collection.com/wp-content/uploads/2025/05/SPC-carte-cadeau-montant-3.jpg"
               alt="Carte Cadeau Spa & Prestige"
               className="max-w-full h-auto"
@@ -111,14 +115,12 @@ export default function WhoPageView() {
           </div>
         </div>
         <div className="flex items-center justify-center my-4">
-          <button className="font-bricolage bg-[#B6B498] py-2 px-4 rounded-full text-white hover:bg-black duration-300">
-            NOUS CONTACTER
-          </button>
+          <ButtonIcon link={paths.contact} title="Nous Contacter" />
         </div>
       </div>
 
       <div className="bg-[#FBF6EC] w-screen relative left-[calc(-50vw+50%)]">
-        <div className="max-w-6xl mx-auto py-6">
+        <div className="max-w-6xl mx-auto py-6 px-1">
           <h2 className="text-4xl font-bold text-center mb-6">
             Rejoignez la Communauté Privée Spa & Prestige Collection
           </h2>
@@ -130,28 +132,28 @@ export default function WhoPageView() {
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
             {/* Colonne gauche */}
             <div className="space-y-8">
-              <div>
-                <h3 className="text-2xl font-bold mb-2">Vivez</h3>
+              <div className="text-center md:text-left">
+                <h3 className="text-2xl font-bold mb-2"><span className="leading-none mt-1">✔</span> Vivez</h3>
                 <p className="font-bricolage">
                   Des expériences personnalisées, créées spécialement pour vous
                 </p>
               </div>
-              <div>
-                <h3 className="text-2xl font-bold mb-2">Accédez</h3>
+              <div className="text-center md:text-left">
+                <h3 className="text-2xl font-bold mb-2"><span className="leading-none mt-1">✔</span> Accédez</h3>
                 <p className="font-bricolage">
                   A des établissements prestigieux, rigoureusement sélectionnés
                   par nos équipes
                 </p>
               </div>
-              <div>
-                <h3 className="text-2xl font-bold mb-2">Bénéficiez</h3>
+              <div className="text-center md:text-left">
+                <h3 className="text-2xl font-bold mb-2"><span className="leading-none mt-1">✔</span> Bénéficiez</h3>
                 <p className="font-bricolage">
                   D’un programme de fidélité généreux, vous offrant de précieux
                   avantages
                 </p>
               </div>
-              <div>
-                <h3 className="text-2xl font-bold mb-2">Exprimez</h3>
+              <div className="text-center md:text-left">
+                <h3 className="text-2xl font-bold mb-2"><span className="leading-none mt-1">✔</span> Exprimez</h3>
                 <p className="font-bricolage">
                   Vos impressions pour nous aider à vous offrir une expérience
                   toujours plus raffinée
@@ -161,28 +163,28 @@ export default function WhoPageView() {
 
             {/* Colonne droite */}
             <div className="space-y-8">
-              <div>
-                <h3 className="text-2xl font-bold mb-2">Profitez</h3>
+              <div className="text-center md:text-left">
+                <h3 className="text-2xl font-bold mb-2"><span className="leading-none mt-1">✔</span> Profitez</h3>
                 <p className="font-bricolage">
                   De tarifs préférentiels pour des instants de bien-être
                   inoubliables
                 </p>
               </div>
-              <div>
-                <h3 className="text-2xl font-bold mb-2">Offrez</h3>
+              <div className="text-center md:text-left">
+                <h3 className="text-2xl font-bold mb-2"><span className="leading-none mt-1">✔</span> Offrez</h3>
                 <p className="font-bricolage">
                   Des cartes cadeaux élégantes, disponibles en version numérique
                   ou physique
                 </p>
               </div>
-              <div>
-                <h3 className="text-2xl font-bold mb-2">Partagez</h3>
+              <div className="text-center md:text-left">
+                <h3 className="text-2xl font-bold mb-2"><span className="leading-none mt-1">✔</span> Partagez</h3>
                 <p className="font-bricolage">
                   Ces moments d'exception en parrainant vos proches
                 </p>
               </div>
-              <div>
-                <h3 className="text-2xl font-bold mb-2">Recevez</h3>
+              <div className="text-center md:text-left">
+                <h3 className="text-2xl font-bold mb-2"><span className="leading-none mt-1">✔</span> Recevez</h3>
                 <p className="font-bricolage">
                   Des conseils exclusifs de Spa & Prestige Collection pour
                   enrichir votre expérience
@@ -193,12 +195,10 @@ export default function WhoPageView() {
 
           {/* Bouton Coup de cœur */}
           <div className="flex justify-center mt-10">
-            <button className="bg-[#B6B498] text-white rounded-full py-2 px-6 hover:bg-black duration-300 font-bricolage">
-              COUP DE CŒUR
-            </button>
+            <ButtonIcon link={paths.spa.list} title="COUP DE CŒUR" />
           </div>
         </div>
       </div>
-    </>
+    </div>
   );
 }

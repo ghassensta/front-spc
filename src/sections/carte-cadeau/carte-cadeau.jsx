@@ -8,14 +8,14 @@ export default function CarteCadeau() {
   return (
     <>
       {/* Intro Section */}
-      <div className="flex bg-[#FBF6EC] w-screen relative left-[calc(-50vw+50%)]">
+      <div className="flex bg-[#FBF6EC] w-screen relative left-[calc(-50vw+50%)] p-1">
         <div className="max-w-6xl mx-auto py-6">
           <div className="flex flex-col md:flex-row gap-6">
             <div className="md:w-1/2">
               <h2 className="text-4xl font-bold mb-4">
                 Un cadeau qui fait la différence
               </h2>
-              <p className="font-roboto pr-6">
+              <p className="font-roboto pr-6 text-[#5E5E5E]">
                 Instantanée. Attentionnée. La carte cadeau Spa & Prestige
                 Collection vous permet d’offrir une expérience bien-être unique
                 à vos proches, en toute simplicité.
@@ -32,7 +32,8 @@ export default function CarteCadeau() {
               </p>
             </div>
             <div className="md:w-1/2">
-              <img lazyload="lazy"
+              <img
+                lazyload="lazy"
                 src="https://spa-prestige-collection.com/wp-content/uploads/2025/05/SPC-carte-cadeau-montant-3.jpg"
                 alt="Carte Cadeau Spa & Prestige"
                 className="w-full h-auto object-cover rounded"
@@ -43,7 +44,7 @@ export default function CarteCadeau() {
       </div>
 
       <div className="max-w-6xl mx-auto gap-6 py-8">
-        <div className="grid grid-cols-3 items-start">
+        <div className="grid grid-cols-1 md:grid-cols-3 items-start">
           <div className="flex flex-col items-center justify-center">
             <h4 className="text-center text-2xl mb-4 font-bold">
               Un cadeau instantané et pratique
@@ -79,8 +80,9 @@ export default function CarteCadeau() {
           OFFRIR UNE CARTE CADEAU :<br /> UNE ATTENTION QUI A DU SENS.
         </h2>
 
-        <div className="flex gap-6">
-          <img lazyload="lazy"
+        <div className="flex flex-col md:flex-row gap-6">
+          <img
+            lazyload="lazy"
             src="https://spa-prestige-collection.com/wp-content/uploads/2025/05/SPC-Femme-cartes-square.jpg"
             alt=""
           />
@@ -105,13 +107,13 @@ export default function CarteCadeau() {
             </div>
             <div className="flex flex-col gap-4">
               {/* Recipient Form */}
-              <div className="bg-white p-6 rounded-xl shadow-md">
-                <h5 className="text-xl font-roboto font-semibold mb-4">
+              <div className="">
+                <h5 className="text-xl font-tahoma font-normal mb-4">
                   Nom et prénom de la personne qui recevra la carte Cadeau
                 </h5>
                 <div className="space-y-4">
-                  <div>
-                    <label className="block text-sm font-tahoma font-medium mb-1">
+                  <div className="flex gap-6">
+                    <label className="block w-40 text-sm font-tahoma font-medium mb-1">
                       Nom et prénom
                     </label>
                     <input
@@ -126,8 +128,8 @@ export default function CarteCadeau() {
                       }
                     />
                   </div>
-                  <div>
-                    <label className="block text-sm font-tahoma font-medium mb-1">
+                  <div className="flex gap-6">
+                    <label className="block w-40 text-sm font-tahoma font-medium mb-1">
                       Email
                     </label>
                     <input
@@ -146,13 +148,13 @@ export default function CarteCadeau() {
               </div>
 
               {/* Sender Form */}
-              <div className="bg-white p-6 rounded-xl shadow-md">
-                <h5 className="text-xl font-roboto font-semibold mb-4">
+              <div className="">
+                <h5 className="text-xl font-tahoma font-normal mb-4">
                   Nom et prénom de la personne qui commande
                 </h5>
                 <div className="space-y-4">
-                  <div>
-                    <label className="block text-sm font-tahoma font-medium mb-1">
+                  <div className="flex gap-6">
+                    <label className="block w-40 text-sm font-tahoma font-medium mb-1">
                       Nom et prénom
                     </label>
                     <input
@@ -167,8 +169,8 @@ export default function CarteCadeau() {
                       }
                     />
                   </div>
-                  <div>
-                    <label className="block text-sm font-tahoma font-medium mb-1">
+                  <div className="flex gap-6">
+                    <label className="block w-40 text-sm font-tahoma font-medium mb-1">
                       Message
                     </label>
                     <textarea
@@ -190,7 +192,12 @@ export default function CarteCadeau() {
 
               <div className="col-span-2">
                 <div className="flex justify-end">
-                  <ButtonIcon title="Offrir" />
+                  <button
+                // onClick={addProductToCheckout}
+                className="w-max px-4 py-3 bg-black leading-4 text-white uppercase font-normal text-xs tracking-[3px] hover:bg-gray-800 transition font-tahoma flex items-center justify-center gap-2"
+              >
+                <span>Offrir</span>
+              </button>
                 </div>
               </div>
             </div>

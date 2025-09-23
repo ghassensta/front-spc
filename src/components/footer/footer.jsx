@@ -2,22 +2,23 @@ import React from "react";
 import {
   FaFacebookF,
   FaInstagram,
-  FaTiktok,
+  FaTiktok ,
   FaLinkedinIn,
 } from "react-icons/fa";
 import { paths } from "src/router/paths";
 import { useLayout } from "src/actions/layout";
 import { CONFIG } from "src/config-global";
-import { IconBrandFacebookFilled, IconBrandInstagramFilled, IconBrandLinkedinFilled, IconBrandTiktokFilled } from "@tabler/icons-react";
 const iconMap = {
-  "ti ti-brand-facebook": IconBrandFacebookFilled,
-  "ti ti-brand-instagram": IconBrandInstagramFilled,
-  "ti ti-brand-tiktok": IconBrandTiktokFilled,
-  "ti ti-brand-linkedin": IconBrandLinkedinFilled,
+  "ti ti-brand-facebook": FaFacebookF,
+  "ti ti-brand-instagram": FaInstagram ,
+  "ti ti-brand-tiktok": FaTiktok ,
+  "ti ti-brand-linkedin": FaLinkedinIn,
 };
 
 export default function Footer() {
   const { footer } = useLayout();
+
+  console.log("FOoter", footer)
 
   const { settings, footer_about, footer_pro, social_links } = footer || {};
 
@@ -43,6 +44,8 @@ export default function Footer() {
         .filter((item) => item.is_active)
         .sort((a, b) => a.order - b.order)
     : [];
+
+    console.log(socialLinksFiltered)
 
   return (
     <footer className="bg-secondary text-white pt-8 md:pt-12 left-[calc(-50vw+50%)] relative w-screen font-roboto">
@@ -144,7 +147,7 @@ export default function Footer() {
               </button>
             </div>
           </div>
-          <div className="flex justify-start gap-2 mt-10 text-white text-lg">
+          <div className="flex justify-start gap-2 mt-6 text-white text-lg">
             {socialLinksFiltered.map((item) => {
               const IconComponent = iconMap[item.icon];
               if (!IconComponent) return null;
@@ -154,10 +157,10 @@ export default function Footer() {
                   href={item.url}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="hover:text-gray-300 transition-colors"
-                  style={{ color: item.color || "inherit" }} // Utilise la couleur si fournie
+                  className="hover:text-gray-900 hover:bg-white p-1 rounded-full transition-colors font-light "
                 >
-                  <i className={item.icon} ></i>
+                  {/* <i className={item.icon}></i> */}
+                  <IconComponent />
                 </a>
               );
             })}
