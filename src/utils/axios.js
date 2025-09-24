@@ -118,6 +118,7 @@ export const endpoints = {
   orders: {
     list: '/api/commandes',
     detail: (id) => `/api/commandes/${id}`,
+    myOrders: '/api/auth/mes-commandes'
   },
   layout: {
     sidebar : '/api/menu-sidebar',

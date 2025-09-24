@@ -1,10 +1,12 @@
 import React, { useState } from "react";
 import { Handshake, Gift, Users, Copy, Mail } from "lucide-react";
+import { useAuthContext } from "src/auth/hooks/use-auth-context";
 
 export default function ParrainagePageView() {
-  const [referralCode] = useState("ABC12345");
+  const { user } = useAuthContext()
+  const [referralCode] = useState(user?.parrainage_code);
   const [referralLink] = useState(
-    "https://www.voyage-prive.com/login/signup/NoN00/26635822"
+    "https://www.voyage-prive.com/signup?code="+referralCode
   );
   const [copied, setCopied] = useState(false);
   const [emails, setEmails] = useState([""]);

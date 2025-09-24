@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from "react";
+import React, { useState, useRef, useEffect, useCallback } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { motion } from "framer-motion";
 import { paths } from "src/router/paths";
@@ -13,6 +13,8 @@ import {
   HelpCircle,
   ChevronDown,
 } from "lucide-react";
+import { useAuthContext } from "src/auth/hooks/use-auth-context";
+import { signOut } from "src/actions/auth";
 
 const NavLink = ({ link, isActive, toggleMenu, openMenus, isMobile = false, menuRef }) => {
   const [showPopover, setShowPopover] = useState(false);
@@ -214,11 +216,16 @@ const NavLink = ({ link, isActive, toggleMenu, openMenus, isMobile = false, menu
 const LogoutButton = ({ isMobile }) => {
   const [showPopover, setShowPopover] = useState(false);
   const { push } = useRouter();
+  const { user, checkUserSession } = useAuthContext();
 
-  const handleLogout = () => {
-    localStorage.removeItem("token");
-    push("/");
-  };
+  const handleLogout = useCallback(async () => {
+      try {
+        await signOut();
+        await checkUserSession?.();
+      } catch (error) {
+        console.error(error);
+      }
+    }, [checkUserSession]);
 
   if (isMobile) {
     return (

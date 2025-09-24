@@ -14,11 +14,25 @@ export function useGetOrders() {
 
     const memoizedValue = useMemo(
         () => ({
-            orders: data?.orders || [],
+            orders: data?.commandes || [],
         }),
         [data]
     );
     return memoizedValue;
+}
+
+export function useGetMyOrders() {
+    const url = endpoints.orders.myOrders;
+
+    const { data } = useSWR(url, fetcher, swrOptions);
+
+    const memoizedValue = useMemo(
+        ()=> ({
+            orders: data?.commandes || []
+        }),
+        [data]
+    );
+    return memoizedValue
 }
 
 export function useGetOrder(id) {

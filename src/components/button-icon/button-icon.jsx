@@ -8,6 +8,7 @@ export default function ButtonIcon({
   sx = "",  
   size = "md", // default size  
   variant = "filled", // default variant  
+  props
 }) {  
   const sizeStyles = {  
     sm: "px-4 py-2 text-xs",  
@@ -23,7 +24,8 @@ export default function ButtonIcon({
 
   return (  
     <Link  
-      to={link}  
+      to={link} 
+      {...props} 
       className={`inline-flex font-tahoma rounded-full items-center gap-2 uppercase font-normal tracking-widest transition-all duration-300 ${sizeStyles[size] || sizeStyles.md} ${variantStyles[variant] || variantStyles.filled} ${sx}`}  
     >  
       {icon && <span>{icon}</span>}  

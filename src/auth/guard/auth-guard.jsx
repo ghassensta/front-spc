@@ -43,12 +43,7 @@ export function AuthGuard({ children }) {
     }
     setIsChecking(false);
 
-    // 🔐 Check role
-    if (user && user?.role) {
-      // Redirect unauthorized users (e.g., user trying to access /admin)
-      if(user?.role=== "admin" && !pathname.includes('admin')) router.replace(paths.admin.root);
-      if(user?.role=== "client" && !pathname.includes('my-account')) router.replace(paths.profile.root);
-    }
+   
   };
 
   useEffect(() => {

@@ -67,7 +67,7 @@ export const routes = [
       // { element: <ViewProduct />, path: "spa" },
       { element: <Categories />, path: "categories/:slug" },
       { element: <Actualites />, path: "actualites" },
-      { element: <ActualitesDetails />, path: "actualites/:title" },
+      { element: <ActualitesDetails />, path: "actualites/:slug" },
       { element: <CollectionPrestige />, path: "collection-prestige" },
       { element: <Partenaire />, path: "devenir-partenaire" },
       { element: <Glossaire />, path: "glossaire" },

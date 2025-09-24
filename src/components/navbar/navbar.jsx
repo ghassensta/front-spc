@@ -5,6 +5,8 @@ import Menu from "../menu/menu";
 import { Link } from "react-router-dom";
 import { paths } from "../../router/paths";
 import { CheckoutContext } from "../../sections/checkout/context/checkout-provider";
+import { MdDashboard } from "react-icons/md";
+import { useAuthContext } from "src/auth/hooks/use-auth-context";
 // import { CheckoutContext } from '../../context/checkout-provider'; // make sure path is correct
 
 export default function Navbar() {
@@ -12,21 +14,7 @@ export default function Navbar() {
 
   const { items } = useContext(CheckoutContext); // Access cart items from context
 
-  const leftSide = (
-    <div className="flex gap-3">
-      <Link to={paths.auth.root} className="relative">
-        <IoMdLogIn className="text-2xl" />
-      </Link>
-      <Link to={paths.checkout} className="relative">
-        <IoMdCart className="text-2xl" />
-        {items?.length > 0 && (
-          <span className="absolute -top-2 -right-2 bg-red-500 text-white rounded-full text-xs w-5 h-5 flex items-center justify-center font-tahoma">
-            {items.length}
-          </span>
-        )}
-      </Link>
-    </div>
-  );
+  const { user } = useAuthContext();
 
   return (
     <div className="w-full px-2 md:px-6 py-8 flex flex-col md:flex-row justify-between relative gap-6">
@@ -57,9 +45,16 @@ export default function Navbar() {
       <Logo className="max-w-min mx-auto" />
 
       <div className="gap-3 hidden md:flex">
-        <Link to={paths.auth.root} className="relative">
-          <IoMdLogIn className="text-2xl" />
-        </Link>
+        {user ? (
+          <Link to={paths.dashboard.root} className="relative">
+            <MdDashboard className="text-2xl" />
+          </Link>
+        ) : (
+          <Link to={paths.auth.root} className="relative">
+            <IoMdLogIn className="text-2xl" />
+          </Link>
+        )}
+
         <Link to={paths.checkout} className="relative">
           <IoMdCart className="text-2xl" />
           {items?.length > 0 && (

@@ -1,51 +1,11 @@
 import React from "react";
+import { Link } from "react-router-dom";
+import { CONFIG } from "src/config-global";
 import { paths } from "src/router/paths";
 
-export default function BlogPage() {
-  const articles = [
-    {
-      title:
-        "Lodge de Luxe en France : Votre Évasion Nature au Domaine des Prés Verts",
-      excerpt:
-        "Lodge de Luxe en France : Votre Évasion Nature au Domaine des Prés Verts. Dans un monde en quête de sérénité...",
-      image:
-        "https://spa-prestige-collection.com/wp-content/uploads/2025/03/SPC-Essence-1975x1318-02.jpg",
-      link: paths?.actualitesDetails("lodge-de-luxe-en-france"),
-    },
-    {
-      title: "Voyager Autrement : L’Art de Partir Sans Voiture",
-      excerpt:
-        "Voyager Autrement : L’Art de Partir Sans Voiture. Partir en vacances sans voiture est une tendance en plein essor...",
-      image:
-        "https://spa-prestige-collection.com/wp-content/uploads/2025/03/SPC-Essence-1975x1318-02.jpg",
-      link: paths.actualitesDetails("lodge-de-luxe-en-france"),
-    },
-    {
-      title: "Hydrafacial : Le Soin Star pour une Peau Visiblement Sublimée",
-      excerpt:
-        "Découvrez pourquoi l'Hydrafacial est devenu incontournable pour une peau éclatante...",
-      image:
-        "https://spa-prestige-collection.com/wp-content/uploads/2025/03/SPC-Essence-1975x1318-02.jpg",
-      link: paths.actualitesDetails("lodge-de-luxe-en-france"),
-    },
-    {
-      title:
-        "Sécurité Hivernale : 7 Pratiques Naturelles pour Rééquilibrer Votre Énergie",
-      excerpt:
-        "En hiver, prenez soin de votre corps avec ces 7 pratiques simples et naturelles...",
-      image:
-        "https://spa-prestige-collection.com/wp-content/uploads/2025/03/SPC-Essence-1975x1318-02.jpg",
-      link: paths.actualitesDetails("lodge-de-luxe-en-france"),
-    },
-  ];
-
-  const recentArticles = [
-    "Lodge de Luxe en France : Votre Évasion Nature au Domaine des Prés Verts",
-    "Voyager Autrement : L’Art de Partir Sans Voiture",
-    "Élixir des Saisons à Thiers : Quand l’Hébergement Devient Évasion",
-    "Hydrafacial : Le Soin Star pour une Peau Visiblement Sublimée",
-    "Sécurité Hivernale : 7 pratiques naturelles pour rééquilibrer votre énergie",
-  ];
+export default function BlogPage({ articles }) {
+  console.log(articles);
+  
 
   return (
     <>
@@ -73,8 +33,9 @@ export default function BlogPage() {
               key={index}
               className="bg-[#FBF6EC] shadow rounded overflow-hidden flex flex-col font-roboto"
             >
-              <img lazyload="lazy"
-                src={article.image}
+              <img
+                lazyload="lazy"
+                src={CONFIG.serverUrl + "/storage/" + article.image}
                 alt={article.title}
                 className="w-full h-48 object-cover"
               />
@@ -83,14 +44,14 @@ export default function BlogPage() {
                   {article.title}
                 </h3>
                 <p className="text-sm text-gray-700 flex-1">
-                  {article.excerpt}
+                  {article.petit_description}
                 </p>
-                <a
-                  href={article.link}
+                <Link
+                  to={paths.actualitesDetails(article.slug)}
                   className="inline-block w-max mt-4 bg-[#B6B498] text-white py-2 px-4 rounded hover:bg-black duration-300"
                 >
                   Lire plus
-                </a>
+                </Link>
               </div>
             </div>
           ))}
@@ -107,9 +68,9 @@ export default function BlogPage() {
           </div>
           <h3 className="font-bold text-2xl mb-4">Articles récents</h3>
           <ul className="space-y-3 text-base font-roboto">
-            {recentArticles.map((item, i) => (
+            {articles.map((item, i) => (
               <li key={i} className="hover:underline cursor-pointer">
-                {item}
+                <Link to={paths.actualitesDetails(item.slug)}>{item.title}</Link>
               </li>
             ))}
           </ul>

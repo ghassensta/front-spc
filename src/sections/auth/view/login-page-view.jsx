@@ -1,44 +1,46 @@
 import React, { useState } from "react";
-import axios from "axios";
-import { useNavigate } from "react-router-dom";
-import { CONFIG } from "src/config-global";
+import { Link } from "react-router-dom";
 import { toast } from "react-toastify";
+import { signInWithPassword } from "src/actions/auth";
+import Logo from "src/components/logo/logo";
+import { useRouter } from "src/hooks";
+import { paths } from "src/router/paths";
 
 export default function LoginPageView() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState("");
-  const navigate = useNavigate();
+  const router = useRouter()
 
-  const handleSubmit = async (e) => {
+   const handleSubmit = async (e) => {
     e.preventDefault();
-    setLoading(true);
-    setError("");
 
+    const promise = signInWithPassword({ email, password });
+
+    toast.promise(
+      promise,
+      {
+        pending: "Connexion en cours...",
+        success: "Connecté avec succès !",
+        error: "Échec de la connexion. Vérifiez vos identifiants.",
+      }
+    );
 
     try {
-      const response = await axios.post(`${CONFIG.serverUrl}/api/auth/login`, {
-        email,
-        password,
-      });
-      localStorage.setItem("token", response.data.access_token);
-      localStorage.setItem("user_id", JSON.stringify(response.data.user.id));
-      navigate("/dashboard");
-    } catch (err) {
-      console.error(err.response); // Affiche toutes les infos de l'erreur
-      toast.error('Erreur lors de la connexion')
-    } finally {
-      setLoading(false);
+      await promise;
+      router.refresh(); // Or redirect if needed
+    } catch (error) {
+      console.error(error);
     }
   };
 
   return (
     <div className="font-tahoma">
+      <div className="flex items-center w-full justify-center mb-4">
+        <Link to={paths.main}>
+          <Logo />
+        </Link>
+      </div>
       <h1 className="text-xl font-semibold text-center mb-6">Connexion</h1>
-
-      {error && <p className="text-red-500 text-sm mb-4">{error}</p>}
-
       <form onSubmit={handleSubmit} className="flex flex-col gap-4">
         <div>
           <label htmlFor="email" className="text-sm text-gray-600">
@@ -70,10 +72,9 @@ export default function LoginPageView() {
 
         <button
           type="submit"
-          disabled={loading}
           className="w-full bg-black text-white p-2 rounded hover:bg-gray-800 disabled:opacity-50"
         >
-          {loading ? "Connexion..." : "Se Connecter"}
+          Se Connecter
         </button>
       </form>
     </div>

@@ -1,8 +1,8 @@
 
 import { CONFIG } from "src/config-global";
-import { paths } from "../routes/paths";
 
 import axios from './axios';
+import { paths } from "src/router/paths";
 
 // ----------------------------------------------------------------------
 

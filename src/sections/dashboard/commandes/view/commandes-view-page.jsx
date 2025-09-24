@@ -1,7 +1,7 @@
 import React from 'react'
 import { useCheckoutContext } from 'src/sections/checkout/context'
 
-export default function CommandesViewPage() {
+export default function CommandesViewPage({ order }) {
     const checkout = useCheckoutContext()
   return (
     <div className="mt-4 grid grid-cols-1 lg:grid-cols-3 gap-4">  

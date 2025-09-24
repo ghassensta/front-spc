@@ -26,13 +26,16 @@ export function useGetNews() {
 export function useGetNewsDetail(slug) {
     const url = endpoints.actualites.detail(slug);
 
-    const { data } = useSWR(url, fetcher, swrOptions);
+    const { data, isLoading } = useSWR(url, fetcher, swrOptions);
+
+    console.log(data)
 
     const memoizedValue = useMemo(
         () => ({
-            actualite: data?.actualite || null,
+            actualite: data?.data || null,
+            Loading: isLoading,
         }),
-        [data]
+        [data, isLoading]
     );
 
     return memoizedValue;
