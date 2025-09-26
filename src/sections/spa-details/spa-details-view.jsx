@@ -12,6 +12,7 @@ import StarRatingInput from "src/components/star-rating-input/star-rating-input"
 import { CONFIG } from "src/config-global";
 import { usePostEtablissementsAvis } from "src/actions/etablissements";
 import { FaStar } from "react-icons/fa";
+import SpaDetailsSkeleton from "./spa-details-skeleton";
 
 const criteria = [
   "Practicien(ne)",
@@ -29,15 +30,13 @@ export default function SpaDetailsView({
   types,
   simlairesEtablissment,
   avis,
-  marquesPartenaires
+  marquesPartenaires,
+  loading
 }) {
   const initialRatings = {};
   criteria.forEach((key) => {
     initialRatings[key] = 0;
   });
-  // const avis = spaData?.avis || [];
-
-  console.log(spaData)
 
   const [ratings, setRatings] = useState(initialRatings);
   const [name, setName] = useState("");
@@ -94,6 +93,12 @@ export default function SpaDetailsView({
         console.error("Erreur lors de l'envoi de l'avis:", error);
       });
   };
+
+  if (loading) {
+    return (
+      <SpaDetailsSkeleton />
+    );
+  }
 
   return (
     <div className="mx-auto px-4">
@@ -198,12 +203,13 @@ export default function SpaDetailsView({
       <div
         style={{
           backgroundImage:
-            "url(https://spa-prestige-collection.com/wp-content/uploads/2025/07/1.png)",
+            "ur[](https://spa-prestige-collection.com/wp-content/uploads/2025/07/1.png)",
         }}
         className="bg-primary w-screen relative left-[calc(-50vw+50%)] mb-8 min-h-32 overflow-hidden bg-center"
       >
         <div className="flex flex-col items-center p-12 text-center bg-slate-300/80 w-[60%] my-36 mx-auto">
-          <img lazyload="lazy"
+          <img
+            loading="lazy"
             src={logoSpc}
             alt="Logo Spa & Prestige Collection"
             className="w-36 mb-4"

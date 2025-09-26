@@ -58,7 +58,7 @@ export default function BlogDetails({ actualitie }) {
         <div className="">
 
           <div
-      className="prose space-y-4 max-w-none font-tahoma" // optional Tailwind typography plugin for better style
+      className="prose space-y-4 max-w-none font-tahoma blog-container" // optional Tailwind typography plugin for better style
       dangerouslySetInnerHTML={{ __html: actualitie?.content }}
     />
           {/* {actualitie?.content} */}

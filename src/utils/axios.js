@@ -93,6 +93,7 @@ export const endpoints = {
     signIn: "/api/auth/login",
     signUp: "/api/auth/register",
     logout: "/api/auth/logout",
+    edit: "/api/auth/profile"
   },
   categories: {
     list: "/api/categories",
@@ -117,7 +118,7 @@ export const endpoints = {
   },
   orders: {
     list: '/api/commandes',
-    detail: (id) => `/api/commandes/${id}`,
+    detail: (id) => `/api/auth/commandes/${id}`,
     myOrders: '/api/auth/mes-commandes'
   },
   layout: {
@@ -126,5 +127,13 @@ export const endpoints = {
     carte: '/api/section-carte',
     prochainement: '/api/section-prochainement-disponible',
     marques: '/api/marques-partenaires',
+  },
+  wishlist: {
+    toggle: '/api/auth/wishlists',
+    list: '/api/auth/wishlists',
+  },
+  parrainage: {
+    get: '/api/auth/parrainage',
+    sendEmails: '/api/auth/send-invites'
   }
 };

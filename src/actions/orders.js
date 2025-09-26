@@ -42,7 +42,7 @@ export function useGetOrder(id) {
 
     const memoizedValue = useMemo(
         () => ({
-            order: data?.order || null,
+            order: data?.data || null,
         }),
         [data]
     );

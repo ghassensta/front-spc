@@ -45,3 +45,37 @@ body {
         max-width: 1536px;
     }
 }
+
+
+  .blog-container h1 {
+    @apply text-4xl font-bold mb-6 text-gray-900;
+  }
+
+  .blog-container h2 {
+    @apply text-3xl font-semibold mb-4 text-gray-800 text-justify; /* Example: large, bold, justified */
+  }
+
+  .blog-container h3 {
+    @apply text-2xl font-semibold mb-3 text-gray-800;
+  }
+
+  .blog-container p {
+    @apply mb-4 text-base leading-relaxed text-gray-700 text-justify; /* Justified text as in Quill classes */
+  }
+
+  .blog-container strong {
+    @apply font-bold text-gray-900;
+  }
+
+  .blog-container a {
+    @apply text-blue-600 hover:underline;
+  }
+
+  .blog-container .ql-align-justify {
+    @apply text-justify; /* Preserve Quill's justify alignment */
+  }
+
+  /* Handle inline styles if needed, but Tailwind prose should respect them */
+  .blog-container span[style*="color"] {
+    /* Optional: Preserve inline colors if overridden */
+  }

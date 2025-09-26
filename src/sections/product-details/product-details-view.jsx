@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { FaStar } from "react-icons/fa";
 import { useCheckoutContext } from "../checkout/context/use-checkout-context";
@@ -10,8 +10,11 @@ import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { CONFIG } from "src/config-global";
 import { usePostProductAvis } from "src/actions/products";
+import { useAuthContext } from "src/auth/hooks/use-auth-context";
+import { useToggleWishlist } from "src/actions/wishlists";
+import ProductDetailsSkeleton from "./product-details-skeleton";
 
-export default function ProductDetailsView({ product, avis = [] }) {
+export default function ProductDetailsView({ product, avis = [], loading, like=false }) {
   const navigate = useNavigate();
   const checkout = useCheckoutContext();
   const [rating, setRating] = useState(0);
@@ -19,12 +22,36 @@ export default function ProductDetailsView({ product, avis = [] }) {
   const [email, setEmail] = useState("");
   const [comment, setComment] = useState("");
   const [activeTab, setActiveTab] = useState("reviews");
-
-  // State for multiple recipients (repeater)
   const [recipients, setRecipients] = useState([{ fullName: "", email: "" }]);
+  const { user } = useAuthContext();
+  const [isFav, setIsFav] = useState(false);
+
+  useEffect(()=> {
+    setIsFav(like)
+  }, [like])
+
+  console.log(product)
+
+  // Ensure galleries_images is an array and filter out empty strings
+  const gallery = [
+    ...(product?.image ? [product.image] : []),
+    ...(Array.isArray(product?.galleries_images)
+      ? product.galleries_images.filter(img => img && img.trim() !== '')
+      : []),
+  ];
+  const [view, setView] = useState(null);
+
+  useEffect(() => {
+    if (view === null && product) {
+      setView(product?.image || "");
+    }
+  }, [product, view]);
 
   const addProductToCheckout = () => {
-    if (!product) return;
+    if (!product) {
+      toast.error("Produit non disponible.");
+      return;
+    }
 
     // Check for required fields
     if (recipients.some((r) => !r.fullName || !r.email)) {
@@ -57,7 +84,7 @@ export default function ProductDetailsView({ product, avis = [] }) {
       destinataires: existingItem
         ? [...existingItem.destinataires, ...uniqueRecipients]
         : uniqueRecipients,
-      expediteur: {}, // Empty here, handled in next step
+      expediteur: {},
       quantity: existingItem
         ? existingItem.destinataires.length + uniqueRecipients.length
         : uniqueRecipients.length,
@@ -65,7 +92,6 @@ export default function ProductDetailsView({ product, avis = [] }) {
 
     // Clear repeater state after adding
     setRecipients([{ fullName: "", email: "" }]);
-
     navigate(paths.checkout);
   };
 
@@ -86,51 +112,25 @@ export default function ProductDetailsView({ product, avis = [] }) {
     setRecipients(newRecipients);
   };
 
-  // const handleSubmitReview = async () => {
-  //   if (!product || !name || !email) {
-  //     toast.error("Veuillez remplir tous les champs obligatoires.");
-  //     return;
-  //   }
+  const toggleFav = async () => {
+    const promise = useToggleWishlist(product.id);
 
-  //   const newAvis = {
-  //     type_produit_id: product.id,
-  //     ratings: rating,
-  //     name,
-  //     email,
-  //     comment,
-  //   };
+    toast.promise(promise, {
+      pending: isFav ? 'Retirer de favoris...' : 'Ajouter aux favoris...'
+    });
 
-  //   console.log(newAvis);
+    try {
+      if (!user) return;
+      await promise;
+      setIsFav((prev) => !prev);
+    } catch (err) {
+      console.error(err);
+    }
+  };
 
-  //   try {
-  //     const res = await fetch(`${CONFIG.serverUrl}/api/produit/avis`, {
-  //       method: "POST",
-  //       headers: { "Content-Type": "application/json" },
-  //       body: JSON.stringify(newAvis),
-  //     });
-
-  //     if (res.ok) {
-  //       const responseData = await res.json();
-  //       // const avisAjoute = responseData.avis || responseData;
-  //       setName("");
-  //       setEmail("");
-  //       setComment("");
-  //       setRating(0);
-  //       toast.success("Avis envoyé avec succès");
-  //     } else {
-  //       throw new Error("Erreur lors de l'envoi de l'avis");
-  //     }
-  //   } catch (err) {
-  //     console.error(err);
-  //     toast.error("Une erreur est survenue lors de l'envoi de l'avis.");
-  //   }
-  // };
-
-const validateForm = () => {
+  const validateForm = () => {
     if (!name || !email) {
-      toast.error(
-        "Veuillez remplir tous les champs (nom, email) !"
-      );
+      toast.error("Veuillez remplir tous les champs (nom, email) !");
       return false;
     }
 
@@ -143,55 +143,103 @@ const validateForm = () => {
     return true;
   };
 
-  
   const handleSubmit = async (e) => {
-      e.preventDefault();
-      if (!validateForm()) return;
-  
-      toast
-        .promise(
-          usePostProductAvis({
-            name,
-            email,
-            comment,
-            ratings: rating,
-            id: product.id,
-          }),
-          {
-            pending: "Envoi de votre avis...",
-            success: "Avis envoyé avec succès !",
-            error: "Erreur lors de l'envoi de l'avis.",
-          }
-        )
-        .then(() => {
-          setRating(0);
-          setName("");
-          setEmail("");
-          setComment("");
-        })
-        .catch((error) => {
-          console.error("Erreur lors de l'envoi de l'avis:", error);
-        });
-    };
+    e.preventDefault();
+    if (!validateForm()) return;
+
+    toast
+      .promise(
+        usePostProductAvis({
+          name,
+          email,
+          comment,
+          ratings: rating,
+          id: product.id,
+          slug: product.slug,
+        }),
+        {
+          pending: "Envoi de votre avis...",
+          success: "Avis envoyé avec succès !",
+          error: "Erreur lors de l'envoi de l'avis.",
+        }
+      )
+      .then(() => {
+        setRating(0);
+        setName("");
+        setEmail("");
+        setComment("");
+      })
+      .catch((error) => {
+        console.error("Erreur lors de l'envoi de l'avis:", error);
+      });
+  };
+
   const stars = product?.avg_rating || 0;
   const roundedRating = Math.round(stars * 2) / 2;
+
+  if (loading) {
+   return <ProductDetailsSkeleton />
+  }
 
   return (
     <div className="max-w-6xl mx-auto px-4 font-tahoma">
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        {product?.image && (
-          <img lazyload="lazy"
-          
-            className=""
-            src={`${CONFIG.serverUrl}/storage/${product.image}`}
-            alt={product.nom}
-          />
-        )}
-        <div className="bg-white p-8 rounded-2xl">
+        <div className="flex flex-col">
+          {view ? (
+            <img
+              loading="lazy"
+              className=""
+              src={`${CONFIG.serverUrl}/storage/${view}`}
+              alt={product?.nom || "Produit"}
+            />
+          ) : (
+            <p className="text-gray-600">Aucune image disponible.</p>
+          )}
+          <div className="grid grid-cols-4">
+            {gallery.map((image, index) => (
+              <img
+                key={index}
+                onClick={() => setView(image)}
+                src={`${CONFIG.serverUrl}/storage/${image}`}
+                className="h-full w-full max-h-16 md:max-h-20 lg:max-h-24 cursor-pointer"
+                style={view === image ? { opacity: 1 } : { opacity: 0.5 }}
+                alt={`Galerie ${index + 1}`}
+              />
+            ))}
+          </div>
+        </div>
+        <div className="bg-white px-8 rounded-2xl">
+          {user && (
+            <div className="mb-2 w-full flex items-end justify-end">
+              <motion.button
+                whileTap={{ scale: 0.9 }}
+                onClick={toggleFav}
+                className={`flex items-center gap-2 px-4 py-2 rounded-lg border transition font-tahoma text-xs
+                    ${
+                      isFav
+                        ? "bg-yellow-100 border-yellow-400 text-yellow-600"
+                        : "bg-gray-100 border-gray-300 text-gray-600"
+                    }
+                  `}
+              >
+                <Star
+                  size={18}
+                  className={`transition ${
+                    isFav
+                      ? "fill-yellow-500 stroke-yellow-500"
+                      : "stroke-gray-500"
+                  }`}
+                />
+                {isFav ? "Retirer des favoris" : "Ajouter aux favoris"}
+              </motion.button>
+            </div>
+          )}
           <div className="flex flex-wrap gap-2 mb-4">
             {[
-              product?.type?.etablissement?.nom+" - Tél. :"+product?.type?.etablissement?.telephone,
-              " - Email:"+product?.type?.etablissement?.email,
+              product?.type?.etablissement?.nom +
+                " - Tél. :" +
+                product?.type?.etablissement?.telephone,
+              " - Email:" + product?.type?.etablissement?.email,
               product?.type?.etablissement?.adresse,
               "France",
             ].map((text, i) => (
@@ -199,7 +247,7 @@ const validateForm = () => {
                 key={i}
                 className="bg-primary text-secondary font-tahoma text-xs px-3 p-1 rounded-ss-xl rounded-ee-xl"
               >
-                {text}
+                {text || "Information non disponible"}
               </div>
             ))}
           </div>
@@ -227,7 +275,7 @@ const validateForm = () => {
           </div>
 
           <div className="font-normal text-[#958e09] text-lg font-tahoma mb-2">
-            {product?.prix} €
+            {product?.prix ? `${product.prix} €` : "Prix non disponible"}
           </div>
 
           <div className="leading-base text-base font-light font-tahoma text-[#333]">
@@ -235,7 +283,7 @@ const validateForm = () => {
           </div>
           {product?.conditions_utilisation && (
             <div className="leading-base text-base font-tahoma">
-              {product?.conditions_utilisation}
+              {product.conditions_utilisation}
             </div>
           )}
           {/* Repeater for multiple recipients */}
@@ -357,7 +405,7 @@ const validateForm = () => {
                       </p>
                       <p className="text-gray-600">
                         Soyez le premier à laisser votre avis sur "
-                        {product?.nom}" !
+                        {product?.nom || "ce produit"}" !
                       </p>
                       <p className="text-gray-600">
                         Votre adresse e-mail ne sera pas publiée. Les champs

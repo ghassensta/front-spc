@@ -30,6 +30,16 @@ export default function CommandesListView({ orders }) {
         <th>Actions</th>
       </thead>
       <tbody className="text-center text-secondary text-sm">
+        {!orders.length && (
+          <tr>
+            <td colSpan={5}>
+              <div className="flex flex-col items-center">
+                <p className="py-2">Vous n'avez pas des commandes</p>
+                <Link to={paths.spa.list} className="bg-black text-white px-6 py-2 uppercase tracking-wider hover:bg-gray-800 max-w-max">Découvrir nos offres</Link>
+              </div>
+            </td>
+          </tr>
+        )}
         {orders.map((order) => (
           <tr className="border-b-2 py-2">
             <td>

@@ -7,7 +7,7 @@ export default function ConditionsPageView() {
         Conditions Générales de vente.
       </h1>
 
-      <div class="space-y-6 text-justify font-bricolage">
+      <div className="space-y-6 text-justify font-bricolage">
         <p>
           <strong>Préambule</strong>
         </p>

@@ -39,5 +39,6 @@ export const paths = {
   },
   auth: {
     root: "/auth",
+    register: "/auth/register",
   },
 };

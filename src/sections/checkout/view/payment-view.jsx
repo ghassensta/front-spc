@@ -4,12 +4,14 @@ import { useNavigate } from "react-router-dom";
 import ButtonIcon from "src/components/button-icon/button-icon";
 import axios from "axios";
 import { CONFIG } from "src/config-global";
+import { useAuthContext } from "src/auth/hooks/use-auth-context";
 
 export default function PaymentView() {
   const checkout = useCheckoutContext();
   const navigate = useNavigate();
   const [isEditingAddress, setIsEditingAddress] = useState(false);
   const [loading, setLoading] = useState(false);
+  const { user } = useAuthContext()
 
   const TAX_RATE = 0.2;
 
@@ -73,7 +75,7 @@ export default function PaymentView() {
               type="email"
               className="w-full border rounded-md p-2 focus:outline-none focus:ring-2 focus:ring-blue-400"
               placeholder="contact@example.com"
-              value={checkout.expediteur.email}
+              value={checkout.expediteur?.email || user?.email || ""}
               onChange={(e) =>
                 checkout.onCreateExpediteur({
                   ...checkout.expediteur,

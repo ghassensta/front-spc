@@ -25,10 +25,11 @@ export function useGetEtablissements() {
 
 export function useGetAllEtablissements() {
   const url = endpoints.etablissements.getAll;
-  const { data } = useSWR(url, fetcher, swrOptions);
+  const { data, isLoading } = useSWR(url, fetcher, swrOptions);
   const memoizedValue = useMemo(
     () => ({
       etablissements: data?.etablissements || [],
+      etablissementLoading: isLoading,
     }), [data]
   );
 
@@ -38,7 +39,7 @@ export function useGetAllEtablissements() {
 export function useGetEtablissement(slug) {
   const url = endpoints.etablissements.detail(slug);
 
-  const { data } = useSWR(url, fetcher, swrOptions);
+  const { data, isLoading } = useSWR(url, fetcher, swrOptions);
 
   const memoizedValue = useMemo(
     () => ({
@@ -47,6 +48,7 @@ export function useGetEtablissement(slug) {
       simlairesEtablissment: data?.similairesEtablissement || [],
       avis: data?.avis || [],
       marquesPartenaires: data?.marquesPartenaires || [],
+      loading: isLoading,
     }),
     [data]
   );
@@ -80,13 +82,14 @@ export const usePostEtablissementsAvis = async ({
 export function useGetFiltersEtablissements() {
     const url = endpoints.etablissements.filters;
 
-    const { data } = useSWR(url, fetcher, swrOptions);
+    const { data, isLoading } = useSWR(url, fetcher, swrOptions);
 
     const memoizedValue = useMemo(
         () => ({
             villes: data?.region_villes || [],
             types: data?.types_etablissements || [],
             services: data?.services_equipements || [],
+            filtersLoading: isLoading
         }),
         [data]
     ); 

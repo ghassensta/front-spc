@@ -4,12 +4,12 @@ import { useGetProduct } from "src/actions/products";
 
 export default function Page() {
   const { slug } = useParams();
-  const { product, avis } = useGetProduct(slug);
+  const { product, avis, productLoading, like } = useGetProduct(slug);
 
-  console.log(product)
+  console.log("Produit => ",avis)
   return (
     <>
-     <ProductDetailsView product={product} avis={avis}/>
+     <ProductDetailsView product={product} avis={avis} loading={productLoading} like={like}/>
     </>
   );
 }

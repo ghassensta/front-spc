@@ -1,19 +1,20 @@
 import React, { useState } from "react";
 import { Handshake, Gift, Users, Copy, Mail } from "lucide-react";
 import { useAuthContext } from "src/auth/hooks/use-auth-context";
+import { paths } from "src/router/paths";
+import { toast } from "react-toastify";
+import { useSendInvites } from "src/actions/parrainage";
 
-export default function ParrainagePageView() {
-  const { user } = useAuthContext()
+export default function ParrainagePageView({ filleuls, total_filleuls }) {
+  const { user } = useAuthContext();
   const [referralCode] = useState(user?.parrainage_code);
   const [referralLink] = useState(
-    "https://www.voyage-prive.com/signup?code="+referralCode
+    window.location.origin + paths.auth.register + "?code=" + referralCode
   );
+
   const [copied, setCopied] = useState(false);
+
   const [emails, setEmails] = useState([""]);
-  const [filleuls] = useState([
-    { name: "Sarah", status: "validée" },
-    { name: "Youssef", status: "en_attente" },
-  ]);
 
   const handleCopy = (text) => {
     navigator.clipboard.writeText(text);
@@ -27,10 +28,33 @@ export default function ParrainagePageView() {
     setEmails(updated);
   };
 
-  const addEmailField = () => setEmails([...emails, ""]);
+  const addEmailField = () => {
+    if (10 - total_filleuls - emails.length <= 0) {
+      toast.error("Vous avez atteint le limit");
+    } else {
+      setEmails([...emails, ""]);
+    }
+  };
 
-  const handleSendInvites = () => {
-    alert("Invitations envoyées ✅");
+  const handleSendInvites = async () => {
+    if (!emails[0]) {
+      toast.error("Saisir un email au moins");
+      return;
+    }
+
+    const filteredEmails = emails.filter((email) => email);
+
+    // if() VALIDATE EMAILS
+
+    try {
+      await toast.promise(useSendInvites(filteredEmails), {
+        pending: "Envoi en cours ...",
+        success: "Envoi avec succéss",
+        error: "Un erreur est servenu",
+      });
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   return (
@@ -43,7 +67,7 @@ export default function ParrainagePageView() {
             <h2 className="text-lg font-semibold text-gray-800">Parrainage</h2>
           </div>
           <span className="text-xs text-cyan-600 bg-cyan-50 px-2 py-1 rounded">
-            Limité à 10 filleuls
+            Limité à {10 - total_filleuls} filleuls
           </span>
         </div>
 
@@ -64,11 +88,14 @@ export default function ParrainagePageView() {
           </button>
         </div>
         {copied && (
-          <p className="text-xs text-green-600 mb-2">Copié dans le presse-papier ✅</p>
+          <p className="text-xs text-green-600 mb-2">
+            Copié dans le presse-papier ✅
+          </p>
         )}
 
         <p className="text-sm text-gray-600">
-          Partagez ce code par vos propres moyens (email, téléphone, réseaux sociaux).
+          Partagez ce code par vos propres moyens (email, téléphone, réseaux
+          sociaux).
         </p>
 
         {/* Rewards */}
@@ -93,7 +120,12 @@ export default function ParrainagePageView() {
             <Users className="w-5 h-5 text-gray-700" />
             <h3 className="text-md font-semibold text-gray-800">Filleuls</h3>
           </div>
-          <div className="space-y-2">
+          <div className="space-y-2 flex-1 h-full">
+            {!filleuls.length && (
+              <div className="flex items-center justify-center flex-1 w-full my-auto">
+                <p>Vous avez aucun personne parrainé</p>
+              </div>
+            )}
             {filleuls.map((f, idx) => (
               <div
                 key={idx}

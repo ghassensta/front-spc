@@ -3,6 +3,7 @@ import { useState, useEffect } from 'react';
 import { paths } from 'src/router/paths';
 import { useAuthContext } from '../hooks/use-auth-context';
 import { useRouter, useSearchParams } from 'src/hooks';
+import LoadingScreen from 'src/components/loading-screen/loading-screen';
 
 // ----------------------------------------------------------------------
 
@@ -38,7 +39,7 @@ export function GuestGuard({ children }) {
   }, [authenticated, loading]);
 
   if (isChecking) {
-    return <p>Loading...</p>;
+    return <LoadingScreen />;
   }
 
   return <>{children}</>;

@@ -1,21 +1,23 @@
-import React from "react";
+import React, { useState } from "react";
 import { useCheckoutContext } from "../context/use-checkout-context";
 import { Link } from "react-router-dom";
 import { paths } from "../../../router/paths";
 import ButtonIcon from "../../../components/button-icon/button-icon";
 import { FaRegTrashAlt } from "react-icons/fa";
 import { CONFIG } from "src/config-global";
+import { useAuthContext } from "src/auth/hooks/use-auth-context";
 
 export default function CheckoutView() {
   const checkout = useCheckoutContext();
+  const { user } = useAuthContext()
   const itemsFiltered = checkout.items?.filter((item) => item.quantity > 0) || [];
   const TAX_RATE = 0.2;
 
   // State for expéditeur input fields
-  const [expediteurFullName, setExpediteurFullName] = React.useState(
-    checkout.expediteur?.fullName || ""
+  const [expediteurFullName, setExpediteurFullName] = useState(
+    checkout.expediteur?.fullName || user?.name || ""
   );
-  const [expediteurMessage, setExpediteurMessage] = React.useState(
+  const [expediteurMessage, setExpediteurMessage] = useState(
     checkout.expediteur?.message || ""
   );
 

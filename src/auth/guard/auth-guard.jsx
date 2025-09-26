@@ -4,6 +4,7 @@ import { useState, useEffect, useCallback } from 'react';
 import { useRouter, usePathname, useSearchParams } from 'src/hooks';
 import { paths } from 'src/router/paths';
 import { useAuthContext } from '../hooks/use-auth-context';
+import LoadingScreen from 'src/components/loading-screen/loading-screen';
 // import { useRouter } from 'src/hooks';
 
 // ----------------------------------------------------------------------
@@ -52,7 +53,7 @@ export function AuthGuard({ children }) {
   }, [authenticated, loading]);
 
   if (isChecking) {
-    return <p>Loading...</p>;
+    return <LoadingScreen />;
   }
 
   return <>{children}</>;

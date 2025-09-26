@@ -66,6 +66,7 @@ export const routes = [
       // === Nouvelles routes statiques ===
       // { element: <ViewProduct />, path: "spa" },
       { element: <Categories />, path: "categories/:slug" },
+      { element: <Categories />, path: "categories" },
       { element: <Actualites />, path: "actualites" },
       { element: <ActualitesDetails />, path: "actualites/:slug" },
       { element: <CollectionPrestige />, path: "collection-prestige" },

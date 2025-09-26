@@ -4,6 +4,7 @@ import { GuestGuard } from "src/auth/guard/guest-guard";
 import AuthLayout from "src/layouts/authLayout";
 
 const Login = lazy(() => import("../pages/auth/login"));
+const Register = lazy(() => import("../pages/auth/register"));
 
 export const authRoutes = [
   {
@@ -15,6 +16,9 @@ export const authRoutes = [
         </AuthLayout>
       </GuestGuard>
     ),
-    children: [{ element: <Login />, index: true }],
+    children: [
+      { element: <Login />, index: true },
+      { element: <Register />, path: "register" },
+    ],
   },
 ];

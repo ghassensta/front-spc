@@ -11,8 +11,8 @@ function App() {
   useScrollToTop();
 
   return (
-    <CheckoutProvider>
-      <AuthProvider>
+    <AuthProvider>
+        <CheckoutProvider>
       <ToastContainer
         position="top-right"
         autoClose={3000}
@@ -21,8 +21,8 @@ function App() {
         pauseOnHover
       />
       <Router />
-      </AuthProvider>
     </CheckoutProvider>
+      </AuthProvider>
   );
 }
 

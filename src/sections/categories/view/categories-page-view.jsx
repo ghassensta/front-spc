@@ -1,12 +1,16 @@
 import React, { useState } from "react";
 import SpaCard from "src/components/spa-card/spa-card";
 import { paths } from "src/router/paths";
+import CategoriesSkeleton from "../categories-skeleton";
+import FiltersSkeleton from "../filters-skeleton";
 
 export default function CategoriesPageView({
   cardsByCategory = [],
   villes = [],
   types = [],
   services = [],
+  loading,
+  filterLoading
 }) {
   const [filters, setFilters] = useState({
     etablissement: "",
@@ -32,6 +36,12 @@ export default function CategoriesPageView({
         : true)
     );
   });
+
+  if (filterLoading) {
+    return (
+      <FiltersSkeleton />
+    );
+  }
 
   return (
     <div className="max-w-6xl mx-auto p-1">
@@ -90,21 +100,25 @@ export default function CategoriesPageView({
       </div>
 
       {/* Cards */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-x-4 gap-y-12">
-        {filteredCards.length > 0 ? (
-          filteredCards.map((card) => (
-            <SpaCard
-              key={card.id}
-              to={paths.spa.details(card.slug)}
-              title={card.nom}
-              image={card.image_avant}
-              description={card.description_avant}
-            />
-          ))
-        ) : (
-          <p className="col-span-3 text-center">Aucun résultat trouvé.</p>
-        )}
-      </div>
+      {loading ? (
+        <CategoriesSkeleton />
+      ) : (
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-x-4 gap-y-12">
+          {filteredCards.length > 0 ? (
+            filteredCards.map((card) => (
+              <SpaCard
+                key={card.id}
+                to={paths.spa.details(card.slug)}
+                title={card.nom}
+                image={card.image_avant}
+                description={card.description_avant}
+              />
+            ))
+          ) : (
+            <p className="col-span-3 text-center">Aucun résultat trouvé.</p>
+          )}
+        </div>
+      )}
     </div>
   );
 }

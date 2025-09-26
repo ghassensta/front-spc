@@ -1,6 +1,6 @@
 import { useMemo } from "react";
 import { endpoints, fetcher, poster } from "src/utils/axios";
-import useSWR from "swr";
+import useSWR, { mutate } from "swr";
 
 const swrOptions = {
   revalidateIfStale: false,
@@ -11,11 +11,12 @@ const swrOptions = {
 export function useGetProducts() {
   const url = endpoints.product.list;
 
-  const { data } = useSWR(url, fetcher, swrOptions);
+  const { data, isLoading } = useSWR(url, fetcher, swrOptions);
 
   const memoizedValue = useMemo(
     () => ({
       products: data?.products || [],
+      porductsLoading: isLoading,
     }),
     [data]
   );
@@ -26,12 +27,14 @@ export function useGetProducts() {
 export function useGetProduct(slug) {
   const url = endpoints.product.detail(slug);
 
-  const { data } = useSWR(url, fetcher, swrOptions);
+  const { data, isLoading } = useSWR(url, fetcher, swrOptions);
 
   const memoizedValue = useMemo(
     () => ({
       product: data?.product || null,
       avis: data?.avis || [],
+      like: data?.inWishlist,
+      productLoading : isLoading,
     }),
     [data]
   );
@@ -45,11 +48,14 @@ export const usePostProductAvis = async ({
   comment,
   ratings,
   id,
+  slug
 }) => {
   try {
     const url = endpoints.product.avis;
     const params = { name, email, comment, ratings, type_produit_id: id };
     const res = await poster(url, params);
+
+    mutate(endpoints.product.detail(slug))
 
     return res;
   } catch (error) {

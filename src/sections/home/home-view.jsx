@@ -1,12 +1,10 @@
 import React from "react";
 import Header from "./comp/header";
 
-import { FaHandHoldingHeart } from "react-icons/fa";
 import ButtonIcon from "../../components/button-icon/button-icon";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Autoplay, Navigation } from "swiper/modules";
 import "swiper/css";
-import { paths } from "../../router/paths";
 import Card from "../../components/card/card";
 import { useGetEtablissements } from "src/actions/etablissements";
 import { useGetLastNews } from "src/actions/actualites";
@@ -14,13 +12,12 @@ import { useLayout } from "src/actions/layout";
 import { CONFIG } from "src/config-global";
 import SpaCard from "src/components/spa-card/spa-card";
 import { Link } from "react-router-dom";
+import { paths } from "src/router/paths";
 
 export default function HomeView() {
   const { etablissements } = useGetEtablissements();
   const { actualites } = useGetLastNews(3);
   const { marques, prochainement, carte } = useLayout();
-
-  console.log("eta", carte.button_url); 
 
   return (
     <>
@@ -48,7 +45,10 @@ export default function HomeView() {
           ))}
         </div>
         <div className="text-center">
-          <ButtonIcon link={paths.spa.list} title="Découvrir toutes les offres" />
+          <ButtonIcon
+            link={paths.spa.list}
+            title="Découvrir toutes les offres"
+          />
         </div>
       </div>
 
@@ -163,7 +163,6 @@ export default function HomeView() {
 
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-8">
               {actualites.map((actualite) => (
-              
                 <div
                   className="mb-3 relative cursor-pointer"
                   key={actualite.id}
@@ -174,7 +173,10 @@ export default function HomeView() {
                     alt={actualite.title}
                   />
                   <span className="absolute bg-black/25 w-full h-full top-0 left-0" />
-                  <Link to={paths.actualitesDetails(actualite.slug)} className="absolute bottom-0 text-white text-2xl p-2 pb-5 font-bold">
+                  <Link
+                    to={paths.actualitesDetails(actualite.slug)}
+                    className="absolute bottom-0 text-white text-2xl p-2 pb-5 font-bold"
+                  >
                     {actualite.title}
                   </Link>
                 </div>

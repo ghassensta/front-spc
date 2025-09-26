@@ -1,6 +1,5 @@
 
 import { motion } from "framer-motion";
-
 function LoadingScreen() {  
     const dotVariants = {  
         jump: {  
@@ -15,24 +14,26 @@ function LoadingScreen() {
     };  
 
     return (  
-        <motion.div  
-            className="flex justify-center items-center gap-2"  
-            animate="jump"  
-            transition={{ staggerChildren: -0.2, staggerDirection: -1 }}  
-        >  
-            <motion.div  
-                className="w-5 h-5 rounded-full bg-primary"  
-                variants={dotVariants}  
-            />  
-            <motion.div  
-                className="w-5 h-5 rounded-full bg-primary"  
-                variants={dotVariants}  
-            />  
-            <motion.div  
-                className="w-5 h-5 rounded-full bg-primary"  
-                variants={dotVariants}  
-            />  
-        </motion.div>  
+        <div className="flex flex-col">
+            <motion.div
+                className="flex justify-center items-center gap-2"
+                animate="jump"
+                transition={{ staggerChildren: -0.2, staggerDirection: -1 }}
+            >
+                <motion.div
+                    className="w-5 h-5 rounded-full bg-primary"
+                    variants={dotVariants}
+                />
+                <motion.div
+                    className="w-5 h-5 rounded-full bg-primary"
+                    variants={dotVariants}
+                />
+                <motion.div
+                    className="w-5 h-5 rounded-full bg-primary"
+                    variants={dotVariants}
+                />
+            </motion.div>
+        </div>
     );  
 }  
 

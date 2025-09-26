@@ -2,10 +2,19 @@ import React from "react";
 import { Link } from "react-router-dom";
 import { CONFIG } from "src/config-global";
 import { paths } from "src/router/paths";
+import PageSkeleton from "./page-skeleton";
 
-export default function BlogPage({ articles }) {
-  console.log(articles);
-  
+export default function BlogPage({ articles, loading }) {
+
+  const sortedArticles = [...articles].sort((a, b) => b.view_count - a.view_count);
+
+  const recentArticles = [...articles]
+    .sort((a, b) => new Date(b.created_at) - new Date(a.created_at))
+    .slice(0, 8);
+
+  if (loading) {
+    return <PageSkeleton />;
+  }
 
   return (
     <>
@@ -28,14 +37,14 @@ export default function BlogPage({ articles }) {
       <div className="max-w-6xl mx-auto py-10 px-4 grid grid-cols-1 md:grid-cols-3 gap-8">
         {/* Articles */}
         <div className="md:col-span-2 grid grid-cols-1 sm:grid-cols-2 gap-6">
-          {articles.map((article, index) => (
+          {sortedArticles.map((article, index) => (
             <div
               key={index}
               className="bg-[#FBF6EC] shadow rounded overflow-hidden flex flex-col font-roboto"
             >
               <img
-                lazyload="lazy"
-                src={CONFIG.serverUrl + "/storage/" + article.image}
+                loading="lazy"
+                src={article.image ? `${CONFIG.serverUrl}/storage/${article.image}` : 'https://via.placeholder.com/400x200?text=No+Image'}
                 alt={article.title}
                 className="w-full h-48 object-cover"
               />
@@ -68,7 +77,7 @@ export default function BlogPage({ articles }) {
           </div>
           <h3 className="font-bold text-2xl mb-4">Articles récents</h3>
           <ul className="space-y-3 text-base font-roboto">
-            {articles.map((item, i) => (
+            {recentArticles.map((item, i) => (
               <li key={i} className="hover:underline cursor-pointer">
                 <Link to={paths.actualitesDetails(item.slug)}>{item.title}</Link>
               </li>

@@ -11,11 +11,12 @@ const swrOptions = {
 export function useGetNews() {
     const url = endpoints.actualites.list;
 
-    const { data } = useSWR(url, fetcher, swrOptions);
+    const { data, isLoading } = useSWR(url, fetcher, swrOptions);
 
     const memoizedValue = useMemo(
         () => ({
             actualites: data?.actualites || [],
+            actualitesLoading: isLoading
         }),
         [data]
     );

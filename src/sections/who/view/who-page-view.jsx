@@ -12,25 +12,31 @@ export default function WhoPageView() {
           </h2>
           <div className="flex flex-col md:flex-row">
             <p className="font-roboto md:w-1/2 pr-6">
-              <span className="font-bold">Spa & Prestige Collection</span>{" "}
-              réunit des établissements d’exception, soigneusement sélectionnés
-              pour leur confort, leur ambiance singulière et leur service
-              sur-mesure. Spas urbains, thermes apaisants, hôtels de charme ou
-              refuges insolites, chaque lieu a été choisi pour offrir des
-              instants mémorables alliant authenticité et bienveillance.
-              <br /> Nous travaillons main dans la main avec nos établissements
-              partenaires, qui partagent notre vision de préserver et valoriser
-              des lieux empreints de caractère. Ces établissements s’engagent à
-              créer un cadre propice à la détente, avec un accueil chaleureux et
-              une attention portée à chaque détail. Ensemble, nous garantissons
-              une expérience inoubliable, alliant plénitude et bien-être.
-              <br /> Rejoindre Spa & Prestige Collection c’est accéder à un
-              univers pensé autant pour nos membres que pour nos partenaires.
-              Nos membres bénéficient de privilèges exclusifs, tels que des
-              expériences sur mesure et l’accès à des lieux de confiance, tandis
-              que nos partenaires profitent d’une visibilité renforcée et d’un
-              accompagnement dédié.
-              <br />
+              <p className="mb-3">
+                <span className="font-bold">Spa & Prestige Collection</span>{" "}
+                réunit des établissements d’exception, soigneusement sélectionnés
+                pour leur confort, leur ambiance singulière et leur service
+                sur-mesure. Spas urbains, thermes apaisants, hôtels de charme ou
+                refuges insolites, chaque lieu a été choisi pour offrir des
+                instants mémorables alliant authenticité et bienveillance.
+              </p>
+               <p className="mb-3">
+                Nous travaillons main dans la main avec nos établissements
+                partenaires, qui partagent notre vision de préserver et valoriser
+                des lieux empreints de caractère. Ces établissements s’engagent à
+                créer un cadre propice à la détente, avec un accueil chaleureux et
+                une attention portée à chaque détail. Ensemble, nous garantissons
+                une expérience inoubliable, alliant plénitude et bien-être.
+              </p>
+              <p className="mb-3">
+                 Rejoindre Spa & Prestige Collection c’est accéder à un
+                univers pensé autant pour nos membres que pour nos partenaires.
+                Nos membres bénéficient de privilèges exclusifs, tels que des
+                expériences sur mesure et l’accès à des lieux de confiance, tandis
+                que nos partenaires profitent d’une visibilité renforcée et d’un
+                accompagnement dédié.
+              </p>
+              
               <p className="italic">
                 Ensemble, nous créons des expériences inoubliables, accessibles,
                 dans un esprit de sérénité et d’élégance.

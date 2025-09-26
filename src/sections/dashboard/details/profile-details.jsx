@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { toast } from "react-toastify";
+import { editUser } from "src/actions/auth";
 import { useAuthContext } from "src/auth/hooks/use-auth-context";
 import ButtonIcon from "src/components/button-icon/button-icon";
 
@@ -13,7 +14,7 @@ export default function ProfileDetails() {
     email: user?.email || "",
     password: "",
     new_password: "",
-    confirm_password: "",
+    new_password_confirmation: "",
   });
 
   const handleChange = (e) => {
@@ -25,7 +26,6 @@ export default function ProfileDetails() {
   };
 
   const handleSubmit = async () => {
-    // 1️⃣ Required fields
     if (!formData.name.trim()) {
       toast.error("Le nom est requis");
       return;
@@ -35,42 +35,45 @@ export default function ProfileDetails() {
       return;
     }
 
-    // 2️⃣ Password change validations
     const isChangingPassword =
-      formData.password || formData.new_password || formData.confirm_password;
+      formData.password || formData.new_password || formData.new_password_confirmation;
 
     if (isChangingPassword) {
-      // All fields must be filled
-      if (!formData.password || !formData.new_password || !formData.confirm_password) {
+      if (
+        !formData.password ||
+        !formData.new_password ||
+        !formData.new_password_confirmation
+      ) {
         toast.error("Veuillez remplir tous les champs de mot de passe");
         return;
       }
 
-      // Minimum length
       if (formData.new_password.length < 8) {
-        toast.error("Le nouveau mot de passe doit contenir au moins 8 caractères");
+        toast.error(
+          "Le nouveau mot de passe doit contenir au moins 8 caractères"
+        );
         return;
       }
 
-      // Match confirm
-      if (formData.new_password !== formData.confirm_password) {
+      if (formData.new_password !== formData.new_password_confirmation) {
         toast.error("Les nouveaux mots de passe ne correspondent pas");
         return;
       }
     }
 
-    // 3️⃣ API call simulation with toast.promise
-    try {
-      await toast.promise(
-        new Promise((resolve) => setTimeout(resolve, 1000)), // replace with API call
-        {
-          pending: "Mise à jour en cours...",
-          success: "Profil mis à jour avec succès !",
-          error: "Erreur lors de la mise à jour",
-        }
-      );
+    const promise = editUser(formData);
 
+    toast.promise(promise, {
+      pending: "Mise à jour en cours...",
+      success: "Profil mis à jour avec succès !",
+      error: "Erreur lors de la mise à jour",
+    });
+
+    try {
+      await promise;
       checkUserSession?.();
+
+      setFormData({...formData, new_password_confirmation: "", new_password: "", password: ""})
     } catch (err) {
       console.error(err);
     }
@@ -78,7 +81,6 @@ export default function ProfileDetails() {
 
   return (
     <div className="grid grid-cols-2 gap-2 p-3">
-      {/* Name */}
       <div className="flex flex-col">
         <label htmlFor="name" className="text-sm text-secondary">
           Nom
@@ -93,7 +95,6 @@ export default function ProfileDetails() {
         />
       </div>
 
-      {/* Last Name */}
       <div className="flex flex-col">
         <label htmlFor="lastName" className="text-sm text-secondary">
           Prénom
@@ -108,7 +109,6 @@ export default function ProfileDetails() {
         />
       </div>
 
-      {/* Displayed Name */}
       <div className="flex flex-col">
         <label htmlFor="displayedName" className="text-sm text-secondary">
           Nom affiché
@@ -123,7 +123,6 @@ export default function ProfileDetails() {
         />
       </div>
 
-      {/* Email */}
       <div className="flex flex-col">
         <label htmlFor="email" className="text-sm text-secondary">
           Adresse e-mail
@@ -138,7 +137,6 @@ export default function ProfileDetails() {
         />
       </div>
 
-      {/* Password Section */}
       <div className="col-span-2 mt-4 grid grid-cols-2 gap-2 border p-4">
         <div className="flex flex-col col-span-2 md:col-span-1">
           <label htmlFor="currentPassword" className="text-sm text-secondary">
@@ -173,15 +171,14 @@ export default function ProfileDetails() {
           <input
             type="password"
             id="confirmPassword"
-            name="confirm_password"
+            name="new_password_confirmation"
             className="border rounded p-1"
-            value={formData.confirm_password}
+            value={formData.new_password_confirmation}
             onChange={handleChange}
           />
         </div>
       </div>
 
-      {/* Submit */}
       <div className="col-span-2 flex justify-end">
         <button
           type="button"
