@@ -61,16 +61,16 @@ function Container({ children }) {
       const existingItemIndex = updatedItems.findIndex((item) => item.id === newItem.id);
 
       // Filter out duplicate destinataires based on email
-      const newDestinataires = newItem.destinataires.filter(
-        (newDest) => !updatedItems.some((item) =>
-          item.destinataires?.some((dest) => dest.email.toLowerCase() === newDest.email.toLowerCase())
-        )
-      );
+      // const newDestinataires = newItem.destinataires.filter(
+      //   (newDest) => !updatedItems.some((item) =>
+      //     item.destinataires?.some((dest) => dest.email.toLowerCase() === newDest.email.toLowerCase())
+      //   )
+      // );
 
       if (existingItemIndex !== -1) {
         // Item exists, append new unique destinataires and update quantity
         const existingItem = updatedItems[existingItemIndex];
-        const updatedDestinataires = [...existingItem.destinataires, ...newDestinataires];
+        const updatedDestinataires = [...existingItem.destinataires, ...newItem.destinataires];
         updatedItems[existingItemIndex] = {
           ...existingItem,
           destinataires: updatedDestinataires,
@@ -80,8 +80,8 @@ function Container({ children }) {
         // New item, add with unique destinataires list
         updatedItems.push({
           ...newItem,
-          destinataires: newDestinataires,
-          quantity: newDestinataires.length, // Quantity is number of destinataires
+          destinataires: newItem.destinataires,
+          quantity: newItem.destinataires.length, // Quantity is number of destinataires
         });
       }
 
@@ -114,6 +114,8 @@ function Container({ children }) {
     [setField]
   );
 
+ 
+
   const onApplyDiscount = useCallback(
     (discount) => {
       setField('discount', discount);
@@ -134,6 +136,8 @@ function Container({ children }) {
     resetState();
   }, [resetState]);
 
+  console.log(state)
+
   const memoizedValue = useMemo(
     () => ({
       ...state,
@@ -141,6 +145,7 @@ function Container({ children }) {
       onReset,
       onUpdate: setState,
       onUpdateField: setField,
+      // setAmount: onSetAmount,
       onAddToCart,
       onDeleteCart,
       onCreateBilling,
@@ -153,6 +158,7 @@ function Container({ children }) {
       onReset,
       canReset,
       setState,
+      // onSetAmount,
       setField,
       onAddToCart,
       onDeleteCart,

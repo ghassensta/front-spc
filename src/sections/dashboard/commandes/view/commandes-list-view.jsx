@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 import ButtonIcon from "src/components/button-icon/button-icon";
 import { paths } from "src/router/paths";
 
-export default function CommandesListView({ orders }) {
+export default function CommandesListView({ orders, loading, validating }) {
   const date = new Date("Wed Sep 24 2025 15:41:33 GMT+0100");
   const formatted = new Intl.DateTimeFormat("fr-FR", {
     weekday: "long", // mercredi
@@ -19,52 +19,85 @@ export default function CommandesListView({ orders }) {
       return sum + parseFloat(ligne.prix_unitaire) * ligne.quantite;
     }, 0);
   });
- 
+
+  if (loading || validating) {
+    return (
+      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+        <table className="table w-full">
+          <thead className="bg-gray-300">
+            <tr>
+              <th>Commande</th>
+              <th>Date</th>
+              <th>Etat</th>
+              <th>Total</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody className="text-center text-sm">
+            {[...Array(5)].map((_, index) => (
+              <tr key={index} className="border-b-2 py-2">
+                <td><div className="h-4 bg-gray-200 animate-pulse w-24 mx-auto rounded" /></td>
+                <td><div className="h-4 bg-gray-200 animate-pulse w-32 mx-auto rounded" /></td>
+                <td><div className="h-4 bg-gray-200 animate-pulse w-16 mx-auto rounded" /></td>
+                <td><div className="h-4 bg-gray-200 animate-pulse w-24 mx-auto rounded" /></td>
+                <td><div className="h-6 w-12 bg-gray-200 animate-pulse mx-auto rounded" /></td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+    );
+  }
+
   return (
-    <table className="table w-full">
-      <thead className="bg-gray-300 ">
-        <th>Commande</th>
-        <th>Date</th>
-        <th>Etat</th>
-        <th>Total</th>
-        <th>Actions</th>
-      </thead>
-      <tbody className="text-center text-secondary text-sm">
-        {!orders.length && (
+    <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+      <table className="table w-full">
+        <thead className="bg-gray-300 ">
           <tr>
-            <td colSpan={5}>
-              <div className="flex flex-col items-center">
-                <p className="py-2">Vous n'avez pas des commandes</p>
-                <Link to={paths.spa.list} className="bg-black text-white px-6 py-2 uppercase tracking-wider hover:bg-gray-800 max-w-max">Découvrir nos offres</Link>
-              </div>
-            </td>
+            <th>Commande</th>
+            <th>Date</th>
+            <th>Etat</th>
+            <th>Total</th>
+            <th>Actions</th>
           </tr>
-        )}
-        {orders.map((order) => (
-          <tr className="border-b-2 py-2">
-            <td>
-              <Link
-                to={paths.dashboard.commandes.view(order.id)}
-                className="font-bold"
-              >
-                {order.numero_commande}
-              </Link>
-            </td>
-            <td>{formatted}</td>
-            <td>{order.statut_paiement ? "Payé" : "Non Payé"}</td>
-            <td>
-              {totals} € pour {order.lignes_commande.length} article(s)
-            </td>
-            <td>
-              <ButtonIcon
-                link={paths.dashboard.commandes.view(order.id)}
-                size="sm"
-                title="Voir"
-              />
-            </td>
-          </tr>
-        ))}
-      </tbody>
-    </table>
+        </thead>
+        <tbody className="text-center text-secondary text-sm">
+          {!orders.length && (
+            <tr>
+              <td colSpan={5}>
+                <div className="flex flex-col items-center">
+                  <p className="py-2">Vous n'avez pas des commandes</p>
+                  <Link to={paths.spa.list} className="bg-black text-white px-6 py-2 uppercase tracking-wider hover:bg-gray-800 max-w-max">Découvrir nos offres</Link>
+                </div>
+              </td>
+            </tr>
+          )}
+          {orders.map((order, index) => (
+            <tr key={order.id} className="border-b-2 py-2">
+              <td>
+                <Link
+                  to={paths.dashboard.commandes.view(order.id)}
+                  className="font-bold"
+                >
+                  {order.numero_commande}
+                </Link>
+              </td>
+              <td>{formatted}</td>
+              <td>{order.statut_paiement ? "Payé" : "Non Payé"}</td>
+              <td>
+                {totals[index]} € pour {order.lignes_commande.length} article(s)
+              </td>
+              <td>
+                <ButtonIcon
+                  link={paths.dashboard.commandes.view(order.id)}
+                  size="sm"
+                  title="Voir"
+                />
+              </td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
   );
 }

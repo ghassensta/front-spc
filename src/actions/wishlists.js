@@ -3,10 +3,27 @@ import { endpoints, fetcher, poster } from "src/utils/axios";
 import useSWR, { mutate } from "swr";
 
 const swrOptions = {
-  revalidateIfStale: false,
+  revalidateIfStale: true,
   revalidateOnFocus: false,
-  revalidateOnReconnect: false,
+  revalidateOnReconnect: true,
 };
+
+
+export function useGetWishlist() {
+    const url = endpoints.wishlist.list;
+
+    const { data, isLoading, isValidating } = useSWR(url, fetcher, swrOptions);
+
+    const memoizedValue = useMemo(
+        () => ({
+            wishlist: data?.data || [],
+            loading: isLoading,
+            validating: isValidating
+        }), [data]
+    );
+
+    return memoizedValue;
+}
 
 export const useToggleWishlist= async(id) => {
     try {
@@ -20,18 +37,4 @@ export const useToggleWishlist= async(id) => {
     } catch (error) {
         console.log(error)
     }
-}
-
-export function useGetWishlist() {
-    const url = endpoints.wishlist.list;
-
-    const { data } = useSWR(url, fetcher, swrOptions);
-
-    const memoizedValue = useMemo(
-        () => ({
-            wishlist: data?.data || []
-        }), [data]
-    );
-
-    return memoizedValue;
 }

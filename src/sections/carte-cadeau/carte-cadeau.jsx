@@ -1,10 +1,46 @@
-import React from "react";
+import React, { useState } from "react";
 import { MapPin, BookOpen, PhoneCall, Sparkles } from "lucide-react";
 import ButtonIcon from "src/components/button-icon/button-icon";
 import { useCheckoutContext } from "../checkout/context";
+import { useNavigate } from "react-router-dom";
+import { paths } from "src/router/paths";
+import { toast } from "react-toastify";
 const amounts = [50, 100, 150, 200];
 export default function CarteCadeau() {
   const checkout = useCheckoutContext();
+  const navigate = useNavigate();
+
+  const [amount, setAmount] = useState(null)
+  const [receiver, setReceiver] = useState([{fullName: '', email: ''}])
+  const addProductToCheckout = () => {
+    if (!amount) {
+      toast.error("Veuillez sélectionner un montant.");
+      return;
+    }
+
+    if (!receiver[0].fullName || !receiver[0].email) {
+      toast.error("Veuillez remplir les champs pour le destinataire.");
+      return;
+    }
+
+    if (!checkout.expediteur.fullName) {
+      toast.error("Veuillez remplir votre nom et prénom.");
+      return;
+    }
+    console.log("receiver", receiver)
+    checkout.onAddToCart({
+      id: Date.now(),
+      name: "Carte cadeau de "+ amount + "€",
+      price: amount,
+      image: "https://spa-prestige-collection.com/wp-content/uploads/2025/05/SPC-carte-cadeau-montant-3.jpg",
+      destinataires: receiver,
+      expediteur: checkout.expediteur,
+      quantity: 1
+    });
+
+    // Navigate to checkout after adding
+    navigate(paths.checkout);
+  }
   return (
     <>
       {/* Intro Section */}
@@ -33,7 +69,7 @@ export default function CarteCadeau() {
             </div>
             <div className="md:w-1/2">
               <img
-                lazyload="lazy"
+                loading="lazy"
                 src="https://spa-prestige-collection.com/wp-content/uploads/2025/05/SPC-carte-cadeau-montant-3.jpg"
                 alt="Carte Cadeau Spa & Prestige"
                 className="w-full h-auto object-cover rounded"
@@ -82,7 +118,7 @@ export default function CarteCadeau() {
 
         <div className="flex flex-col md:flex-row gap-6">
           <img
-            lazyload="lazy"
+            loading="lazy"
             src="https://spa-prestige-collection.com/wp-content/uploads/2025/05/SPC-Femme-cartes-square.jpg"
             alt=""
           />
@@ -92,10 +128,10 @@ export default function CarteCadeau() {
               {amounts.map((amt) => (
                 <button
                   key={amt}
-                  onClick={() => checkout.setAmount(amt)}
+                  onClick={() => setAmount(amt)}
                   className={`border border-black py-2 px-3 w-full font-bold
         ${
-          checkout.amount === amt
+          amount === amt
             ? "bg-black text-white"
             : "bg-gray-200 hover:bg-black hover:text-white"
         }
@@ -119,12 +155,9 @@ export default function CarteCadeau() {
                     <input
                       type="text"
                       className="w-full border border-gray-300 rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-primary"
-                      value={checkout.billing.fullName}
+                      value={receiver[0].fullName}
                       onChange={(e) =>
-                        checkout.onCreateBilling({
-                          ...checkout.billing,
-                          fullName: e.target.value,
-                        })
+                       setReceiver([{email: receiver[0].email, fullName: e.target.value}])
                       }
                     />
                   </div>
@@ -135,12 +168,9 @@ export default function CarteCadeau() {
                     <input
                       type="email"
                       className="w-full border border-gray-300 rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-primary"
-                      value={checkout.billing.email}
+                      value={receiver[0].email}
                       onChange={(e) =>
-                        checkout.onCreateBilling({
-                          ...checkout.billing,
-                          email: e.target.value,
-                        })
+                       setReceiver([{fullName: receiver[0].fullName, email: e.target.value}])
                       }
                     />
                   </div>
@@ -176,16 +206,14 @@ export default function CarteCadeau() {
                     <textarea
                       rows="3"
                       className="w-full border border-gray-300 rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-primary"
-                      value={checkout.billing.message}
+                      value={checkout.expediteur.message || ''}
                       onChange={(e) =>
                         checkout.onCreateExpediteur({
                           ...checkout.expediteur,
                           message: e.target.value,
                         })
                       }
-                    >
-                      {checkout.billing.message}
-                    </textarea>
+                    />
                   </div>
                 </div>
               </div>
@@ -193,7 +221,7 @@ export default function CarteCadeau() {
               <div className="col-span-2">
                 <div className="flex justify-end">
                   <button
-                // onClick={addProductToCheckout}
+                onClick={addProductToCheckout}
                 className="w-max px-4 py-3 bg-black leading-4 text-white uppercase font-normal text-xs tracking-[3px] hover:bg-gray-800 transition font-tahoma flex items-center justify-center gap-2"
               >
                 <span>Offrir</span>

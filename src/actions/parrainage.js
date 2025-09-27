@@ -24,11 +24,13 @@ export function useGetParrainage() {
     return memoizedValue;
 }
 
-export const useSendInvites = async(emails) => {
+export const useSendInvites = async(data) => {
     try {
         const url = endpoints.parrainage.sendEmails;
 
-        const params = { emails: emails };
+        const params = { emails: data.emails, link: data.referralLink };
+
+        console.log(params)
 
         const res = await poster(url, params)
 

@@ -79,11 +79,9 @@ export default function ProductDetailsView({ product, avis = [], loading, like=f
       id: product.id,
       name: product.nom,
       price: product.prix,
-      image: product.image,
+      image: CONFIG.serverUrl+"/storage/"+product.image,
       description: product.description,
-      destinataires: existingItem
-        ? [...existingItem.destinataires, ...uniqueRecipients]
-        : uniqueRecipients,
+      destinataires: recipients,
       expediteur: {},
       quantity: existingItem
         ? existingItem.destinataires.length + uniqueRecipients.length

@@ -24,11 +24,13 @@ export function useGetOrders() {
 export function useGetMyOrders() {
     const url = endpoints.orders.myOrders;
 
-    const { data } = useSWR(url, fetcher, swrOptions);
+    const { data, isLoading, isValidating } = useSWR(url, fetcher, swrOptions);
 
     const memoizedValue = useMemo(
         ()=> ({
-            orders: data?.commandes || []
+            orders: data?.commandes || [],
+            loading: isLoading,
+            validating: isValidating
         }),
         [data]
     );

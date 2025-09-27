@@ -48,14 +48,17 @@ body {
 
 
   .blog-container h1 {
+    font-family: "Cormorant Garamond", serif;
     @apply text-4xl font-bold mb-6 text-gray-900;
   }
 
   .blog-container h2 {
+    font-family: "Cormorant Garamond", serif;
     @apply text-3xl font-semibold mb-4 text-gray-800 text-justify; /* Example: large, bold, justified */
   }
 
   .blog-container h3 {
+    font-family: "Cormorant Garamond", serif;
     @apply text-2xl font-semibold mb-3 text-gray-800;
   }
 
@@ -64,7 +67,7 @@ body {
   }
 
   .blog-container strong {
-    @apply font-bold text-gray-900;
+    @apply font-semibold text-gray-900;
   }
 
   .blog-container a {

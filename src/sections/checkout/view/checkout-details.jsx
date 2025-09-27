@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { FaHome } from "react-icons/fa";
 import { MdDashboard } from "react-icons/md";
 import ButtonIcon from "src/components/button-icon/button-icon";
@@ -6,8 +6,17 @@ import { paths } from "src/router/paths";
 import { useCheckoutContext } from "../context";
 
 export default function CheckoutDetails() {
-  const checkout = useCheckoutContext(); // Use checkout context
+  const checkout = useCheckoutContext();
+  const [ checkoutBackup, setCheckoutBackup] = useState(null);
 
+  useEffect(() => {
+    setCheckoutBackup(checkout);
+
+   
+  }, [])
+   if(checkoutBackup){
+      checkout.onReset()
+    }
   return (
     <>
       <div className="max-w-6xl m-auto font-tahoma">
@@ -17,11 +26,9 @@ export default function CheckoutDetails() {
               <h2 className="text-2xl font-bold">Commande #777676</h2>
               <div className="flex gap-2">
                 <div className="bg-secondary text-primary rounded px-2 leading-4 py-1 text-xs">
-                  {checkout?.total.toFixed(2)} € {/* Display total */}
+                  {checkoutBackup?.total.toFixed(2)} € {/* Display total */}
                 </div>
-                <div className="bg-secondary text-primary rounded px-2 leading-4 py-1 text-xs">
-                  Cash on delivery
-                </div>
+                
               </div>
             </div>
             <div className="text-xs text-gray-500">
@@ -66,7 +73,7 @@ export default function CheckoutDetails() {
                 </tr>
               </thead>
               <tbody>
-                {checkout.items.map((item) => (
+                {checkoutBackup?.items.map((item) => (
                   <tr key={item.id} className="border-t">
                     <td className="border p-2">{item.name}</td>
                     <td className="border p-2">{item.quantity}</td>
@@ -82,21 +89,21 @@ export default function CheckoutDetails() {
             <div className="mt-4 border-t pt-2">
               <div className="flex justify-between">
                 <span>Sous-total :</span>
-                <span>{checkout.subtotal.toFixed(2)} €</span>
+                <span>{checkoutBackup?.subtotal.toFixed(2)} €</span>
               </div>
               <div className="flex justify-between">
                 <span>Frais de livraison :</span>
-                <span>{checkout.shipping.toFixed(2)} €</span>
+                <span>{checkoutBackup?.shipping.toFixed(2)} €</span>
               </div>
-              {checkout.discount > 0 && (
+              {checkoutBackup?.discount > 0 && (
                 <div className="flex justify-between">
                   <span>Remise :</span>
-                  <span>-{checkout.discount.toFixed(2)} €</span>
+                  <span>-{checkoutBackup?.discount.toFixed(2)} €</span>
                 </div>
               )}
               <div className="flex justify-between font-bold">
                 <span>Total :</span>
-                <span>{checkout.total.toFixed(2)} €</span>
+                <span>{checkoutBackup?.total.toFixed(2)} €</span>
               </div>
             </div>
           </div>
@@ -105,19 +112,19 @@ export default function CheckoutDetails() {
           <div className="border p-4">
             <h3 className="font-bold text-xl">Expéditeur</h3>
             <div className="mt-2">
-              <div>{checkout.expediteur.fullName}</div>
-              <div>{checkout.expediteur.address}</div>
-              {checkout.expediteur.address2 && (
-                <div>{checkout.expediteur.address2}</div>
+              <div>{checkoutBackup?.expediteur.fullName}</div>
+              <div>{checkoutBackup?.expediteur.address}</div>
+              {checkoutBackup?.expediteur.address2 && (
+                <div>{checkoutBackup?.expediteur.address2}</div>
               )}
-              <div>{checkout.expediteur.city}</div>
-              <div>{checkout.expediteur.state}</div>
-              <div>{checkout.expediteur.postalCode}</div>
-              <div>{checkout.expediteur.country}</div>
-              <div>{checkout.expediteur.phone}</div>
+              <div>{checkoutBackup?.expediteur.city}</div>
+              <div>{checkoutBackup?.expediteur.state}</div>
+              <div>{checkoutBackup?.expediteur.postalCode}</div>
+              <div>{checkoutBackup?.expediteur.country}</div>
+              <div>{checkoutBackup?.expediteur.phone}</div>
             </div>
             <div className="mt-4">
-              <span>{checkout.expediteur.email}</span>
+              <span>{checkoutBackup?.expediteur.email}</span>
             </div>
           </div>
         </div>

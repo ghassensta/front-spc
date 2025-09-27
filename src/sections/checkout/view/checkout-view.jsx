@@ -6,10 +6,14 @@ import ButtonIcon from "../../../components/button-icon/button-icon";
 import { FaRegTrashAlt } from "react-icons/fa";
 import { CONFIG } from "src/config-global";
 import { useAuthContext } from "src/auth/hooks/use-auth-context";
+import { toast } from "react-toastify";
+import { useRouter } from "src/hooks";
 
 export default function CheckoutView() {
   const checkout = useCheckoutContext();
   const { user } = useAuthContext()
+
+  const router = useRouter();
   const itemsFiltered = checkout.items?.filter((item) => item.quantity > 0) || [];
   const TAX_RATE = 0.2;
 
@@ -39,6 +43,22 @@ export default function CheckoutView() {
   const grandTotal = subtotal + tax;
   const isCartEmpty = itemsFiltered.length === 0;
 
+
+  const gotCheckout = () => {
+    if (isCartEmpty) {
+      toast.error("Panier est vide");
+      return;
+    }
+    if(!expediteurFullName){
+      toast.error("Remplir nom d'expéditeur")
+      return;
+    }
+    router.push(paths.payment)
+
+  }
+
+
+
   return (
     <div className="container mx-auto p-4 font-tahoma">
       <div className="flex flex-col lg:flex-row gap-6">
@@ -63,7 +83,7 @@ export default function CheckoutView() {
                     <td className="py-3">
                       <div className="flex gap-2 items-start">
                         <img lazyload="lazy"
-                          src={`${CONFIG.serverUrl}/storage/${item.image}`}
+                          src={item.image}
                           alt={item.name}
                           className="w-16 h-16 object-cover rounded"
                         />
@@ -163,12 +183,9 @@ export default function CheckoutView() {
               />
             </div>
           </div>
-          <ButtonIcon
-            title="Commander"
-            size=""
-            link={paths.payment}
-            disabled={isCartEmpty || !expediteurFullName}
-          />
+          <button onClick={gotCheckout} className="inline-flex font-tahoma justify-center rounded-full items-center gap-2 uppercase font-normal tracking-widest transition-all duration-300 px-6 py-3 text-sm text-center bg-[#B6B499] hover:bg-black text-white">
+            Commander
+          </button>
         </div>
       </div>
     </div>

@@ -279,7 +279,7 @@ export default function PaymentView() {
               className="flex gap-4 items-center border-b pb-2"
             >
               <img lazyload="lazy"
-                src={`${CONFIG.serverUrl}/storage/${item.image}`}
+                src={item.image}
                 alt={item.name}
                 className="w-16 h-16 object-cover rounded"
               />

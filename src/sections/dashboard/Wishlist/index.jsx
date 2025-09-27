@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { FaHeart, FaRegHeart, FaEye } from 'react-icons/fa';
 import { paths } from 'src/router/paths';
@@ -6,8 +6,13 @@ import { CONFIG } from 'src/config-global';
 import { useToggleWishlist } from 'src/actions/wishlists';
 import { toast } from 'react-toastify';
 
-export default function Wishlist({ wishlist }) {
-  console.log(wishlist)
+export default function Wishlist({ wishlists, loading, validating }) {
+  
+  const [wishlist, setWishlist] = useState([])
+
+  useEffect(() => {
+    setWishlist(wishlists)
+  }, [wishlists])
 
   const toggleLike = async(id) => {
     const promise = useToggleWishlist(id);
@@ -22,6 +27,45 @@ export default function Wishlist({ wishlist }) {
           console.error(err);
         }
   };
+
+  if(loading || validating){
+    return(
+      <div className="min-h-screen py-8">
+        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+          {/* En-tête Skeleton */}
+          <div className="mb-8">
+            <div className="h-8 bg-gray-200 animate-pulse w-1/4 rounded mb-2" />
+            <div className="h-4 bg-gray-200 animate-pulse w-1/2 rounded" />
+          </div>
+
+          {/* Cards Skeleton */}
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {[...Array(6)].map((_, index) => (
+              <div key={index} className="bg-white rounded-lg shadow-sm overflow-hidden">
+                <div className="relative">
+                  <div className="w-full h-48 bg-gray-200 animate-pulse" />
+                  <div className="absolute top-3 right-3">
+                    <div className="h-8 w-8 bg-gray-200 animate-pulse rounded-full" />
+                  </div>
+                </div>
+                <div className="p-4">
+                  <div className="flex justify-between items-start mb-2">
+                    <div className="h-5 bg-gray-200 animate-pulse w-3/4 rounded" />
+                  </div>
+                  <div className="flex justify-between items-center mt-4">
+                    <div className="h-5 bg-gray-200 animate-pulse w-1/4 rounded" />
+                    <div className="flex space-x-2">
+                      <div className="h-8 w-8 bg-gray-200 animate-pulse rounded-md" />
+                    </div>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+    )
+  }
 
   return (
     <div className="min-h-screen py-8">
@@ -58,7 +102,8 @@ export default function Wishlist({ wishlist }) {
             {wishlist.map((item) => (
               <div key={item.id} className="bg-white rounded-lg shadow-sm overflow-hidden hover:shadow-md transition-shadow duration-300">
                 <div className="relative">
-                  <img lazyload="lazy" 
+                  <img 
+                    loading="lazy" 
                     src={CONFIG.serverUrl+"/storage/"+item.image} 
                     alt={item.name}
                     className="w-full h-48 object-cover"

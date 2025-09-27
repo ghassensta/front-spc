@@ -4,12 +4,13 @@ import { useAuthContext } from "src/auth/hooks/use-auth-context";
 import { paths } from "src/router/paths";
 import { toast } from "react-toastify";
 import { useSendInvites } from "src/actions/parrainage";
+import { CONFIG } from "src/config-global";
 
 export default function ParrainagePageView({ filleuls, total_filleuls }) {
   const { user } = useAuthContext();
   const [referralCode] = useState(user?.parrainage_code);
   const [referralLink] = useState(
-    window.location.origin + paths.auth.register + "?code=" + referralCode
+    CONFIG.frontUrl + paths.auth.register + "?code=" + referralCode
   );
 
   const [copied, setCopied] = useState(false);
@@ -47,7 +48,7 @@ export default function ParrainagePageView({ filleuls, total_filleuls }) {
     // if() VALIDATE EMAILS
 
     try {
-      await toast.promise(useSendInvites(filteredEmails), {
+      await toast.promise(useSendInvites({emails :filteredEmails, referralLink}), {
         pending: "Envoi en cours ...",
         success: "Envoi avec succéss",
         error: "Un erreur est servenu",
