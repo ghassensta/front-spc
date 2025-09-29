@@ -7,7 +7,6 @@ export default function Page() {
 
   const { order } = useGetOrder(id)
 
-  console.log(order)
     return (
       <>
           <CommandesViewPage order={order}/>

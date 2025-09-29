@@ -50,13 +50,13 @@ export default function PaymentView() {
 
     try {
       const response = await axios.post(`${CONFIG.serverUrl}/api/commandes`, data);
-      console.log("Commande envoyée :", response.data);
 
       navigate("/checkout/details"); // navigue vers la page suivante
       localStorage.removeItem("app-checkout"); // puis vide le panier
     } catch (error) {
       console.error("Erreur lors de l'envoi :", error);
       alert("Erreur lors de l'envoi de la commande. Veuillez réessayer.");
+      throw error
     } finally {
       setLoading(false);
     }

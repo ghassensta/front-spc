@@ -6,8 +6,6 @@ import { Link } from "react-router-dom";
 export default function Menu({ show, onClose }) {
   const { sidebar } = useLayout();
 
-  console.log(sidebar);
-
   const menuVariants = {
     hidden: { x: "-100%" },
     visible: {

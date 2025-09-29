@@ -28,7 +28,6 @@ export default function ImageCarousel({ height, images = [] }) {
     const timer = setInterval(() => {
       setIndex(([prev]) => {
         const newIndex = (prev + 1) % imgLength;
-        console.log("Carousel:", { prev, imgLength, newIndex });
         return [newIndex, 1];
       });
     }, 5000);
@@ -52,7 +51,7 @@ export default function ImageCarousel({ height, images = [] }) {
     return (
       <div
         className="flex items-center justify-center bg-gray-100 rounded-sm shadow-lg"
-        style={{ height: height ?? "700px", width: height * 1.5 }}
+        
       >
         <p className="text-gray-500">No images available</p>
       </div>
@@ -61,8 +60,8 @@ export default function ImageCarousel({ height, images = [] }) {
 
   return (
     <div
-      className="relative w-full mx-auto overflow-hidden rounded-sm shadow-lg"
-      style={{ height: height ?? "700px", width: height * 1.5 }}
+      className={`relative w-full mx-auto overflow-hidden rounded-sm shadow-lg ${height || "h-[300px] md:h-[600px]"}`}
+      // style={{ height: height ?? "500px", width: height * 1.5 }}
     >
       <AnimatePresence initial={false} custom={direction}>
         <motion.img

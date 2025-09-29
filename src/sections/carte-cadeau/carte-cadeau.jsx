@@ -27,7 +27,6 @@ export default function CarteCadeau() {
       toast.error("Veuillez remplir votre nom et prénom.");
       return;
     }
-    console.log("receiver", receiver)
     checkout.onAddToCart({
       id: Date.now(),
       name: "Carte cadeau de "+ amount + "€",

@@ -6,7 +6,6 @@ export default function Page() {
   const { slug } = useParams();
   const { product, avis, productLoading, like } = useGetProduct(slug);
 
-  console.log("Produit => ",avis)
   return (
     <>
      <ProductDetailsView product={product} avis={avis} loading={productLoading} like={like}/>

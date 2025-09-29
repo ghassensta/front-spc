@@ -35,6 +35,6 @@ export const useToggleWishlist= async(id) => {
         mutate(endpoints.wishlist.list)
         return res
     } catch (error) {
-        console.log(error)
+        console.error(error)
     }
 }

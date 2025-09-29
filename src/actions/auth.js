@@ -7,10 +7,7 @@ export const signInWithPassword = async ({ email, password }) => {
     const params = { email, password };
 
     const res = await axios.post(endpoints.auth.signIn, params);
-    console.log(res);
     const { access_token } = res.data;
-
-    console.log("Auth", res);
 
     if (!access_token) {
       throw new Error("Access token not found in response");
@@ -44,7 +41,6 @@ export const registerAccount = async ({
     };
 
     const res = await axios.post(endpoints.auth.signUp, params);
-    console.log("Registration success:", res);
 
     const { access_token } = res.data;
 
@@ -76,7 +72,6 @@ export const editUser = async (data) => {
   try {
     const params = { ...data, current_password: data.password };
 
-    console.log(params)
     const res = await putter(endpoints.auth.edit, params);
 
     mutate(endpoints.auth.me);

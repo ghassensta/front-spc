@@ -5,6 +5,7 @@ export const paths = {
     details: (id) => `/spa/${id}`,
     list: "/spa-list"
   },
+  product: (slug) => `/produit/${slug}`,
   checkout: "/checkout",
   actualites: "/actualites",/*DONE */
   actualitesDetails: (slug) => `/actualites/${slug}`,

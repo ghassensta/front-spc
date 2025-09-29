@@ -17,8 +17,6 @@ export default function Page() {
 
   const { spaList, catLoading } = useGetSpaByCategory(slug);
 
-  console.log("Categorei", spaList);
-
   const { villes, types, services, filtersLoading } = useGetFiltersEtablissements();
 
   return (

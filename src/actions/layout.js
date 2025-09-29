@@ -26,8 +26,6 @@ export function useGetFooter() {
 
     const { data } = useSWR(url, fetcher, swrOptions);
 
-    console.log("footer", data)
-
     const memoizedValue = useMemo(
         () => ({
             footer: data?.data || [],
@@ -77,8 +75,6 @@ export function useGetMarques() {
         }),
         [data]
     );
-
-    console.log("Marques data:", memoizedValue);
 
     return memoizedValue;
 }

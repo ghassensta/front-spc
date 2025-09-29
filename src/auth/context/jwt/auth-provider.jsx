@@ -63,8 +63,6 @@ export function AuthProvider({ children }) {
     [checkUserSession, state.user, status]
   );
 
-  console.log(memoizedValue);
-
   return (
     <AuthContext.Provider value={memoizedValue}>
       {children}

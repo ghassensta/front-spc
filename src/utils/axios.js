@@ -135,5 +135,10 @@ export const endpoints = {
   parrainage: {
     get: '/api/auth/parrainage',
     sendEmails: '/api/auth/send-invites'
+  },
+  aide: {
+    services: '/api/services',
+    mymessages: '/api/auth/messages',
+    messages: (id) => `/api/auth/messages/${id}`
   }
 };

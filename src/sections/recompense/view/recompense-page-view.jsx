@@ -110,7 +110,7 @@ export default function RecompensePageView() {
         </div>
       </div>
 
-      <div className="w-screen relative left-[calc(-50vw+50%)] mb-4 py-4">
+      <div className="w-screen relative left-[calc(-50vw+50%)] mb-4 py-4 px-4">
         <h2 className="text-4xl mb-4 font-bold text-center">
           Soyez les premiers informés
         </h2>
@@ -119,9 +119,11 @@ export default function RecompensePageView() {
         </p>
         <div className="flex items-center max-w-xl mx-auto">
             <div className="flex flex-col items-center font-bricolage text-lg w-full">
-                <div>
-                  <label className="text-sm text-gray-600" htmlFor="email">Email*</label>
-                  <input type="text" className="px-3 py-2 border border-black text-sm rounded w-full mb-4"/>
+                <div className="flex flex-col items-center">
+                  <div className="w-full">
+                    <label className="text-sm text-gray-600 flex  mx-auto" htmlFor="email">Email*</label>
+                    <input type="text" className="px-3 py-2 border border-black text-sm rounded w-full mb-4 mx-auto"/>
+                  </div>
                   <div className="flex gap-2 items-center mb-6">
                       <input type="checkbox" name="" id="accepte" className="w-6 h-6 border-black"/>
                       <label htmlFor="accepte" className="text-[#55575d] text-sm">J'accepte l'inscription à la base de données Newsletter SPC.</label>

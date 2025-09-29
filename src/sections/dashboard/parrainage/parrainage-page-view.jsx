@@ -54,7 +54,8 @@ export default function ParrainagePageView({ filleuls, total_filleuls }) {
         error: "Un erreur est servenu",
       });
     } catch (error) {
-      console.log(error);
+      console.error("Erreur lors d'envoi les invitaions",error);
+      throw error;
     }
   };
 

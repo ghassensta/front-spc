@@ -8,8 +8,6 @@ import CategoriesPageView from "src/sections/categories/view/categories-page-vie
 export default function Page() {
   const { etablissements, etablissementLoading } = useGetAllEtablissements();
 
-  console.log(etablissements)
-
   const { villes, types, services, filtersLoading } = useGetFiltersEtablissements();
 
   return (

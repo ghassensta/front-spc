@@ -5,6 +5,7 @@ import exclusive from "../../assets/exclusive.png";
 import ButtonIcon from "../button-icon/button-icon";
 import { CONFIG } from "src/config-global";
 import { Link } from "react-router-dom";
+import { paths } from "src/router/paths";
 
 export default function CardItem({
   id,
@@ -146,7 +147,7 @@ export default function CardItem({
             {slug && (
               <>
                 <div className="flex-1" />
-                <Link to={`/produit/${slug}`} className="w-full">
+                <Link to={paths.product(slug)} className="w-full">
                   <button className="w-full px-4 py-3 bg-black leading-4 text-white uppercase font-normal text-xs tracking-[3px] hover:bg-gray-800 transition font-tahoma flex items-center justify-center gap-2">
                     Offrir
                   </button>

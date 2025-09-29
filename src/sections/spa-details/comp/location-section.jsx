@@ -14,7 +14,7 @@ export default function LocationSection({ data }) {
         transition={{ duration: 0.6 }}
         viewport={{ once: true }}
       >
-        <iframe
+        {/* <iframe
           src={data?.iframeUrl}
           width="100%"
           height="100%"
@@ -23,7 +23,8 @@ export default function LocationSection({ data }) {
           loading="lazy"
           title="Google Map"
           className="rounded-lg"
-        />
+        /> */}
+        {data?.iframeUrl || <div className="h-full w-full bg-gray-400 rounded-lg"></div>}
       </motion.div>
 
       {/* Info */}

@@ -1,70 +1,101 @@
-import React, { useState } from "react";
+// Updated aide-page-view.jsx (with added dependency to useEffect)
+import React, { useState, useEffect } from "react";
+import { toast } from "react-toastify";
+import { sendSupport, sendMessage, useGetMessage } from "src/actions/aide";
 
-export default function AidePageView() {
+export default function AidePageView({
+  messages, messagesError, messagesLoading, messagesValidating,
+  services, servicesError, servicesLoading, servicesValidating,
+}) {
   const [openModal, setOpenModal] = useState(false);
   const [selectedConversation, setSelectedConversation] = useState(null);
+  const [conversationId, setConversationId] = useState(null);
   const [reply, setReply] = useState("");
+  const { messages: convMessages, messagesError: convError, messagesLoading: convLoading, messagesValidating: convValidating } = useGetMessage(conversationId);
+  const [localConversation, setLocalConversation] = useState([]);
 
-  const demandes = [
-    {
-      id: 1,
-      title: "Demande de soin visage",
-      service: "Noélie",
-      date: "02/07/2025",
-      conversation: [
-        {
-          sender: "Client",
-          text: "Je souhaite prendre un rendez-vous pour un soin visage hydratant.",
-          date: "02/07/2025 - 09:43",
-          type: "client",
-        },
-        {
-          sender: "SPC",
-          text: "Bonjour, nous avons des disponibilités mercredi à 15h ou jeudi à 10h. Quel créneau préférez-vous ?",
-          date: "02/07/2025 - 10:15",
-          type: "spc",
-        },
-      ],
-    },
-    {
-      id: 2,
-      title: "Hammam + Massage",
-      service: "Romain",
-      date: "30/06/2025",
-      conversation: [],
-    },
-  ];
+  const [allDemandes, setAllDemandes] = useState(messages || []);
+  const [form, setForm] = useState({
+    service: "",
+    title: "",
+    description: "",
+  });
 
-  const [allDemandes, setAllDemandes] = useState(demandes);
+  // Update allDemandes when messages prop changes
+  useEffect(() => {
+    setAllDemandes(messages || []);
+  }, [messages]);
+
+  // Update local conversation when fetched
+  useEffect(() => {
+    if (JSON.stringify(convMessages) !== JSON.stringify(localConversation)) {
+      setLocalConversation(convMessages || []);
+    }
+  }, [convMessages, localConversation]);
+
+  const handleFormChange = (e) => {
+    setForm({ ...form, [e.target.name]: e.target.value });
+  };
+
+  const submitForm = async (e) => {
+    e.preventDefault();
+
+    const promise = sendSupport(form);
+
+    toast.promise(promise, {
+      pending: "En Cours d'envoi..",
+      success: "Envoi avec success",
+      error: "Echec d'envoi",
+    });
+
+    try {
+      await promise;
+      setForm({ service: "", title: "", description: "" });
+    } catch (error) {
+      console.error(error);
+    }
+  };
 
   const handleVoir = (demande) => {
+    setConversationId(demande.id);
     setSelectedConversation(demande);
+    setLocalConversation([]); // Reset until fetch
     setReply("");
     setOpenModal(true);
   };
 
-  const handleSend = () => {
+  const handleSend = async () => {
     if (!reply.trim()) return;
 
     const newMessage = {
-      sender: "SPC",
+      sender: "Client",
       text: reply,
       date: new Date().toLocaleString("fr-FR"),
-      type: "spc",
+      type: "client",
     };
 
-    const updatedDemandes = allDemandes.map((d) =>
-      d.id === selectedConversation.id
-        ? { ...d, conversation: [...d.conversation, newMessage] }
-        : d
-    );
-
-    setAllDemandes(updatedDemandes);
-    setSelectedConversation(
-      updatedDemandes.find((d) => d.id === selectedConversation.id)
-    );
+    // Optimistic update
+    setLocalConversation((prev) => [...prev, newMessage]);
     setReply("");
+
+    // Send to API
+    try {
+      await sendMessage({
+        id: selectedConversation.id,
+        text: reply,
+        type: "client",
+        sender: "Client",
+      });
+    } catch (error) {
+      console.error(error);
+      setLocalConversation((prev) => prev.slice(0, -1));
+    }
   };
+
+  // Skeleton component
+  const Skeleton = ({ className }) => (
+    <div className={`animate-pulse bg-gray-200 rounded ${className}`} />
+  );
 
   return (
     <div className="p-6 grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -77,45 +108,78 @@ export default function AidePageView() {
           Envoyez une demande pour un service spécifique
         </p>
 
-        <div className="space-y-4">
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
-              Service
-            </label>
-            <select className="w-full border rounded-lg px-3 py-2 text-sm text-gray-700 focus:outline-none focus:ring-2 focus:ring-orange-300">
-              <option value="">Selectionnez le service</option>
-              <option value="soin-visage">Soin visage</option>
-              <option value="massage">Massage</option>
-              <option value="hammam">Hammam</option>
-            </select>
+        {servicesError ? (
+          <p className="text-red-500 text-sm">Erreur lors du chargement des services. Veuillez réessayer plus tard.</p>
+        ) : servicesLoading || servicesValidating ? (
+          <div className="space-y-4">
+            <Skeleton className="h-10 w-full" />
+            <Skeleton className="h-10 w-full" />
+            <Skeleton className="h-32 w-full" />
+            <Skeleton className="h-10 w-32" />
           </div>
+        ) : services.length === 0 ? (
+          <p className="text-gray-500 text-sm">Aucun service disponible pour le moment.</p>
+        ) : (
+          <form onSubmit={submitForm} className="space-y-4">
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">
+                Service
+              </label>
+              <select
+                name="service"
+                value={form.service}
+                onChange={handleFormChange}
+                className="w-full border rounded-lg px-3 py-2 text-sm text-gray-700 focus:outline-none focus:ring-2 focus:ring-orange-300"
+                required
+              >
+                <option value="">Selectionnez le service</option>
+                {services.map((service) => (
+                  <option key={service.id} value={service.id}>
+                    {service.name} {/* Adjust if needed */}
+                  </option>
+                ))}
+                <option value="others">Autres</option>
+              </select>
+            </div>
 
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
-              Titre
-            </label>
-            <input
-              type="text"
-              placeholder="Ex: Demande de rendez-vous"
-              className="w-full border rounded-lg px-3 py-2 text-sm text-gray-700 focus:outline-none focus:ring-2 focus:ring-orange-300"
-            />
-          </div>
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">
+                Titre
+              </label>
+              <input
+                type="text"
+                name="title"
+                value={form.title}
+                onChange={handleFormChange}
+                placeholder="Ex: Demande de rendez-vous"
+                className="w-full border rounded-lg px-3 py-2 text-sm text-gray-700 focus:outline-none focus:ring-2 focus:ring-orange-300"
+                required
+              />
+            </div>
 
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
-              Description
-            </label>
-            <textarea
-              rows={4}
-              placeholder="Décrivez votre besoin ou question..."
-              className="w-full border rounded-lg px-3 py-2 text-sm text-gray-700 focus:outline-none focus:ring-2 focus:ring-orange-300"
-            />
-          </div>
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">
+                Description
+              </label>
+              <textarea
+                rows={4}
+                name="description"
+                value={form.description}
+                onChange={handleFormChange}
+                placeholder="Décrivez votre besoin ou question..."
+                className="w-full border rounded-lg px-3 py-2 text-sm text-gray-700 focus:outline-none focus:ring-2 focus:ring-orange-300"
+                required
+              />
+            </div>
 
-          <button className="bg-orange-300 text-white px-5 py-2 rounded-lg hover:bg-orange-400 transition">
-            Envoyer
-          </button>
-        </div>
+            <button
+              type="submit"
+              className="bg-orange-300 text-white px-5 py-2 rounded-lg hover:bg-orange-400 transition"
+            >
+              Envoyer
+            </button>
+          </form>
+        )}
       </div>
 
       {/* Historique des demandes */}
@@ -127,26 +191,45 @@ export default function AidePageView() {
           Consultez vos précédentes requêtes
         </p>
 
-        <div className="space-y-4">
-          {allDemandes.map((d) => (
-            <div
-              key={d.id}
-              className="flex justify-between items-center border-b pb-3"
-            >
-              <div>
-                <h3 className="font-medium text-gray-800">{d.title}</h3>
-                <p className="text-sm text-gray-500">Service: {d.service}</p>
-                <p className="text-xs text-gray-400">{d.date}</p>
+        {messagesError ? (
+          <p className="text-red-500 text-sm">Erreur lors du chargement des demandes. Veuillez réessayer plus tard.</p>
+        ) : messagesLoading || messagesValidating ? (
+          <div className="space-y-4">
+            {[...Array(3)].map((_, i) => (
+              <div key={i} className="flex justify-between items-center border-b pb-3">
+                <div className="space-y-2">
+                  <Skeleton className="h-5 w-40" />
+                  <Skeleton className="h-4 w-32" />
+                  <Skeleton className="h-3 w-24" />
+                </div>
+                <Skeleton className="h-8 w-16" />
               </div>
-              <button
-                onClick={() => handleVoir(d)}
-                className="bg-orange-300 text-white text-sm px-3 py-1 rounded-lg hover:bg-orange-400 transition"
+            ))}
+          </div>
+        ) : allDemandes.length === 0 ? (
+          <p className="text-sm text-gray-500">Aucune demande trouvée.</p>
+        ) : (
+          <div className="space-y-4">
+            {allDemandes.map((d) => (
+              <div
+                key={d.id}
+                className="flex justify-between items-center border-b pb-3"
               >
-                Voir
-              </button>
-            </div>
-          ))}
-        </div>
+                <div>
+                  <h3 className="font-medium text-gray-800">{d.title}</h3>
+                  <p className="text-sm text-gray-500">Service: {d.service}</p>
+                  <p className="text-xs text-gray-400">{d.date}</p>
+                </div>
+                <button
+                  onClick={() => handleVoir(d)}
+                  className="bg-orange-300 text-white text-sm px-3 py-1 rounded-lg hover:bg-orange-400 transition"
+                >
+                  Voir
+                </button>
+              </div>
+            ))}
+          </div>
+        )}
       </div>
 
       {/* Modal */}
@@ -166,19 +249,31 @@ export default function AidePageView() {
             </div>
 
             <div className="p-4 space-y-4 max-h-80 overflow-y-auto">
-              {selectedConversation.conversation.map((msg, index) => (
-                <div
-                  key={index}
-                  className={`p-3 rounded-lg shadow text-sm ${
-                    msg.type === "client"
-                      ? "bg-gray-100 text-gray-700"
-                      : "bg-orange-300 text-white"
-                  }`}
-                >
-                  <p>{msg.text}</p>
-                  <p className="text-xs mt-1 opacity-80">{msg.date}</p>
+              {convError ? (
+                <p className="text-red-500 text-sm text-center">Erreur lors du chargement de la conversation. Veuillez réessayer.</p>
+              ) : convLoading || convValidating ? (
+                <div className="space-y-4">
+                  {[...Array(3)].map((_, i) => (
+                    <Skeleton key={i} className="h-20 w-full rounded-lg" />
+                  ))}
                 </div>
-              ))}
+              ) : localConversation.length === 0 ? (
+                <p className="text-sm text-gray-500 text-center">Aucun message dans cette conversation.</p>
+              ) : (
+                localConversation.map((msg, index) => (
+                  <div
+                    key={index}
+                    className={`p-3 rounded-lg shadow text-sm ${
+                      msg.type === "client"
+                        ? "bg-gray-100 text-gray-700"
+                        : "bg-orange-300 text-white"
+                    }`}
+                  >
+                    <p>{msg.text}</p>
+                    <p className="text-xs mt-1 opacity-80">{msg.date}</p>
+                  </div>
+                ))
+              )}
             </div>
 
             <div className="border-t p-4 flex items-center space-x-2">

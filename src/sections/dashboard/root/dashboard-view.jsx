@@ -13,6 +13,8 @@ export default function DashboardView() {
           await checkUserSession?.();
         } catch (error) {
           console.error(error);
+
+          throw error
         }
       }, [checkUserSession]);
   return (

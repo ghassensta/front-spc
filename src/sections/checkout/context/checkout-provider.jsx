@@ -136,8 +136,6 @@ function Container({ children }) {
     resetState();
   }, [resetState]);
 
-  console.log(state)
-
   const memoizedValue = useMemo(
     () => ({
       ...state,

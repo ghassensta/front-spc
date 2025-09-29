@@ -8,7 +8,6 @@ export default function Page() {
 
   const { actualite } = useGetNewsDetail(slug)
 
-  console.log("actualite", actualite, slug)
   return (
     <BlogDetails actualitie={actualite}/>
   )

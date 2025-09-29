@@ -30,15 +30,13 @@ export const useSendInvites = async(data) => {
 
         const params = { emails: data.emails, link: data.referralLink };
 
-        console.log(params)
-
         const res = await poster(url, params)
 
         mutate(endpoints.parrainage.get);
 
         return res;
     } catch (error) {
-        console.log(error)
+        console.error(error)
         return error
     }
 }

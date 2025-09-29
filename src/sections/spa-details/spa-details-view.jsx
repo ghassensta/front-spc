@@ -102,11 +102,11 @@ export default function SpaDetailsView({
 
   return (
     <div className="mx-auto px-4">
-      <div className="flex flex-col md:flex-row gap-12">
-        <div className="w-full ">
+      <div className="flex flex-col md:flex-row gap-12 items-center">
+        <div className="w-full md:w-3/5">
           <ImageCarousel images={spaData?.gallerie} />
         </div>
-        <div className="w-full">
+        <div className="w-full md:w-2/5">
           <DetailsCard details={spaData} avisTotals={avis.length} marquesPartenaires={marquesPartenaires}/>
         </div>
       </div>

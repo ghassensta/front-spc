@@ -76,6 +76,8 @@ export default function ProfileDetails() {
       setFormData({...formData, new_password_confirmation: "", new_password: "", password: ""})
     } catch (err) {
       console.error(err);
+
+      throw err
     }
   };
 

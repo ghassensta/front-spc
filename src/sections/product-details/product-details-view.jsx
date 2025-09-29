@@ -30,8 +30,6 @@ export default function ProductDetailsView({ product, avis = [], loading, like=f
     setIsFav(like)
   }, [like])
 
-  console.log(product)
-
   // Ensure galleries_images is an array and filter out empty strings
   const gallery = [
     ...(product?.image ? [product.image] : []),
@@ -123,6 +121,8 @@ export default function ProductDetailsView({ product, avis = [], loading, like=f
       setIsFav((prev) => !prev);
     } catch (err) {
       console.error(err);
+
+      throw err;
     }
   };
 

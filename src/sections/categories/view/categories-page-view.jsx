@@ -112,6 +112,7 @@ export default function CategoriesPageView({
                 title={card.nom}
                 image={card.image_avant}
                 description={card.description_avant}
+                location={card.adresse}
               />
             ))
           ) : (

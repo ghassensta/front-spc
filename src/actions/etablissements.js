@@ -52,9 +52,6 @@ export function useGetEtablissement(slug) {
     }),
     [data]
   );
-
-  console.log(data)
-
   return memoizedValue;
 }
 

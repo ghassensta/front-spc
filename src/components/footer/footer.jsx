@@ -18,8 +18,6 @@ const iconMap = {
 export default function Footer() {
   const { footer } = useLayout();
 
-  console.log("FOoter", footer)
-
   const { settings, footer_about, footer_pro, social_links } = footer || {};
 
   const siteLogoPath = settings?.site_logo?.value || "";
@@ -44,8 +42,6 @@ export default function Footer() {
         .filter((item) => item.is_active)
         .sort((a, b) => a.order - b.order)
     : [];
-
-    console.log(socialLinksFiltered)
 
   return (
     <footer className="bg-secondary text-white pt-8 md:pt-12 left-[calc(-50vw+50%)] relative w-screen font-roboto">

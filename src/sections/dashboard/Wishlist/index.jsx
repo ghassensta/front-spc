@@ -25,6 +25,7 @@ export default function Wishlist({ wishlists, loading, validating }) {
           await promise;
         } catch (err) {
           console.error(err);
+          throw err
         }
   };
 
@@ -127,7 +128,7 @@ export default function Wishlist({ wishlists, loading, validating }) {
                   <div className="flex justify-between items-center mt-4">
                     <span className="text-lg font-bold text-secondary">{item.prix} €</span>
                     <div className="flex space-x-2">
-                      <Link to={paths.spa.details(item.slug)} className="p-2 text-gray-600 hover:text-primary border border-gray-200 rounded-md">
+                      <Link to={paths.product(item.slug)} className="p-2 text-gray-600 hover:text-primary border border-gray-200 rounded-md">
                         <FaEye />
                       </Link>
                     </div>

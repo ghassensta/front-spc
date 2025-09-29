@@ -87,7 +87,7 @@ export default function ReferentielViewPage() {
         {/* Right Side: Adhesion Info */}
       </div>
       <div className="bg-[#FBF6EC] p-8 w-screen relative left-[calc(-50vw+50%)] rounded-lg shadow-lg flex flex-col items-center ">
-        <div className="max-w-6xl grid grid-cols-2 gap-4">
+        <div className="max-w-6xl grid grid-cols-1 md:grid-cols-2 gap-4">
           <div className="font-bricolage">
             <h3 className="text-xl font-bold mb-4 ">
               Modalités d’adhésion – Spa & Prestige Collection

@@ -113,7 +113,7 @@ export default function DevenirPartnerView() {
             className="grid grid-cols-1 md:grid-cols-2 gap-4"
           >
             {/* Nom établissement */}
-            <label className="flex flex-col">
+            <label className="flex flex-col col-span-2">
               Nom de l'établissement*
               <input
                 type="text"

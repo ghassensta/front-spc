@@ -29,8 +29,6 @@ export function useGetNewsDetail(slug) {
 
     const { data, isLoading } = useSWR(url, fetcher, swrOptions);
 
-    console.log(data)
-
     const memoizedValue = useMemo(
         () => ({
             actualite: data?.data || null,

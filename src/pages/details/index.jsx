@@ -16,8 +16,6 @@ export default function Page() {
     loading,
   } = useGetEtablissement(id);
 
-  console.log(etablissement);
-
   return (
     <>
       <SpaDetailsView

@@ -27,7 +27,6 @@ export function useGetSpaByCategory(category) {
     const url = `${endpoints.categories.byCategory(category)}`; 
 
     const { data, isLoading } = useSWR(url, fetcher, swrOptions);
-    console.log(data)
     const memoizedValue = useMemo(
         () => ({
             spaList: data?.etablissements || [],

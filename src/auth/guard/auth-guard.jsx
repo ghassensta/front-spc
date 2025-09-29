@@ -14,12 +14,7 @@ export function AuthGuard({ children }) {
   const pathname = usePathname();
   const searchParams = useSearchParams();
 
-  console.log(pathname)
-
   const { authenticated, loading, user } = useAuthContext();
-
-  console.log("from auth-guard :", user)
-  console.log("Required ", user?.role)
 
   const [isChecking, setIsChecking] = useState(true);
 
