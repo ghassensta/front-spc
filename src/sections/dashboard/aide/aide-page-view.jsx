@@ -63,6 +63,8 @@ export default function AidePageView({
     setReply("");
     setOpenModal(true);
   };
+  console.log(localConversation)
+
 
   const handleSend = async () => {
     if (!reply.trim()) return;

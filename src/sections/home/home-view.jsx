@@ -19,6 +19,8 @@ export default function HomeView() {
   const { actualites } = useGetLastNews(3);
   const { marques, prochainement, carte } = useLayout();
 
+  console.log(marques)
+
   return (
     <>
       <Header />
@@ -190,7 +192,7 @@ export default function HomeView() {
       )}
 
       {/* MARQUES PARTENAIRES SECTION  */}
-      {marques?.extra_data?.logos?.length > 0 && (
+      {marques?.extra_data?.logos && (
         <div className="bg-white rounded-lg">
           <div className="max-w-6xl mx-auto py-12">
             <h2 className="text-4xl font-bold text-center">
@@ -202,7 +204,7 @@ export default function HomeView() {
 
             {/* Gestion du loading et erreur */}
 
-            {marques?.extra_data?.logos?.length > 0 ? (
+            {Object.keys(marques?.extra_data?.logos || {}).length > 0 ? (
               <Swiper
                 spaceBetween={20}
                 modules={[Autoplay, Navigation]}
@@ -218,7 +220,7 @@ export default function HomeView() {
                   1024: { slidesPerView: 4 },
                 }}
               >
-                {marques?.extra_data?.logos.map((marque, i) => (
+                {Object.values(marques?.extra_data?.logos || {}).map((marque, i) => (
                   <SwiperSlide
                     key={i}
                     className="flex justify-center w-full h-48"
