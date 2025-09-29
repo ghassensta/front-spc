@@ -77,7 +77,8 @@ export default function ImageCarousel({ height, images = [] }) {
           dragConstraints={{ left: 0, right: 0 }}
           dragElastic={0.7}
           onDragEnd={handleDragEnd}
-          className="absolute w-full h-full object-cover cursor-grab active:cursor-grabbing"
+          // absolute
+          className=" w-full h-full object-cover cursor-grab active:cursor-grabbing"
         />
       </AnimatePresence>
 

@@ -13,6 +13,8 @@ import { CONFIG } from "src/config-global";
 import { usePostEtablissementsAvis } from "src/actions/etablissements";
 import { FaStar } from "react-icons/fa";
 import SpaDetailsSkeleton from "./spa-details-skeleton";
+import { Link } from "react-router-dom";
+import { paths } from "src/router/paths";
 
 const criteria = [
   "Practicien(ne)",
@@ -31,12 +33,15 @@ export default function SpaDetailsView({
   simlairesEtablissment,
   avis,
   marquesPartenaires,
-  loading
+  loading,
 }) {
   const initialRatings = {};
   criteria.forEach((key) => {
     initialRatings[key] = 0;
   });
+
+  console.log(spaData)
+  console.log(`${CONFIG.serverUrl}/storage/${spaData?.image_avant}`)
 
   const [ratings, setRatings] = useState(initialRatings);
   const [name, setName] = useState("");
@@ -49,9 +54,7 @@ export default function SpaDetailsView({
 
   const validateForm = () => {
     if (!name || !email) {
-      toast.error(
-        "Veuillez remplir tous les champs (nom, email) !"
-      );
+      toast.error("Veuillez remplir tous les champs (nom, email) !");
       return false;
     }
 
@@ -95,11 +98,9 @@ export default function SpaDetailsView({
   };
 
   if (loading) {
-    return (
-      <SpaDetailsSkeleton />
-    );
+    return <SpaDetailsSkeleton />;
   }
-
+  //"url(https://spa-prestige-collection.com/wp-content/uploads/2025/07/1.png)"
   return (
     <div className="mx-auto px-4">
       <div className="flex flex-col md:flex-row gap-12 items-center">
@@ -107,7 +108,11 @@ export default function SpaDetailsView({
           <ImageCarousel images={spaData?.gallerie} />
         </div>
         <div className="w-full md:w-2/5">
-          <DetailsCard details={spaData} avisTotals={avis.length} marquesPartenaires={marquesPartenaires}/>
+          <DetailsCard
+            details={spaData}
+            avisTotals={avis.length}
+            marquesPartenaires={marquesPartenaires}
+          />
         </div>
       </div>
       <Services data={types} />
@@ -202,8 +207,9 @@ export default function SpaDetailsView({
       <CarteCadeau />
       <div
         style={{
-          backgroundImage:
-            "ur[](https://spa-prestige-collection.com/wp-content/uploads/2025/07/1.png)",
+          backgroundImage: `url('${CONFIG.serverUrl}/storage/${spaData.image_avant}')`,
+          backgroundRepeat: "no-repeat",
+          backgroundSize: "cover"
         }}
         className="bg-primary w-screen relative left-[calc(-50vw+50%)] mb-8 min-h-32 overflow-hidden bg-center"
       >
@@ -229,6 +235,14 @@ export default function SpaDetailsView({
       </div>
       <LocationSection data={spaData} />
       <TestimonialsSection testimonials={simlairesEtablissment} />
+      <div className="flex items-center justify-center gap-2">
+        <Link to={paths.spa.list} className="inline-flex font-tahoma rounded-full items-center gap-2 uppercase font-normal tracking-widest transition-all duration-300 px-6 py-3 text-sm bg-[#B6B499] hover:bg-black text-white">
+          Nos établissements
+        </Link>
+        <Link to={paths.main} className="inline-flex font-tahoma rounded-full items-center gap-2 uppercase font-normal tracking-widest transition-all duration-300 px-6 py-3 text-sm bg-[#B6B499] hover:bg-black text-white">
+          Accueil
+        </Link>
+      </div>
     </div>
   );
 }

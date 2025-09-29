@@ -3,6 +3,8 @@ import { useCheckoutContext } from 'src/sections/checkout/context'
 
 export default function CommandesViewPage({ order }) {
     const checkout = useCheckoutContext()
+
+    console.log(order)
   return (
     <div className="mt-4 grid grid-cols-1 lg:grid-cols-3 gap-4">  
           {/* Items List - Left Column */}  
@@ -19,7 +21,7 @@ export default function CommandesViewPage({ order }) {
               <tbody>  
                 {order?.lignes.map(item => (  
                   <tr key={item.id} className="border-t">  
-                    <td className="border p-2">{item.produit.nom}</td>  
+                    <td className="border p-2">{item.produit?.nom || item.produit}</td>  
                     <td className="border p-2">{item.quantite}</td>  
                     <td className="border p-2">{parseFloat(item.prix_unitaire).toFixed(2)} €</td>  
                   </tr>  

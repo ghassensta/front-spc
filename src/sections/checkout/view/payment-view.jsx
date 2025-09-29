@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useCheckoutContext } from "../context";
 import { useNavigate } from "react-router-dom";
 import ButtonIcon from "src/components/button-icon/button-icon";
@@ -11,11 +11,11 @@ export default function PaymentView() {
   const navigate = useNavigate();
   const [isEditingAddress, setIsEditingAddress] = useState(false);
   const [loading, setLoading] = useState(false);
-  const { user } = useAuthContext()
+  const [expediteurEmail, setExpediteurEmail] = useState("");
+  const { user } = useAuthContext();
 
   const TAX_RATE = 0.2;
 
-  // Calcul HT, taxe et TTC
   const subtotal =
     checkout.items?.reduce(
       (acc, item) => acc + Number(item.price || 0) * item.quantity,
@@ -24,16 +24,13 @@ export default function PaymentView() {
   const tax = subtotal * TAX_RATE;
   const total = subtotal + tax;
 
-  // Fonction pour envoyer la commande
   const handleSubmit = async () => {
     if (
       !checkout.expediteur ||
       !checkout.items ||
       checkout.items.length === 0
     ) {
-      alert(
-        "Veuillez remplir toutes les informations et ajouter des articles."
-      );
+      alert("Veuillez remplir toutes les informations et ajouter des articles.");
       return;
     }
 
@@ -51,16 +48,36 @@ export default function PaymentView() {
     try {
       const response = await axios.post(`${CONFIG.serverUrl}/api/commandes`, data);
 
-      navigate("/checkout/details"); // navigue vers la page suivante
-      localStorage.removeItem("app-checkout"); // puis vide le panier
+      navigate("/checkout/details");
+      localStorage.removeItem("app-checkout");
     } catch (error) {
       console.error("Erreur lors de l'envoi :", error);
       alert("Erreur lors de l'envoi de la commande. Veuillez réessayer.");
-      throw error
+      throw error;
     } finally {
       setLoading(false);
     }
   };
+
+  const handleExpediteurChange = (field, value) => {
+    checkout.onCreateExpediteur({
+      ...checkout.expediteur,
+      [field]: value,
+    });
+  };
+
+  useEffect(() => {
+    if (user && user.email && !checkout.expediteur?.email) {
+      const updatedExpediteur = {
+        ...checkout.expediteur,
+        email: user.email,
+        fullName: user.name || "",
+      };
+
+      setExpediteurEmail(user.email);
+      checkout.onCreateExpediteur(updatedExpediteur);
+    }
+  }, [user, checkout.expediteur]);
 
   return (
     <div className="container font-tahoma mx-auto p-6 grid grid-cols-1 md:grid-cols-3 gap-6">
@@ -75,13 +92,12 @@ export default function PaymentView() {
               type="email"
               className="w-full border rounded-md p-2 focus:outline-none focus:ring-2 focus:ring-blue-400"
               placeholder="contact@example.com"
-              value={checkout.expediteur?.email || user?.email || ""}
-              onChange={(e) =>
-                checkout.onCreateExpediteur({
-                  ...checkout.expediteur,
-                  email: e.target.value,
-                })
-              }
+              value={expediteurEmail}
+              onChange={(e) => {
+                const email = e.target.value;
+                setExpediteurEmail(email);
+                handleExpediteurChange("email", email);
+              }}
             />
           </div>
         </div>
@@ -102,50 +118,45 @@ export default function PaymentView() {
             <div className="space-y-1 text-sm">
               <p>{checkout.expediteur.fullName}</p>
               <p>{checkout.expediteur.address}</p>
-              {checkout.expediteur.address2 && (
-                <p>{checkout.expediteur.address2}</p>
-              )}
+              {checkout.expediteur.address2 && <p>{checkout.expediteur.address2}</p>}
               <p>
                 {checkout.expediteur.city} {checkout.expediteur.state}{" "}
                 {checkout.expediteur.postalCode}
               </p>
               <p>{checkout.expediteur.country}</p>
-              {checkout.expediteur.phone && (
-                <p>Téléphone : {checkout.expediteur.phone}</p>
-              )}
+              {checkout.expediteur.phone && <p>Téléphone : {checkout.expediteur.phone}</p>}
             </div>
           ) : (
             <div className="space-y-2">
+              {/* Full name */}
               <div>
                 <label className="block text-sm font-medium">Nom complet</label>
                 <input
                   type="text"
                   className="w-full border rounded-md p-2 focus:outline-none focus:ring-2 focus:ring-blue-400"
-                  value={checkout.expediteur.fullName}
+                  value={checkout.expediteur.fullName || ""}
                   onChange={(e) =>
-                    checkout.onCreateExpediteur({
-                      ...checkout.expediteur,
-                      fullName: e.target.value,
-                    })
+                    handleExpediteurChange("fullName", e.target.value)
                   }
                   placeholder="Jean Dupont"
                 />
               </div>
+
+              {/* Address */}
               <div>
                 <label className="block text-sm font-medium">Adresse</label>
                 <input
                   type="text"
                   className="w-full border rounded-md p-2 focus:outline-none focus:ring-2 focus:ring-blue-400"
-                  value={checkout.expediteur.address}
+                  value={checkout.expediteur.address || ""}
                   onChange={(e) =>
-                    checkout.onCreateExpediteur({
-                      ...checkout.expediteur,
-                      address: e.target.value,
-                    })
+                    handleExpediteurChange("address", e.target.value)
                   }
                   placeholder="15 rue Jean Maridor"
                 />
               </div>
+
+              {/* Address 2 */}
               <div>
                 <label className="block text-sm font-medium">
                   Complément d'adresse
@@ -155,26 +166,22 @@ export default function PaymentView() {
                   className="w-full border rounded-md p-2 focus:outline-none focus:ring-2 focus:ring-blue-400"
                   value={checkout.expediteur.address2 || ""}
                   onChange={(e) =>
-                    checkout.onCreateExpediteur({
-                      ...checkout.expediteur,
-                      address2: e.target.value,
-                    })
+                    handleExpediteurChange("address2", e.target.value)
                   }
                   placeholder="Appartement, étage, etc."
                 />
               </div>
+
+              {/* City & State */}
               <div className="grid grid-cols-2 gap-4">
                 <div>
                   <label className="block text-sm font-medium">Ville</label>
                   <input
                     type="text"
                     className="w-full border rounded-md p-2 focus:outline-none focus:ring-2 focus:ring-blue-400"
-                    value={checkout.expediteur.city}
+                    value={checkout.expediteur.city || ""}
                     onChange={(e) =>
-                      checkout.onCreateExpediteur({
-                        ...checkout.expediteur,
-                        city: e.target.value,
-                      })
+                      handleExpediteurChange("city", e.target.value)
                     }
                     placeholder="Paris"
                   />
@@ -186,31 +193,25 @@ export default function PaymentView() {
                   <input
                     type="text"
                     className="w-full border rounded-md p-2 focus:outline-none focus:ring-2 focus:ring-blue-400"
-                    value={checkout.expediteur.state}
+                    value={checkout.expediteur.state || ""}
                     onChange={(e) =>
-                      checkout.onCreateExpediteur({
-                        ...checkout.expediteur,
-                        state: e.target.value,
-                      })
+                      handleExpediteurChange("state", e.target.value)
                     }
                     placeholder="Île-de-France"
                   />
                 </div>
               </div>
+
+              {/* Postal Code & Country */}
               <div className="grid grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-sm font-medium">
-                    Code postal
-                  </label>
+                  <label className="block text-sm font-medium">Code postal</label>
                   <input
                     type="text"
                     className="w-full border rounded-md p-2 focus:outline-none focus:ring-2 focus:ring-blue-400"
-                    value={checkout.expediteur.postalCode}
+                    value={checkout.expediteur.postalCode || ""}
                     onChange={(e) =>
-                      checkout.onCreateExpediteur({
-                        ...checkout.expediteur,
-                        postalCode: e.target.value,
-                      })
+                      handleExpediteurChange("postalCode", e.target.value)
                     }
                     placeholder="75015"
                   />
@@ -220,28 +221,24 @@ export default function PaymentView() {
                   <input
                     type="text"
                     className="w-full border rounded-md p-2 focus:outline-none focus:ring-2 focus:ring-blue-400"
-                    value={checkout.expediteur.country}
+                    value={checkout.expediteur.country || ""}
                     onChange={(e) =>
-                      checkout.onCreateExpediteur({
-                        ...checkout.expediteur,
-                        country: e.target.value,
-                      })
+                      handleExpediteurChange("country", e.target.value)
                     }
                     placeholder="France"
                   />
                 </div>
               </div>
+
+              {/* Phone */}
               <div>
                 <label className="block text-sm font-medium">Téléphone</label>
                 <input
                   type="tel"
                   className="w-full border rounded-md p-2 focus:outline-none focus:ring-2 focus:ring-blue-400"
-                  value={checkout.expediteur.phone}
+                  value={checkout.expediteur.phone || ""}
                   onChange={(e) =>
-                    checkout.onCreateExpediteur({
-                      ...checkout.expediteur,
-                      phone: e.target.value,
-                    })
+                    handleExpediteurChange("phone", e.target.value)
                   }
                   placeholder="+33 6 12 34 56 78"
                 />
@@ -250,7 +247,7 @@ export default function PaymentView() {
           )}
         </div>
 
-        {/* Payment - Stripe only */}
+        {/* Payment info */}
         <div className="bg-white rounded-md p-6 shadow">
           <h2 className="text-base font-semibold mb-4">Paiement</h2>
           <p>Le paiement se fera uniquement par carte via Stripe.</p>
@@ -270,24 +267,18 @@ export default function PaymentView() {
       {/* Right Side - Order Summary */}
       <div>
         <div className="bg-white rounded-md p-6 shadow space-y-4 mb-3">
-          <h2 className="text-base font-semibold mb-4">
-            Résumé de la commande
-          </h2>
+          <h2 className="text-base font-semibold mb-4">Résumé de la commande</h2>
           {checkout.items?.map((item) => (
-            <div
-              key={item.id}
-              className="flex gap-4 items-center border-b pb-2"
-            >
-              <img lazyload="lazy"
+            <div key={item.id} className="flex gap-4 items-center border-b pb-2">
+              <img
+                lazyload="lazy"
                 src={item.image}
                 alt={item.name}
                 className="w-16 h-16 object-cover rounded"
               />
               <div className="flex-1">
                 <p className="font-medium">{item.name}</p>
-                <p className="text-sm text-gray-500">
-                  Quantité: {item.quantity}
-                </p>
+                <p className="text-sm text-gray-500">Quantité: {item.quantity}</p>
               </div>
               <div className="font-bold">
                 {(Number(item.price || 0) * item.quantity).toFixed(2)} €
@@ -311,6 +302,7 @@ export default function PaymentView() {
           </div>
         </div>
 
+        {/* Order Note */}
         <div className="bg-white rounded-md p-6 shadow">
           <h2 className="text-base font-semibold mb-4">Note de commande</h2>
           <textarea
@@ -318,10 +310,7 @@ export default function PaymentView() {
             placeholder="Ex : Laisser la commande devant la porte..."
             value={checkout.expediteur.note || ""}
             onChange={(e) =>
-              checkout.onCreateExpediteur({
-                ...checkout.expediteur,
-                note: e.target.value,
-              })
+              handleExpediteurChange("note", e.target.value)
             }
             rows={4}
           />

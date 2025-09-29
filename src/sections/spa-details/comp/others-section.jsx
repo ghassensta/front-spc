@@ -9,7 +9,7 @@ import { CONFIG } from "src/config-global";
 export default function TestimonialsSection({ testimonials = [] }) {
   const [index, setIndex] = useState(0);
   const [direction, setDirection] = useState(1); // 1 pour next, -1 pour prev
-
+  console.log(testimonials)
   if (testimonials.length === 0) return null;
 
   const length = testimonials.length;
@@ -42,7 +42,7 @@ export default function TestimonialsSection({ testimonials = [] }) {
   };
 
   return (
-    <section className="py-4 lg:py-16 px-2 max-w-7xl mx-auto">
+    <section className="py-4 lg:py-16 px-2 max-w-7xl mx-auto  ">
       <h2 className="text-3xl font-bold mb-6">– Autres établissements –</h2>
 
       <div className="flex items-center space-x-4 mb-6">
@@ -69,7 +69,7 @@ export default function TestimonialsSection({ testimonials = [] }) {
           {visibleTestimonials.map((testimonial) => (
             <motion.div
               key={testimonial.id}
-              className="w-1/3 p-6 rounded-2xl border"
+              className="w-1/3 rounded-2xl border"
               custom={direction}
               variants={cardVariants}
               initial="initial"
@@ -77,26 +77,26 @@ export default function TestimonialsSection({ testimonials = [] }) {
               exit="exit"
               transition={{ duration: 0.4, ease: "easeInOut" }}
             >
-              <div className="flex  flex-col items-center">
+              <div className="flex flex-col items-center">
                 <img lazyload="lazy"
                   src={
                     testimonial.logo
-                      ? `${CONFIG.serverUrl}/storage/${testimonial.logo}`
+                      ? `${CONFIG.serverUrl}/storage/${testimonial?.image_avant}`
                       : "/images/default-logo.png"
                   }
                   alt={testimonial.slug}
                   style={{
                     // width: "120px",
-                    height: "120px",
+                    height: "240px",
                     objectFit: "cover",
-                    borderRadius: "12px",
-                    marginRight: "0.5rem", // équivalent mr-2 en Tailwind
+                    borderRadius: "12px 12px 0 0",
+                    // marginRight: "0.5rem", // équivalent mr-2 en Tailwind
                   }}
                 />
 
                 <Link
                   to={`/spa/${testimonial.slug}`}
-                  className="flex flex-col items-center no-underline hover:underline"
+                  className="flex flex-col items-center no-underline hover:underline p-6 pt-3"
                 >
                   <h3 className="text-2xl font-bold text-center text-black">
                     {testimonial.nom}

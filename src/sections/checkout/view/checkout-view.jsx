@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useCheckoutContext } from "../context/use-checkout-context";
 import { Link } from "react-router-dom";
 import { paths } from "../../../router/paths";
@@ -18,12 +18,15 @@ export default function CheckoutView() {
   const TAX_RATE = 0.2;
 
   // State for expéditeur input fields
-  const [expediteurFullName, setExpediteurFullName] = useState(
-    checkout.expediteur?.fullName || user?.name || ""
-  );
-  const [expediteurMessage, setExpediteurMessage] = useState(
-    checkout.expediteur?.message || ""
-  );
+  const [expediteurFullName, setExpediteurFullName] = useState(checkout.expediteur?.fullName || "");
+  const [expediteurMessage, setExpediteurMessage] = useState(checkout.expediteur?.message || "");
+
+useEffect(() => {
+  if(user){
+    setExpediteurFullName(user.name);
+    
+  }
+}, [user])
 
   // Update expéditeur in checkout context when inputs change
   const handleExpediteurChange = (field, value) => {

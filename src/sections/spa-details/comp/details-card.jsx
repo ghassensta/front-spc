@@ -4,6 +4,7 @@ import { Star, Minus, Plus } from "lucide-react";
 import { CONFIG } from "src/config-global";
 
 export default function ServiceCard({ details, avisTotals = 0, marquesPartenaires }) {
+  console.log(details); 
   const [isExpanded, setIsExpanded] = useState(false);
   const [openSection, setOpenSection] = useState(null);
 
@@ -122,7 +123,11 @@ export default function ServiceCard({ details, avisTotals = 0, marquesPartenaire
       {/* Header */}
       <div className="flex flex-col mb-4">
         {notEmpty(details?.logo) && (
-          <img lazyload="lazy" src={details.logo} alt="" className="max-w-24 mr-2" />
+          <img lazyload="lazy" src={
+                  details.logo
+                    ? `${CONFIG.serverUrl}/storage/${details.logo}`
+                    : "/images/default-avatar.png"
+                }  alt="" className="max-w-24 mr-2" />
         )}
         <div>
           <h4 className="font-black text-5xl">{details?.nom}</h4>

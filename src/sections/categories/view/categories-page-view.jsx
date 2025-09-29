@@ -3,6 +3,8 @@ import SpaCard from "src/components/spa-card/spa-card";
 import { paths } from "src/router/paths";
 import CategoriesSkeleton from "../categories-skeleton";
 import FiltersSkeleton from "../filters-skeleton";
+import Header from "src/sections/home/comp/header";
+import ButtonIcon from "src/components/button-icon/button-icon";
 
 export default function CategoriesPageView({
   cardsByCategory = [],
@@ -10,7 +12,7 @@ export default function CategoriesPageView({
   types = [],
   services = [],
   loading,
-  filterLoading
+  filterLoading,
 }) {
   const [filters, setFilters] = useState({
     etablissement: "",
@@ -26,7 +28,9 @@ export default function CategoriesPageView({
   const filteredCards = cardsByCategory.filter((card) => {
     return (
       (filters.etablissement
-        ? card.types_etablissement_ids?.includes(parseInt(filters.etablissement))
+        ? card.types_etablissement_ids?.includes(
+            parseInt(filters.etablissement)
+          )
         : true) &&
       (filters.region
         ? card.region_ids?.includes(parseInt(filters.region))
@@ -38,14 +42,30 @@ export default function CategoriesPageView({
   });
 
   if (filterLoading) {
-    return (
-      <FiltersSkeleton />
-    );
+    return <FiltersSkeleton />;
   }
 
   return (
     <div className="max-w-6xl mx-auto p-1">
+      <div className="text-center w-full flex flex-col z-10 relative items-center p-4">
+        <p className="text-secondary text-2xl font-medium lg:w-3/4 mb-4">
+          Rejoignez la Communauté Privée Spa & Prestige Collection ! Plongez
+          dans un univers d’exception et{" "}
+          <span className="underline">
+            laissez-vous séduire par des privilèges rares et uniques…
+          </span>
+        </p>
+
+        {/* Bouton vers la page carte cadeau */}
+        <ButtonIcon
+          title="Découvrir les offres"
+          link={paths.spa.list}
+          variant="filled"
+          size="md"
+        />
+      </div>
       {/* Filters */}
+      <p className="text-center text-4xl font-semibold my-4">Filtrer par</p>
       <div className="grid grid-cols-3 gap-4 font-roboto mb-16">
         {/* Types (Établissements) */}
         <div className="border rounded-lg">

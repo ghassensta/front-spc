@@ -212,7 +212,7 @@ export default function RegisterPageView({ code }) {
 
       <p className="mt-4 text-sm text-center text-gray-600">
         Vous avez déjà un compte ?{" "}
-        <Link to={paths.auth.root} className="text-blue-500 hover:underline">
+        <Link to={paths.auth.root} className="text-[#B6B499] hover:underline">
           Se connecter
         </Link>
       </p>

@@ -78,7 +78,7 @@ export default function LoginPageView() {
         </button>
       </form>
      
-      <p className="mt-4 text-sm text-center text-gray-600">Vous n'avez pas d'un compte ? <Link className="text-blue-500 hover:underline" to={paths.auth.register}>Créer un compte!</Link></p>
+      <p className="mt-4 text-sm text-center text-gray-600">Vous n'avez pas d'un compte ? <Link className="text-[#B6B499] hover:underline" to={paths.auth.register}>Créer un compte!</Link></p>
     </div>
   );
 }
