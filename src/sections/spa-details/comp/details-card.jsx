@@ -127,7 +127,7 @@ export default function ServiceCard({ details, avisTotals = 0, marquesPartenaire
                   details.logo
                     ? `${CONFIG.serverUrl}/storage/${details.logo}`
                     : "/images/default-avatar.png"
-                }  alt="" className="max-w-24 mr-2" />
+                }  alt="" className="max-w-[50%] mr-2" />
         )}
         <div>
           <h4 className="font-black text-5xl">{details?.nom}</h4>

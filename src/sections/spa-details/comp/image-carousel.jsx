@@ -60,7 +60,7 @@ export default function ImageCarousel({ height, images = [] }) {
 
   return (
     <div
-      className={`relative w-full mx-auto overflow-hidden rounded-sm shadow-lg ${height || "h-[300px] md:h-[600px]"}`}
+      className={`relative w-full mx-auto overflow-hidden rounded-sm flex shadow-lg h-${height || " h-[300px] md:h-[600px]"}`}
       // style={{ height: height ?? "500px", width: height * 1.5 }}
     >
       <AnimatePresence initial={false} custom={direction}>

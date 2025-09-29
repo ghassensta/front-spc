@@ -17,7 +17,7 @@ export default function TemplateRestaurant({ data=[] }) {
       <div className="bg-[#f9f7ed] p-6 max-w-7xl mx-auto flex flex-col md:flex-row gap-6 items-start ">
         {/* Carousel Section */}
         {imagesCarousel.length > 0 && (
-          <div className="w-full relative">
+          <div className="w-full h-full">
             <ImageCarousel height="280px" images={imagesCarousel} />
           </div>
         )}
