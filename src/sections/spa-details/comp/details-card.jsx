@@ -2,6 +2,7 @@ import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Star, Minus, Plus } from "lucide-react";
 import { CONFIG } from "src/config-global";
+import defaultAvatar from "../../../assets/default-avatar.png"
 
 export default function ServiceCard({ details, avisTotals = 0, marquesPartenaires }) {
   console.log(details); 
@@ -77,9 +78,9 @@ export default function ServiceCard({ details, avisTotals = 0, marquesPartenaire
             >
               <img lazyload="lazy"
                 src={
-                  person.image
+                  person?.image
                     ? `${CONFIG.serverUrl}/storage/${person.image}`
-                    : "/images/default-avatar.png"
+                    : defaultAvatar 
                 }
                 alt={person.nom}
                 loading="lazy"
