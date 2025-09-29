@@ -86,7 +86,7 @@ export default function TestimonialsSection({ testimonials = [] }) {
                   }
                   alt={testimonial.slug}
                   style={{
-                    // width: "120px",
+                    width: "100%",
                     height: "240px",
                     objectFit: "cover",
                     borderRadius: "12px 12px 0 0",
