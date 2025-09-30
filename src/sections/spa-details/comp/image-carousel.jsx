@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { CONFIG } from "src/config-global";
+import Viewer from "react-viewer";
 
 const variants = {
   enter: (direction) => ({
@@ -19,7 +20,19 @@ const variants = {
 
 export default function ImageCarousel({ height, images = [] }) {
   const [[index, direction], setIndex] = useState([0, 0]);
+  const [org, setOrg] = useState([]);
+  const [visible, setVisible] = useState(false);
+  console.log(images);
   const imgLength = images.length;
+
+  useEffect(() => {
+    setOrg(
+      images.map((img) => ({
+        src: `${CONFIG.serverUrl}/storage/${img}`,
+      }))
+    );
+  }, [images]);
+
 
   // Auto slide every 5 seconds
   useEffect(() => {
@@ -35,8 +48,7 @@ export default function ImageCarousel({ height, images = [] }) {
     return () => clearInterval(timer);
   }, [imgLength]);
 
-  const next = () =>
-    setIndex(([prev]) => [(prev + 1) % imgLength, 1]);
+  const next = () => setIndex(([prev]) => [(prev + 1) % imgLength, 1]);
 
   const prev = () =>
     setIndex(([prev]) => [prev === 0 ? imgLength - 1 : prev - 1, -1]);
@@ -49,52 +61,66 @@ export default function ImageCarousel({ height, images = [] }) {
   // 👉 Conditional rendering after hooks
   if (imgLength === 0) {
     return (
-      <div
-        className="flex items-center justify-center bg-gray-100 rounded-sm shadow-lg"
-        
-      >
+      <div className="flex items-center justify-center bg-gray-100 rounded-sm shadow-lg">
         <p className="text-gray-500">No images available</p>
       </div>
     );
   }
 
   return (
-    <div
-      className={`relative w-full mx-auto overflow-hidden rounded-sm flex shadow-lg h-${height || " h-[300px] md:h-[600px]"}`}
-      // style={{ height: height ?? "500px", width: height * 1.5 }}
-    >
-      <AnimatePresence initial={false} custom={direction}>
-        <motion.img
-          key={index}
-          src={`${CONFIG.serverUrl}/storage/${images[index]}`}
-          custom={direction}
-          variants={variants}
-          initial="enter"
-          animate="center"
-          exit="exit"
-          transition={{ duration: 0.5, ease: "easeInOut" }}
-          drag="x"
-          dragConstraints={{ left: 0, right: 0 }}
-          dragElastic={0.7}
-          onDragEnd={handleDragEnd}
-          // absolute
-          className=" w-full h-full object-cover cursor-grab active:cursor-grabbing"
-        />
-      </AnimatePresence>
+    <>
+      <div
+        className={`relative w-full mx-auto overflow-hidden rounded-sm flex shadow-lg h-${
+          height || " h-[300px] md:h-[600px]"
+        }`}
+        // style={{ height: height ?? "500px", width: height * 1.5 }}
+      >
+        <AnimatePresence initial={false} custom={direction}>
+          <motion.img
+            key={index}
+            src={`${CONFIG.serverUrl}/storage/${images[index]}`}
+            custom={direction}
+            variants={variants}
+            initial="enter"
+            animate="center"
+            exit="exit"
+            transition={{ duration: 0.5, ease: "easeInOut" }}
+            drag="x"
+            dragConstraints={{ left: 0, right: 0 }}
+            dragElastic={0.7}
+            onDragEnd={handleDragEnd}
+            onClick={() => setVisible(true)}
+            // absolute
+            className=" w-full h-full object-cover cursor-grab active:cursor-grabbing"
+          />
+        </AnimatePresence>
 
-      {/* Controls */}
-      <button
-        onClick={prev}
-        className="absolute top-1/2 left-3 -translate-y-1/2 bg-white/80 hover:bg-white p-2 rounded-full shadow z-10"
-      >
-        ◀
-      </button>
-      <button
-        onClick={next}
-        className="absolute top-1/2 right-3 -translate-y-1/2 bg-white/80 hover:bg-white p-2 rounded-full shadow z-10"
-      >
-        ▶
-      </button>
-    </div>
+        {/* Controls */}
+        <button
+          onClick={prev}
+          className="absolute top-1/2 left-3 -translate-y-1/2 bg-white/80 hover:bg-white p-2 rounded-full shadow z-10"
+        >
+          ◀
+        </button>
+        <button
+          onClick={next}
+          className="absolute top-1/2 right-3 -translate-y-1/2 bg-white/80 hover:bg-white p-2 rounded-full shadow z-10"
+        >
+          ▶
+        </button>
+      </div>
+      <Viewer
+      drag
+      attribute
+      rotatable={false}
+      scalable={false}
+      downloadable
+        visible={visible}
+        onClose={() => {
+          setVisible(false);
+        }}
+        images={org}
+      />
+    </>
   );
 }

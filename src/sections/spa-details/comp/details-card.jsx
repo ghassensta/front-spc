@@ -29,7 +29,7 @@ export default function ServiceCard({ details, avisTotals = 0, marquesPartenaire
   if (notEmpty(details?.adresse) || notEmpty(details?.email) || notEmpty(details?.telephone)) {
     sections.push({
       key: "general",
-      title: "Inf. Générale",
+      title: "Informations Générale",
       content: (
         <ul>
           {notEmpty(details?.adresse) && (
@@ -55,7 +55,7 @@ export default function ServiceCard({ details, avisTotals = 0, marquesPartenaire
   if (notEmpty(details?.horaires_ouverture)) {
     sections.push({
       key: "utiles",
-      title: "Inf. Utiles",
+      title: "Informations Utiles",
       content: (
         <p>
           <strong>Jours et Horaires d’ouverture :</strong>{" "}
@@ -186,7 +186,7 @@ export default function ServiceCard({ details, avisTotals = 0, marquesPartenaire
                 className="w-full text-left text-base px-3 py-2 flex gap-3 items-center font-roboto"
               >
                 {openSection === section.key ? <Minus size={18} /> : <Plus size={18} />}
-                <span className="font-light uppercase">{section.title}</span>
+                <span className="font-[400] uppercase">{section.title}</span>
               </button>
               <AnimatePresence initial={false}>
                 {openSection === section.key && (

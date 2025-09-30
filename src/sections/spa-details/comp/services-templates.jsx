@@ -6,6 +6,7 @@ import { CONFIG } from "src/config-global";
 export default function ServicesTemplates({ data = {} }) {
   // Sécurité pour éviter les erreurs si data est vide
   const produits = data.type_produit || [];
+  console.log(produits)
   const equipements = data.type_equipement.map(
     (pivot) => pivot.service_equipement || []
   );

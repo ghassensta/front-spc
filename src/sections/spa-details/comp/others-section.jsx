@@ -69,7 +69,7 @@ export default function TestimonialsSection({ testimonials = [] }) {
           {visibleTestimonials.map((testimonial) => (
             <motion.div
               key={testimonial.id}
-              className="w-1/3 rounded-2xl border"
+              className="md:w-1/3 w-full rounded-2xl border"
               custom={direction}
               variants={cardVariants}
               initial="initial"

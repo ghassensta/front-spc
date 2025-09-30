@@ -1,8 +1,10 @@
 import React, { useState } from "react";
+import { toast } from "react-toastify";
+import { sendMarques } from "src/actions/forms";
 
 export default function MarquePartenairePage() {
   const [formData, setFormData] = useState({
-    etablissement: "",
+    marque: "",
     nom: "",
     prenom: "",
     telephone: "",
@@ -25,17 +27,59 @@ export default function MarquePartenairePage() {
     }));
   };
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
+   const validateForm = () => {
+    const errors = [];
 
-    // Prepare FormData for file uploads
-    const formPayload = new FormData();
-    for (const key in formData) {
-      formPayload.append(key, formData[key]);
+    if (!formData.nom.trim()) {
+      errors.push("Le champ Nom est requis.");
     }
 
-    alert("Formulaire soumis !");
-    // Here you could send formPayload via fetch or axios
+    if (!formData.marque.trim()) {
+      errors.push("Le champ Nom de la marque est requis.");
+    }
+
+    if (!formData.email.trim()) {
+      errors.push("Le champ Email est requis.");
+    } else {
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      if (!emailRegex.test(formData.email)) {
+        errors.push("L'adresse e-mail n'est pas valide.");
+      }
+    }
+
+    if (formData.telephone && !/^\+?[0-9\s-]{6,15}$/.test(formData.telephone)) {
+      errors.push("Le numéro de téléphone n'est pas valide.");
+    }
+
+    if (formData.siteweb && !/^https?:\/\/[^\s]+$/.test(formData.siteweb)) {
+      errors.push("L'URL du site web doit être valide (commencer par http ou https).");
+    }
+
+    return errors;
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+
+    const errors = validateForm();
+    if (errors.length > 0) {
+      errors.forEach((err) => toast.error(err));
+      return;
+    }
+
+    try {
+      const promise = sendMarques(formData);
+      toast.promise(promise, {
+        pending: "En cours d'envoi",
+        success: "Envoi avec succès",
+        error: "Échec lors de l'envoi",
+      });
+
+      console.log(formData)
+    } catch (error) {
+      console.error("Erreur lors de l'envoi", error);
+      toast.error("Une erreur inattendue est survenue.");
+    }
   };
 
   return (
@@ -51,7 +95,8 @@ export default function MarquePartenairePage() {
         <div className="absolute inset-0 bg-black bg-opacity-40" />
         <div className="absolute inset-0 flex items-center justify-center px-4">
           <h1 className="text-white text-4xl md:text-5xl max-w-5xl mx-auto text-center font-bold leading-snug">
-            OFFREZ A VOTRE MARQUE UNE VISIBILITÉ INÉGALÉE AVEC SPA & PRESTIGE COLLECTION
+            OFFREZ A VOTRE MARQUE UNE VISIBILITÉ INÉGALÉE AVEC SPA & PRESTIGE
+            COLLECTION
           </h1>
         </div>
       </div>
@@ -64,16 +109,35 @@ export default function MarquePartenairePage() {
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-10">
           <div className="space-y-4 text-justify font-bricolage text-sm">
-            <p><strong>Visibilité Ciblée :</strong> Profitez d’une newsletter exclusive...</p>
-            <p><strong>Accompagnement Digital et Direct :</strong> Participez à des visio-conférences...</p>
-            <p><strong>Événements Stratégiques :</strong> Profitez de stratégies sur mesure...</p>
-            <p><strong>Bénéficiez d’un accompagnement personnalisé :</strong> Optimisez votre stratégie...</p>
-            <p><strong>Soutien Marketing et Développement Commercial :</strong> Outils marketing exclusifs...</p>
-            <p><strong>Collection Prestige :</strong> Faites rayonner votre marque...</p>
+            <p>
+              <strong>Visibilité Ciblée :</strong> Profitez d’une newsletter
+              exclusive...
+            </p>
+            <p>
+              <strong>Accompagnement Digital et Direct :</strong> Participez à
+              des visio-conférences...
+            </p>
+            <p>
+              <strong>Événements Stratégiques :</strong> Profitez de stratégies
+              sur mesure...
+            </p>
+            <p>
+              <strong>Bénéficiez d’un accompagnement personnalisé :</strong>{" "}
+              Optimisez votre stratégie...
+            </p>
+            <p>
+              <strong>Soutien Marketing et Développement Commercial :</strong>{" "}
+              Outils marketing exclusifs...
+            </p>
+            <p>
+              <strong>Collection Prestige :</strong> Faites rayonner votre
+              marque...
+            </p>
           </div>
 
           <div>
-            <img lazyload="lazy"
+            <img
+              lazyload="lazy"
               src="https://spa-prestige-collection.com/wp-content/uploads/2025/05/SPC-equipe-ce-1975x1318-1-768x513.jpg"
               alt="Piscine spa"
               className="w-full h-auto object-cover rounded-lg shadow-lg"
@@ -126,8 +190,8 @@ export default function MarquePartenairePage() {
               Nom de la marque*
               <input
                 type="text"
-                name="etablissement"
-                value={formData.etablissement}
+                name="marque"
+                value={formData.marque}
                 onChange={handleChange}
                 className="border p-2 rounded w-full"
                 required
@@ -171,7 +235,7 @@ export default function MarquePartenairePage() {
               />
             </label>
 
-            <label className="flex flex-col col-span-2">
+            <label className="flex flex-col md:col-span-2">
               E-mail*
               <input
                 type="email"
@@ -202,10 +266,11 @@ export default function MarquePartenairePage() {
                 onChange={handleChange}
                 className="border p-2 rounded w-full"
               >
-                <option>Hôtel</option>
-                <option>Restaurant</option>
-                <option>Bien-être</option>
-                <option>Autre</option>
+                <option value="Hôtel">Hôtel</option>
+                <option value="Spa">Spa</option>
+                <option value="Centre de beauté">Centre de beauté</option>
+                <option value="Restaurant">Restaurant</option>
+                <option value="Autre">Autre</option>
               </select>
             </label>
 

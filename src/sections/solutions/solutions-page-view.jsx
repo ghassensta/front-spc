@@ -1,35 +1,83 @@
 import React, { useState } from "react";
+import { toast } from "react-toastify";
+import { sendEntreprise } from "src/actions/forms";
 
 export default function SolutionsPageView() {
-    const [formData, setFormData] = useState({
-        etablissement: "",
-        nom: "",
-        prenom: "",
-        telephone: "",
-        email: "",
-        pays: "France",
-        adresse: "",
-        siteweb: "",
-        role: "",
-        connaissance: "",
-        message: "",
-        secteur: "Hôtel",
-        fichier: null,
+  const [formData, setFormData] = useState({
+    name: "",
+    email: "",
+    phone: "",
+    entreprise: "",
+    nbr: "",
+    fonction: "",
+    country: "France",
+    adresse: "",
+    message: "",
+  });
+
+  const handleChange = (e) => {
+    const { name, value, files } = e.target;
+    if (files) {
+      setFormData({ ...formData, [name]: files[0] });
+    } else {
+      setFormData({ ...formData, [name]: value });
+    }
+  };
+
+  const validateForm = () => {
+    const errors = [];
+
+    if (!formData.name.trim()) {
+      errors.push("Le champ Nom et prénom est requis.");
+    }
+
+    if (!formData.email.trim()) {
+      errors.push("Le champ Email est requis.");
+    } else {
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      if (!emailRegex.test(formData.email)) {
+        errors.push("L'adresse e-mail n'est pas valide.");
+      }
+    }
+
+    if (!formData.entreprise.trim()) {
+      errors.push("Le champ Nom de l'entreprise est requis.");
+    }
+
+    if (formData.phone && !/^\+?[0-9\s-]{6,15}$/.test(formData.phone)) {
+      errors.push("Le numéro de téléphone n'est pas valide.");
+    }
+
+    if (formData.nbr && isNaN(Number(formData.nbr))) {
+      errors.push("Le nombre de salariés doit être un nombre.");
+    }
+
+    return errors;
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+
+    const errors = validateForm();
+    if (errors.length > 0) {
+      errors.forEach((err) => toast.error(err));
+      return;
+    }
+
+    try {
+      const promise = sendEntreprise(formData);
+      toast.promise(promise, {
+        pending: "En cours d'envoi",
+        success: "Envoi avec succès",
+        error: "Échec lors de l'envoi",
       });
-    
-      const handleChange = (e) => {
-        const { name, value, files } = e.target;
-        if (files) {
-          setFormData({ ...formData, [name]: files[0] });
-        } else {
-          setFormData({ ...formData, [name]: value });
-        }
-      };
-    
-      const handleSubmit = (e) => {
-        e.preventDefault();
-        alert("Formulaire soumis !");
-      };
+
+      console.log(formData)
+    } catch (error) {
+      console.error("Erreur lors de l'envoi", error);
+      toast.error("Une erreur inattendue est survenue.");
+    }
+  };
   return (
     <>
       <div
@@ -50,7 +98,8 @@ export default function SolutionsPageView() {
       {/* First Section */}
       <section className="max-w-7xl mx-auto px-4 py-16">
         <h2 className="text-2xl italic font-bold text-center mb-12">
-          NOTRE ENGAGEMENT : Offrir à vos salariés des expériences bien-être d’exception !
+          NOTRE ENGAGEMENT : Offrir à vos salariés des expériences bien-être
+          d’exception !
         </h2>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-10 items-center">
           {/* Text Column */}
@@ -104,7 +153,8 @@ export default function SolutionsPageView() {
 
           {/* Image Column */}
           <div>
-            <img lazyload="lazy"
+            <img
+              lazyload="lazy"
               src="https://spa-prestige-collection.com/wp-content/uploads/2025/05/SPC-equipe-ce-1975x1318-1-768x513.jpg"
               alt="Réunion d'équipe"
               className="w-full h-auto object-cover rounded-lg shadow-lg"
@@ -168,7 +218,9 @@ export default function SolutionsPageView() {
 
             {/* Card 3 */}
             <div className="bg-[#faf4ec] p-6 rounded shadow-sm text-left">
-              <h3 className="font-bold mb-4 text-2xl">Avantages pour vos équipes</h3>
+              <h3 className="font-bold mb-4 text-2xl">
+                Avantages pour vos équipes
+              </h3>
               <ul className="list-disc list-inside space-y-2 text-sm font-bricolage">
                 <li>
                   Stimulez vos collaborateurs avec des cadeaux exceptionnels qui
@@ -196,32 +248,24 @@ export default function SolutionsPageView() {
           <h2 className="text-2xl md:text-3xl font-bold text-center mb-6 font-serif">
             Pourquoi choisir Spa & Prestige Collection ?
           </h2>
-          <p className="text-center italic font-bold text-xl mb-4">NOTRE ENGAGEMENT : Offrir à vos salariés des expériences bien-être d’exception !</p>
-          <ul className="font-roboto list-disc text-xs space-y-2 mb-4">
-            <li className="list-item">Une entreprise française engagée dans la valorisation du bien-être et des expériences d’exception.</li>
-            <li className="list-item">Une équipe à votre écoute pour vous accompagner et simplifier votre quotidien.</li>
-            <li className="list-item">Des solutions exclusives en matière de bien-être et de cadeaux, avec un accompagnement personnalisé pour répondre à vos besoins.</li>
-          </ul>
-          <p className="text-center font-bold text-xl mb-4">Prêt, partez !</p>
 
           <form
             onSubmit={handleSubmit}
             className="grid grid-cols-1 md:grid-cols-2 gap-2 font-roboto"
           >
-            {/* Nom établissement */}
+            {/* Nom et prénom */}
             <label className="flex flex-col">
               Nom et prénom*
               <input
                 type="text"
-                name="etablissement"
-                value={formData.etablissement}
+                name="name"
+                value={formData.name}
                 onChange={handleChange}
                 className="border py-1 px-2 rounded w-full"
-                required
               />
             </label>
 
-              {/* Email */}
+            {/* Email */}
             <label className="flex flex-col">
               E-mail*
               <input
@@ -230,58 +274,58 @@ export default function SolutionsPageView() {
                 value={formData.email}
                 onChange={handleChange}
                 className="border py-1 px-2 rounded w-full"
-                required
               />
             </label>
 
-             {/* Téléphone */}
+            {/* Téléphone */}
             <label className="flex flex-col">
               Téléphone
               <input
                 type="tel"
-                name="telephone"
-                value={formData.telephone}
+                name="phone"
+                value={formData.phone}
                 onChange={handleChange}
                 className="border py-1 px-2 rounded w-full"
               />
             </label>
 
-            {/* Nom */}
+            {/* Entreprise */}
             <label className="flex flex-col">
               Nom de l'entreprise*
               <input
                 type="text"
-                name="nom"
-                value={formData.nom}
+                name="entreprise"
+                value={formData.entreprise}
                 onChange={handleChange}
                 className="border py-1 px-2 rounded w-full"
-                required
               />
             </label>
 
-            {/* Prénom */}
+            {/* Nombre de salariés */}
             <label className="flex flex-col">
               Nombre de salariés
               <input
                 type="text"
-                name="prenom"
-                value={formData.prenom}
-                onChange={handleChange}
-                className="border py-1 px-2 rounded w-full"
-              />
-            </label>
-            <label className="flex flex-col">
-              Fonction
-              <input
-                type="text"
-                name="prenom"
-                value={formData.prenom}
+                name="nbr"
+                value={formData.nbr}
                 onChange={handleChange}
                 className="border py-1 px-2 rounded w-full"
               />
             </label>
 
-             {/* Adresse */}
+            {/* Fonction */}
+            <label className="flex flex-col">
+              Fonction
+              <input
+                type="text"
+                name="fonction"
+                value={formData.fonction}
+                onChange={handleChange}
+                className="border py-1 px-2 rounded w-full"
+              />
+            </label>
+
+            {/* Adresse */}
             <label className="flex flex-col">
               Adresse complète
               <input
@@ -297,8 +341,8 @@ export default function SolutionsPageView() {
             <label className="flex flex-col">
               Pays
               <select
-                name="pays"
-                value={formData.pays}
+                name="country"
+                value={formData.country}
                 onChange={handleChange}
                 className="border py-1 px-2 rounded w-full"
               >
@@ -329,11 +373,6 @@ export default function SolutionsPageView() {
               >
                 Envoyer
               </button>
-            </div>
-
-            <div className="flex w-full justify-around mt-10 gap-4 col-span-2">
-                <button className="bg-[#c0a765] text-white w-max px-8 py-2 hover:bg-[#b09456] transition rounded-full">ACCUEIL</button>
-                <button className="bg-[#c0a765] text-white w-max px-8 py-2 hover:bg-[#b09456] transition rounded-full">COUP DE CŒUR</button>
             </div>
           </form>
         </section>

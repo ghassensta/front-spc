@@ -58,6 +58,8 @@ export default function CardItem({
     setShowFullDescription((prev) => !prev);
   };
 
+  console.log(date_fin)
+
   return (
     <motion.div className="flex flex-col md:flex-row gap-4 py-6 border-b border-gray-400 ">
       {/* Image */}
@@ -76,7 +78,7 @@ export default function CardItem({
       {/* Content */}
       <div className="flex flex-col md:flex-row md:justify-between w-full gap-6">
         <div className="flex flex-col md:flex-row justify-between flex-1 gap-2 md:gap-8">
-          <div>
+          <div className="min-w-[60%]">
             <h3 className="text-2xl text-left font-normal text-gray-900">
               {nom}
             </h3>
@@ -95,9 +97,10 @@ export default function CardItem({
                 </span>
               )}
             </p>
+            <p className="text-left font-roboto text-base text-[#333]">{access_spa}</p>
           </div>
           <div className="flex flex-row items-center h-full justify-center font-roboto gap-2">
-            {prix &&
+            {prix && !prix_au_lieu_de &&
               parseFloat(prix) !== 0 &&
               parseFloat(prix_barre) !== 0 &&
               parseFloat(prix_au_lieu_de) !== 0 && (
@@ -118,19 +121,19 @@ export default function CardItem({
               parseFloat(prix_au_lieu_de) !== parseFloat(prix) && (
                 <span className="text-center text-base text-gray-900">
                   <div className="font-bold">
-                    {parseFloat(prix_au_lieu_de).toFixed(2)}€
+                    {parseFloat(prix).toFixed(2)}€
                   </div>
                   <div className="text-sm">Au lieu de </div>
-                  <div className="text-sm">{parseFloat(prix).toFixed(2)}€</div>
+                  <div className="text-sm">{parseFloat(prix_au_lieu_de).toFixed(2)}€</div>
                 </span>
               )}
           </div>
-          <div className="flex min-w-[100px] flex-col h-full justify-between items-center gap-4 md:gap-2">
+          <div className="flex min-w-[100px] flex-col h-full justify-center items-center gap-4 md:gap-2">
             {exclusivite_spc === 1 && (
               <img lazyload="lazy"
                 src={exclusive}
                 alt="Exclusivité"
-                className="w-16 h-auto my-2"
+                className="w-24 h-auto my-2"
               />
             )}
 
@@ -146,7 +149,7 @@ export default function CardItem({
             )}
             {slug && (
               <>
-                <div className="flex-1" />
+                <div />
                 <Link to={paths.product(slug)} className="w-full">
                   <button className="w-full px-4 py-3 bg-black leading-4 text-white uppercase font-normal text-xs tracking-[3px] hover:bg-gray-800 transition font-tahoma flex items-center justify-center gap-2">
                     Offrir

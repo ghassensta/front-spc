@@ -140,5 +140,10 @@ export const endpoints = {
     services: '/api/services',
     mymessages: '/api/auth/messages',
     messages: (id) => `/api/auth/messages/${id}`
+  },
+  forms: {
+    partenaire: "/api/send-partenaire",
+    entreprise: "/api/send-entreprise",
+    marques: "/api/send-marques"
   }
 };

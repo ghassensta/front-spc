@@ -1,4 +1,6 @@
 import React, { useState } from "react";
+import { toast } from "react-toastify";
+import { sendDevenirPartenaire } from "src/actions/forms";
 
 export default function DevenirPartnerView() {
   const [formData, setFormData] = useState({
@@ -26,9 +28,63 @@ export default function DevenirPartnerView() {
     }
   };
 
-  const handleSubmit = (e) => {
+    const validateForm = () => {
+    const errors = [];
+
+    if (!formData.etablissement.trim())
+      errors.push("Le nom de l'établissement est obligatoire.");
+    if (!formData.nom.trim()) errors.push("Le nom est obligatoire.");
+    if (!formData.email.trim()) {
+      errors.push("L'email est obligatoire.");
+    } else {
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      if (!emailRegex.test(formData.email)) {
+        errors.push("Veuillez entrer un email valide.");
+      }
+    }
+    if (formData.telephone && !/^\+?[0-9\s-]{6,20}$/.test(formData.telephone)) {
+      errors.push("Veuillez entrer un numéro de téléphone valide.");
+    }
+    if (!formData.message.trim())
+      errors.push("Le message est obligatoire.");
+    if (!formData.secteur) errors.push("Le secteur est obligatoire.");
+
+    // File validation
+    if (formData.fichier) {
+      const allowedTypes = ["image/jpeg", "image/png", "application/pdf"];
+      if (!allowedTypes.includes(formData.fichier.type)) {
+        errors.push("Le fichier doit être en format JPEG, PNG ou PDF.");
+      }
+      if (formData.fichier.size > 5 * 1024 * 1024) {
+        errors.push("La taille du fichier ne doit pas dépasser 5 Mo.");
+      }
+    }
+
+    return errors;
+  };
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    alert("Formulaire soumis !");
+
+    const errors = validateForm();
+    if (errors.length > 0) {
+      errors.forEach((err) => toast.error(err));
+      return;
+    }
+
+    try {
+      const promise = sendDevenirPartenaire(formData);
+      toast.promise(promise, {
+        pending: "En cours d'envoi",
+        success: "Envoi avec succès",
+        error: "Échec lors de l'envoi",
+      });
+
+      console.log(formData)
+    } catch (error) {
+      console.error("Erreur lors de l'envoi", error);
+      toast.error("Une erreur inattendue est survenue.");
+    }
   };
 
   return (
@@ -109,11 +165,12 @@ export default function DevenirPartnerView() {
           </p>
 
           <form
-            onSubmit={handleSubmit}
+            onSubmit={(e) => handleSubmit(e)}
+            method="POST"
             className="grid grid-cols-1 md:grid-cols-2 gap-4"
           >
             {/* Nom établissement */}
-            <label className="flex flex-col col-span-2">
+            <label className="flex flex-col md:col-span-2">
               Nom de l'établissement*
               <input
                 type="text"
@@ -192,7 +249,7 @@ export default function DevenirPartnerView() {
             </label>
 
             {/* Adresse */}
-            <label className="flex flex-col md:col-span-2">
+            <label className="flex flex-col">
               Adresse complète
               <input
                 type="text"
@@ -229,15 +286,18 @@ export default function DevenirPartnerView() {
 
             {/* Secteur */}
             <label className="flex flex-col">
-              Secteur
+              Secteur d'activité*
               <select
                 name="secteur"
                 value={formData.secteur}
                 onChange={handleChange}
+                required
                 className="border p-2 rounded w-full"
               >
                 <option value="Hôtel">Hôtel</option>
                 <option value="Spa">Spa</option>
+                <option value="Centre de beauté">Centre de beauté</option>
+                <option value="Restaurant">Restaurant</option>
                 <option value="Autre">Autre</option>
               </select>
             </label>
@@ -256,13 +316,14 @@ export default function DevenirPartnerView() {
 
             {/* Message */}
             <label className="flex flex-col md:col-span-2">
-              Message
+              Message*
               <textarea
                 name="message"
                 value={formData.message}
                 onChange={handleChange}
                 className="border p-2 rounded w-full"
                 rows="4"
+                required
               ></textarea>
             </label>
 

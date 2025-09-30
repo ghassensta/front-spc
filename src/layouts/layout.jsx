@@ -34,7 +34,7 @@ export default function LayoutTheme({ children }) {
             ))}
           </div>
 
-          <div className="py-12 ">{children}</div>
+          <div className="">{children}</div>
         </div>
 
         <Footer />

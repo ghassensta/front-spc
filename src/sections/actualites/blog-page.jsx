@@ -44,7 +44,7 @@ export default function BlogPage({ articles, loading }) {
             >
               <img
                 loading="lazy"
-                src={article.image ? `${CONFIG.serverUrl}/storage/${article.image}` : 'https://via.placeholder.com/400x200?text=No+Image'}
+                src={article.thumbnail_path ? `${CONFIG.serverUrl}/storage/${article.thumbnail_path}` : 'https://via.placeholder.com/400x200?text=No+Image'}
                 alt={article.title}
                 className="w-full h-48 object-cover"
               />
@@ -53,7 +53,7 @@ export default function BlogPage({ articles, loading }) {
                   {article.title}
                 </h3>
                 <p className="text-sm text-gray-700 flex-1">
-                  {article.petit_description}
+                  {article.summary}
                 </p>
                 <Link
                   to={paths.actualitesDetails(article.slug)}

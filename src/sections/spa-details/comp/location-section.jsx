@@ -54,24 +54,24 @@ export default function LocationSection({ data }) {
         viewport={{ once: true }}
       >
         <div className="text-gray-800 space-y-1">
-          <h2 className="text-2xl font-semibold">{data?.nom}</h2>
+          <h2 className="text-2xl font-semibold uppercase">{data?.nom}</h2>
           <div className="flex items-start gap-3 font-tahoma uppercase text-xl border-b text-black py-1">
             <FaMapMarkerAlt className="text-secondary" />
-            <p className="text-base font-normal">{data?.adresse}</p>
+            <p className="text-base font-normal tracking-wide">{data?.adresse}</p>
           </div>
           <div className="flex items-start gap-3 font-tahoma uppercase text-xl border-b text-black py-1">
             <MdAccessTime className="text-secondary" />
-            <p className="text-base font-normal">
+            <p className="text-base font-normal tracking-wide">
               {data?.horaires_ouverture || "Horaires non spécifiés"}
             </p>
           </div>
           <div className="flex items-start gap-3 font-tahoma uppercase text-xl border-b text-black py-1">
             <FaPhone className="text-secondary" />
-            <p className="text-base font-normal">{data?.telephone}</p>
+            <p className="text-base font-normal tracking-wide">{data?.telephone}</p>
           </div>
           <div className="flex items-start gap-3 font-tahoma uppercase text-xl border-b text-black py-1">
             <FaEnvelope className="text-secondary" />
-            <p className="text-base font-normal">{data?.email}</p>
+            <p className="text-base font-normal tracking-wide">{data?.email}</p>
           </div>
         </div>
       </motion.div>

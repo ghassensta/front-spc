@@ -10,27 +10,9 @@ import { Link } from "react-router-dom";
 import { CONFIG } from "src/config-global";
 import { paths } from "src/router/paths";
 
-const articles = [
-  {
-    title:
-      "Lodge de Luxe en France : Votre Évasion Nature au Domaine des Prés Verts",
-    excerpt:
-      "Lodge de Luxe en France : Votre Évasion Nature au Domaine des Prés Verts. Dans un monde en quête de sérénité...",
-    image:
-      "https://spa-prestige-collection.com/wp-content/uploads/2025/03/SPC-Essence-1975x1318-02.jpg",
-    link: "#",
-  },
-  {
-    title: "Voyager Autrement : L’Art de Partir Sans Voiture",
-    excerpt:
-      "Voyager Autrement : L’Art de Partir Sans Voiture. Partir en vacances sans voiture est une tendance en plein essor...",
-    image:
-      "https://spa-prestige-collection.com/wp-content/uploads/2025/03/SPC-Essence-1975x1318-02.jpg",
-    link: "#",
-  },
-];
 
 export default function BlogDetails({ actualitie }) {
+  console.log(actualitie)
   return (
     <>
       <div
@@ -49,7 +31,7 @@ export default function BlogDetails({ actualitie }) {
       <div className="max-w-4xl mx-auto my-8">
         <img
           lazyload="lazy"
-          src={CONFIG.serverUrl + "/storage/" + actualitie?.image}
+          src={CONFIG.serverUrl + "/storage/" + actualitie?.thumbnail_path}
           alt=""
           className="mb-12"
         />
@@ -109,7 +91,7 @@ export default function BlogDetails({ actualitie }) {
               >
                 <img
                   lazyload="lazy"
-                  src={CONFIG.serverUrl + "/storage/" + article.image}
+                  src={CONFIG.serverUrl + "/storage/" + article.thumbnail_path}
                   alt={article.title}
                   className="w-full h-48 object-cover"
                 />
@@ -118,7 +100,7 @@ export default function BlogDetails({ actualitie }) {
                     {article.title}
                   </h3>
                   <p className="text-sm text-gray-700 flex-1">
-                    {article.petit_description}
+                    {article.summary}
                   </p>
                   <Link
                     to={paths.actualitesDetails(article.slug)}

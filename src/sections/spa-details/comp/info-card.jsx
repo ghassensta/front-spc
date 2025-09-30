@@ -4,7 +4,7 @@ export default function InfoCard() {
   return (
     <div className='grid grid-cols-1 font-roboto lg:grid-cols-3 mt-8 lg:mt-16 gap-6 lg:gap-2'>
         <div className="bg-primary text-secondary relative rounded-xl">
-            <span className='absolute bg-secondary px-3 rounded text-primary left-2 -top-3'>Inf. Générale</span>
+            <span className='absolute bg-secondary px-3 rounded text-primary left-2 -top-3'>Informations Générale</span>
             <ul className='p-8 text-lg font-normal'> 
                 <li className='mb-2'><span className='text-base font-bold'>Adresse :</span>100 chemin de la chapelle – 42300 Villerest</li>
                 <li className='mb-2'><span className='text-base font-bold'>Email :</span>contact@davidgrandspa.fr</li>
@@ -12,7 +12,7 @@ export default function InfoCard() {
             </ul>
         </div>
         <div className="bg-secondary text-primary relative rounded-xl">
-            <span className='absolute bg-primary px-3 rounded text-secondary left-2 -top-3'>Inf. Utiles</span>
+            <span className='absolute bg-primary px-3 rounded text-secondary left-2 -top-3'>Informations Utiles</span>
             <div className="p-8">
                 <span className='font-bold'>Jours et Horaires d’ouverture</span>
                 <p>Lundi : fermé ; mardi à jeudi : 9h à 19h ; Vendredi : 9 à 20h ; Samedi 9h à 20h; dimanche de 9h à 14h (sur réservation).</p>
