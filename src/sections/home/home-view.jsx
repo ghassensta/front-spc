@@ -171,7 +171,7 @@ export default function HomeView() {
                 >
                   <img
                     lazyload="lazy"
-                    src={`${CONFIG.serverUrl}/storage/${actualite.image}`}
+                    src={`${CONFIG.serverUrl}/storage/${actualite.thumbnail_path}`}
                     alt={actualite.title}
                   />
                   <span className="absolute bg-black/25 w-full h-full top-0 left-0" />

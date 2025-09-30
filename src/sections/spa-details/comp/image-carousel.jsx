@@ -114,7 +114,6 @@ export default function ImageCarousel({ height, images = [] }) {
       attribute
       rotatable={false}
       scalable={false}
-      downloadable
         visible={visible}
         onClose={() => {
           setVisible(false);
