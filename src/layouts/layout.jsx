@@ -23,7 +23,7 @@ export default function LayoutTheme({ children }) {
         <Navbar />
 
         <div className="flex-1 h-full">
-          <div className="flex flex-wrap gap-4 mx-auto items-center justify-center mb-4">
+          <div className="grid grid-cols-2 px-8 md:flex md:flex-wrap gap-4 mx-auto items-center justify-center mb-4">
             {sortedCategories.map((category) => (
               <CategoryPuce
                 key={category.id}

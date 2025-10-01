@@ -77,7 +77,7 @@ export default function ProgrammePageView() {
             <div className="text-2xl font-bold text-center">
               Partagez votre lien
             </div>
-            <p className="text-center font-bricolage text-base">
+            <p className="text-center font-tahoma text-base">
               Envoyez votre lien de parrainage à un ami pour qu’il s’inscrive.
             </p>
           </div>
@@ -86,7 +86,7 @@ export default function ProgrammePageView() {
             <div className="text-2xl font-bold text-center">
               Votre ami s’inscrit et en profite
             </div>
-            <p className="text-center font-bricolage text-base">
+            <p className="text-center font-tahoma text-base">
               Grâce à votre lien, il reçoit <strong>5€ offerts</strong> sur sa
               première commande. Bienvenue à lui !
             </p>
@@ -96,7 +96,7 @@ export default function ProgrammePageView() {
             <div className="text-2xl font-bold text-center">
               Recevez 5€ en bon d’achat
             </div>
-            <p className="text-center font-bricolage text-base">
+            <p className="text-center font-tahoma text-base">
               Dès sa première commande, vous gagnez{" "}
               <strong>5€ à utiliser sur toutes nos ventes.</strong> C’est gagné
               !
@@ -117,7 +117,7 @@ export default function ProgrammePageView() {
             <div className="text-2xl font-bold text-center">
               Partagez votre lien
             </div>
-            <p className="text-center font-bricolage text-base">
+            <p className="text-center font-tahoma text-base">
               Invitez de nouveaux adhérents à rejoindre Spa & Prestige
               Collection en leur envoyant votre lien de parrainage.
             </p>
@@ -127,9 +127,8 @@ export default function ProgrammePageView() {
             <div className="text-2xl font-bold text-center">
               Votre ami s’inscrit et en profite
             </div>
-            <p className="text-center font-bricolage text-base">
-              Grâce à votre lien, il reçoit <strong>5€ offerts</strong> sur sa
-              première commande. Bienvenue à lui !
+            <p className="text-center font-tahoma text-base">
+             À chaque nouvelle inscription suivie d’une commande, vous gagnez <strong>10€ utilisables sur toutes nos prestations.</strong>
             </p>
           </div>
           <div className="flex flex-col items-center">
@@ -137,7 +136,7 @@ export default function ProgrammePageView() {
             <div className="text-2xl font-bold text-center">
               Votre filleul n’apparaît pas ?
             </div>
-            <p className="text-center font-bricolage text-base">
+            <p className="text-center font-tahoma text-base">
               Cela signifie qu’il ne s’est pas encore inscrit. Encouragez-le à
               finaliser son adhésion !
             </p>
@@ -178,7 +177,7 @@ export default function ProgrammePageView() {
             du programme.
           </p>
           <div className="flex items-center max-w-xl mx-auto">
-            <div className="flex flex-col items-center font-bricolage text-lg w-full">
+            <div className="flex flex-col items-center font-tahoma text-lg w-full">
               <div>
                 <label className="text-sm text-gray-600" htmlFor="email">
                   Email*

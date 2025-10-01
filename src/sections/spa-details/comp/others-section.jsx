@@ -9,7 +9,7 @@ import { CONFIG } from "src/config-global";
 export default function TestimonialsSection({ testimonials = [] }) {
   const [index, setIndex] = useState(0);
   const [direction, setDirection] = useState(1); // 1 pour next, -1 pour prev
-  console.log(testimonials)
+  console.log("AUTRE:", testimonials);
   if (testimonials.length === 0) return null;
 
   const length = testimonials.length;
@@ -45,25 +45,6 @@ export default function TestimonialsSection({ testimonials = [] }) {
     <section className="py-4 lg:py-16 px-2 max-w-7xl mx-auto  ">
       <h2 className="text-3xl font-bold mb-6">– Autres établissements –</h2>
 
-      <div className="flex items-center space-x-4 mb-6">
-        <button
-          onClick={handlePrev}
-          className="p-2 bg-white border rounded-full hover:bg-gray-100 transition"
-          disabled={length <= 3}
-          aria-label="Précédent"
-        >
-          <FaArrowLeft size={20} />
-        </button>
-        <button
-          onClick={handleNext}
-          className="p-2 bg-black text-white rounded-full hover:bg-gray-800 transition"
-          disabled={length <= 3}
-          aria-label="Suivant"
-        >
-          <FaArrowRight size={20} />
-        </button>
-      </div>
-
       <div className="flex lg:flex-row flex-col gap-6">
         <AnimatePresence mode="wait" custom={direction}>
           {visibleTestimonials.map((testimonial) => (
@@ -78,7 +59,8 @@ export default function TestimonialsSection({ testimonials = [] }) {
               transition={{ duration: 0.4, ease: "easeInOut" }}
             >
               <div className="flex flex-col items-center">
-                <img lazyload="lazy"
+                <img
+                  lazyload="lazy"
                   src={
                     testimonial.logo
                       ? `${CONFIG.serverUrl}/storage/${testimonial?.image_avant}`

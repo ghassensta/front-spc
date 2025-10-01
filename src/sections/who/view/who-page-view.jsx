@@ -1,8 +1,53 @@
-import React from "react";
+import React, { useEffect, useRef, useState } from "react";
+import { FaChevronLeft, FaChevronRight } from "react-icons/fa";
 import ButtonIcon from "src/components/button-icon/button-icon";
 import { paths } from "src/router/paths";
 
 export default function WhoPageView() {
+  const images = [
+    "https://spa-prestige-collection.com/wp-content/uploads/2025/02/SPA-images-1975x1318-Qui-Sommes-Nous-02.jpg",
+    "https://spa-prestige-collection.com/wp-content/uploads/2025/02/SPA-images-1975x1318-Qui-Sommes-Nous-01.jpg",
+    "https://spa-prestige-collection.com/wp-content/uploads/2025/02/SPA-images-1975x1318-Qui-Sommes-Nous-03.jpg", // Repeated for demo; replace with actual third image
+  ];
+
+  const [currentSlide, setCurrentSlide] = useState(0);
+  const timerRef = useRef(null);
+
+  // Auto-slide functionality
+  useEffect(() => {
+    const startTimer = () => {
+      timerRef.current = setInterval(() => {
+        setCurrentSlide((prev) => (prev + 1) % images.length);
+      }, 5000); // Change slide every 5 seconds
+    };
+
+    startTimer();
+
+    return () => clearInterval(timerRef.current);
+  }, [images.length]);
+
+  const resetTimer = () => {
+    clearInterval(timerRef.current);
+    timerRef.current = setInterval(() => {
+      setCurrentSlide((prev) => (prev + 1) % images.length);
+    }, 5000);
+  };
+
+  const goToSlide = (index) => {
+    setCurrentSlide(index);
+    resetTimer();
+  };
+
+  const goToPrev = () => {
+    setCurrentSlide((prev) => (prev - 1 + images.length) % images.length);
+    resetTimer();
+  };
+
+  const goToNext = () => {
+    setCurrentSlide((prev) => (prev + 1) % images.length);
+    resetTimer();
+  };
+
   return (
     <div className="">
       <div className="flex bg-[#FBF6EC] w-screen relative left-[calc(-50vw+50%)] ">
@@ -14,41 +59,82 @@ export default function WhoPageView() {
             <p className="font-roboto md:w-1/2 pr-6">
               <p className="mb-3">
                 <span className="font-bold">Spa & Prestige Collection</span>{" "}
-                réunit des établissements d’exception, soigneusement sélectionnés
-                pour leur confort, leur ambiance singulière et leur service
-                sur-mesure. Spas urbains, thermes apaisants, hôtels de charme ou
-                refuges insolites, chaque lieu a été choisi pour offrir des
-                instants mémorables alliant authenticité et bienveillance.
-              </p>
-               <p className="mb-3">
-                Nous travaillons main dans la main avec nos établissements
-                partenaires, qui partagent notre vision de préserver et valoriser
-                des lieux empreints de caractère. Ces établissements s’engagent à
-                créer un cadre propice à la détente, avec un accueil chaleureux et
-                une attention portée à chaque détail. Ensemble, nous garantissons
-                une expérience inoubliable, alliant plénitude et bien-être.
+                réunit des établissements d’exception, soigneusement
+                sélectionnés pour leur confort, leur ambiance singulière et leur
+                service sur-mesure. Spas urbains, thermes apaisants, hôtels de
+                charme ou refuges insolites, chaque lieu a été choisi pour
+                offrir des instants mémorables alliant authenticité et
+                bienveillance.
               </p>
               <p className="mb-3">
-                 Rejoindre Spa & Prestige Collection c’est accéder à un
-                univers pensé autant pour nos membres que pour nos partenaires.
-                Nos membres bénéficient de privilèges exclusifs, tels que des
-                expériences sur mesure et l’accès à des lieux de confiance, tandis
-                que nos partenaires profitent d’une visibilité renforcée et d’un
-                accompagnement dédié.
+                Nous travaillons main dans la main avec nos établissements
+                partenaires, qui partagent notre vision de préserver et
+                valoriser des lieux empreints de caractère. Ces établissements
+                s’engagent à créer un cadre propice à la détente, avec un
+                accueil chaleureux et une attention portée à chaque détail.
+                Ensemble, nous garantissons une expérience inoubliable, alliant
+                plénitude et bien-être.
               </p>
-              
+              <p className="mb-3">
+                Rejoindre Spa & Prestige Collection c’est accéder à un univers
+                pensé autant pour nos membres que pour nos partenaires. Nos
+                membres bénéficient de privilèges exclusifs, tels que des
+                expériences sur mesure et l’accès à des lieux de confiance,
+                tandis que nos partenaires profitent d’une visibilité renforcée
+                et d’un accompagnement dédié.
+              </p>
+
               <p className="italic">
                 Ensemble, nous créons des expériences inoubliables, accessibles,
                 dans un esprit de sérénité et d’élégance.
               </p>
             </p>
-            <div className="md:w-1/2">
-              <img
-                lazyload="lazy"
-                src="https://spa-prestige-collection.com/wp-content/uploads/2025/03/SPC-Essence-1975x1318-02.jpg"
-                alt="Spa & Prestige"
-                className="w-full h-auto object-cover"
-              />
+             <div className="md:w-1/2 relative">
+              <div className="relative w-full h-[400px] overflow-hidden">
+                {images.map((src, index) => (
+                  <img
+                    key={index}
+                    src={src}
+                    alt={`Spa & Prestige Slide ${index + 1}`}
+                    className={`absolute top-0 left-0 w-full h-full object-cover transition-transform duration-1000 ease-in-out ${
+                      currentSlide === index
+                        ? "translate-x-0"
+                        : index < currentSlide
+                        ? "-translate-x-full"
+                        : "translate-x-full"
+                    }`}
+                    loading="lazy"
+                  />
+                ))}
+              </div>
+              {/* Navigation Arrows */}
+              <button
+                onClick={goToPrev}
+                className="absolute top-1/2 left-4 transform -translate-y-1/2 text-white p-2 rounded-full transition-colors duration-300"
+                aria-label="Previous slide"
+              >
+                <FaChevronLeft size={20} />
+              </button>
+              <button
+                onClick={goToNext}
+                className="absolute top-1/2 right-4 transform -translate-y-1/2 text-white p-2 rounded-full transition-colors duration-300"
+                aria-label="Next slide"
+              >
+                <FaChevronRight size={20} />
+              </button>
+              {/* Navigation Dots */}
+              <div className="absolute mt-3 left-1/2 transform -translate-x-1/2 flex space-x-2">
+                {images.map((_, index) => (
+                  <button
+                    key={index}
+                    onClick={() => goToSlide(index)}
+                    className={`w-2 h-2 rounded-full ${
+                      currentSlide === index ? "bg-black" : "bg-gray-400"
+                    } hover:bg-[#B6B498] transition-colors duration-300`}
+                    aria-label={`Go to slide ${index + 1}`}
+                  />
+                ))}
+              </div>
             </div>
           </div>
         </div>
@@ -127,10 +213,10 @@ export default function WhoPageView() {
 
       <div className="bg-[#FBF6EC] w-screen relative left-[calc(-50vw+50%)]">
         <div className="max-w-6xl mx-auto py-6 px-1">
-          <h2 className="text-4xl font-bold text-center mb-6">
+          <h2 className="text-4xl md:text-5xl font-semibold text-center mb-6">
             Rejoignez la Communauté Privée Spa & Prestige Collection
           </h2>
-          <div className="text-base font-roboto font-normal text-center mb-10">
+          <div className="text-xl text-[#414244] font-roboto font-normal text-center mb-10 w-full md:w-1/2 mx-auto">
             Plongez dans un univers d'exception et laissez-vous séduire par des
             privilèges rares et uniques :
           </div>
@@ -139,27 +225,35 @@ export default function WhoPageView() {
             {/* Colonne gauche */}
             <div className="space-y-8">
               <div className="text-center md:text-left">
-                <h3 className="text-2xl font-bold mb-2"><span className="leading-none mt-1">✔</span> Vivez</h3>
+                <h3 className="text-2xl font-bold mb-2">
+                  <span className="leading-none mt-1">✔</span> Vivez
+                </h3>
                 <p className="font-bricolage">
                   Des expériences personnalisées, créées spécialement pour vous
                 </p>
               </div>
               <div className="text-center md:text-left">
-                <h3 className="text-2xl font-bold mb-2"><span className="leading-none mt-1">✔</span> Accédez</h3>
+                <h3 className="text-2xl font-bold mb-2">
+                  <span className="leading-none mt-1">✔</span> Accédez
+                </h3>
                 <p className="font-bricolage">
                   A des établissements prestigieux, rigoureusement sélectionnés
                   par nos équipes
                 </p>
               </div>
               <div className="text-center md:text-left">
-                <h3 className="text-2xl font-bold mb-2"><span className="leading-none mt-1">✔</span> Bénéficiez</h3>
+                <h3 className="text-2xl font-bold mb-2">
+                  <span className="leading-none mt-1">✔</span> Bénéficiez
+                </h3>
                 <p className="font-bricolage">
                   D’un programme de fidélité généreux, vous offrant de précieux
                   avantages
                 </p>
               </div>
               <div className="text-center md:text-left">
-                <h3 className="text-2xl font-bold mb-2"><span className="leading-none mt-1">✔</span> Exprimez</h3>
+                <h3 className="text-2xl font-bold mb-2">
+                  <span className="leading-none mt-1">✔</span> Exprimez
+                </h3>
                 <p className="font-bricolage">
                   Vos impressions pour nous aider à vous offrir une expérience
                   toujours plus raffinée
@@ -170,27 +264,35 @@ export default function WhoPageView() {
             {/* Colonne droite */}
             <div className="space-y-8">
               <div className="text-center md:text-left">
-                <h3 className="text-2xl font-bold mb-2"><span className="leading-none mt-1">✔</span> Profitez</h3>
+                <h3 className="text-2xl font-bold mb-2">
+                  <span className="leading-none mt-1">✔</span> Profitez
+                </h3>
                 <p className="font-bricolage">
                   De tarifs préférentiels pour des instants de bien-être
                   inoubliables
                 </p>
               </div>
               <div className="text-center md:text-left">
-                <h3 className="text-2xl font-bold mb-2"><span className="leading-none mt-1">✔</span> Offrez</h3>
+                <h3 className="text-2xl font-bold mb-2">
+                  <span className="leading-none mt-1">✔</span> Offrez
+                </h3>
                 <p className="font-bricolage">
                   Des cartes cadeaux élégantes, disponibles en version numérique
                   ou physique
                 </p>
               </div>
               <div className="text-center md:text-left">
-                <h3 className="text-2xl font-bold mb-2"><span className="leading-none mt-1">✔</span> Partagez</h3>
+                <h3 className="text-2xl font-bold mb-2">
+                  <span className="leading-none mt-1">✔</span> Partagez
+                </h3>
                 <p className="font-bricolage">
                   Ces moments d'exception en parrainant vos proches
                 </p>
               </div>
               <div className="text-center md:text-left">
-                <h3 className="text-2xl font-bold mb-2"><span className="leading-none mt-1">✔</span> Recevez</h3>
+                <h3 className="text-2xl font-bold mb-2">
+                  <span className="leading-none mt-1">✔</span> Recevez
+                </h3>
                 <p className="font-bricolage">
                   Des conseils exclusifs de Spa & Prestige Collection pour
                   enrichir votre expérience

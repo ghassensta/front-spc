@@ -21,7 +21,7 @@ export default function CollectionPrestigePage() {
 
       {/* Intro Section */}
       <div className="my-8 px-4">
-        <h5 className="text-2xl md:text-3xl text-center mb-6">
+        <h5 className="text-2xl md:text-3xl text-center mb-6 italic font-bold py-6 md:max-w-[70%] tracking-wider mx-auto" style={{ wordSpacing: "8px"}}>
           Bientôt disponible, Collection Prestige revient avec une nouvelle
           édition dédiée aux plus belles adresses bien-être de notre réseau.
         </h5>
@@ -92,7 +92,7 @@ export default function CollectionPrestigePage() {
       </div>
 
       <div className="bg-[#FBF6EC] p-8 w-screen relative left-[calc(-50vw+50%)] rounded-lg shadow-lg flex flex-col items-center ">
-        <div className="max-w-6xl grid grid-cols-2 gap-4">
+        <div className="max-w-6xl flex flex-col-reverse md:grid grid-cols-2 gap-4">
           <div className="font-bricolage">
             <h3 className="text-xl font-bold mb-4 ">
               Modalités d’adhésion – Spa & Prestige Collection
@@ -105,11 +105,11 @@ export default function CollectionPrestigePage() {
               standards élevés, assurant ainsi une expérience client d’exception
               et une qualité cohérente au sein du réseau.
             </p>
-            <div className="flex flex-col gap-4 w-full justify-center items-center">
-              <button className="bg-[#A88A4D] w-max text-white px-12 rounded-full py-2 rounded hover:bg-[#8c723e] transition">
+            <div className="flex flex-col gap-12 w-full justify-center items-center">
+              <button className="bg-[#B6B499] w-max text-white px-6 rounded-full py-2 text-sm hover:bg-black uppercase tracking-wider transition">
                 Devenir partenaire
               </button>
-              <button className="bg-gray-500 w-max text-white px-12 rounded-full py-2 rounded hover:bg-gray-600 transition">
+              <button className="bg-[#B6B499] w-max text-white px-6 rounded-full py-2 text-sm hover:bg-black uppercase tracking-wider transition">
                 Nous contacter
               </button>
             </div>

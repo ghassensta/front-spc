@@ -52,7 +52,7 @@ export default function Tabs({ data = [] }) {
   return (
     <div className="w-full max-w-7xl mx-auto mt-10">
       {/* Tab Buttons */}
-      <div className="relative flex flex-wrap justify-between items-center space-x-1 max-w-[75%] mx-auto">
+      <div className="relative flex flex-wrap justify-center gap-10 items-center space-x-1 max-w-[75%] mx-auto">
         {tabs.filter((tab) => tab.visible).map((tab, index) => (
           <React.Fragment key={tab.label}>
             <TabButton
@@ -75,7 +75,7 @@ export default function Tabs({ data = [] }) {
           animate={{ opacity: 1, x: 0 }}
           exit={{ opacity: 0, x: -30 }}
           transition={{ duration: 0.3 }}
-          className="p-6 mt-4"
+          className="mt-4"
         >
           <TabPanel content={active.content} />
         </motion.div>

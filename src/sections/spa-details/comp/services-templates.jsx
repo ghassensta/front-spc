@@ -44,7 +44,7 @@ export default function ServicesTemplates({ data = {} }) {
         </div>
 
         {/* Produits */}
-        <div className="bg-[#F6F5E9] p-6  grid-cols-1 md:grid-cols-3 gap-6 mt-6">
+        <div className="bg-[#F6F5E9] px-6 grid-cols-1 md:grid-cols-3 gap-6 mt-6">
           {produits.length > 0 ? (
             produits.map((prod) => (
               <CardItem

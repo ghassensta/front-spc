@@ -19,7 +19,7 @@ export default function HomeView() {
   const { actualites } = useGetLastNews(3);
   const { marques, prochainement, carte } = useLayout();
 
-  console.log(marques)
+  console.log(marques);
 
   return (
     <>
@@ -43,6 +43,9 @@ export default function HomeView() {
               description={etablissement.description_avant}
               image={etablissement.image_avant}
               location={etablissement.adresse}
+              remise_offres={etablissement.remise_offres}
+              prix_offres={etablissement.prix_offres}
+              nombre_offres={etablissement.nombre_offres}
             />
           ))}
         </div>
@@ -75,7 +78,7 @@ export default function HomeView() {
 
             {/* Description (si carte existe) */}
             {carte && carte.description && (
-              <p className="text-secondary font-tahoma text-base font-medium lg:w-1/2 uppercase mb-4">
+              <p className="text-black font-tahoma text-base font-medium lg:w-1/2 uppercase mb-4">
                 {carte.description}
               </p>
             )}
@@ -220,30 +223,32 @@ export default function HomeView() {
                   1024: { slidesPerView: 4 },
                 }}
               >
-                {Object.values(marques?.extra_data?.logos || {}).map((marque, i) => (
-                  <SwiperSlide
-                    key={i}
-                    className="flex justify-center w-full h-48"
-                  >
-                    <a
-                      href={marque.link || "#"}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="flex items-center justify-center w-full h-full"
+                {Object.values(marques?.extra_data?.logos || {}).map(
+                  (marque, i) => (
+                    <SwiperSlide
+                      key={i}
+                      className="flex justify-center w-full h-48"
                     >
-                      <img
-                        lazyload="lazy"
-                        className="mx-auto max-h-full object-contain"
-                        src={
-                          marque.image
-                            ? `${CONFIG.serverUrl}/storage/${marque.image}`
-                            : "/assets/img/placeholder.png"
-                        }
-                        alt={`Logo partenaire ${i + 1}`}
-                      />
-                    </a>
-                  </SwiperSlide>
-                ))}
+                      <a
+                        href={marque.link || "#"}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="flex items-center justify-center w-full h-full"
+                      >
+                        <img
+                          lazyload="lazy"
+                          className="mx-auto max-h-full object-contain"
+                          src={
+                            marque.image
+                              ? `${CONFIG.serverUrl}/storage/${marque.image}`
+                              : "/assets/img/placeholder.png"
+                          }
+                          alt={`Logo partenaire ${i + 1}`}
+                        />
+                      </a>
+                    </SwiperSlide>
+                  )
+                )}
               </Swiper>
             ) : (
               <p className="text-center text-gray-400">

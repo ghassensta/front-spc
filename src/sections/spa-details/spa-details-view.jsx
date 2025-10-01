@@ -102,7 +102,7 @@ export default function SpaDetailsView({
   }
   //"url(https://spa-prestige-collection.com/wp-content/uploads/2025/07/1.png)"
   return (
-    <div className="mx-auto px-4">
+    <div className="mx-auto xl:px-4 py-12">
       <div className="flex flex-col md:flex-row gap-12 items-center">
         <div className="w-full md:w-3/5">
           <ImageCarousel images={spaData?.gallerie} />
@@ -116,7 +116,7 @@ export default function SpaDetailsView({
         </div>
       </div>
       <Services data={types} />
-      <div className="space-y-4 max-w-6xl mx-auto font-roboto">
+      <div className="space-y-4 px-1 mt-4 max-w-6xl mx-auto font-roboto" id="avis">
         <div className="flex gap-4 border-b border-gray-200">
           <span className="font-semibold uppercase">Les avis</span>
         </div>
@@ -207,29 +207,24 @@ export default function SpaDetailsView({
       <CarteCadeau />
       <div
         style={{
-          backgroundImage: `url('${CONFIG.serverUrl}/storage/${spaData.image_avant}')`,
+          backgroundImage: `url('${CONFIG.serverUrl}/storage/${spaData?.image_conseil}')`,
           backgroundRepeat: "no-repeat",
           backgroundSize: "cover"
         }}
-        className="bg-primary w-screen relative left-[calc(-50vw+50%)] mb-8 min-h-32 overflow-hidden bg-center"
+        className="bg-white w-screen relative left-[calc(-50vw+50%)] mb-8 py-24 overflow-hidden bg-center"
       >
-        <div className="flex flex-col items-center p-12 text-center bg-slate-300/80 w-[60%] my-36 mx-auto">
+        <div className="flex flex-col items-center p-5 pb-4 pt-10 text-center bg-white/80 mx-[4%] md:mx-[20%]">
           <img
             loading="lazy"
             src={logoSpc}
             alt="Logo Spa & Prestige Collection"
             className="w-36 mb-4"
           />
-          <h3 className="text-4xl font-bold mb-4">
+          <h3 className="text-3xl font-bold mb-4">
             – Le conseil Spa & Prestige Collection –
           </h3>
           <p className="text-lg font-normal font-tahoma">
-            {spaData?.nom || "Cet établissement"} incarne à merveille
-            l’équilibre entre raffinement, nature et quiétude. Nous vous
-            recommandons d’y vivre une parenthèse de détente à deux, en
-            conjuguant un soin bien-être personnalisé avec une expérience
-            unique, pour savourer pleinement l’essence du bien-être dans un
-            cadre inspirant.
+           {spaData?.text_conseil}
           </p>
         </div>
       </div>

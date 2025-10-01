@@ -5,7 +5,7 @@ import { motion } from "framer-motion";
 import { FiMapPin } from "react-icons/fi";
 import { CONFIG } from "src/config-global";
 
-export default function SpaCard({ to, image, title, description, location }) {
+export default function SpaCard({ to, image, title, description, location, remise_offres, prix_offres, nombre_offres }) {
   const renderLocation = () => {
     if (!location) return null;
     return (
@@ -19,13 +19,24 @@ export default function SpaCard({ to, image, title, description, location }) {
   const renderImage = () => {
     if (!image) return null;
     return (
-      <img lazyload="lazy"
-        src={CONFIG.serverUrl+'/storage/'+image}
-        alt={title}
-        className="w-full h-72 rounded-3xl object-cover overflow-hidden"
-      />
+      <div className="relative">
+        <img lazyload="lazy"
+          src={CONFIG.serverUrl+'/storage/'+image}
+          alt={title}
+          className="w-full h-72 rounded-3xl object-cover overflow-hidden"
+        />
+        {renderRemisePer()}
+      </div>
     );
   };
+
+  const renderRemisePer = () => {
+    if (!remise_offres) return null;
+
+    return (
+      <span className="bg-[#B6B499] w-max text-black font-bold font-roboto px-2 py-1 absolute -bottom-1 left-1/2 -translate-x-1/2">Jusqu'à {remise_offres}% de remise</span>
+    )
+  }
 
   const renderTitle = () => {
     if (!title) return null;
@@ -37,11 +48,19 @@ export default function SpaCard({ to, image, title, description, location }) {
   const renderDescription = () => {
     if (!description) return null;
     return (
-      <p className="text-gray-600 font-tahoma text-sm mt-2 text-center">
+      <p className="text-black font-tahoma text-base mt-2 text-center">
         {description}
       </p>
     );
   };
+
+  const renderOffres = () => {
+    if (!prix_offres || !nombre_offres ) return null;
+
+    return(
+      <p className="font-tahoma text-center mt-2">{nombre_offres} offres à partir de <strong>{parseFloat(prix_offres)} €</strong></p>
+    )
+  }
 
   return (
     <Link to={to}>
@@ -56,9 +75,12 @@ export default function SpaCard({ to, image, title, description, location }) {
 
         {renderImage()}
 
+        
+
         {renderTitle()}
 
         {renderDescription()}
+        {renderOffres()}
 
         <div className="mt-2 w-full flex justify-center items-center">
             <button className="inline-flex mx-auto font-tahoma rounded-full items-center gap-2 uppercase font-normal tracking-widest transition-all duration-300 bg-[#B6B499] hover:bg-black text-white px-6 py-3 text-sm">Offrir une expérience</button>

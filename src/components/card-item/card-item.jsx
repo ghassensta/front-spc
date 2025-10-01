@@ -61,9 +61,9 @@ export default function CardItem({
   console.log(date_fin)
 
   return (
-    <motion.div className="flex flex-col md:flex-row gap-4 py-6 border-b border-gray-400 ">
+    <motion.div className="flex flex-col md:flex-row gap-4 py-7 border-b border-gray-400 ">
       {/* Image */}
-      <div className="flex-shrink-0 w-full md:w-1/3">
+      <div className="flex-shrink-0 w-full md:w-[30%]">
         <img lazyload="lazy"
           src={
             image
@@ -71,22 +71,18 @@ export default function CardItem({
               : "/images/default-product.jpg"
           }
           alt={nom}
-          className="w-full h-[250px] object-cover rounded"
+          className="w-full h-[190px] object-cover"
         />
       </div>
-
-      {/* Content */}
-      <div className="flex flex-col md:flex-row md:justify-between w-full gap-6">
-        <div className="flex flex-col md:flex-row justify-between flex-1 gap-2 md:gap-8">
-          <div className="min-w-[60%]">
-            <h3 className="text-2xl text-left font-normal text-gray-900">
+      <div className="md:w-[40%] ">
+        <h3 className="text-2xl text-left font-normal text-gray-900">
               {nom}
             </h3>
             <p className="text-left font-normal font-tahoma text-black mt-1">
               {showFullDescription
                 ? description
                 : description?.length > 150
-                ? description.slice(0, 200) + "..."
+                ? description.slice(0, 175) + "..."
                 : description}
               {description && description.length > 150 && (
                 <span
@@ -98,21 +94,21 @@ export default function CardItem({
               )}
             </p>
             <p className="text-left font-roboto text-base text-[#333]">{access_spa}</p>
-          </div>
-          <div className="flex flex-row items-center h-full justify-center font-roboto gap-2">
-            {prix && !prix_au_lieu_de &&
+      </div>
+      <div className="md:w-[10%] flex gap-2 md:gap-0 items-center justify-center md:flex-col font-tahoma">
+        {prix && !prix_au_lieu_de &&
               parseFloat(prix) !== 0 &&
               parseFloat(prix_barre) !== 0 &&
               parseFloat(prix_au_lieu_de) !== 0 && (
-                <span className="text-lg font-normal text-gray-900">
-                  {parseFloat(prix).toFixed(2)}€
+                <span className="text-base font-normal text-gray-900">
+                  {parseFloat(prix).toFixed(2)} €
                 </span>
               )}
             {prix_barre &&
               parseFloat(prix_barre) !== 0 &&
               parseFloat(prix_barre) !== parseFloat(prix) && (
-                <span className="text-gray-500 line-through text-sm w-full">
-                  {parseFloat(prix_barre).toFixed(2)}€
+                <span className="text-gray-500 line-through text-base">
+                  {parseFloat(prix_barre).toFixed(2)} €
                 </span>
               )}
 
@@ -121,19 +117,19 @@ export default function CardItem({
               parseFloat(prix_au_lieu_de) !== parseFloat(prix) && (
                 <span className="text-center text-base text-gray-900">
                   <div className="font-bold">
-                    {parseFloat(prix).toFixed(2)}€
+                    {parseFloat(prix).toFixed(2)} €
                   </div>
                   <div className="text-sm">Au lieu de </div>
-                  <div className="text-sm">{parseFloat(prix_au_lieu_de).toFixed(2)}€</div>
+                  <div className="text-sm">{parseFloat(prix_au_lieu_de).toFixed(2)} €</div>
                 </span>
               )}
-          </div>
-          <div className="flex min-w-[100px] flex-col h-full justify-center items-center gap-4 md:gap-2">
-            {exclusivite_spc === 1 && (
+      </div>
+      <div className="md:w-[20%] flex  flex-col items-center justify-center">
+        {exclusivite_spc === 1 && (
               <img lazyload="lazy"
                 src={exclusive}
                 alt="Exclusivité"
-                className="w-24 h-auto my-2"
+                className="w-auto h-auto my-2"
               />
             )}
 
@@ -151,14 +147,12 @@ export default function CardItem({
               <>
                 <div />
                 <Link to={paths.product(slug)} className="w-full">
-                  <button className="w-full px-4 py-3 bg-black leading-4 text-white uppercase font-normal text-xs tracking-[3px] hover:bg-gray-800 transition font-tahoma flex items-center justify-center gap-2">
+                  <button className="w-auto mx-auto mt-4 px-4 py-3 bg-black leading-4 text-white uppercase font-normal text-xs tracking-[3px] hover:bg-gray-800 transition font-tahoma flex items-center justify-center gap-2">
                     Offrir
                   </button>
                 </Link>
               </>
             )}
-          </div>
-        </div>
       </div>
     </motion.div>
   );

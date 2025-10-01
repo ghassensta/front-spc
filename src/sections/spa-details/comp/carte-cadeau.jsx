@@ -3,6 +3,7 @@ import React from "react";
 import carteCadeau from "../../../assets/SPC-icone-carte-cadeau.png";
 import ButtonIcon from "../../../components/button-icon/button-icon";
 import { FaHandHoldingHeart } from "react-icons/fa";
+import { paths } from "src/router/paths";
 
 export default function CarteCadeau() {
   return (
@@ -18,11 +19,13 @@ export default function CarteCadeau() {
       <div className="bg-[#f3ececa8] absolute w-full h-full"></div>
       <div className="text-center w-full flex flex-col z-10 relative items-center p-4 lg:p-16">
         <img lazyload="lazy" src={carteCadeau} alt="" className="mb-4" />
-        <p className="text-secondary font-tahoma text-base font-normal lg:w-1/2 uppercase mb-4">
-          JE COMMANDE une CARTE cadeau à utiliser dans un établissement SPA &
-          PRESTIGE COLLECTION et je cumule des avantages
+        <p className="text-black font-tahoma text-base font-normal lg:w-1/2 uppercase mb-4">
+          JE COMMANDE une CARTE cadeau à utiliser dans un établissement <strong>
+            SPA &
+            PRESTIGE COLLECTION
+          </strong> et je cumule des avantages
         </p>
-        <ButtonIcon title="OFFRIR" icon={<FaHandHoldingHeart />} />
+        <ButtonIcon title="OFFRIR" link={paths.cadeau} />
       </div>
     </div>
   );

@@ -2,10 +2,15 @@ import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Star, Minus, Plus } from "lucide-react";
 import { CONFIG } from "src/config-global";
-import defaultAvatar from "../../../assets/default-avatar.png"
+import defaultAvatar from "../../../assets/default-avatar.png";
+import { Link } from "react-router-dom";
 
-export default function ServiceCard({ details, avisTotals = 0, marquesPartenaires }) {
-  console.log(details); 
+export default function ServiceCard({
+  details,
+  avisTotals = 0,
+  marquesPartenaires,
+}) {
+  console.log(details);
   const [isExpanded, setIsExpanded] = useState(false);
   const [openSection, setOpenSection] = useState(null);
 
@@ -26,15 +31,19 @@ export default function ServiceCard({ details, avisTotals = 0, marquesPartenaire
   // Sections config
   const sections = [];
 
-  if (notEmpty(details?.adresse) || notEmpty(details?.email) || notEmpty(details?.telephone)) {
+  if (
+    notEmpty(details?.adresse) ||
+    notEmpty(details?.email) ||
+    notEmpty(details?.telephone)
+  ) {
     sections.push({
       key: "general",
       title: "Informations Générale",
       content: (
         <ul>
-          {notEmpty(details?.adresse) && (
+          {notEmpty(details?.avant_adresse) && (
             <li className="mb-2">
-              <span className="font-bold">Adresse :</span> {details.adresse}
+              <span className="font-bold">Adresse :</span> {details.avant_adresse}
             </li>
           )}
           {notEmpty(details?.email) && (
@@ -65,7 +74,10 @@ export default function ServiceCard({ details, avisTotals = 0, marquesPartenaire
     });
   }
 
-  if (Array.isArray(details?.portrait_equipe) && details.portrait_equipe.length > 0) {
+  if (
+    Array.isArray(details?.portrait_equipe) &&
+    details.portrait_equipe.length > 0
+  ) {
     sections.push({
       key: "partenaire",
       title: "PORTRAIT DE L'EQUIPE",
@@ -76,11 +88,12 @@ export default function ServiceCard({ details, avisTotals = 0, marquesPartenaire
               key={index}
               className="flex justify-start items-center gap-4 p-1"
             >
-              <img lazyload="lazy"
+              <img
+                lazyload="lazy"
                 src={
                   person?.image
                     ? `${CONFIG.serverUrl}/storage/${person.image}`
-                    : defaultAvatar 
+                    : defaultAvatar
                 }
                 alt={person.nom}
                 loading="lazy"
@@ -89,7 +102,9 @@ export default function ServiceCard({ details, avisTotals = 0, marquesPartenaire
               <div>
                 <h6 className="text-2xl font-normal">
                   {person.nom}{" "}
-                  <span className="text-base text-gray-500">{person.poste}</span>
+                  <span className="text-base text-gray-500">
+                    {person.poste}
+                  </span>
                 </h6>
                 {notEmpty(person.description) && (
                   <p className="text-sm text-gray-600">{person.description}</p>
@@ -123,12 +138,18 @@ export default function ServiceCard({ details, avisTotals = 0, marquesPartenaire
     <div className="p-4 bg-white">
       {/* Header */}
       <div className="flex flex-col mb-4">
+        { !!details.remise_offres && <span className="bg-[#B6B499] w-max mb-2 text-black font-bold font-roboto px-2 py-1">Jusqu'à {details.remise_offres}% de remise</span>}
         {notEmpty(details?.logo) && (
-          <img lazyload="lazy" src={
-                  details.logo
-                    ? `${CONFIG.serverUrl}/storage/${details.logo}`
-                    : "/images/default-avatar.png"
-                }  alt="" className="max-w-[50%] mr-2" />
+          <img
+            lazyload="lazy"
+            src={
+              details.logo
+                ? `${CONFIG.serverUrl}/storage/${details.logo}`
+                : "/images/default-avatar.png"
+            }
+            alt=""
+            className="max-w-[50%] mr-2"
+          />
         )}
         <div>
           <h4 className="font-black text-5xl">{details?.nom}</h4>
@@ -147,9 +168,9 @@ export default function ServiceCard({ details, avisTotals = 0, marquesPartenaire
                 stroke="#facc15"
               />
             ))}
-            <span className="text-sm text-gray-600 ml-2 font-roboto">
+            <a href="#avis" className="text-sm text-gray-600 ml-2 font-roboto">
               ({avisTotals} avis)
-            </span>
+            </a>
           </div>
         </div>
       </div>
@@ -180,12 +201,20 @@ export default function ServiceCard({ details, avisTotals = 0, marquesPartenaire
       {sections.length > 0 && (
         <div className="mt-6 flex flex-col gap-0 font-roboto">
           {sections.map((section) => (
-            <motion.div key={section.key} layout className="border overflow-hidden">
+            <motion.div
+              key={section.key}
+              layout
+              className="border overflow-hidden"
+            >
               <button
                 onClick={() => toggleSection(section.key)}
                 className="w-full text-left text-base px-3 py-2 flex gap-3 items-center font-roboto"
               >
-                {openSection === section.key ? <Minus size={18} /> : <Plus size={18} />}
+                {openSection === section.key ? (
+                  <Minus size={18} />
+                ) : (
+                  <Plus size={18} />
+                )}
                 <span className="font-[400] uppercase">{section.title}</span>
               </button>
               <AnimatePresence initial={false}>

@@ -1,6 +1,8 @@
 import React, { useState } from "react";
+import { Link } from "react-router-dom";
 import { toast } from "react-toastify";
 import { sendEntreprise } from "src/actions/forms";
+import { paths } from "src/router/paths";
 
 export default function SolutionsPageView() {
   const [formData, setFormData] = useState({
@@ -89,7 +91,7 @@ export default function SolutionsPageView() {
       >
         <div className="absolute inset-0 bg-black bg-opacity-40" />
         <div className="absolute inset-0 flex items-center justify-center px-4">
-          <h1 className="text-white text-4xl md:text-5xl max-w-5xl mx-auto text-center font-bold leading-snug italic">
+          <h1 className="text-white text-4xl md:text-5xl max-w-5xl mx-auto text-center font-bold leading-snug">
             Spa & Prestige Collection – CSE & Collectivités
           </h1>
         </div>
@@ -175,9 +177,9 @@ export default function SolutionsPageView() {
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             {/* Card 1 */}
-            <div className="bg-[#faf4ec] p-6 rounded shadow-sm text-left">
+            <div className="py-12 bg-[#faf4ec] p-6 rounded shadow-sm text-left hover:bg-[#B6B499] duration-300 ease-out">
               <h3 className="font-bold text-2xl mb-4">Commandes Groupées</h3>
-              <ul className="list-disc list-inside space-y-2 text-sm font-bricolage">
+              <ul className="list-disc list-inside space-y-2 font-bricolage text-[#565656]">
                 <li>
                   <strong>Remises Exclusives :</strong> Bénéficiez d'avantages
                   tarifaires sur vos commandes groupées.
@@ -198,9 +200,9 @@ export default function SolutionsPageView() {
             </div>
 
             {/* Card 2 */}
-            <div className="bg-[#faf4ec] p-6 rounded shadow-sm text-left">
+            <div className="py-12 bg-[#faf4ec] p-6 rounded shadow-sm text-left hover:bg-[#B6B499] duration-300 ease-out">
               <h3 className="font-bold text-2xl mb-4">Vente en Ligne</h3>
-              <ul className="list-disc list-inside space-y-2 text-sm font-bricolage">
+              <ul className="list-disc list-inside space-y-2 font-bricolage text-[#565656]">
                 <li>
                   <strong>Tarifs Préférentiels :</strong> Offrez à vos
                   collaborateurs des réductions grâce à un code unique.
@@ -217,11 +219,11 @@ export default function SolutionsPageView() {
             </div>
 
             {/* Card 3 */}
-            <div className="bg-[#faf4ec] p-6 rounded shadow-sm text-left">
+            <div className="py-12 bg-[#faf4ec] p-6 rounded shadow-sm text-left hover:bg-[#B6B499] duration-300 ease-out">
               <h3 className="font-bold mb-4 text-2xl">
                 Avantages pour vos équipes
               </h3>
-              <ul className="list-disc list-inside space-y-2 text-sm font-bricolage">
+              <ul className="list-disc list-inside space-y-2 font-bricolage text-[#565656]">
                 <li>
                   Stimulez vos collaborateurs avec des cadeaux exceptionnels qui
                   marquent leur quotidien.
@@ -236,9 +238,9 @@ export default function SolutionsPageView() {
 
           {/* Contact Button */}
           <div className="mt-10">
-            <button className="px-6 py-2 bg-[#a4a083] font-bricolage text-white rounded-full uppercase text-sm tracking-wide hover:bg-[#8d8a6d] transition">
+            <Link to={paths.contact} className="inline-flex mx-auto font-tahoma rounded-full items-center gap-2 uppercase font-normal tracking-widest transition-all duration-300 bg-[#B6B499] hover:bg-black text-white px-6 py-3 text-sm">
               Nous contacter
-            </button>
+            </Link>
           </div>
         </div>
       </section>

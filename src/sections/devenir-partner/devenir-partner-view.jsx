@@ -113,7 +113,7 @@ export default function DevenirPartnerView() {
         </h2>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-10">
-          <div className="space-y-4 text-justify font-bricolage text-sm">
+            <div className="space-y-4 text-justify font-bricolage text-sm">
             <p>
               <strong>Boostez votre Chiffre d’Affaires :</strong> Développez vos
               revenus grâce à la vente de cartes cadeaux et à des partenariats

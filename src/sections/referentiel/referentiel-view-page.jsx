@@ -20,9 +20,9 @@ export default function ReferentielViewPage() {
       </div>
 
       {/* Checkmarks & Adhesion Section */}
-      <div className="max-w-6xl mx-auto gap-10 py-12 px-4 items-center">
+      <div className="max-w-6xl mx-auto  gap-10 py-12 px-4 grid grid-cols-1 md:grid-cols-2 mt-5">
         {/* Left Side: Checkmark List */}
-        <div className="space-y-4 grid grid-cols-1 md:grid-cols-2 gap-4 mb-12">
+        <div className="space-y-4 flex flex-col mb-12">
           {[
             {
               description:
@@ -48,7 +48,19 @@ export default function ReferentielViewPage() {
               description:
                 "Les établissements doivent proposer des services novateurs, intégrer de nouvelles technologies, développer des concepts créatifs et adopter des approches originales. Ces initiatives sont essentielles pour répondre aux exigences des clients et renforcer l'attractivité de l'établissement.",
               title: "Innovation et Originalité",
-            },
+            }
+          ].map((text, i) => (
+            <div key={i} className="flex items-start text-3xl space-x-3">
+              <span className="leading-none mt-6">✔</span>
+              <div>
+                <p className="mb-3">{text.title}</p>
+                <p className="text-base font-bricolage">{text.description}</p>
+              </div>
+            </div>
+          ))}
+        </div>
+        <div className="space-y-4 flex flex-col mb-12">
+          {[
             {
               description:
                 "Les soins doivent répondre à des standards d’excellence, avec une attention particulière à la posture, à la fluidité des gestes et à l’ancrage. Chaque prestation doit être unique, adaptée aux besoins de chaque client et refléter l’identité de l’établissement.",
@@ -76,10 +88,10 @@ export default function ReferentielViewPage() {
             },
           ].map((text, i) => (
             <div key={i} className="flex items-start text-3xl space-x-3">
-              <span className="leading-none mt-1">✔</span>
+              <span className="leading-none mt-6">✔</span>
               <div>
-                  <p>{text.title}</p>
-                  <p className="text-base font-bricolage">{text.description}</p>
+                <p className="mb-3">{text.title}</p>
+                <p className="text-base font-bricolage">{text.description}</p>
               </div>
             </div>
           ))}
@@ -87,7 +99,7 @@ export default function ReferentielViewPage() {
         {/* Right Side: Adhesion Info */}
       </div>
       <div className="bg-[#FBF6EC] p-8 w-screen relative left-[calc(-50vw+50%)] rounded-lg shadow-lg flex flex-col items-center ">
-        <div className="max-w-6xl grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div className="max-w-6xl flex flex-col-reverse md:grid grid-cols-2 gap-4">
           <div className="font-bricolage">
             <h3 className="text-xl font-bold mb-4 ">
               Modalités d’adhésion – Spa & Prestige Collection
@@ -100,16 +112,17 @@ export default function ReferentielViewPage() {
               standards élevés, assurant ainsi une expérience client d’exception
               et une qualité cohérente au sein du réseau.
             </p>
-            <div className="flex flex-col gap-4 w-full justify-center items-center">
-              <button className="bg-[#A88A4D] w-max text-white px-12 rounded-full py-2 rounded hover:bg-[#8c723e] transition">
+            <div className="flex flex-col gap-12 w-full justify-center items-center">
+              <button className="bg-[#B6B499] w-max text-white px-6 rounded-full py-2 text-sm hover:bg-black uppercase tracking-wider transition">
                 Devenir partenaire
               </button>
-              <button className="bg-gray-500 w-max text-white px-12 rounded-full py-2 rounded hover:bg-gray-600 transition">
+              <button className="bg-[#B6B499] w-max text-white px-6 rounded-full py-2 text-sm hover:bg-black uppercase tracking-wider transition">
                 Nous contacter
               </button>
             </div>
           </div>
-          <img lazyload="lazy"
+          <img
+            lazyload="lazy"
             src="https://spa-prestige-collection.com/wp-content/uploads/2025/05/SPC-Catalogue-1975x1318-1-1024x683.jpg"
             alt="Spa & Prestige Collection"
             className="w-full mb-6 rounded shadow"
@@ -118,4 +131,4 @@ export default function ReferentielViewPage() {
       </div>
     </>
   );
-}   
+}

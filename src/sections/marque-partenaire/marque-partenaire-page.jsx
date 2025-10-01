@@ -55,6 +55,10 @@ export default function MarquePartenairePage() {
       errors.push("L'URL du site web doit être valide (commencer par http ou https).");
     }
 
+    if(!formData.message.trim()) {
+      errors.push("Votre email doit contient une message")
+    }
+
     return errors;
   };
 
@@ -102,38 +106,35 @@ export default function MarquePartenairePage() {
       </div>
 
       {/* Pourquoi nous rejoindre */}
-      <section className="max-w-7xl mx-auto px-4 py-16">
-        <h2 className="text-4xl font-bold text-center mb-12 font-serif">
+      <section className="max-w-6xl mx-auto px-4 py-16">
+        <h2 className="text-5xl italic text-center mb-12 font-serif">
           Pourquoi nous rejoindre ?
         </h2>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-10">
-          <div className="space-y-4 text-justify font-bricolage text-sm">
-            <p>
-              <strong>Visibilité Ciblée :</strong> Profitez d’une newsletter
-              exclusive...
-            </p>
-            <p>
-              <strong>Accompagnement Digital et Direct :</strong> Participez à
-              des visio-conférences...
-            </p>
-            <p>
-              <strong>Événements Stratégiques :</strong> Profitez de stratégies
-              sur mesure...
-            </p>
-            <p>
+          <ul className="space-y-4 text-justify font-bricolage text-base list-disc">
+            <li>
+              <strong>Visibilité Ciblée :</strong> Profitez d’une newsletter exclusive, de publications personnalisées sur nos réseaux sociaux et d’une mise en avant optimale sur notre site.
+            </li>
+            <li>
+              <strong>Accompagnement Digital et Direct :</strong> Participez à des visio-conférences régulières et aux réunions régionales pour échanger directement avec le réseau et renforcer vos collaborations.
+            </li>
+            <li>
+              <strong>Événements Stratégiques :</strong> Assurez votre présence lors des salons et événements majeurs pour accroître votre visibilité et multiplier les opportunités.
+            </li>
+            <li>
               <strong>Bénéficiez d’un accompagnement personnalisé :</strong>{" "}
-              Optimisez votre stratégie...
-            </p>
-            <p>
+              Assurez votre présence lors des salons et événements majeurs pour accroître votre visibilité et multiplier les opportunités.
+            </li>
+            <li>
               <strong>Soutien Marketing et Développement Commercial :</strong>{" "}
-              Outils marketing exclusifs...
-            </p>
-            <p>
+              Bénéficiez d’outils marketing exclusifs et de partenariats stratégiques pour accélérer votre développement.
+              </li>
+            <li>
               <strong>Collection Prestige :</strong> Faites rayonner votre
               marque...
-            </p>
-          </div>
+            </li>
+          </ul>
 
           <div>
             <img
@@ -148,16 +149,18 @@ export default function MarquePartenairePage() {
 
       {/* Form */}
       <div className="bg-[#FBF6EC] p-8 w-screen relative left-[calc(-50vw+50%)]">
-        <section className="max-w-6xl mx-auto px-4 py-16">
-          <h2 className="text-2xl md:text-3xl font-bold text-center mb-6 font-serif">
+        <section className="max-w-6xl mx-auto px-4">
+          <h2 className="text-xl italic text-center mb-6 font-serif">
             Rejoignez le Cercle des Fournisseurs de Spa & Prestige Collection
           </h2>
-          <p className="font-roboto text-center text-sm mb-8">
-            Rejoignez un réseau sélectif en pleine expansion...
+          <p className="font-roboto text-center mb-8">
+            Rejoignez un réseau sélectif en pleine expansion et donnez à votre marque l’opportunité de se propulser vers de nouveaux horizons.
           </p>
-          <p className="text-center text-lg font-bold">
+          <p className="text-center italic text-2xl font-bold">
             Vous souhaitez devenir une marque partenaire ?
           </p>
+          <p className="font-tahoma text-base mt-4">Veuillez remplir ce formulaire, et nous vous recontacterons dans les plus brefs délais !</p>
+          <p className="font-tahoma text-base mb-4">* Champs obligatoires</p>
 
           <form
             onSubmit={handleSubmit}
@@ -297,8 +300,9 @@ export default function MarquePartenairePage() {
             </label>
 
             <label className="flex flex-col md:col-span-2">
-              Message
+              Message*
               <textarea
+              required
                 name="message"
                 value={formData.message}
                 onChange={handleChange}

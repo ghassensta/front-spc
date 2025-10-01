@@ -83,7 +83,7 @@ export default function RecompensePageView() {
         <p className="font-tahoma text-center mb-12">C’est simple : plus vous commandez, plus vous accumulez des avantages.</p>
         <div className="grid grid-cols-1 md:grid-cols-3 max-w-6xl mx-auto">
           <div className="flex flex-col items-center">
-            <FaShoppingCart className="text-6xl text-center"/>
+            <FaShoppingCart className="text-6xl text-[#C7B892] text-center"/>
             <div className="text-2xl font-bold text-center">Commandez</div>
             <p className="text-center font-bricolage text-base">
               Assurez-vous d’être connecté à votre compte, puis découvrez vos
@@ -91,7 +91,7 @@ export default function RecompensePageView() {
             </p>
           </div>
           <div className="flex flex-col items-center">
-            <FaTrophy className="text-6xl" />
+            <FaTrophy className="text-6xl text-[#C7B892]" />
             <div className="text-2xl font-bold text-center">Gagnez</div>
             <p className="text-center font-bricolage text-base">
               Choisissez votre mode de paiement en ligne et cumulez 1 point pour
@@ -99,7 +99,7 @@ export default function RecompensePageView() {
             </p>
           </div>
           <div className="flex flex-col items-center">
-            <FaExchangeAlt className="text-6xl"/>
+            <FaExchangeAlt className="text-6xl text-[#C7B892]"/>
             <div className="text-2xl font-bold text-center">Échangez</div>
             <p className="text-center font-bricolage text-base">
               Une fois que vous avez accumulé les points nécessaires,

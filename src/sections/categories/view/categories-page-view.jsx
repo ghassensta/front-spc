@@ -20,6 +20,8 @@ export default function CategoriesPageView({
     service: "",
   });
 
+  console.log(cardsByCategory)
+
   const handleChange = (e) => {
     setFilters({ ...filters, [e.target.name]: e.target.value });
   };
@@ -66,7 +68,7 @@ export default function CategoriesPageView({
       </div>
       {/* Filters */}
       <p className="text-center text-4xl font-semibold my-4">Filtrer par</p>
-      <div className="grid grid-cols-3 gap-4 font-roboto mb-16">
+      <div className="grid grid-cols-1 md:grid-cols-3 px-2 gap-4 font-roboto mb-16">
         {/* Types (Établissements) */}
         <div className="border rounded-lg">
           <select
@@ -133,6 +135,9 @@ export default function CategoriesPageView({
                 image={card.image_avant}
                 description={card.description_avant}
                 location={card.adresse}
+                remise_offres={card.remise_offres}
+                prix_offres={card.prix_offres}
+                nombre_offres={card.nombre_offres}
               />
             ))
           ) : (
