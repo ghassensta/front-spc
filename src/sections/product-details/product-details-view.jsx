@@ -13,8 +13,14 @@ import { usePostProductAvis } from "src/actions/products";
 import { useAuthContext } from "src/auth/hooks/use-auth-context";
 import { useToggleWishlist } from "src/actions/wishlists";
 import ProductDetailsSkeleton from "./product-details-skeleton";
+import ImageCarousel from "../spa-details/comp/image-carousel";
 
-export default function ProductDetailsView({ product, avis = [], loading, like=false }) {
+export default function ProductDetailsView({
+  product,
+  avis = [],
+  loading,
+  like = false,
+}) {
   const navigate = useNavigate();
   const checkout = useCheckoutContext();
   const [rating, setRating] = useState(0);
@@ -26,15 +32,15 @@ export default function ProductDetailsView({ product, avis = [], loading, like=f
   const { user } = useAuthContext();
   const [isFav, setIsFav] = useState(false);
 
-  useEffect(()=> {
-    setIsFav(like)
-  }, [like])
+  useEffect(() => {
+    setIsFav(like);
+  }, [like]);
 
   // Ensure galleries_images is an array and filter out empty strings
   const gallery = [
     ...(product?.image ? [product.image] : []),
     ...(Array.isArray(product?.galleries_images)
-      ? product.galleries_images.filter(img => img && img.trim() !== '')
+      ? product.galleries_images.filter((img) => img && img.trim() !== "")
       : []),
   ];
   const [view, setView] = useState(null);
@@ -77,7 +83,7 @@ export default function ProductDetailsView({ product, avis = [], loading, like=f
       id: product.id,
       name: product.nom,
       price: product.prix,
-      image: CONFIG.serverUrl+"/storage/"+product.image,
+      image: CONFIG.serverUrl + "/storage/" + product.image,
       description: product.description,
       destinataires: recipients,
       expediteur: {},
@@ -112,7 +118,7 @@ export default function ProductDetailsView({ product, avis = [], loading, like=f
     const promise = useToggleWishlist(product.id);
 
     toast.promise(promise, {
-      pending: isFav ? 'Retirer de favoris...' : 'Ajouter aux favoris...'
+      pending: isFav ? "Retirer de favoris..." : "Ajouter aux favoris...",
     });
 
     try {
@@ -176,13 +182,13 @@ export default function ProductDetailsView({ product, avis = [], loading, like=f
   const roundedRating = Math.round(stars * 2) / 2;
 
   if (loading) {
-   return <ProductDetailsSkeleton />
+    return <ProductDetailsSkeleton />;
   }
 
   return (
-    <div className="max-w-6xl mx-auto px-4 font-tahoma">
+    <div className="max-w-7xl mx-auto px-4 font-tahoma">
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        <div className="flex flex-col">
+        {/* <div className="flex flex-col">
           {view ? (
             <img
               loading="lazy"
@@ -205,6 +211,9 @@ export default function ProductDetailsView({ product, avis = [], loading, like=f
               />
             ))}
           </div>
+        </div> */}
+        <div className="flex flex-col">
+          <ImageCarousel images={gallery} height={"auto"} />
         </div>
         <div className="bg-white px-8 rounded-2xl">
           {user && (

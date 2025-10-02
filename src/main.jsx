@@ -4,13 +4,16 @@ import "./index.css";
 import "flag-icons/css/flag-icons.min.css";
 import App from "./App.jsx";
 import { BrowserRouter } from "react-router-dom";
+import { TranslationProvider } from "./context/translation-context";
 
 createRoot(document.getElementById("root")).render(
-  <StrictMode>
-    <BrowserRouter>
-      <Suspense>
-        <App />
-      </Suspense>
-    </BrowserRouter>
-  </StrictMode>
+  // <StrictMode>
+    <TranslationProvider>
+      <BrowserRouter>
+        <Suspense>
+          <App />
+        </Suspense>
+      </BrowserRouter>
+    </TranslationProvider>
+  // </StrictMode>
 );

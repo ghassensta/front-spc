@@ -1,5 +1,6 @@
 import React from "react";  
 import { Link } from "react-router-dom";  
+import { TranslatedText } from "../translated-text/translated-text";
 
 export default function ButtonIcon({  
   icon,  
@@ -31,7 +32,7 @@ export default function ButtonIcon({
       className={`inline-flex font-tahoma rounded-full items-center gap-2 uppercase font-normal tracking-widest transition-all duration-300 ${sizeStyles[size] || sizeStyles.md} ${variantStyles[variant] || variantStyles.filled} ${sx}`}  
     >  
       {icon && <span>{icon}</span>}  
-      {title}  
+      <TranslatedText text={title}  /> 
     </Link>  
   );  
 }  

@@ -10,55 +10,29 @@ import { useEffect } from "react";
 function App() {
   useScrollToTop();
 
-  // Load Google Translate script
   useEffect(() => {
-    const addGoogleTranslateScript = () => {
-      // Check if script is already loaded
-      if (!document.querySelector('script[src="//translate.google.com/translate_a/element.js"]')) {
-        const script = document.createElement("script");
-        script.src = "//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit";
-        script.async = true;
-        document.body.appendChild(script);
+    // Only add once
+    if (document.getElementById("google-translate-script")) return;
 
-        // Initialize Google Translate
-        window.googleTranslateElementInit = () => {
-          new window.google.translate.TranslateElement(
-            {
-              pageLanguage: "en", // Default language
-              includedLanguages: "en,fr,de,it,es", // Supported languages
-              layout: window.google.translate.TranslateElement.InlineLayout.SIMPLE,
-              autoDisplay: false,
-            },
-            "google_translate_element"
-          );
-        };
-      }
+    // Define the global init function ONCE
+    window.googleTranslateElementInit = () => {
+      new window.google.translate.TranslateElement(
+        {
+          pageLanguage: "fr",
+          includedLanguages: "fr,it,es,de,en",
+          autoDisplay: false,
+        },
+        "google_translate_element"
+      );
     };
 
-    // Load script and ensure initialization
-    addGoogleTranslateScript();
-
-    // Fallback to ensure script loads
-    const checkScriptLoaded = setInterval(() => {
-      if (window.google && window.google.translate) {
-        window.googleTranslateElementInit();
-        clearInterval(checkScriptLoaded);
-      }
-    }, 500);
-
-    // Cleanup script and interval on component unmount
-    return () => {
-      clearInterval(checkScriptLoaded);
-      const scripts = document.getElementsByTagName("script");
-      for (let i = scripts.length - 1; i >= 0; i--) {
-        if (scripts[i].src.includes("translate.google.com")) {
-          scripts[i].remove();
-        }
-      }
-      if (window.googleTranslateElementInit) {
-        delete window.googleTranslateElementInit;
-      }
-    };
+    // Load Google Translate script
+    const script = document.createElement("script");
+    script.id = "google-translate-script";
+    script.src =
+      "https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit";
+    script.defer = true;
+    document.body.appendChild(script);
   }, []);
 
   return (

@@ -13,6 +13,7 @@ import { CONFIG } from "src/config-global";
 import SpaCard from "src/components/spa-card/spa-card";
 import { Link } from "react-router-dom";
 import { paths } from "src/router/paths";
+import { TranslatedText } from "src/components/translated-text/translated-text";
 
 export default function HomeView() {
   const { etablissements } = useGetEtablissements();
@@ -28,10 +29,12 @@ export default function HomeView() {
       {/* ETABLISSEMENT SECTION  */}
       <div className="max-w-6xl mx-auto">
         <h2 className="text-4xl font-bold text-center">
-          Des Moments Sélectionnés pour Vous.{" "}
+          <TranslatedText text="Des Moments Sélectionnés pour Vous." />{" "}
           <div className="text-[#B6B499] text-2xl">
-            Une collection choisie avec soin, pour celles et ceux en quête
-            d’exceptions.
+            <TranslatedText
+              text="Une collection choisie avec soin, pour celles et ceux en quête
+            d’exceptions."
+            />
           </div>
         </h2>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-16">
@@ -95,11 +98,167 @@ export default function HomeView() {
         </div>
       </div>
 
+      <div
+        className="relative w-screen left-[calc(-50vw+50%)]"
+        style={{ backgroundColor: "#FFF" }}
+      >
+        <div className="max-w-6xl mx-auto py-4">
+          <h2 className="text-4xl font-bold text-center">
+            Moments de détente / Eclat & Soin de soi
+            <div className="text-[#B6B499] mt-2">
+              Découvrez nos offres séjour pour une détente absolue.
+            </div>
+          </h2>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-16">
+            <Card
+              to={paths.product(
+                "rituel-corps-relaxant-avec-massage-gommage-et-sauna-infrarouge-solo"
+              )}
+              title="Rituel Corps Relaxant avec Massage, Gommage et Sauna Infrarouge – Solo"
+              image={`${CONFIG.serverUrl}/storage/uploads/products/vsh20tkZbTBA0YuocmFb2TgIEmFaCamZibo0cmSY.jpg`}
+              headTitle= "Maison Blanche"
+              buttonTitle= "Offrir cette expérience"
+              location="11320 Montferrand France"
+              bottomText="Jusqu'à 20% de remise"
+              offreValue={320}
+            />
+            <Card
+              to={paths.product("sejour-jai-fais-un-reve")}
+              title="Séjour “J’ai Fais Un Rêve”"
+              image={`${CONFIG.serverUrl}/storage/products/thumbnails/8XpFhMpcDYnO8ylgwSCGFrE4VX7jzfxS7lJcsOws.jpg`}
+            />
+            <Card
+              to={paths.product(
+                "soin-hydrafacial-x-myblend-soin-signature-solo"
+              )}
+              title="Soin Hydrafacial x MyBlend – Soin Signature – Solo"
+              image={`${CONFIG.serverUrl}/storage/products/thumbnails/vA3qP0AqNpUqf2kwexPYT1cwjgQCsa7J6Kbsjrkx.jpg`}
+            />
+          </div>
+          <div className="text-center">
+            <ButtonIcon link={paths.spa.list} title="DÉCOUVRIR" />
+          </div>
+        </div>
+      </div>
+
+      <div
+        className="relative w-screen left-[calc(-50vw+50%)]"
+        style={{ backgroundColor: "beige" }}
+      >
+        <div className="max-w-6xl mx-auto py-4">
+          <h2 className="text-4xl font-bold text-center">
+            Escapades Bien-Être (Offres Séjour)
+            <div className="text-[#B6B499] mt-2">
+              Savourez des moments gourmands et relaxants.
+            </div>
+          </h2>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-16">
+            <Card
+              to={paths.product(
+                "rituel-corps-relaxant-avec-massage-gommage-et-sauna-infrarouge-solo"
+              )}
+              title="Rituel Corps Relaxant avec Massage, Gommage et Sauna Infrarouge – Solo"
+              image={`${CONFIG.serverUrl}/storage/uploads/products/vsh20tkZbTBA0YuocmFb2TgIEmFaCamZibo0cmSY.jpg`}
+            />
+            <Card
+              to={paths.product("sejour-jai-fais-un-reve")}
+              title="Séjour “J’ai Fais Un Rêve”"
+              image={`${CONFIG.serverUrl}/storage/products/thumbnails/8XpFhMpcDYnO8ylgwSCGFrE4VX7jzfxS7lJcsOws.jpg`}
+            />
+            <Card
+              to={paths.product(
+                "soin-hydrafacial-x-myblend-soin-signature-solo"
+              )}
+              title="Soin Hydrafacial x MyBlend – Soin Signature – Solo"
+              image={`${CONFIG.serverUrl}/storage/products/thumbnails/vA3qP0AqNpUqf2kwexPYT1cwjgQCsa7J6Kbsjrkx.jpg`}
+            />
+          </div>
+          <div className="text-center">
+            <ButtonIcon link={paths.spa.list} title="Découvrir" />
+          </div>
+        </div>
+      </div>
+
+      <div
+        className="relative w-screen left-[calc(-50vw+50%)]"
+        style={{ backgroundColor: "white" }}
+      >
+        <div className="max-w-6xl mx-auto py-4">
+          <h2 className="text-4xl font-bold text-center">
+            Plaisirs & Saveurs
+            <div className="text-[#B6B499] mt-2">
+              Boostez votre énergie avec nos activités dynamiques.
+            </div>
+          </h2>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-16">
+            <Card
+              to={paths.product(
+                "rituel-corps-relaxant-avec-massage-gommage-et-sauna-infrarouge-solo"
+              )}
+              title="Rituel Corps Relaxant avec Massage, Gommage et Sauna Infrarouge – Solo"
+              image={`${CONFIG.serverUrl}/storage/uploads/products/vsh20tkZbTBA0YuocmFb2TgIEmFaCamZibo0cmSY.jpg`}
+            />
+            <Card
+              to={paths.product("sejour-jai-fais-un-reve")}
+              title="Séjour “J’ai Fais Un Rêve”"
+              image={`${CONFIG.serverUrl}/storage/products/thumbnails/8XpFhMpcDYnO8ylgwSCGFrE4VX7jzfxS7lJcsOws.jpg`}
+            />
+            <Card
+              to={paths.product(
+                "soin-hydrafacial-x-myblend-soin-signature-solo"
+              )}
+              title="Soin Hydrafacial x MyBlend – Soin Signature – Solo"
+              image={`${CONFIG.serverUrl}/storage/products/thumbnails/vA3qP0AqNpUqf2kwexPYT1cwjgQCsa7J6Kbsjrkx.jpg`}
+            />
+          </div>
+          <div className="text-center">
+            <ButtonIcon link={paths.spa.list} title="Découvrir" />
+          </div>
+        </div>
+      </div>
+      <div
+        className="relative w-screen left-[calc(-50vw+50%)]"
+        style={{ backgroundColor: "beige" }}
+      >
+        <div className="max-w-6xl mx-auto py-4">
+          <h2 className="text-4xl font-bold text-center">
+            Vitalité & Mouvement
+            <div className="text-[#B6B499] mt-2">
+              Découvrez nos offres à venir.
+            </div>
+          </h2>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-16">
+            <Card
+              to={paths.product(
+                "rituel-corps-relaxant-avec-massage-gommage-et-sauna-infrarouge-solo"
+              )}
+              title="Rituel Corps Relaxant avec Massage, Gommage et Sauna Infrarouge – Solo"
+              image={`${CONFIG.serverUrl}/storage/uploads/products/vsh20tkZbTBA0YuocmFb2TgIEmFaCamZibo0cmSY.jpg`}
+            />
+            <Card
+              to={paths.product("sejour-jai-fais-un-reve")}
+              title="Séjour “J’ai Fais Un Rêve”"
+              image={`${CONFIG.serverUrl}/storage/products/thumbnails/8XpFhMpcDYnO8ylgwSCGFrE4VX7jzfxS7lJcsOws.jpg`}
+            />
+            <Card
+              to={paths.product(
+                "soin-hydrafacial-x-myblend-soin-signature-solo"
+              )}
+              title="Soin Hydrafacial x MyBlend – Soin Signature – Solo"
+              image={`${CONFIG.serverUrl}/storage/products/thumbnails/vA3qP0AqNpUqf2kwexPYT1cwjgQCsa7J6Kbsjrkx.jpg`}
+            />
+          </div>
+          <div className="text-center">
+            <ButtonIcon link={paths.spa.list} title="Découvrir" />
+          </div>
+        </div>
+      </div>
+
       {/* PROCHAINEMENT & CARDS SECTION  */}
       <div
         className=" relative w-screen left-[calc(-50vw+50%)]"
         style={{
-          backgroundColor: prochainement?.extra_data?.background || "#F6F5E9",
+          backgroundColor: "white",
         }}
       >
         <div className="max-w-6xl mx-auto py-4">
@@ -129,7 +288,7 @@ export default function HomeView() {
       </div>
 
       {/* L'UNIVERS SECTION  */}
-      <div className="">
+      <div className=" relative w-screen left-[calc(-50vw+50%)] bg-[beige]">
         <div className="max-w-6xl mx-auto py-4">
           <h2 className="text-4xl font-bold text-center">
             L’univers Spa & Prestige Collection.{" "}
@@ -139,17 +298,17 @@ export default function HomeView() {
           </h2>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-6">
             <Card
-              to="/spa/paris"
+              to={paths.who}
               title="Qui sommes-nous ?"
               image="https://spa-prestige-collection.com/wp-content/uploads/2025/03/SPC-Essence-1975x1318-02.jpg"
             />
             <Card
-              to="/spa/paris"
+              to={paths.referentiel}
               title="Référentiel de candidature"
               image="https://spa-prestige-collection.com/wp-content/uploads/2025/03/SPC-Essence-1975x1318-02.jpg"
             />
             <Card
-              to="/spa/paris"
+              to={paths.collection}
               title="Collection Prestige"
               image="https://spa-prestige-collection.com/wp-content/uploads/2025/03/SPC-Essence-1975x1318-02.jpg"
             />
@@ -159,7 +318,7 @@ export default function HomeView() {
 
       {/* ACTUALITES SECTION  */}
       {actualites.length > 0 && (
-        <div className="bg-[#F6F5E9] rounded-lg  left-[calc(-50vw+50%)] relative w-screen">
+        <div className="bg-white rounded-lg  left-[calc(-50vw+50%)] relative w-screen">
           <div className="max-w-6xl mx-auto py-4">
             <h2 className="text-4xl font-bold text-center">
               Actualités
