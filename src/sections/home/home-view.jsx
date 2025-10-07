@@ -117,7 +117,7 @@ export default function HomeView() {
               title="Rituel Corps Relaxant avec Massage, Gommage et Sauna Infrarouge – Solo"
               image={`${CONFIG.serverUrl}/storage/uploads/products/vsh20tkZbTBA0YuocmFb2TgIEmFaCamZibo0cmSY.jpg`}
               headTitle= "Maison Blanche"
-              buttonTitle= "Offrir cette expérience"
+              // buttonTitle= "Offrir cette expérience"
               location="11320 Montferrand France"
               bottomText="Jusqu'à 20% de remise"
               offreValue={320}
@@ -127,7 +127,7 @@ export default function HomeView() {
               title="Séjour “J’ai Fais Un Rêve”"
               image={`${CONFIG.serverUrl}/storage/products/thumbnails/8XpFhMpcDYnO8ylgwSCGFrE4VX7jzfxS7lJcsOws.jpg`}
                headTitle= "Maison Blanche"
-              buttonTitle= "Offrir cette expérience"
+              // buttonTitle= "Offrir cette expérience"
               location="11320 Montferrand France"
               bottomText="Jusqu'à 20% de remise"
               offreValue={320}
@@ -139,7 +139,7 @@ export default function HomeView() {
               title="Soin Hydrafacial x MyBlend – Soin Signature – Solo"
               image={`${CONFIG.serverUrl}/storage/products/thumbnails/vA3qP0AqNpUqf2kwexPYT1cwjgQCsa7J6Kbsjrkx.jpg`}
                headTitle= "Maison Blanche"
-              buttonTitle= "Offrir cette expérience"
+              // buttonTitle= "Offrir cette expérience"
               location="11320 Montferrand France"
               bottomText="Jusqu'à 20% de remise"
               offreValue={320}
