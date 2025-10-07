@@ -4,10 +4,10 @@ import ProductDetailsView from "src/sections/product-details/product-details-vie
 
 export default function Page() {
   const { slug } = useParams();
-  const { product, avis, productLoading, like } = useGetProduct(slug);
+  const { product, avis, productLoading, like, etablissement } = useGetProduct(slug);
   return (
     <>
-    <ProductDetailsView product={product} avis={avis} like={like}/>
+    <ProductDetailsView product={product} avis={avis} like={like} etablissement={etablissement} loading={productLoading}/>
     </>
   );
 }

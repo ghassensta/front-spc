@@ -35,6 +35,7 @@ export function useGetProduct(slug) {
       avis: data?.avis || [],
       like: data?.inWishlist,
       productLoading : isLoading,
+      etablissement: data?.etablissement || {}
     }),
     [data]
   );
