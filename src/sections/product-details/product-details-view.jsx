@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { FaStar } from "react-icons/fa";
 import { useCheckoutContext } from "../checkout/context/use-checkout-context";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { paths } from "../../router/paths";
 import { Star } from "lucide-react";
 import StarRatingInput from "src/components/star-rating-input/star-rating-input";
@@ -14,6 +14,7 @@ import { useAuthContext } from "src/auth/hooks/use-auth-context";
 import { useToggleWishlist } from "src/actions/wishlists";
 import ProductDetailsSkeleton from "./product-details-skeleton";
 import ImageCarousel from "../spa-details/comp/image-carousel";
+import { TranslatedText } from "src/components/translated-text/translated-text";
 
 export default function ProductDetailsView({
   product,
@@ -31,6 +32,16 @@ export default function ProductDetailsView({
   const [recipients, setRecipients] = useState([{ fullName: "", email: "" }]);
   const { user } = useAuthContext();
   const [isFav, setIsFav] = useState(false);
+  const [visibleReviews, setVisibleReviews] = useState(5);
+
+  console.log("hello => ", product);
+
+  useEffect(() => {
+    if (user) {
+      setName(user.name);
+      setEmail(user.email);
+    }
+  }, [user]);
 
   useEffect(() => {
     setIsFav(like);
@@ -169,13 +180,15 @@ export default function ProductDetailsView({
       )
       .then(() => {
         setRating(0);
-        setName("");
-        setEmail("");
         setComment("");
       })
       .catch((error) => {
         console.error("Erreur lors de l'envoi de l'avis:", error);
       });
+  };
+
+  const handleLoadMore = () => {
+    setVisibleReviews((prev) => prev + 5);
   };
 
   const stars = product?.avg_rating || 0;
@@ -186,36 +199,12 @@ export default function ProductDetailsView({
   }
 
   return (
-    <div className="max-w-7xl mx-auto px-4 font-tahoma">
+    <div className="max-w-7xl mx-auto px-4 font-tahoma py-12">
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        {/* <div className="flex flex-col">
-          {view ? (
-            <img
-              loading="lazy"
-              className=""
-              src={`${CONFIG.serverUrl}/storage/${view}`}
-              alt={product?.nom || "Produit"}
-            />
-          ) : (
-            <p className="text-gray-600">Aucune image disponible.</p>
-          )}
-          <div className="grid grid-cols-4">
-            {gallery.map((image, index) => (
-              <img
-                key={index}
-                onClick={() => setView(image)}
-                src={`${CONFIG.serverUrl}/storage/${image}`}
-                className="h-full w-full max-h-16 md:max-h-20 lg:max-h-24 cursor-pointer"
-                style={view === image ? { opacity: 1 } : { opacity: 0.5 }}
-                alt={`Galerie ${index + 1}`}
-              />
-            ))}
-          </div>
-        </div> */}
-        <div className="flex flex-col">
-          <ImageCarousel images={gallery} height={"auto"} />
+        <div className="flex flex-col col-span-2">
+          <ImageCarousel images={gallery} height={"300px"} />
         </div>
-        <div className="bg-white px-8 rounded-2xl">
+        <div className="bg-[#f9f7ed] px-8 py-4 rounded-2xl">
           {user && (
             <div className="mb-2 w-full flex items-end justify-end">
               <motion.button
@@ -241,7 +230,7 @@ export default function ProductDetailsView({
               </motion.button>
             </div>
           )}
-          <div className="flex flex-wrap gap-2 mb-4">
+          {/* <div className="flex flex-wrap gap-2 mb-4">
             {[
               product?.type?.etablissement?.nom +
                 " - Tél. :" +
@@ -257,7 +246,7 @@ export default function ProductDetailsView({
                 {text || "Information non disponible"}
               </div>
             ))}
-          </div>
+          </div> */}
           <h4 className="font-semibold text-[#333] text-4xl mb-4">
             {product ? product.nom : "Chargement..."}
           </h4>
@@ -277,13 +266,29 @@ export default function ProductDetailsView({
               />
             ))}
             <span className="text-sm text-gray-600 ml-2">
-              ({stars.toFixed(1)})
+              ({stars.toFixed(1)} avis){" "}
+              <a href="#avis">
+                <TranslatedText text="Déposer un avis" />
+              </a>
             </span>
           </div>
+
+          {!!product?.prix_barre && (
+            <span className="text-sm text-gray-500 line-through">
+              {product?.prix_barre}
+            </span>
+          )}
 
           <div className="font-normal text-[#958e09] text-lg font-tahoma mb-2">
             {product?.prix ? `${product.prix} €` : "Prix non disponible"}
           </div>
+          {!!product?.prix_au_lieu_de && (
+            <TranslatedText
+              text={`Au lieu de ${product?.prix_au_lieu_de}€`}
+              className="text-sm text-gray-500"
+              as="span"
+            />
+          )}
 
           <div className="leading-base text-base font-light font-tahoma text-[#333]">
             {product?.description || "Aucune description disponible."}
@@ -363,8 +368,10 @@ export default function ProductDetailsView({
         </div>
       </div>
 
-      {/* Tabs avis */}
-      <div className="mt-10 bg-white p-3 font-tahoma rounded-xl shadow-sm">
+      <div
+        id="avis"
+        className="mt-10 bg-[#f9f7ed] p-4 font-tahoma rounded-xl shadow-sm"
+      >
         <div className="flex gap-4 border-b border-gray-200">
           <button
             className={`px-4 py-2 font-semibold ${
@@ -376,9 +383,19 @@ export default function ProductDetailsView({
           >
             Avis
           </button>
+          <button
+            className={`px-4 py-2 font-semibold ${
+              activeTab === "createReview"
+                ? "border-b-2 border-secondary text-secondary"
+                : "text-gray-600"
+            }`}
+            onClick={() => setActiveTab("createReview")}
+          >
+            Créer votre avis
+          </button>
         </div>
 
-        <div className="mt-6 min-h-[150px]">
+        <div className="min-h-[150px] mt-2">
           <AnimatePresence mode="wait">
             {activeTab === "reviews" && (
               <motion.div
@@ -390,21 +407,42 @@ export default function ProductDetailsView({
               >
                 <div className="space-y-4">
                   {avis.length > 0 ? (
-                    avis.map((avis, index) => (
-                      <div key={index} className="bg-gray-100 p-4 rounded-md">
-                        <p className="font-semibold">{avis.name}</p>
-                        <div className="text-yellow-500 flex gap-1">
-                          {[1, 2, 3, 4, 5].map((i) => (
-                            <FaStar
-                              key={i}
-                              fill={i <= avis.ratings ? "#facc15" : "none"}
-                              stroke="#facc15"
-                            />
-                          ))}
+                    <>
+                      {avis.slice(0, visibleReviews).map((avis, index) => (
+                        <div
+                          key={index}
+                          className="bg-white border border-black p-4 rounded-md"
+                        >
+                          <div className="flex items-center gap-4">
+                            <div className="text-yellow-500 flex gap-1">
+                              {[1, 2, 3, 4, 5].map((i) => (
+                                <FaStar
+                                  key={i}
+                                  fill={
+                                    i <= avis.ratings ? "#facc15" : "#f4efe5"
+                                  }
+                                  stroke="#facc15"
+                                />
+                              ))}
+                            </div>
+                            <p className="font-normal">- {avis.name}</p>
+                          </div>
+                          <p className="text-base text-gray-600">
+                            {avis.comment}
+                          </p>
                         </div>
-                        <p className="text-sm text-gray-600">{avis.comment}</p>
-                      </div>
-                    ))
+                      ))}
+                      {avis.length > visibleReviews && (
+                        <div className="flex justify-center mt-4">
+                          <button
+                            onClick={handleLoadMore}
+                            className="px-4 py-2 bg-gray-200 text-black text-sm rounded-md hover:bg-gray-300 transition"
+                          >
+                            Charger plus d'avis
+                          </button>
+                        </div>
+                      )}
+                    </>
                   ) : (
                     <>
                       <p className="text-gray-600">
@@ -420,46 +458,70 @@ export default function ProductDetailsView({
                       </p>
                     </>
                   )}
-
-                  {/* Formulaire ajouter avis */}
-                  <div className="bg-white p-4 rounded-lg border">
-                    <h6 className="font-semibold text-lg mb-2">
-                      Laisser un avis
-                    </h6>
-                    <input
-                      type="text"
-                      className="w-full border border-gray-300 rounded-lg p-2 mb-3"
-                      placeholder="Votre nom*"
-                      value={name}
-                      onChange={(e) => setName(e.target.value)}
-                    />
-                    <input
-                      type="email"
-                      className="w-full border border-gray-300 rounded-lg p-2 mb-3"
-                      placeholder="Votre email*"
-                      value={email}
-                      onChange={(e) => setEmail(e.target.value)}
-                    />
-                    <textarea
-                      rows={4}
-                      className="w-full border border-gray-300 rounded-lg p-2 mb-3"
-                      placeholder="Partagez votre expérience..."
-                      value={comment}
-                      onChange={(e) => setComment(e.target.value)}
-                    />
-                    <StarRatingInput value={rating} onChange={setRating} />
-                    <div className="flex justify-end mt-3">
-                      <button
-                        onClick={handleSubmit}
-                        className="px-4 py-2 bg-black text-white rounded-md hover:bg-gray-800 transition"
-                        type="button"
-                      >
-                        Envoyer l'avis
-                      </button>
-                    </div>
-                  </div>
                 </div>
               </motion.div>
+            )}
+
+            {activeTab === "createReview" && (
+              <>
+                {/* Formulaire ajouter avis */}
+                <div className="bg-white p-4 rounded-lg border border-black">
+                  {user ? (
+                    <>
+                      <h6 className="font-semibold text-lg mb-2">
+                        Laisser un avis
+                      </h6>
+                      <input
+                        type="text"
+                        className="w-full border border-gray-300 rounded-lg p-2 mb-3"
+                        placeholder="Votre nom*"
+                        value={name}
+                        onChange={(e) => setName(e.target.value)}
+                        disabled={!!name}
+                      />
+                      <input
+                        type="email"
+                        className="w-full border border-gray-300 rounded-lg p-2 mb-3"
+                        placeholder="Votre email*"
+                        value={email}
+                        onChange={(e) => setEmail(e.target.value)}
+                        disabled={!!name}
+                      />
+                      <textarea
+                        rows={4}
+                        className="w-full border border-gray-300 rounded-lg p-2 mb-3"
+                        placeholder="Partagez votre expérience..."
+                        value={comment}
+                        onChange={(e) => setComment(e.target.value)}
+                      />
+                      <StarRatingInput value={rating} onChange={setRating} />
+                      <div className="flex justify-end mt-3">
+                        <button
+                          onClick={handleSubmit}
+                          className="w-max px-4 py-3 bg-black leading-4 text-white uppercase font-normal text-xs tracking-[3px] hover:bg-gray-800 transition font-tahoma flex items-center justify-center gap-2"
+                          type="button"
+                        >
+                          Envoyer l'avis
+                        </button>
+                      </div>
+                    </>
+                  ) : (
+                    <>
+                      <div className="h-60 flex flex-col justify-center items-center">
+                        <p className="text-xl mb-2">
+                          Veuillez vous connecter pour mettre un avis
+                        </p>
+                        <Link
+                          to={paths.auth.root}
+                          className="w-max px-4 py-3 bg-black leading-4 text-white uppercase font-normal text-xs tracking-[3px] hover:bg-gray-800 transition font-tahoma flex items-center justify-center gap-2"
+                        >
+                          Connecter Vous
+                        </Link>
+                      </div>
+                    </>
+                  )}
+                </div>
+              </>
             )}
           </AnimatePresence>
         </div>

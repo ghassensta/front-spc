@@ -8,6 +8,8 @@ import ServicesTemplates from "./services-templates";
 export default function Tabs({ data = [] }) {
   const [tabs, setTabs] = useState([]);
   const [active, setActive] = useState(null);
+
+  console.log(data)
   useEffect(() => {
     if (data.length > 0) {
       // Crée les tabs dynamiquement à partir des type_soin

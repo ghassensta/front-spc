@@ -14,7 +14,7 @@ export default function TemplateRestaurant({ data=[] }) {
   return (
     <>
       {/* Bloc principal */}
-      <div className="bg-[#f9f7ed] p-6 max-w-7xl mx-auto flex flex-col md:flex-row gap-6 items-start ">
+      <div className="bg-[#f9f7ed] p-6 max-w-7xl mx-auto flex flex-col md:flex-row gap-6 items-start rounded-xl">
         {/* Carousel Section */}
         {imagesCarousel.length > 0 && (
           <div className="w-full h-full">
@@ -59,7 +59,7 @@ export default function TemplateRestaurant({ data=[] }) {
       </div>
 
       {/* Bloc des cartes en dessous du bloc principal */}
-      <div className="bg-[#f6f4ec] p-6  grid-cols-1 md:grid-cols-3 gap-6 mt-6">
+      <div className="bg-[#f9f7ed] p-6  grid-cols-1 md:grid-cols-3 gap-6 mt-6 rounded-xl">
         {data.type_produit.length > 0 ? (
           data.type_produit.map((prod) => (
             <CardItem

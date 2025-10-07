@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import ImageCarousel from "./comp/image-carousel";
@@ -15,6 +15,8 @@ import { FaStar } from "react-icons/fa";
 import SpaDetailsSkeleton from "./spa-details-skeleton";
 import { Link } from "react-router-dom";
 import { paths } from "src/router/paths";
+import { useAuthContext } from "src/auth/hooks/use-auth-context";
+import { motion, AnimatePresence } from "framer-motion";
 
 const criteria = [
   "Practicien(ne)",
@@ -40,13 +42,20 @@ export default function SpaDetailsView({
     initialRatings[key] = 0;
   });
 
-  console.log(spaData)
-  console.log(`${CONFIG.serverUrl}/storage/${spaData?.image_avant}`)
-
+  const { user } = useAuthContext();
   const [ratings, setRatings] = useState(initialRatings);
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [comment, setComment] = useState("");
+  const [activeTab, setActiveTab] = useState("reviews");
+  const [visibleReviews, setVisibleReviews] = useState(5);
+
+  useEffect(() => {
+    if (user) {
+      setName(user.name);
+      setEmail(user.email);
+    }
+  }, [user]);
 
   const handleRatingChange = (category, value) => {
     setRatings((prev) => ({ ...prev, [category]: value }));
@@ -88,8 +97,6 @@ export default function SpaDetailsView({
       )
       .then(() => {
         setRatings(initialRatings);
-        setName("");
-        setEmail("");
         setComment("");
       })
       .catch((error) => {
@@ -97,10 +104,14 @@ export default function SpaDetailsView({
       });
   };
 
+  const handleLoadMore = () => {
+    setVisibleReviews((prev) => prev + 5);
+  };
+
   if (loading) {
     return <SpaDetailsSkeleton />;
   }
-  //"url(https://spa-prestige-collection.com/wp-content/uploads/2025/07/1.png)"
+
   return (
     <div className="mx-auto xl:px-4 py-12">
       <div className="flex flex-col md:flex-row gap-12 items-center">
@@ -116,100 +127,174 @@ export default function SpaDetailsView({
         </div>
       </div>
       <Services data={types} />
-      <div className="space-y-4 px-1 mt-4 max-w-6xl mx-auto font-roboto" id="avis">
-        <div className="flex gap-4 border-b border-gray-200">
-          <span className="font-semibold uppercase">Les avis</span>
+
+      <div id="avis" className="mt-10 rounded-xl max-w-7xl mx-auto bg-[#f9f7ed] p-4 font-tahoma shadow-sm">
+        <div className="flex gap-4 border-b border-gray-200 ">
+          <button
+            className={`px-4 py-2 font-semibold ${
+              activeTab === "reviews"
+                ? "border-b-2 border-secondary text-secondary"
+                : "text-gray-600"
+            }`}
+            onClick={() => setActiveTab("reviews")}
+          >
+            Avis
+          </button>
+          <button
+            className={`px-4 py-2 font-semibold ${
+              activeTab === "createReview"
+                ? "border-b-2 border-secondary text-secondary"
+                : "text-gray-600"
+            }`}
+            onClick={() => setActiveTab("createReview")}
+          >
+            Créer votre avis
+          </button>
         </div>
-        {avis.length > 0 ? (
-          avis.map((avis, index) => (
-            <div key={index} className="bg-gray-100 p-4 rounded-md">
-              <p className="font-semibold">{avis.name}</p>
-              <div className="text-yellow-500 flex gap-1">
-                {[1, 2, 3, 4, 5].map((i) => (
-                  <FaStar
-                    key={i}
-                    fill={i <= avis.average_rating ? "#facc15" : "none"}
-                    stroke="#facc15"
-                  />
-                ))}
-              </div>
-              <p className="text-sm text-gray-600">{avis.comment}</p>
-            </div>
-          ))
-        ) : (
-          <p className="text-gray-600">Aucun avis pour le moment.</p>
-        )}
-        <div className="bg-white p-4 rounded-lg border mt-8 ">
-          <h6 className="font-semibold text-lg mb-4">Laisser un avis</h6>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-6">
-            <div>
-              <label className="block text-sm font-medium mb-1 ">
-                Nom et prénom
-              </label>
-              <input
-                type="text"
-                className="w-full p-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-black"
-                placeholder="Votre nom et prénom"
-                value={name}
-                onChange={(e) => setName(e.target.value)}
-              />
-            </div>
-            <div>
-              <label className="block text-sm font-medium mb-1 ">Email</label>
-              <input
-                type="email"
-                className="w-full p-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-black"
-                placeholder="Votre email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-              />
-            </div>
-          </div>
+        <div className="min-h-[150px] mt-2">
+          <AnimatePresence mode="wait">
+            {activeTab === "reviews" && (
+              <motion.div
+                key="reviews"
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -10 }}
+                transition={{ duration: 0.3 }}
+              >
+                <div className="space-y-4">
+                  {avis.length > 0 ? (
+                    <>
+                      {avis.slice(0, visibleReviews).map((avis, index) => (
+                        <div
+                          key={index}
+                          className="bg-white border border-black p-4 rounded-md"
+                        >
+                          <div className="flex items-center gap-4">
+                            <div className="text-yellow-500 flex gap-1">
+                              {[1, 2, 3, 4, 5].map((i) => (
+                                <FaStar
+                                  key={i}
+                                  fill={i <= avis.average_rating ? "#facc15" : "#f4efe5"}
+                                  stroke="#facc15"
+                                />
+                              ))}
+                            </div>
+                            <p className="font-normal">- {avis.name}</p>
+                          </div>
+                          <p className="text-base text-gray-600">
+                            {avis.comment}
+                          </p>
+                        </div>
+                      ))}
+                      {avis.length > visibleReviews && (
+                        <div className="flex justify-center mt-4">
+                          <button
+                            onClick={handleLoadMore}
+                            className="w-auto mx-auto mt-4 px-4 py-3 bg-transparent leading-4 text-black border border-black uppercase font-normal text-xs tracking-[3px] hover:bg-black hover:text-white transition font-tahoma flex items-center justify-center gap-2"
+                          >
+                            Charger plus d'avis
+                          </button>
+                        </div>
+                      )}
+                    </>
+                  ) : (
+                    <>
+                      <p className="text-gray-600">
+                        Aucun avis pour le moment.
+                      </p>
+                      <p className="text-gray-600">
+                        Soyez le premier à laisser votre avis sur "
+                        {spaData?.nom || "ce produit"}" !
+                      </p>
+                      <p className="text-gray-600">
+                        Votre adresse e-mail ne sera pas publiée. Les champs
+                        obligatoires sont indiqués avec *
+                      </p>
+                    </>
+                  )}
+                </div>
+              </motion.div>
+            )}
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 mb-6">
-            {criteria.map((criterion) => (
-              <div key={criterion}>
-                <label className="block text-sm font-medium mb-1 ">
-                  {criterion}
-                </label>
-                <StarRatingInput
-                  value={ratings[criterion]}
-                  onChange={(value) => handleRatingChange(criterion, value)}
-                />
-              </div>
-            ))}
-          </div>
-
-          <div className="mb-6">
-            <label className="block text-sm font-medium mb-1 ">
-              Commentaire
-            </label>
-            <textarea
-              className="w-full p-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-black"
-              rows="4"
-              placeholder="Votre commentaire..."
-              value={comment}
-              onChange={(e) => setComment(e.target.value)}
-            />
-          </div>
-
-          <div className="flex justify-end">
-            <button
-              onClick={(e) => handleSubmit(e)}
-              className="w-max px-4 py-3 bg-black leading-4 text-white uppercase font-normal text-xs tracking-[3px] hover:bg-gray-800 transition font-tahoma flex items-center justify-center gap-2"
-            >
-              envoyer l'avis
-            </button>
-          </div>
+            {activeTab === "createReview" && (
+              <>
+                {/* Formulaire ajouter avis */}
+                <div className="bg-white p-4 rounded-lg border border-black">
+                  {user ? (
+                    <>
+                      <h6 className="font-semibold text-lg mb-2">
+                        Laisser un avis
+                      </h6>
+                      <input
+                        type="text"
+                        className="w-full border border-gray-300 rounded-lg p-2 mb-3"
+                        placeholder="Votre nom*"
+                        value={name}
+                        onChange={(e) => setName(e.target.value)}
+                        disabled={!!name}
+                      />
+                      <input
+                        type="email"
+                        className="w-full border border-gray-300 rounded-lg p-2 mb-3"
+                        placeholder="Votre email*"
+                        value={email}
+                        onChange={(e) => setEmail(e.target.value)}
+                        disabled={!!name}
+                      />
+                      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 mb-6">
+                        {criteria.map((criterion) => (
+                          <div key={criterion}>
+                            <label className="block text-sm font-medium mb-1 ">
+                              {criterion}
+                            </label>
+                            <StarRatingInput
+                              value={ratings[criterion]}
+                              onChange={(value) => handleRatingChange(criterion, value)}
+                            />
+                          </div>
+                        ))}
+                      </div>
+                      <textarea
+                        rows={4}
+                        className="w-full border border-gray-300 rounded-lg p-2 mb-3"
+                        placeholder="Partagez votre expérience..."
+                        value={comment}
+                        onChange={(e) => setComment(e.target.value)}
+                      />
+                      <div className="flex justify-end mt-3">
+                        <button
+                          onClick={handleSubmit}
+                          className="w-max px-4 py-3 bg-black leading-4 text-white uppercase font-normal text-xs tracking-[3px] hover:bg-gray-800 transition font-tahoma flex items-center justify-center gap-2"
+                          type="button"
+                        >
+                          Envoyer l'avis
+                        </button>
+                      </div>
+                    </>
+                  ) : (
+                    <>
+                      <div className="h-60 flex flex-col justify-center items-center">
+                        <p className="text-xl mb-2">Veuillez vous connecter pour mettre un avis</p>
+                        <Link to={paths.auth.root} className="w-max px-4 py-3 bg-black leading-4 text-white uppercase font-normal text-xs tracking-[3px] hover:bg-gray-800 transition font-tahoma flex items-center justify-center gap-2">
+                          Connecter Vous
+                        </Link>
+                      </div>
+                    </>
+                  )}
+                </div>
+              </>
+            )}
+          </AnimatePresence>
         </div>
       </div>
+
       <CarteCadeau />
       <div
         style={{
           backgroundImage: `url('${CONFIG.serverUrl}/storage/${spaData?.image_conseil}')`,
           backgroundRepeat: "no-repeat",
-          backgroundSize: "cover"
+          backgroundSize: "cover",
         }}
         className="bg-white w-screen relative left-[calc(-50vw+50%)] mb-8 py-24 overflow-hidden bg-center"
       >
@@ -224,7 +309,7 @@ export default function SpaDetailsView({
             – Le conseil Spa & Prestige Collection –
           </h3>
           <p className="text-lg font-normal font-tahoma">
-           {spaData?.text_conseil}
+            {spaData?.text_conseil}
           </p>
         </div>
       </div>

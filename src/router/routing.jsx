@@ -10,6 +10,7 @@ const Index = lazy(() => import("../pages/home/index"));
 const Details = lazy(() => import("../pages/details/index"));
 const SpaList = lazy(() => import("../pages/spa-list/index"));
 const ViewProduct = lazy(() => import("../pages/product/index"));
+const ViewProduct2 = lazy(() => import("../pages/product2/index"));
 const Chekckout = lazy(() => import("../pages/checkout/index"));
 const ChekckoutPayement = lazy(() => import("../pages/checkout/checkout"));
 const CheckoutDetails = lazy(() => import("../pages/checkout/details"));
@@ -59,6 +60,7 @@ export const routes = [
       { element: <Details />, path: "spa/:id" },
       { element: <SpaList />, path: "spa-list" },
       { element: <ViewProduct />, path: "produit/:slug" },
+      { element: <ViewProduct2 />, path: "produit2/:slug" },
       { element: <Chekckout />, path: "checkout" },
       { element: <ChekckoutPayement />, path: "payment" },
       { element: <CheckoutDetails />, path: "checkout/details" },
