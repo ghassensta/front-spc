@@ -13,10 +13,10 @@ export default function ServicesTemplates({ data = {} }) {
 
 
   return (
-    <div className="max-w-6xl mx-auto flex flex-col md:flex-row gap-6 items-start ">
+    <div className="max-w-7xl mx-auto flex flex-col md:flex-row gap-6 items-start ">
       {/* Content Section */}
       <div className="w-full text-center">
-        <div className="p-2 bg-[#F6F5E9]">
+        <div className="p-2 bg-[#F6F5E9] rounded-xl">
           <h3 className="text-2xl md:text-3xl font-bold text-gray-900 mb-2">
             Équipements
           </h3>
@@ -39,18 +39,19 @@ export default function ServicesTemplates({ data = {} }) {
               ))}
             </div>
           ) : (
-            <p className="text-gray-500">Aucun équipement trouvé.</p>
+            <p className="text-gray-500 font-tahoma py-12">Aucun équipement trouvé.</p>
           )}
         </div>
 
         {/* Produits */}
-        <div className="bg-[#F6F5E9] px-6 grid-cols-1 md:grid-cols-3 gap-6 mt-6">
+        <div className="bg-[#F6F5E9] px-6 grid-cols-1 md:grid-cols-3 gap-6 mt-6 rounded-xl">
           {produits.length > 0 ? (
             produits.map((prod) => (
               <CardItem
                 key={prod.id}
                 id={prod.id}
                 image={prod.image}
+                gallery={prod.galleries_images}
                 slug={prod.slug}
                 nom={prod.nom}
                 description={prod.description}
@@ -68,7 +69,7 @@ export default function ServicesTemplates({ data = {} }) {
               />
             ))
           ) : (
-            <p className="text-gray-500 col-span-3">
+            <p className="text-gray-500 col-span-3 font-tahoma py-12">
               Aucun produit disponible.
             </p>
           )}
