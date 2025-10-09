@@ -58,7 +58,7 @@ export const routes = [
       // === Anciennes routes dynamiques ===
       { element: <Index />, index: true },
       { element: <Details />, path: "spa/:id" },
-      { element: <SpaList />, path: "spa-list" },
+      { element: <SpaList />, path: "liste-des-spas" },
       { element: <ViewProduct />, path: "produit2/:slug" },
       { element: <ViewProduct2 />, path: "produit/:slug" },
       { element: <Chekckout />, path: "checkout" },

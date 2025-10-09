@@ -33,7 +33,7 @@ export default function Card({
         {/* Image */}
         <div className="relative">
           {location && (
-            <span className="bg-[#020100C9] z-10 text-white font-tahoma uppercase flex items-center justify-start w-max py-3 px-6 gap-2 absolute left-1/2 -translate-x-1/2 -top-1 font-medium text-xs tracking-[2px] max-w-[90%] -mr-6">
+            <span className="bg-[#020100C9] z-10 text-white font-tahoma uppercase flex items-center justify-start w-max py-3 px-6 gap-2 absolute left-1/2 -translate-x-1/2 top-0 -translate-y-1/2 font-medium text-xs tracking-[2px] max-w-[90%] -mr-6">
               <FiMapPin className="text-white" />
               {location}
             </span>

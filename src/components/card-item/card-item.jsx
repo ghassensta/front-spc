@@ -117,7 +117,7 @@ export default function CardItem({
     <motion.div className="flex flex-col md:flex-row gap-4 py-7 border-b border-gray-400">
       {/* Image */}
       <div className="relative w-full md:w-[30%]">
-        <div className=" w-full  h-[190px] relative overflow-hidden">
+        <div className=" w-full  h-[190px] rounded-md relative overflow-hidden">
           {images.map((src, index) => (
             <img
               key={index}

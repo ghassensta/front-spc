@@ -23,7 +23,7 @@ export default function ServicesTemplates({ data = {} }) {
           <p className="text-base font-normal font-tahoma text-gray-800 mt-1">
             {data.description}
           </p>
-          {equipements.length > 0 ? (
+          {equipements.length > 0 && (
             <div className="flex flex-wrap gap-4 mx-auto items-center justify-center mb-4 mt-4">
               {equipements.map((equip) => (
                 <div className="flex items-center gap-1" key={equip.id}>
@@ -38,8 +38,6 @@ export default function ServicesTemplates({ data = {} }) {
                 </div>
               ))}
             </div>
-          ) : (
-            <p className="text-gray-500 font-tahoma py-12">Aucun équipement trouvé.</p>
           )}
         </div>
 

@@ -64,8 +64,8 @@ export default function ProductCarousel({ gallery = [], image = "" }) {
     }
 
     return (
-        <div className="relative w-auto ">
-            <div className=" w-full  h-[300px] relative overflow-hidden">
+        <div className="relative w-auto rounded-md">
+            <div className=" w-full  h-[300px] relative overflow-hidden rounded-md">
                 {images.map((src, index) => (
                     <img
                         key={index}

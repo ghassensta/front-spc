@@ -3,7 +3,7 @@ export const paths = {
   spa: {
     root: "/spa",
     details: (id) => `/spa/${id}`,
-    list: "/spa-list"
+    list: "/liste-des-spas"
   },
   product: (slug) => `/produit/${slug}`,
   checkout: "/checkout",

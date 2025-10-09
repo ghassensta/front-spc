@@ -3,13 +3,14 @@ import { motion, AnimatePresence } from "framer-motion";
 import ImageCarousel from "./image-carousel";
 import CardItem from "../../../components/card-item/card-item";
 
-
-export default function TemplateRestaurant({ data=[] }) {
-  const imagesCarousel = data.type_media.map(
-    (media) => `${media.path}`
-  );
+export default function TemplateRestaurant({ data = [] }) {
+  const imagesCarousel = data.type_media?.map((media) => `${media.path}`) || [];
   const [expanded, setExpanded] = useState(false);
+
   const toggleText = () => setExpanded(!expanded);
+
+  // Check if extra_description exists and is non-empty
+  const hasExtraDescription = data?.extra_description && data.extra_description.trim() !== "";
 
   return (
     <>
@@ -17,8 +18,8 @@ export default function TemplateRestaurant({ data=[] }) {
       <div className="bg-[#f9f7ed] p-6 max-w-7xl mx-auto flex flex-col md:flex-row gap-6 items-start rounded-xl">
         {/* Carousel Section */}
         {imagesCarousel.length > 0 && (
-          <div className="w-full h-full">
-            <ImageCarousel height="280px" images={imagesCarousel} />
+          <div className="w-full h-[400px] md:h-[300px]">
+            <ImageCarousel images={imagesCarousel} />
           </div>
         )}
 
@@ -33,34 +34,39 @@ export default function TemplateRestaurant({ data=[] }) {
           </p>
 
           <AnimatePresence initial={false}>
-            {expanded && data?.extra_description && (
+            {expanded && hasExtraDescription && (
               <motion.div
                 key="expandedText"
                 initial={{ height: 0, opacity: 0 }}
                 animate={{ height: "auto", opacity: 1 }}
                 exit={{ height: 0, opacity: 0 }}
-                transition={{ duration: 0.4 }}
+                transition={{ duration: 0.4, ease: "easeInOut" }}
                 className="overflow-hidden"
               >
                 <p className="text-base font-normal font-tahoma text-gray-800 mt-1">
-                  {data?.extra_description}
+                  {data.extra_description}
                 </p>
               </motion.div>
             )}
           </AnimatePresence>
 
-          <button
-            onClick={toggleText}
-            className="mt-4 text-sm font-tahoma font-normal"
-          >
-            {expanded ? "FERMER" : "LIRE PLUS"}
-          </button>
+          {/* Show button only if extra_description exists */}
+          {hasExtraDescription && (
+            <button
+              onClick={toggleText}
+              className="mt-4 text-sm font-tahoma font-normal text-blue-600 hover:underline"
+              aria-expanded={expanded}
+              aria-controls="expanded-text"
+            >
+              {expanded ? "FERMER" : "LIRE PLUS"}
+            </button>
+          )}
         </div>
       </div>
 
       {/* Bloc des cartes en dessous du bloc principal */}
-      <div className="bg-[#f9f7ed] p-6  grid-cols-1 md:grid-cols-3 gap-6 mt-6 rounded-xl">
-        {data.type_produit.length > 0 ? (
+      <div className="bg-[#f9f7ed] p-6 grid-cols-1 md:grid-cols-3 gap-6 mt-6 rounded-xl">
+        {data.type_produit?.length > 0 && (
           data.type_produit.map((prod) => (
             <CardItem
               key={prod.id}
@@ -82,8 +88,6 @@ export default function TemplateRestaurant({ data=[] }) {
               ordre={prod.ordre}
             />
           ))
-        ) : (
-          <p className="text-gray-500 col-span-3">Aucun produit disponible.</p>
         )}
       </div>
     </>

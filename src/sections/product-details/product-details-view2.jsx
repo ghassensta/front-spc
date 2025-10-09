@@ -220,7 +220,7 @@ export default function ProductDetailsView({
   return (
     <div className="max-w-7xl mx-auto px-4 py-12">
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        <div className="flex flex-col col-span-2">
+        <div className="flex flex-col col-span-2 h-[300px] md:h-[600px]">
           <ImageCarousel images={gallery} height="300px" />
         </div>
 
@@ -279,7 +279,7 @@ export default function ProductDetailsView({
           </div>
 
           {!!product?.prix_barre && (
-            <span className="text-sm text-gray-500 line-through">
+            <span className="text-sm text-gray-500 line-through font-tahoma">
               {product?.prix_barre}
             </span>
           )}
@@ -290,7 +290,7 @@ export default function ProductDetailsView({
           {!!product?.prix_au_lieu_de && (
             <TranslatedText
               text={`Au lieu de ${product?.prix_au_lieu_de}€`}
-              className="text-sm text-gray-500"
+              className="text-sm text-gray-500 font-tahoma"
               as="span"
             />
           )}
