@@ -7,6 +7,7 @@ import { AuthGuard } from "src/auth/guard/auth-guard";
 
 // Pages principales
 const Index = lazy(() => import("../pages/home/index"));
+const Index2 = lazy(() => import("../pages/home/index2"));
 const Details = lazy(() => import("../pages/details/index"));
 const SpaList = lazy(() => import("../pages/spa-list/index"));
 const ViewProduct = lazy(() => import("../pages/product/index"));
@@ -57,6 +58,7 @@ export const routes = [
     children: [
       // === Anciennes routes dynamiques ===
       { element: <Index />, index: true },
+      { element: <Index2 />, path: "home2" },
       { element: <Details />, path: "spa/:id" },
       { element: <SpaList />, path: "liste-des-spas" },
       { element: <ViewProduct />, path: "produit2/:slug" },

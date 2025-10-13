@@ -17,6 +17,7 @@ import { usePathname, useRouter, useSearchParams } from "src/hooks";
 import StarRatingInput from "src/components/star-rating-input/star-rating-input";
 import { usePostProductAvis } from "src/actions/products";
 import ProductDetailsSkeleton from "./product-details-skeleton";
+import { CONFIG } from "src/config-global";
 
 export default function ProductDetailsView({
   product,

@@ -38,7 +38,7 @@ export default function Card({
               {location}
             </span>
           )}
-          {image && (
+          {!!image && (
             <img
               lazyload="lazy"
               src={image}
@@ -47,7 +47,7 @@ export default function Card({
             />
           )}
 
-          {bottomText && (
+          {!!bottomText && (
             <span className="bg-[#B6B499] w-max text-black font-bold font-roboto px-2 py-1 absolute -bottom-1 left-1/2 -translate-x-1/2">
               <TranslatedText text={bottomText} />
             </span>
@@ -56,7 +56,7 @@ export default function Card({
 
         {/* Content */}
         <div className={`p-2 ${type === "news" ? "p-3" : ""} space-y-1`}>
-          {headTitle && <p className="font-tahoma text-center">{headTitle}</p>}
+          {!!headTitle && <p className="font-tahoma text-center">{headTitle}</p>}
           <h5
             className={`font-bold text-center ${
               type === "news" || type === "price"
@@ -67,7 +67,7 @@ export default function Card({
             {title}
           </h5>
 
-          {prestation && (
+          {!!prestation && (
             <span className="text-lg md:text-lg font-bold m-0">
               {prestation}
             </span>

@@ -20,8 +20,6 @@ export default function HomeView() {
   const { actualites } = useGetLastNews(3);
   const { marques, prochainement, carte } = useLayout();
 
-  console.log(marques);
-
   return (
     <>
       <Header />
