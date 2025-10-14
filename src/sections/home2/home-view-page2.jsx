@@ -5,8 +5,10 @@ import ButtonIcon from "src/components/button-icon/button-icon";
 import { paths } from "src/router/paths";
 import { useLayout } from "src/actions/layout";
 import { CONFIG } from "src/config-global";
+import { useGetEtablissements } from "src/actions/etablissements";
 
 export default function HomePageView() {
+  const { etablissements } = useGetEtablissements();
   const sections = [
     {
       bg: "white",
@@ -34,6 +36,16 @@ export default function HomePageView() {
           spaLocation: "Sousse",
           offre: "-10%",
           offreValue: 10,
+        },
+        {
+          slug: "spa-relax",
+          name: "Spa Relax",
+          image:
+            "products/thumbnails/8XpFhMpcDYnO8ylgwSCGFrE4VX7jzfxS7lJcsOws.jpg",
+          spaName: "Oasis Spa",
+          spaLocation: "La Marsa",
+          offre: "-15%",
+          offreValue: 15,
         },
         {
           slug: "spa-relax",
@@ -83,54 +95,28 @@ export default function HomePageView() {
           offre: "New",
           offreValue: 20,
         },
+        {
+          slug: "sauna-premium",
+          name: "Sauna Premium",
+          image:
+            "products/thumbnails/8XpFhMpcDYnO8ylgwSCGFrE4VX7jzfxS7lJcsOws.jpg",
+          spaName: "Hot Spa",
+          spaLocation: "Sfax",
+          offre: "New",
+          offreValue: 20,
+        },
       ],
     },
   ];
+
 
   const { carte } = useLayout();
 
   return (
     <>
       <Header />
-      <Section
-        max={2}
-        header="Des Moments Sélectionnés pour Vous"
-        subheader="Une collection choisie avec soin, pour celles et ceux en quête d’exceptions"
-        link={paths.spa.list}
-        data={[
-          {
-            slug: "bain-marocain",
-            name: "Bain Marocain",
-            image:
-              "products/thumbnails/vA3qP0AqNpUqf2kwexPYT1cwjgQCsa7J6Kbsjrkx.jpg",
-            spaName: "Riad Hammam",
-            spaLocation: "Hammamet",
-            offre: "Nouveau",
-            offreValue: 20,
-          },
-          {
-            slug: "yoga-session",
-            name: "Session Yoga",
-            image:
-              "uploads/products/vsh20tkZbTBA0YuocmFb2TgIEmFaCamZibo0cmSY.jpg",
-            spaName: "Zen Life Center",
-            spaLocation: "Nabeul",
-            offre: "New",
-            offreValue: 20,
-          },
-          {
-            slug: "sauna-premium",
-            name: "Sauna Premium",
-            image:
-              "products/thumbnails/8XpFhMpcDYnO8ylgwSCGFrE4VX7jzfxS7lJcsOws.jpg",
-            spaName: "Hot Spa",
-            spaLocation: "Sfax",
-            offre: "New",
-            offreValue: 20,
-          },
-        ]}
-      />
-      <div
+      
+      {/* <div
         style={{
           backgroundImage: `url("https://spa-prestige-collection.com/wp-content/uploads/2025/01/Piscine2.jpg")`,
         }}
@@ -138,7 +124,6 @@ export default function HomePageView() {
       >
         <div className="w-full flex flex-col z-10 relative items-center p-4 lg:p-16">
           <div className="bg-white/80 text-center flex flex-col items-center py-8 px-6 rounded-xl shadow-lg">
-            {/* Vérifier que sectionCarte existe avant de lire ses propriétés */}
             {carte && carte.image && (
               <img
                 lazyload="lazy"
@@ -148,14 +133,12 @@ export default function HomePageView() {
               />
             )}
 
-            {/* Description (si carte existe) */}
             {carte && carte.description && (
               <p className="text-black font-tahoma text-base font-medium lg:w-1/2 uppercase mb-4">
                 {carte.description}
               </p>
             )}
 
-            {/* Bouton (si carte existe) */}
             {carte && carte.button_url && (
               <ButtonIcon
                 title={carte.button_text || "OFFRIR"}
@@ -165,10 +148,12 @@ export default function HomePageView() {
             )}
           </div>
         </div>
+      </div> */}
+      <div className="px-2">
+        {sections.map((section, index) => (
+          <Section key={index} {...section} />
+        ))}
       </div>
-      {sections.map((section, index) => (
-        <Section key={index} {...section} />
-      ))}
     </>
   );
 }

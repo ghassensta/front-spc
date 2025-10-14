@@ -3,6 +3,7 @@ import ButtonIcon from "src/components/button-icon/button-icon";
 import Card from "src/components/card/card";
 import { CONFIG } from "src/config-global";
 import { paths } from "src/router/paths";
+import SwiperContent from "./swiper-content";
 
 export default function Section({
   bg = "white",
@@ -12,19 +13,6 @@ export default function Section({
   data = [],
   max = 3
 }) {
-  const [currentIndex, setCurrentIndex] = useState(0);
-  const visibleCount = max ;
-
-  // Limit the slide range
-  const maxIndex = Math.max(data.length - visibleCount, 0);
-
-  const nextSlide = () => {
-    setCurrentIndex((prev) => (prev < maxIndex ? prev + 1 : 0));
-  };
-
-  const prevSlide = () => {
-    setCurrentIndex((prev) => (prev > 0 ? prev - 1 : maxIndex));
-  };
 
   return (
     <div
@@ -32,15 +20,19 @@ export default function Section({
         bg === "white" ? "bg-white" : "bg-[beige]"
       }`}
     >
-      <div className="max-w-6xl mx-auto overflow-hidden">
+      <div className="max-w-6xl mx-auto">
         {/* Header */}
         <h2 className="text-4xl font-bold text-center">
           {header}
           {!!subheader && <div className="text-[#B6B499] mt-2">{subheader}</div>}
         </h2>
 
-        {/* Carousel */}
-        <div className="relative mt-8">
+        <div className="mt-8">
+          <SwiperContent slidesPerView={max} data={data}/>
+        </div>
+
+       
+        {/* <div className="relative mt-8">
           <div
             className="flex transition-transform duration-700 ease-in-out"
             style={{
@@ -68,7 +60,6 @@ export default function Section({
             ))}
           </div>
 
-          {/* Arrows */}
           {data.length > visibleCount && (
             <>
               <button
@@ -87,7 +78,6 @@ export default function Section({
           )}
         </div>
 
-        {/* Dots */}
         {data.length > visibleCount && (
           <div className="flex justify-center gap-2 mt-4">
             {Array.from({ length: maxIndex + 1 }).map((_, index) => (
@@ -100,7 +90,7 @@ export default function Section({
               />
             ))}
           </div>
-        )}
+        )} */}
 
         {/* CTA */}
         <div className="text-center mt-6">
