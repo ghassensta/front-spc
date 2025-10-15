@@ -26,21 +26,19 @@ export default function SwiperContent({ slidesPerView = 3, data }) {
           // Phone: 1 slide
           320: {
             slidesPerView: 1,
-            spaceBetween: 20,
+            spaceBetween: 10,
           },
           // Tablet: 2 slides
           768: {
             slidesPerView: 2,
-            spaceBetween: 30,
+            spaceBetween: 15,
           },
           // Desktop: use prop value
           1024: {
             slidesPerView: slidesPerView,
-            spaceBetween: 50,
+            spaceBetween: 20,
           },
         }}
-        onSlideChange={() => console.log("slide change")}
-        onSwiper={(swiper) => console.log(swiper)}
         modules={[Navigation]}
         navigation={{
           prevEl: ".swiper-button-prev",
@@ -49,7 +47,7 @@ export default function SwiperContent({ slidesPerView = 3, data }) {
         }}
       >
         {data.map((item) => (
-          <SwiperSlide className="pt-8">
+          <SwiperSlide className="pt-8" key={item.slug}>
             <Card
               to={paths.product(item.slug)}
               title={item.name}
