@@ -57,8 +57,8 @@ export const routes = [
     ),
     children: [
       // === Anciennes routes dynamiques ===
-      { element: <Index />, index: true },
-      { element: <Index2 />, path: "home2" },
+      { element: <Index2 />, index: true },
+      { element: <Index />, path: "home2" },
       { element: <Details />, path: "spa/:id" },
       { element: <SpaList />, path: "liste-des-spas" },
       { element: <ViewProduct />, path: "produit2/:slug" },

@@ -117,6 +117,55 @@ export default function HomePageView() {
         },
       ],
     },
+    {
+      bg: "white",
+      header: "Soins Visage",
+      subheader:
+        "Sublimez votre peau et révélez votre éclat grâce à nos soins experts.",
+      link: "/soins-visage",
+      data: [
+        {
+          slug: "bain-marocain",
+          name: "Soin Visage Signature Maison Blanche - Solo",
+          image:
+            "products/thumbnails/vA3qP0AqNpUqf2kwexPYT1cwjgQCsa7J6Kbsjrkx.jpg",
+          spaName: "Maison Blanche Ile Rousse",
+          spaLocation: "1490 SAINT-JEAN DE TRÉZY - FRANCE ",
+          offre: "Jusqu’à 20% de remise",
+          offreValue: 250,
+        },
+        {
+          slug: "yoga-session",
+          name: "Soin Personalisé au Choix - 30 mn",
+          image:
+            "uploads/products/vsh20tkZbTBA0YuocmFb2TgIEmFaCamZibo0cmSY.jpg",
+          spaName: "Domaine de Rymska",
+          spaLocation: "1490 SAINT-JEAN DE TRÉZY - FRANCE",
+          offre: "Jusqu’à 20% de remise",
+          offreValue: 80,
+        },
+        {
+          slug: "sauna-premium",
+          name: "Soin Visage Vinésim au choix 60 mn - Solo.",
+          image:
+            "products/thumbnails/8XpFhMpcDYnO8ylgwSCGFrE4VX7jzfxS7lJcsOws.jpg",
+          spaName: "Domaine des Prés Verts",
+          spaLocation: "1490 SAINT-JEAN DE TRÉZY - FRANCE",
+          offre: "Jusqu’à 20% de remise",
+          offreValue: 90,
+        },
+        {
+          slug: "sauna-premium",
+          name: "Soin Personalisé au Choix - 30 mn",
+          image:
+            "products/thumbnails/8XpFhMpcDYnO8ylgwSCGFrE4VX7jzfxS7lJcsOws.jpg",
+          spaName: "Domaine de Rymska",
+          spaLocation: "1490 SAINT-JEAN DE TRÉZY - FRANCE",
+          offre: "Jusqu’à 20% de remise",
+          offreValue: 20,
+        },
+      ],
+    },
   ];
 
   const { carte, prochainement, marques } = useLayout();
@@ -136,7 +185,7 @@ export default function HomePageView() {
               Plongez dans un univers d’ exception laissez-vous séduire par des
               privilèges rares et uniques
             </p>
-            <p className="text-lg font-tahoma uppercase">
+            <p className="text-lg font-tahoma uppercase hidden md:block">
               JE COMMANDE UNE CARTE CADEAU À UTILISER DANS UN ÉTABLISSEMENT SPA
               & PRESTIGE COLLECTION ET JE CUMULE DES AVANTAGES
             </p>
@@ -169,30 +218,33 @@ export default function HomePageView() {
           <div className="max-w-6xl mx-auto py-4 px-3">
             <h2 className="text-3xl font-bold text-center">
               Actualités :
-              <span className="text-[#B6B499]">Nos derniers articles</span>
+              <span className="text-[#B6B499]"> Nos derniers articles</span>
             </h2>
 
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-4">
+            <div className={`grid grid-cols-1 md:grid-cols-${actualites.length} gap-4 mt-4`}>
               {actualites.map((actualite) => (
                 <div className="flex flex-col">
-                  <div
-                    className="mb-1 relative cursor-pointer rounded-2xl overflow-hidden"
-                    key={actualite.id}
-                  >
-                    <img
-                      lazyload="lazy"
-                      src={`${CONFIG.serverUrl}/storage/${actualite.thumbnail_path}`}
-                      alt={actualite.title}
-                    />
-                    <span className="absolute bg-black/25 w-full h-full top-0 left-0 " />
-                  
-                  </div>
-                   <Link
-                      to={paths.actualitesDetails(actualite.slug)}
-                      className="text-black text-xl p-2 pb-5 font-normal"
+                  <Link
+                  to={paths.actualitesDetails(actualite.slug)}  >
+                    <div
+                      className="mb-1 relative cursor-pointer rounded-2xl overflow-hidden"
+                      key={actualite.id}
                     >
-                      {actualite.title}
-                    </Link>
+                      <img
+                        lazyload="lazy"
+                        src={`${CONFIG.serverUrl}/storage/${actualite.thumbnail_path}`}
+                        alt={actualite.title}
+                      />
+                      <span className="absolute bg-black/25 w-full h-full top-0 left-0 " />
+                    
+                    </div>
+                     <span
+                        
+                        className="text-black text-xl p-2 pb-5 font-normal"
+                      >
+                        {actualite.title}
+                      </span>
+                  </Link>
                 </div>
               ))}
             </div>

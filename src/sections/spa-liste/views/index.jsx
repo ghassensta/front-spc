@@ -4,8 +4,6 @@ import { paths } from "src/router/paths";
 import CategoriesSkeleton from "../categories-skeleton";
 import FiltersSkeleton from "../filters-skeleton";
 import ButtonIcon from "src/components/button-icon/button-icon";
-import Card from "src/components/card/card";
-import { CONFIG } from "src/config-global";
 
 export default function CategoriesPageView({
   cardsByCategory = [],
@@ -21,7 +19,7 @@ export default function CategoriesPageView({
     service: "",
   });
 
-  console.log(cardsByCategory);
+  console.log(cardsByCategory)
 
   const handleChange = (e) => {
     setFilters({ ...filters, [e.target.name]: e.target.value });
@@ -69,7 +67,7 @@ export default function CategoriesPageView({
       </div>
       {/* Filters */}
       <p className="text-center text-4xl font-semibold my-4">Filtrer par</p>
-      <div className="grid grid-cols-1 md:grid-cols-3 px-2 gap-4 font-roboto mb-8">
+      <div className="grid grid-cols-1 md:grid-cols-3 px-2 gap-4 font-roboto mb-16">
         {/* Types (Établissements) */}
         <div className="border rounded-lg">
           <select
@@ -121,46 +119,30 @@ export default function CategoriesPageView({
           </select>
         </div>
       </div>
-      <div className="mb-10">
-        <p className="text-center text-4xl font-normal my-4">Soins Visage</p>
-        <p className="text-center text-3xl font-normal my-4 text-[#777765]">
-          Sublimez votre peau et révélez votre éclat grâce à nos soins experts.
-        </p>
-      </div>
 
       {/* Cards */}
       {loading ? (
         <CategoriesSkeleton />
       ) : (
-        <>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-x-4 gap-y-12">
-            {filteredCards.length > 0 ? (
-              <>
-                {filteredCards.map((card) => (
-                  <Card
-                    key={card.id}
-                    to={paths.spa.details(card.slug)}
-                    headTitle={card.nom}
-                    image={CONFIG.serverUrl + "/storage/" + card.image_avant}
-                    description={card.description_avant}
-                    location={card.adresse}
-                    title="Soin Visage Signature Maison Blanche - Solo."
-                    // remise_offres={card.remise_offres}
-                    // prix_offres={card.prix_offres}
-                    offreValue={card.nombre_offres}
-                  />
-                ))}
-              </>
-            ) : (
-              <p className="col-span-3 text-center">Aucun résultat trouvé.</p>
-            )}
-          </div>
-          <div className="w-full flex justify-center mb-10">
-            <button className="inline-flex font-tahoma rounded-full items-center gap-2 uppercase font-normal tracking-widest transition-all duration-300 px-6 py-3 text-sm bg-black text-white mt-6 text-center mx-auto">
-              CHARGER PLUS D’OFFRES
-            </button>
-          </div>
-        </>
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-x-4 gap-y-12">
+          {filteredCards.length > 0 ? (
+            filteredCards.map((card) => (
+              <SpaCard
+                key={card.id}
+                to={paths.spa.details(card.slug)}
+                title={card.nom}
+                image={card.image_avant}
+                description={card.description_avant}
+                location={card.adresse}
+                remise_offres={card.remise_offres}
+                prix_offres={card.prix_offres}
+                nombre_offres={card.nombre_offres}
+              />
+            ))
+          ) : (
+            <p className="col-span-3 text-center">Aucun résultat trouvé.</p>
+          )}
+        </div>
       )}
     </div>
   );

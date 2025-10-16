@@ -5,6 +5,8 @@ import { FaBagShopping } from "react-icons/fa6";
 import { Link } from "react-router-dom";
 import ButtonIcon from "../button-icon/button-icon"; // Optional for type "price"
 import { TranslatedText } from "../translated-text/translated-text";
+import { FaHeart, FaRegHeart } from "react-icons/fa";
+import { useAuthContext } from "src/auth/hooks/use-auth-context";
 
 export default function Card({
   to = "/",
@@ -16,8 +18,8 @@ export default function Card({
   bottomText,
   offreValue,
 }) {
+  const { user } = useAuthContext();
   return (
-    <Link to={to}>
       <motion.div
         initial={{ opacity: 0, y: 50 }}
         whileInView={{ opacity: 1, y: 0 }}
@@ -33,13 +35,16 @@ export default function Card({
               {location}
             </span>
           )}
+          {user && (<FaRegHeart className="absolute top-8 right-4 text-white text-xl z-10 cursor-pointer hover:text-red-500 transition" />)}
           {!!image && (
-            <img
-              lazyload="lazy"
-              src={image}
-              alt="spa"
-              className="w-full h-full rounded-xl object-cover overflow-hidden"
-            />
+            <Link to={to}>
+              <img
+                lazyload="lazy"
+                src={image}
+                alt="spa"
+                className="w-full h-full rounded-xl object-cover overflow-hidden"
+              />
+            </Link>
           )}
 
           {!!bottomText && (
@@ -50,13 +55,13 @@ export default function Card({
         </div>
 
         {/* Content */}
-        <div className={`p-2 mt-3 space-y-1`}>
+        <Link to={to} className={`p-2 mt-3 space-y-1`}>
           {!!headTitle && (
             <p className=" text-center text-xl md:text-2xl">{headTitle}</p>
           )}
           <h5 className={`font-normal text-center text-lg`}>{title}</h5>
 
-          {offreValue && (
+          {!!offreValue && (
             <div className="flex gap-1 items-center justify-center">
               <TranslatedText
                 text="Offre exclusive"
@@ -77,8 +82,8 @@ export default function Card({
               />
             </div>
           )}
-        </div>
+        </Link>
       </motion.div>
-    </Link>
+    
   );
 }

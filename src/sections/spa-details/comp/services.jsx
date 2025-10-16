@@ -54,7 +54,7 @@ export default function Tabs({ data = [] }) {
   return (
     <div className="w-full max-w-7xl mx-auto mt-10">
       {/* Tab Buttons */}
-      <div className="relative flex flex-wrap justify-center gap-10 items-center space-x-1 max-w-[75%] mx-auto">
+      <div className="relative flex flex-wrap justify-center gap-2 md:gap-10 items-center space-x-1 max-w-[75%] mx-auto">
         {tabs.filter((tab) => tab.visible).map((tab, index) => (
           <React.Fragment key={tab.label}>
             <TabButton

@@ -3,7 +3,7 @@ import {
   useGetEtablissements,
   useGetFiltersEtablissements,
 } from "src/actions/etablissements";
-import CategoriesPageView from "src/sections/categories/view/categories-page-view";
+import CategoriesPageView from "src/sections/spa-liste/views";
 
 export default function Page() {
   const { etablissements, etablissementLoading } = useGetAllEtablissements();

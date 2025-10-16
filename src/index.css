@@ -12,6 +12,7 @@
 
 body {
   font-family: "Cormorant Garamond", serif;
+  overflow-x: hidden;
 }
 .font-tahoma{
   font-family: 'Tahoma', sans-serif;
@@ -44,6 +45,16 @@ body {
     .container {
         max-width: 1536px;
     }
+}
+
+.swiper{
+  /* @apply overflow-visible md:overflow-hidden; */
+  overflow: visible!important;
+}
+@media (min-width: 768px) {
+  .swiper{
+    overflow: hidden!important;
+  }
 }
 
 

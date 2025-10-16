@@ -1,5 +1,5 @@
 import React, { useState, useContext } from "react";
-import { IoMdCart, IoMdLogIn, IoMdMenu } from "react-icons/io";
+import { IoIosHeartEmpty, IoMdCart, IoMdLogIn, IoMdMenu } from "react-icons/io";
 import Logo from "../logo/logo";
 import Menu from "../menu/menu";
 import { Link } from "react-router-dom";
@@ -7,6 +7,7 @@ import { paths } from "../../router/paths";
 import { CheckoutContext } from "../../sections/checkout/context/checkout-provider";
 import { MdDashboard } from "react-icons/md";
 import { useAuthContext } from "src/auth/hooks/use-auth-context";
+import { FaRegHeart } from "react-icons/fa";
 // import { CheckoutContext } from '../../context/checkout-provider'; // make sure path is correct
 
 export default function Navbar() {
@@ -45,6 +46,7 @@ export default function Navbar() {
       <Logo className="max-w-min mx-auto" />
 
       <div className="gap-3 hidden md:flex">
+        {user && <Link><FaRegHeart className="text-2xl"/></Link>}
         {user ? (
           <Link to={paths.dashboard.root} className="relative">
             <MdDashboard className="text-2xl" />

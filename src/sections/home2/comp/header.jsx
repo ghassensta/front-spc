@@ -60,7 +60,7 @@ export default function Header() {
         ))}
 
         {/* Content Card */}
-        <div className="absolute bottom-24 md:bottom-8  left-8 md:left-12 z-20 text-gray-900 rounded-md shadow-lg w-[90%] max-w-md backdrop-blur-sm">
+        <div className="absolute bottom-24 md:bottom-8  left-4 md:left-12 z-20 text-gray-900 rounded-md shadow-lg w-[90%] max-w-md backdrop-blur-sm">
           <div className="relative z-10 p-6 ">
             {!!current?.remise_offres && (<p className="text-xs absolute px-2 py-1 -translate-y-1/2 bg-[#B6B499] top-0 font-semibold text-gray-700 uppercase mb-2">
               Jusqu’à {current.remise_offres}% de remise
