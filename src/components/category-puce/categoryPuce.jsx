@@ -2,14 +2,14 @@ import React from "react";
 import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
 
-export default function CategoryPuce({ slug = "#", icon = null, name = "" }) {
+export default function CategoryPuce({ slug, icon = null, name = "" }) {
   return (
     <motion.div
       whileHover={{ scale: 1.05 }}
       transition={{ type: "spring", stiffness: 300 }}
     >
       <Link
-        to={`/categories/${slug}`}
+        to={slug && `/categories/${slug}`}
         className="group w-full inline-block rounded-full min-w-24  pr-6 pl-1  duration-300 "
       >
         <div className="flex items-center gap-1 text-center text-black relative">
