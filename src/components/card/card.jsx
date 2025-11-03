@@ -17,6 +17,8 @@ export default function Card({
   buttonTitle,
   bottomText,
   offreValue,
+  price,
+  duration
 }) {
   const { user } = useAuthContext();
   return (
@@ -63,12 +65,17 @@ export default function Card({
 
           {!!offreValue && (
             <div className="flex gap-1 items-center justify-center">
-              <TranslatedText
-                text="Offre exclusive"
+              {!!duration && (
+                <>
+                <TranslatedText
+                text="Durée"
                 as="p"
                 className=" text-center"
-              />{" "}
-              <strong className="">{parseFloat(offreValue)} €</strong>
+              />
+              <strong className="mr-3">{duration}</strong>
+              </>
+              )}
+              <strong>{price}</strong>
             </div>
           )}
 

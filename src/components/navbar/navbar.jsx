@@ -1,5 +1,5 @@
-import React, { useState, useContext } from "react";
-import { IoIosHeartEmpty, IoMdCart, IoMdLogIn, IoMdMenu } from "react-icons/io";
+import React, { useState, useContext, useRef } from "react";
+import { IoIosHeartEmpty, IoMdCart, IoMdClose, IoMdLogIn, IoMdMenu } from "react-icons/io";
 import Logo from "../logo/logo";
 import Menu from "../menu/menu";
 import { Link } from "react-router-dom";
@@ -8,6 +8,7 @@ import { CheckoutContext } from "../../sections/checkout/context/checkout-provid
 import { MdDashboard } from "react-icons/md";
 import { useAuthContext } from "src/auth/hooks/use-auth-context";
 import { FaRegHeart } from "react-icons/fa";
+import MenuPopover from "../menu/menu-popover";
 // import { CheckoutContext } from '../../context/checkout-provider'; // make sure path is correct
 
 export default function Navbar() {
@@ -17,14 +18,17 @@ export default function Navbar() {
 
   const { user } = useAuthContext();
 
+  const buttonRef = useRef(null)
+
   return (
     <div className="w-full px-2 md:px-6 py-8 flex flex-col md:flex-row justify-between relative gap-6">
       <div className="flex justify-between">
         <button
+        ref={buttonRef}
           className="text-base cursor-pointer flex items-center h-max p-1 gap-2 text-[#33373d] bg-black/5 font-arial font-sans font-medium"
-          onClick={() => setShow(true)}
+          onClick={() => setShow(!show)}
         >
-          <IoMdMenu className="text-2xl" />
+          {show ?<IoMdClose className="text-2xl"/>  : <IoMdMenu className="text-2xl" />}
           <span>Menu</span>
         </button>
         <div className="gap-3 flex md:hidden">
@@ -41,7 +45,7 @@ export default function Navbar() {
           </Link>
         </div>
       </div>
-      <Menu show={show} onClose={() => setShow(false)} />
+      <MenuPopover anchorRef={buttonRef} open={show} onClose={() => setShow(false)} />
 
       <Logo className="max-w-min mx-auto" />
 

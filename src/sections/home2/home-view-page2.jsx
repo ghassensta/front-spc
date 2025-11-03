@@ -27,6 +27,8 @@ export default function HomePageView() {
       link: "/offres",
       data: [
         {
+          price: "70.00 €",
+          duration: "",
           slug: "massage-deluxe",
           name: "Accès Spa privatisé 60 mn - Solo et Duo.",
           image:
@@ -37,6 +39,8 @@ export default function HomePageView() {
           offreValue: 20,
         },
         {
+          price: "70.00 €",
+          duration: "1h30",
           slug: "soin-visage",
           name: "Privatisation Spa 60mn - Duo.",
           image:
@@ -47,6 +51,8 @@ export default function HomePageView() {
           offreValue: 70,
         },
         {
+          price: "70.00 €",
+          duration: "1h30",
           slug: "spa-relax",
           name: "Accès Spa privatisé 60 mn - Solo et Duo (si réservation de soins).",
           image:
@@ -57,6 +63,8 @@ export default function HomePageView() {
           offreValue: 40,
         },
         {
+          price: "70.00 €",
+          duration: "1h30",
           slug: "spa-relax",
           name: "Privatisation Spa 60mn - Duo.",
           image:
@@ -76,6 +84,8 @@ export default function HomePageView() {
       link: "/soins-visage",
       data: [
         {
+          price: "70.00 €",
+          duration: "1h30",
           slug: "bain-marocain",
           name: "Soin Visage Signature Maison Blanche - Solo",
           image:
@@ -86,6 +96,8 @@ export default function HomePageView() {
           offreValue: 250,
         },
         {
+          price: "70.00 €",
+          duration: "1h30",
           slug: "yoga-session",
           name: "Soin Personalisé au Choix - 30 mn",
           image:
@@ -96,6 +108,8 @@ export default function HomePageView() {
           offreValue: 80,
         },
         {
+          price: "70.00 €",
+          duration: "1h30",
           slug: "sauna-premium",
           name: "Soin Visage Vinésim au choix 60 mn - Solo.",
           image:
@@ -106,6 +120,8 @@ export default function HomePageView() {
           offreValue: 90,
         },
         {
+          price: "70.00 €",
+          duration: "1h30",
           slug: "sauna-premium",
           name: "Soin Personalisé au Choix - 30 mn",
           image:
@@ -125,6 +141,8 @@ export default function HomePageView() {
       link: "/soins-visage",
       data: [
         {
+          price: "70.00 €",
+          duration: "1h30",
           slug: "bain-marocain",
           name: "Soin Visage Signature Maison Blanche - Solo",
           image:
@@ -135,6 +153,8 @@ export default function HomePageView() {
           offreValue: 250,
         },
         {
+          price: "70.00 €",
+          duration: "1h30",
           slug: "yoga-session",
           name: "Soin Personalisé au Choix - 30 mn",
           image:
@@ -145,6 +165,8 @@ export default function HomePageView() {
           offreValue: 80,
         },
         {
+          price: "70.00 €",
+          duration: "1h30",
           slug: "sauna-premium",
           name: "Soin Visage Vinésim au choix 60 mn - Solo.",
           image:
@@ -155,6 +177,8 @@ export default function HomePageView() {
           offreValue: 90,
         },
         {
+          price: "70.00 €",
+          duration: "1h30",
           slug: "sauna-premium",
           name: "Soin Personalisé au Choix - 30 mn",
           image:
