@@ -324,6 +324,7 @@ export default function DashboardLayout({ children }) {
       label: "Avantage",
       icon: Gift,
       children: [
+        {label: "Bon d'achat", to: paths.dashboard.bonAchats },
         { label: "Cadeau d'anniversaire", to: paths.dashboard.cadeau },
         { label: "Parrainage", to: paths.dashboard.parrainage },
         { label: "Fidélité", to: paths.dashboard.fidelite },

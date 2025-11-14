@@ -29,7 +29,7 @@ export function useGetSpaByCategory(category) {
     const { data, isLoading } = useSWR(url, fetcher, swrOptions);
     const memoizedValue = useMemo(
         () => ({
-            spaList: data?.etablissements || [],
+            spaList: data?.produits || [],
             catLoading: isLoading,
         }),
         [data]

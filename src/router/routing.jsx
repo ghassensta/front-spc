@@ -15,6 +15,7 @@ const ViewProduct2 = lazy(() => import("../pages/product2/index"));
 const Chekckout = lazy(() => import("../pages/checkout/index"));
 const ChekckoutPayement = lazy(() => import("../pages/checkout/checkout"));
 const CheckoutDetails = lazy(() => import("../pages/checkout/details"));
+const SearchPage = lazy(() => import("../pages/serach/index"));
 
 // Dashboard
 const DashboardMain = lazy(() => import("../pages/dashboard/index"));
@@ -26,6 +27,7 @@ const DashboardAide = lazy(() => import("../pages/dashboard/aide"));
 const DashboardCadeaux = lazy(() => import("../pages/dashboard/cadeaux"));
 const DashboardParrainage = lazy(() => import("../pages/dashboard/parrainage"));
 const DashboardFidelite = lazy(() => import("../pages/dashboard/fidelite"));
+const DashboardBonAchats = lazy(() => import("../pages/dashboard/bon-achats"));
 
 // Nouvelles pages
 const Categories = lazy(() => import("../pages/categories"));
@@ -86,6 +88,11 @@ export const routes = [
       { element: <Contact />, path: "assistance-contact" },
       { element: <Mentions />, path: "mentions-legales" },
       { element: <Conditions />, path: "conditions" },
+      // === DANS LE TABLEAU `children` DE LA RACINE ===
+      {
+        element: <SearchPage />,
+        path: "recherche/:catSlug?/:villeSlug?",
+      },
 
       // === Dashboard ===
       {
@@ -114,6 +121,7 @@ export const routes = [
           { path: "cadeau", element: <DashboardCadeaux /> },
           { path: "parrainage", element: <DashboardParrainage /> },
           { path: "fidelite", element: <DashboardFidelite /> },
+          { path: "bon-achats", element: <DashboardBonAchats /> },
           { path: "*", element: <DashboardMain /> },
         ],
       },

@@ -21,14 +21,14 @@ export default function CategoriesPageView({
     service: "",
   });
 
-  console.log(cardsByCategory);
+  console.log('ddddddddddddddddddddd',cardsByCategory);
 
   const handleChange = (e) => {
     setFilters({ ...filters, [e.target.name]: e.target.value });
   };
 
   // Apply filters
-  const filteredCards = cardsByCategory.filter((card) => {
+  const filteredCards = cardsByCategory.filter((  ) => {
     return (
       (filters.etablissement
         ? card.types_etablissement_ids?.includes(
@@ -59,7 +59,6 @@ export default function CategoriesPageView({
           </span>
         </p>
 
-        {/* Bouton vers la page carte cadeau */}
         <ButtonIcon
           title="Découvrir les offres"
           link={paths.spa.list}
@@ -67,10 +66,8 @@ export default function CategoriesPageView({
           size="md"
         />
       </div>
-      {/* Filters */}
       <p className="text-center text-4xl font-semibold my-4">Filtrer par</p>
       <div className="grid grid-cols-1 md:grid-cols-3 px-2 gap-4 font-roboto mb-8">
-        {/* Types (Établissements) */}
         <div className="border rounded-lg">
           <select
             className="w-full p-2 border-none focus:outline-none"
@@ -87,7 +84,6 @@ export default function CategoriesPageView({
           </select>
         </div>
 
-        {/* Villes */}
         <div className="border rounded-lg">
           <select
             className="w-full p-2 border-none focus:outline-none"
@@ -104,7 +100,6 @@ export default function CategoriesPageView({
           </select>
         </div>
 
-        {/* Services / Équipements */}
         <div className="border rounded-lg">
           <select
             className="w-full p-2 border-none focus:outline-none"
@@ -128,7 +123,6 @@ export default function CategoriesPageView({
         </p>
       </div>
 
-      {/* Cards */}
       {loading ? (
         <CategoriesSkeleton />
       ) : (
@@ -139,15 +133,13 @@ export default function CategoriesPageView({
                 {filteredCards.map((card) => (
                   <Card
                     key={card.id}
-                    to={paths.spa.details(card.slug)}
-                    headTitle={card.nom}
-                    image={CONFIG.serverUrl + "/storage/" + card.image_avant}
+                    to={paths.product(card.slug)}
+                    headTitle={card.etablissement.nom}
+                    image={CONFIG.serverUrl + "/storage/" + card.image}
                     description={card.description_avant}
-                    location={card.adresse}
-                    title="Soin Visage Signature Maison Blanche - Solo."
-                    // remise_offres={card.remise_offres}
-                    // prix_offres={card.prix_offres}
-                    offreValue={card.nombre_offres}
+                    location={card.etablissement.adresse_complete}
+                    title={card.nom}
+                    offreValue={card.remise_produit}
                   />
                 ))}
               </>

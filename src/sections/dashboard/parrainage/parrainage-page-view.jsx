@@ -6,16 +6,26 @@ import { toast } from "react-toastify";
 import { useSendInvites } from "src/actions/parrainage";
 import { CONFIG } from "src/config-global";
 
-export default function ParrainagePageView({ filleuls, total_filleuls }) {
+export default function ParrainagePageView({
+  filleuls = [],
+  total_filleuls = 0,
+}) {
   const { user } = useAuthContext();
-  const [referralCode] = useState(user?.parrainage_code);
+  const [referralCode] = useState(user?.parrainage_code || "");
   const [referralLink] = useState(
-    CONFIG.frontUrl + paths.auth.register + "?code=" + referralCode
+    `${CONFIG.frontUrl}${paths.auth.register}?code=${referralCode}`
   );
 
   const [copied, setCopied] = useState(false);
-
   const [emails, setEmails] = useState([""]);
+  const [isSending, setIsSending] = useState(false);
+
+  const maxInvites = 10;
+  const remaining = maxInvites - total_filleuls;
+
+  // Validation email
+  const isValidEmail = (email) =>
+    /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.trim());
 
   const handleCopy = (text) => {
     navigator.clipboard.writeText(text);
@@ -30,38 +40,100 @@ export default function ParrainagePageView({ filleuls, total_filleuls }) {
   };
 
   const addEmailField = () => {
-    if (10 - total_filleuls - emails.length <= 0) {
-      toast.error("Vous avez atteint le limit");
-    } else {
-      setEmails([...emails, ""]);
+    if (emails.filter(Boolean).length >= remaining) {
+      toast.error(`Limite de ${maxInvites} filleuls atteinte`);
+      return;
     }
+    setEmails([...emails, ""]);
   };
 
+  // ENVOI INVITATIONS – TOUT DYNAMIQUE
   const handleSendInvites = async () => {
-    if (!emails[0]) {
-      toast.error("Saisir un email au moins");
+    const filledEmails = emails.map((e) => e.trim()).filter(Boolean);
+
+    if (filledEmails.length === 0) {
+      toast.error("Veuillez saisir au moins un email");
       return;
     }
 
-    const filteredEmails = emails.filter((email) => email);
+    const invalidEmails = filledEmails.filter((e) => !isValidEmail(e));
+    if (invalidEmails.length > 0) {
+      toast.error(`Email(s) invalide(s) : ${invalidEmails.join(", ")}`);
+      return;
+    }
 
-    // if() VALIDATE EMAILS
+    const userEmail = user?.email?.toLowerCase();
+    const selfEmails = filledEmails.filter(
+      (e) => e.toLowerCase() === userEmail
+    );
+    if (selfEmails.length > 0) {
+      toast.warn(`Invitation ignorée (vous-même) : ${selfEmails.join(", ")}`);
+    }
+
+    const emailsToSend = filledEmails.filter(
+      (e) => e.toLowerCase() !== userEmail
+    );
+    if (emailsToSend.length === 0) {
+      toast.info("Aucun email valide à envoyer");
+      return;
+    }
+
+    setIsSending(true);
 
     try {
-      await toast.promise(useSendInvites({emails :filteredEmails, referralLink}), {
-        pending: "Envoi en cours ...",
-        success: "Envoi avec succéss",
-        error: "Un erreur est servenu",
+      const response = await useSendInvites({
+        emails: emailsToSend,
+        referralLink,
       });
+
+      console.log("API Response (Succès) :", response);
+
+      // TOUT VIENT DE L'API
+      const data = response; // ou response.data si ton hook retourne { data }
+
+      if (data.success) {
+        toast.success(data.message); // "Invitations envoyées avec succès"
+
+        if (data.invited?.length > 0) {
+          toast.success(`Invités : ${data.invited.join(", ")}`);
+        }
+        if (data.ignored_existing_users?.length > 0) {
+          toast.info(
+            `Déjà inscrits : ${data.ignored_existing_users.join(", ")}`
+          );
+        }
+        if (data.ignored_already_filleuls?.length > 0) {
+          toast.info(
+            `Déjà filleuls : ${data.ignored_already_filleuls.join(", ")}`
+          );
+        }
+
+        setEmails([""]);
+      }
     } catch (error) {
-      console.error("Erreur lors d'envoi les invitaions",error);
-      throw error;
+      console.error("API Error Response :", error);
+      console.error("Error data :", error?.response?.data);
+      console.error("Status :", error?.response?.status);
+
+      const data = error?.response?.data || {};
+
+      // MESSAGE EXACT DE L'API
+      if (data.message) {
+        toast.error(data.message); // ← Affiche "Tous les emails sont déjà inscrits..."
+      } else if (data.errors) {
+        const messages = Object.values(data.errors).flat().join(" ");
+        toast.error(messages);
+      } else {
+        toast.error("Erreur inconnue");
+      }
+    } finally {
+      setIsSending(false);
     }
   };
-
+  
   return (
     <div className="p-6 space-y-6">
-      {/* Parrainage Card */}
+      {/* Card Parrainage */}
       <div className="bg-white border rounded-xl shadow-sm p-6">
         <div className="flex justify-between items-start mb-4">
           <div className="flex items-center gap-2">
@@ -69,17 +141,16 @@ export default function ParrainagePageView({ filleuls, total_filleuls }) {
             <h2 className="text-lg font-semibold text-gray-800">Parrainage</h2>
           </div>
           <span className="text-xs text-cyan-600 bg-cyan-50 px-2 py-1 rounded">
-            Limité à {10 - total_filleuls} filleuls
+            Limité à {remaining} filleul{remaining > 1 ? "s" : ""}
           </span>
         </div>
 
-        {/* Referral Code */}
         <div className="flex items-center gap-2 mb-3">
           <input
             type="text"
             value={referralCode}
             disabled
-            className="flex-1 border rounded-md px-3 py-2 bg-gray-50 text-gray-700"
+            className="flex-1 border rounded-md px-3 py-2 bg-gray-50 text-gray-700 text-sm"
           />
           <button
             onClick={() => handleCopy(referralCode)}
@@ -91,16 +162,14 @@ export default function ParrainagePageView({ filleuls, total_filleuls }) {
         </div>
         {copied && (
           <p className="text-xs text-green-600 mb-2">
-            Copié dans le presse-papier ✅
+            Copié dans le presse-papier
           </p>
         )}
 
-        <p className="text-sm text-gray-600">
-          Partagez ce code par vos propres moyens (email, téléphone, réseaux
-          sociaux).
+        <p className="text-sm text-gray-600 mb-6">
+          Partagez ce code par vos propres moyens.
         </p>
 
-        {/* Rewards */}
         <div className="mt-6">
           <div className="flex items-center gap-2 mb-2">
             <Gift className="w-5 h-5 text-yellow-500" />
@@ -114,7 +183,7 @@ export default function ParrainagePageView({ filleuls, total_filleuls }) {
         </div>
       </div>
 
-      {/* Bottom Section: Filleuls + Invite */}
+      {/* Filleuls + Inviter */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         {/* Filleuls */}
         <div className="bg-white border rounded-xl shadow-sm p-6">
@@ -122,33 +191,34 @@ export default function ParrainagePageView({ filleuls, total_filleuls }) {
             <Users className="w-5 h-5 text-gray-700" />
             <h3 className="text-md font-semibold text-gray-800">Filleuls</h3>
           </div>
-          <div className="space-y-2 flex-1 h-full">
-            {!filleuls.length && (
-              <div className="flex items-center justify-center flex-1 w-full my-auto">
-                <p>Vous avez aucun personne parrainé</p>
-              </div>
+          <div className="space-y-2 min-h-32">
+            {filleuls.length === 0 ? (
+              <p className="text-center text-gray-500 py-8">
+                Aucun filleul pour le moment
+              </p>
+            ) : (
+              filleuls.map((f, idx) => (
+                <div
+                  key={idx}
+                  className="flex justify-between items-center border rounded px-3 py-2 text-sm"
+                >
+                  <span>{f.name}</span>
+                  <span
+                    className={`px-2 py-1 text-xs rounded ${
+                      f.recompense_donnee
+                        ? "bg-green-100 text-green-700"
+                        : "bg-yellow-100 text-yellow-700"
+                    }`}
+                  >
+                    {f.recompense_donnee ? "Validée" : "En attente"}
+                  </span>
+                </div>
+              ))
             )}
-            {filleuls.map((f, idx) => (
-              <div
-                key={idx}
-                className="flex justify-between items-center border rounded px-3 py-2 text-sm"
-              >
-                <span>{f.name}</span>
-                {f.status === "validée" ? (
-                  <span className="px-2 py-1 text-xs bg-green-100 text-green-700 rounded">
-                    Commande validée
-                  </span>
-                ) : (
-                  <span className="px-2 py-1 text-xs bg-yellow-100 text-yellow-700 rounded">
-                    En attente
-                  </span>
-                )}
-              </div>
-            ))}
           </div>
         </div>
 
-        {/* Invite */}
+        {/* Inviter */}
         <div className="bg-white border rounded-xl shadow-sm p-6">
           <h3 className="text-md font-semibold text-gray-800 mb-3">
             Inviter via un lien
@@ -158,7 +228,7 @@ export default function ParrainagePageView({ filleuls, total_filleuls }) {
               type="text"
               value={referralLink}
               disabled
-              className="flex-1 border rounded-md px-3 py-2 bg-gray-50 text-gray-700 text-sm"
+              className="flex-1 border rounded-md px-3 py-2 bg-gray-50 text-gray-700 text-xs"
             />
             <button
               onClick={() => handleCopy(referralLink)}
@@ -178,22 +248,35 @@ export default function ParrainagePageView({ filleuls, total_filleuls }) {
               type="email"
               value={email}
               onChange={(e) => handleEmailChange(idx, e.target.value)}
-              placeholder="Email"
-              className="w-full border rounded-md px-3 py-2 mb-2 text-sm"
+              placeholder="exemple@domaine.com"
+              className={`w-full border rounded-md px-3 py-2 mb-2 text-sm ${
+                email && !isValidEmail(email) ? "border-red-500" : ""
+              }`}
             />
           ))}
-          <button
-            onClick={addEmailField}
-            className="flex items-center gap-2 text-sm text-gray-600 border px-3 py-1 rounded mb-3 hover:bg-gray-50"
-          >
-            <Mail className="w-4 h-4" /> Inviter plus d’amis
-          </button>
+
+          {emails.filter(Boolean).length < remaining && (
+            <button
+              onClick={addEmailField}
+              className="flex items-center gap-2 text-sm text-gray-600 border px-3 py-1 rounded mb-3 hover:bg-gray-50"
+            >
+              <Mail className="w-4 h-4" /> Ajouter un ami
+            </button>
+          )}
 
           <button
             onClick={handleSendInvites}
-            className="w-full bg-orange-400 text-white font-medium py-2 rounded-md hover:bg-orange-500 transition"
+            disabled={isSending || emails.filter(Boolean).length === 0}
+            className="w-full bg-orange-400 text-white font-medium py-2 rounded-md hover:bg-orange-500 transition disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
           >
-            Envoyer
+            {isSending ? (
+              <>
+                <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+                Envoi...
+              </>
+            ) : (
+              "Envoyer les invitations"
+            )}
           </button>
         </div>
       </div>

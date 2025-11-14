@@ -3,28 +3,32 @@ export const paths = {
   spa: {
     root: "/spa",
     details: (id) => `/spa/${id}`,
-    list: "/liste-des-spas"
+    list: "/liste-des-spas",
   },
   product: (slug) => `/produit/${slug}`,
+  search: (catSlug = "", villeSlug = "") => {
+    const parts = [catSlug, villeSlug].filter(Boolean);
+    return parts.length ? `/recherche/${parts.join("/")}` : "/recherche";
+  },
   checkout: "/checkout",
-  actualites: "/actualites",/*DONE */
+  actualites: "/actualites" /*DONE */,
   actualitesDetails: (slug) => `/actualites/${slug}`,
-  who: "/qui-somme-nous", /*DONE */
+  who: "/qui-somme-nous" /*DONE */,
   categories: (slug) => `/categories/${slug}`,
   payment: "/payment",
-  recompense: "/recompense",  /*DONE */
-  programme: "/programme-de-parrainage",  /*DONE */
-  referentiel: "/referentiel-de-candidature",/*DONE */
-  cadeau: "/carte-cadeau",  /*DONE */
-  collection: "/collection-prestige", /*DONE */
-  partenaire: "/devenir-partenaire",/*DONE */
-  contact: "/assistance-contact",/*DONE */
-  solutions: "/solutions-ce",/*DONE */
-  marque: "/marque-partenaire",/*DONE */
-  glossaire: "/glossaire",/*DONE */
+  recompense: "/recompense" /*DONE */,
+  programme: "/programme-de-parrainage" /*DONE */,
+  referentiel: "/referentiel-de-candidature" /*DONE */,
+  cadeau: "/carte-cadeau" /*DONE */,
+  collection: "/collection-prestige" /*DONE */,
+  partenaire: "/devenir-partenaire" /*DONE */,
+  contact: "/assistance-contact" /*DONE */,
+  solutions: "/solutions-ce" /*DONE */,
+  marque: "/marque-partenaire" /*DONE */,
+  glossaire: "/glossaire" /*DONE */,
   checkoutDetails: "/checkout/details",
-  mentions: "/mentions-legales",/*DONE */
-  conditions: "/conditions",/*DONE */
+  mentions: "/mentions-legales" /*DONE */,
+  conditions: "/conditions" /*DONE */,
   dashboard: {
     root: "/dashboard",
     commandes: {
@@ -37,6 +41,7 @@ export const paths = {
     cadeau: "/dashboard/cadeau",
     parrainage: "/dashboard/parrainage",
     fidelite: "/dashboard/fidelite",
+    bonAchats: "/dashboard/bon-achats",
   },
   auth: {
     root: "/auth",

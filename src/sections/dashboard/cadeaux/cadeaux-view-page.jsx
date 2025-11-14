@@ -6,7 +6,7 @@ export default function CadeauxViewPage() {
     {
       icon: Gift,
       title: "Cadeau d’anniversaire",
-      description: "Offrez à vos clients un bon d'achat de 5€ ou 20 points le jour de leur anniversaire.",
+      description: "Offrez à vos clients un bon d'achat de 5€ le jour de leur anniversaire.",
     },
     {
       icon: Star,

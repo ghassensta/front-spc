@@ -4,7 +4,7 @@ import { useCheckoutContext } from 'src/sections/checkout/context'
 export default function CommandesViewPage({ order }) {
     const checkout = useCheckoutContext()
 
-    console.log(order)
+   // console.log(order)
   return (
     <div className="mt-4 grid grid-cols-1 lg:grid-cols-3 gap-4">  
           {/* Items List - Left Column */}  
@@ -15,7 +15,7 @@ export default function CommandesViewPage({ order }) {
                 <tr>  
                   <th className="border p-2 text-left">Produit</th>  
                   <th className="border p-2 text-left">Quantité</th>  
-                  <th className="border p-2 text-left">Prix</th>  
+                  <th className="border p-2 text-left">Prix (TTC)</th>  
                 </tr>  
               </thead>  
               <tbody>  

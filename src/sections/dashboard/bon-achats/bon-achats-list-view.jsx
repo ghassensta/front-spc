@@ -1,0 +1,148 @@
+import React, { useState, useMemo } from "react";
+import { useGetBonAchats } from "src/actions/bonachats";
+
+export default function BonAchatsListView() {
+  const { bonachats, loading, validating } = useGetBonAchats();
+  const [currentPage, setCurrentPage] = useState(1);
+  const [itemsPerPage, setItemsPerPage] = useState(10);
+
+  // Pagination
+  const totalPages = Math.ceil((bonachats?.length || 0) / itemsPerPage);
+  const currentData = useMemo(() => {
+    const start = (currentPage - 1) * itemsPerPage;
+    return bonachats?.slice(start, start + itemsPerPage);
+  }, [bonachats, currentPage, itemsPerPage]);
+
+  const handlePrev = () => setCurrentPage((prev) => Math.max(prev - 1, 1));
+  const handleNext = () => setCurrentPage((prev) => Math.min(prev + 1, totalPages));
+
+  if (loading || validating) {
+    return (
+      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+        <table className="table w-full">
+          <thead className="bg-gray-300">
+            <tr>
+              <th>Montant</th>
+              <th>Source</th>
+              <th>Description</th>
+              <th>Statut</th>
+            </tr>
+          </thead>
+          <tbody className="text-center text-sm">
+            {[...Array(5)].map((_, index) => (
+              <tr key={index} className="border-b-2 py-2">
+                {[...Array(4)].map((__, i) => (
+                  <td key={i}>
+                    <div className="h-4 bg-gray-200 animate-pulse w-24 mx-auto rounded" />
+                  </td>
+                ))}
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+    );
+  }
+
+  return (
+    <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div className="flex justify-between items-center mb-4">
+        <p className="text-sm text-gray-600">
+          Page {currentPage} sur {totalPages || 1}
+        </p>
+        <div className="flex items-center gap-2">
+          <label htmlFor="itemsPerPage" className="text-sm text-gray-600">
+            Lignes par page :
+          </label>
+          <select
+            id="itemsPerPage"
+            className="border rounded px-2 py-1 text-sm"
+            value={itemsPerPage}
+            onChange={(e) => {
+              setItemsPerPage(Number(e.target.value));
+              setCurrentPage(1);
+            }}
+          >
+            {[5, 10, 20, 50].map((num) => (
+              <option key={num} value={num}>
+                {num}
+              </option>
+            ))}
+          </select>
+        </div>
+      </div>
+
+      <table className="table w-full">
+        <thead className="bg-gray-300">
+          <tr>
+            <th>Montant</th>
+            <th>Source</th>
+            <th>Description</th>
+            <th>Statut</th>
+          </tr>
+        </thead>
+        <tbody className="text-center text-secondary text-sm">
+          {!bonachats?.length && (
+            <tr>
+              <td colSpan={4}>
+                <div className="flex flex-col items-center">
+                  <p className="py-2">Vous n'avez pas de bons d'achat</p>
+                </div>
+              </td>
+            </tr>
+          )}
+
+          {currentData?.map((bon) => {
+            const sourceLabel =
+              bon.source === 0
+                ? "Parrainage"
+                : bon.source === 1
+                ? "Fidélité"
+                : "Échange";
+            const typeLabel =
+              bon.type === "points"
+                ? `${bon.montant} points`
+                : `${bon.montant} €`;
+            const statusClass = bon.utilise
+              ? "text-red-600"
+              : "text-green-600";
+            const statusLabel = bon.utilise
+              ? "Utilisé"
+              : "Disponible";
+
+            return (
+              <tr key={bon.id} className="border-b-2 py-2">
+                <td>{typeLabel}</td>
+                <td>{sourceLabel}</td>
+                <td className="text-left max-w-xs truncate">{bon.description}</td>
+                <td className={statusClass}>{statusLabel}</td>
+              </tr>
+            );
+          })}
+        </tbody>
+      </table>
+
+      {totalPages > 1 && (
+        <div className="flex justify-center items-center gap-3 mt-4">
+          <button
+            onClick={handlePrev}
+            disabled={currentPage === 1}
+            className="px-3 py-1 bg-gray-200 rounded disabled:opacity-50"
+          >
+            Précédent
+          </button>
+          <span className="text-sm text-gray-700">
+            {currentPage} / {totalPages}
+          </span>
+          <button
+            onClick={handleNext}
+            disabled={currentPage === totalPages}
+            className="px-3 py-1 bg-gray-200 rounded disabled:opacity-50"
+          >
+            Suivant
+          </button>
+        </div>
+      )}
+    </div>
+  );
+}

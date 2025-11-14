@@ -2,7 +2,6 @@ import React, { useState } from "react";
 import { toast } from "react-toastify";
 import { editUser } from "src/actions/auth";
 import { useAuthContext } from "src/auth/hooks/use-auth-context";
-import ButtonIcon from "src/components/button-icon/button-icon";
 
 export default function ProfileDetails() {
   const { user, checkUserSession } = useAuthContext();
@@ -12,9 +11,10 @@ export default function ProfileDetails() {
     lastName: user?.lastName || "",
     displayedName: user?.displayedName || "",
     email: user?.email || "",
-    password: "",
+    current_password: "",
     new_password: "",
     new_password_confirmation: "",
+    date_naissance: user?.date_naissance || "",
   });
 
   const handleChange = (e) => {
@@ -36,11 +36,13 @@ export default function ProfileDetails() {
     }
 
     const isChangingPassword =
-      formData.password || formData.new_password || formData.new_password_confirmation;
+      formData.current_password ||
+      formData.new_password ||
+      formData.new_password_confirmation;
 
     if (isChangingPassword) {
       if (
-        !formData.password ||
+        !formData.current_password ||
         !formData.new_password ||
         !formData.new_password_confirmation
       ) {
@@ -61,6 +63,7 @@ export default function ProfileDetails() {
       }
     }
 
+    // ✅ Envoi de la requête
     const promise = editUser(formData);
 
     toast.promise(promise, {
@@ -73,16 +76,21 @@ export default function ProfileDetails() {
       await promise;
       checkUserSession?.();
 
-      setFormData({...formData, new_password_confirmation: "", new_password: "", password: ""})
+      // Réinitialiser uniquement les champs de mot de passe
+      setFormData((prev) => ({
+        ...prev,
+        current_password: "",
+        new_password: "",
+        new_password_confirmation: "",
+      }));
     } catch (err) {
       console.error(err);
-
-      throw err
     }
   };
 
   return (
     <div className="grid grid-cols-2 gap-2 p-3">
+      {/* Nom */}
       <div className="flex flex-col">
         <label htmlFor="name" className="text-sm text-secondary">
           Nom
@@ -97,6 +105,7 @@ export default function ProfileDetails() {
         />
       </div>
 
+      {/* Prénom */}
       <div className="flex flex-col">
         <label htmlFor="lastName" className="text-sm text-secondary">
           Prénom
@@ -111,6 +120,7 @@ export default function ProfileDetails() {
         />
       </div>
 
+      {/* Nom affiché */}
       <div className="flex flex-col">
         <label htmlFor="displayedName" className="text-sm text-secondary">
           Nom affiché
@@ -125,6 +135,7 @@ export default function ProfileDetails() {
         />
       </div>
 
+      {/* Email */}
       <div className="flex flex-col">
         <label htmlFor="email" className="text-sm text-secondary">
           Adresse e-mail
@@ -139,6 +150,31 @@ export default function ProfileDetails() {
         />
       </div>
 
+      <div className="flex flex-col w-full">
+        <label htmlFor="dateNaissance" className="text-sm text-secondary">
+          Date de naissance
+        </label>
+        <input
+          type="date"
+          id="dateNaissance"
+          name="date_naissance"
+          className="border rounded p-1"
+          value={
+            formData.date_naissance
+              ? new Date(formData.date_naissance).toISOString().split("T")[0]
+              : ""
+          }
+          onChange={handleChange}
+          disabled={!!user?.date_naissance}
+        />
+        {user?.date_naissance && (
+          <small className="text-xs text-gray-500 mt-1">
+            La date de naissance ne peut pas être modifiée.
+          </small>
+        )}
+      </div>
+
+      {/* Bloc mot de passe */}
       <div className="col-span-2 mt-4 grid grid-cols-2 gap-2 border p-4">
         <div className="flex flex-col col-span-2 md:col-span-1">
           <label htmlFor="currentPassword" className="text-sm text-secondary">
@@ -146,13 +182,14 @@ export default function ProfileDetails() {
           </label>
           <input
             type="password"
-            name="password"
+            name="current_password"
             id="currentPassword"
             className="border rounded p-1"
-            value={formData.password}
+            value={formData.current_password}
             onChange={handleChange}
           />
         </div>
+
         <div className="flex flex-col col-span-2 md:col-span-1">
           <label htmlFor="newPassword" className="text-sm text-secondary">
             Nouveau mot de passe
@@ -166,6 +203,7 @@ export default function ProfileDetails() {
             onChange={handleChange}
           />
         </div>
+
         <div className="flex flex-col col-span-2">
           <label htmlFor="confirmPassword" className="text-sm text-secondary">
             Confirmer le mot de passe
@@ -181,6 +219,7 @@ export default function ProfileDetails() {
         </div>
       </div>
 
+      {/* Bouton d’enregistrement */}
       <div className="col-span-2 flex justify-end">
         <button
           type="button"

@@ -1,4 +1,5 @@
 import axios from "axios";
+import { get } from "lodash";
 import { CONFIG } from "src/config-global";
 
 // ----------------------------------------------------------------------
@@ -80,7 +81,7 @@ export const patcher = async (url, data = {}, config = {}) => {
     const res = await axiosInstance.patch(url, data, config);
     return res.data;
   } catch (error) {
-    console.error("❌ Failed to patch:", error);
+    console.error("Failed to patch:", error);
     throw error;
   }
 };
@@ -93,17 +94,17 @@ export const endpoints = {
     signIn: "/api/auth/login",
     signUp: "/api/auth/register",
     logout: "/api/auth/logout",
-    edit: "/api/auth/profile"
+    edit: "/api/auth/profile",
   },
   categories: {
     list: "/api/categories",
-    byCategory: (category) => `/api/etablissements/by-categories/${category}`,
+    byCategory: (category) => `/api/produits/by-categories/${category}`,
   },
   etablissements: {
     list: "/api/etablissements",
     getAll: "/api/all-etablissements",
     detail: (slug) => `/api/etablissements/${slug}`,
-    avis: "/api/etablissements/avis",
+    avis: "/api/auth/etablissements/avis",
     filters: "/api/filters/etablissements",
   },
   actualites: {
@@ -112,38 +113,50 @@ export const endpoints = {
     getLast: "/api/last-actualites",
   },
   product: {
-    list: '/api/produit',
+    list: "/api/produit",
     detail: (slug) => `/api/produit/${slug}`,
-    avis: '/api/produit/avis',
+    avis: "/api/auth/produit/avis",
   },
   orders: {
-    list: '/api/commandes',
+    list: "/api/commandes",
     detail: (id) => `/api/auth/commandes/${id}`,
-    myOrders: '/api/auth/mes-commandes'
+    myOrders: "/api/auth/mes-commandes",
   },
   layout: {
-    sidebar : '/api/menu-sidebar',
-    footer : '/api/menu-footer',
-    carte: '/api/section-carte',
-    prochainement: '/api/section-prochainement-disponible',
-    marques: '/api/marques-partenaires',
+    sidebar: "/api/menu-sidebar",
+    footer: "/api/menu-footer",
+    carte: "/api/section-carte",
+    prochainement: "/api/section-prochainement-disponible",
+    marques: "/api/marques-partenaires",
   },
   wishlist: {
-    toggle: '/api/auth/wishlists',
-    list: '/api/auth/wishlists',
+    toggle: "/api/auth/wishlists",
+    list: "/api/auth/wishlists",
   },
   parrainage: {
-    get: '/api/auth/parrainage',
-    sendEmails: '/api/auth/send-invites'
+    get: "/api/auth/parrainage",
+    sendEmails: "/api/auth/send-invites",
   },
   aide: {
-    services: '/api/services',
-    mymessages: '/api/auth/messages',
-    messages: (id) => `/api/auth/messages/${id}`
+    services: "/api/services",
+    mymessages: "/api/auth/messages",
+    messages: (id) => `/api/auth/messages/${id}`,
+  },
+  fidelite: {
+    get: "/api/auth/points-fidelite",
+    exchangePoints: "/api/auth/fidelite/echange",
   },
   forms: {
     partenaire: "/api/send-partenaire",
     entreprise: "/api/send-entreprise",
-    marques: "/api/send-marques"
-  }
+    marques: "/api/send-marques",
+  },
+  bonachats: {
+    list: "/api/auth/credits",
+  },
+  search: {
+    locations: "/api/search/locations",
+    serviceOrCategorie: "/api/search/services-categories",
+    produits: "/api/search", 
+  },
 };

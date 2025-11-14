@@ -1,8 +1,9 @@
 import React from "react";
-import { IoMdClose } from "react-icons/io";
+import { IoMdClose,IoMdMenu } from "react-icons/io";
 import { motion, AnimatePresence } from "framer-motion";
 import { useLayout } from "src/actions/layout";
 import { Link } from "react-router-dom";
+
 export default function Menu({ show, onClose }) {
   const { sidebar } = useLayout();
 
@@ -48,7 +49,7 @@ export default function Menu({ show, onClose }) {
       <AnimatePresence>
         {show && (
           <motion.div
-            className="fixed top-0 left-0 h-full bg-white w-96 z-50"
+            className="fixed top-0 left-0 h-full bg-white w-96 z-50 "
             variants={menuVariants}
             initial="hidden"
             animate="visible"
