@@ -7,8 +7,12 @@ import {
   useServiceCategoriesSearch,
 } from "src/actions/serach";
 import { Link } from "react-router-dom";
+import { useGetHomePage } from "src/actions/homepage";
 
 const Serach = () => {
+  const { sections } = useGetHomePage();
+
+  // ✅ Tous les hooks doivent être appelés avant tout return conditionnel
   const {
     query: villeQuery,
     setQuery: setVilleQuery,
@@ -25,6 +29,10 @@ const Serach = () => {
 
   const [selectedService, setSelectedService] = useState("");
   const [showServiceDropdown, setShowServiceDropdown] = useState(false);
+
+  // Maintenant on peut filtrer la section
+  const section = sections?.find((s) => s.key === "section2");
+  if (!section) return null;
 
   const handleClear = () => {
     setVilleQuery("");
@@ -58,6 +66,7 @@ const Serach = () => {
 
   const searchUrl =
     serviceSlug && villeSlug ? `/recherche/${serviceSlug}/${villeSlug}` : null;
+
   return (
     <div className="relative w-screen left-[calc(-50vw+50%)] bg-white py-12">
       <div className="max-w-4xl mx-auto text-center px-8">
@@ -65,11 +74,11 @@ const Serach = () => {
           className="text-2xl md:text-3xl font-semibold mb-2"
           style={{ fontFamily: "Cormorant Garamond" }}
         >
-          Des Moments Sélectionnés pour Vous
+          {section.title}
         </h2>
+
         <p className="mb-8 font-light text-2xl md:text-3xl text-[#B6B499]">
-          Une collection choisie avec soin, pour celles et ceux en quête
-          d’exceptions.
+          {section.description}
         </p>
 
         <form
@@ -156,7 +165,7 @@ const Serach = () => {
                 </button>
               )}
             </div>
-           
+
             {showServiceDropdown && (
               <div className="absolute top-full left-0 right-0 mt-1 bg-white border border-gray-200 rounded-md shadow-lg z-50 max-h-60 overflow-y-auto">
                 <div className="p-2 border-b border-gray-100">

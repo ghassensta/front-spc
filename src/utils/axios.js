@@ -159,4 +159,8 @@ export const endpoints = {
     serviceOrCategorie: "/api/search/services-categories",
     produits: "/api/search", 
   },
+
+  homesections:{
+    get:"/api/homepage/sections"
+  }
 };
