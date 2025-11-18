@@ -162,5 +162,9 @@ export const endpoints = {
 
   homesections:{
     get:"/api/homepage/sections"
+  },
+
+  credits:{
+    get:"/api/auth/credits-panier"
   }
 };

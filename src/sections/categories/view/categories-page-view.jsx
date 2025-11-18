@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useMemo } from "react";
 import SpaCard from "src/components/spa-card/spa-card";
 import { paths } from "src/router/paths";
 import CategoriesSkeleton from "../categories-skeleton";
@@ -21,28 +21,30 @@ export default function CategoriesPageView({
     service: "",
   });
 
-  console.log('ddddddddddddddddddddd',cardsByCategory);
-
   const handleChange = (e) => {
     setFilters({ ...filters, [e.target.name]: e.target.value });
   };
 
-  // Apply filters
-  const filteredCards = cardsByCategory.filter((  ) => {
-    return (
-      (filters.etablissement
-        ? card.types_etablissement_ids?.includes(
-            parseInt(filters.etablissement)
-          )
-        : true) &&
-      (filters.region
+  // === CORRECTION PRINCIPALE : useMemo + paramètre "card" ajouté ===
+  const filteredCards = useMemo(() => {
+    return cardsByCategory.filter((card) => {
+      if (!card) return false;
+
+      const matchType = filters.etablissement
+        ? card.types_etablissement_ids?.includes(parseInt(filters.etablissement))
+        : true;
+
+      const matchRegion = filters.region
         ? card.region_ids?.includes(parseInt(filters.region))
-        : true) &&
-      (filters.service
+        : true;
+
+      const matchService = filters.service
         ? card.type_equipement_ids?.includes(parseInt(filters.service))
-        : true)
-    );
-  });
+        : true;
+
+      return matchType && matchRegion && matchService;
+    });
+  }, [cardsByCategory, filters]);
 
   if (filterLoading) {
     return <FiltersSkeleton />;
@@ -66,7 +68,9 @@ export default function CategoriesPageView({
           size="md"
         />
       </div>
+
       <p className="text-center text-4xl font-semibold my-4">Filtrer par</p>
+
       <div className="grid grid-cols-1 md:grid-cols-3 px-2 gap-4 font-roboto mb-8">
         <div className="border rounded-lg">
           <select
@@ -116,6 +120,7 @@ export default function CategoriesPageView({
           </select>
         </div>
       </div>
+
       <div className="mb-10">
         <p className="text-center text-4xl font-normal my-4">Soins Visage</p>
         <p className="text-center text-3xl font-normal my-4 text-[#777765]">
@@ -129,26 +134,27 @@ export default function CategoriesPageView({
         <>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-x-4 gap-y-12">
             {filteredCards.length > 0 ? (
-              <>
-                {filteredCards.map((card) => (
-                  <Card
-                    key={card.id}
-                    to={paths.product(card.slug)}
-                    headTitle={card.etablissement.nom}
-                    image={CONFIG.serverUrl + "/storage/" + card.image}
-                    description={card.description_avant}
-                    location={card.etablissement.adresse_complete}
-                    title={card.nom}
-                    offreValue={card.remise_produit}
-                  />
-                ))}
-              </>
+              filteredCards.map((card) => (
+                <Card
+                  key={card.id}
+                  to={paths.product(card.slug)}
+                  headTitle={card.etablissement.nom}
+                  image={`${CONFIG.serverUrl}/storage/${card.image}`}
+                  description={card.description_avant}
+                  location={card.etablissement.adresse_complete}
+                  title={card.nom}
+                  offreValue={card.remise_produit}
+                />
+              ))
             ) : (
-              <p className="col-span-3 text-center">Aucun résultat trouvé.</p>
+              <p className="col-span-3 text-center text-xl text-gray-500">
+                Aucun résultat trouvé.
+              </p>
             )}
           </div>
+
           <div className="w-full flex justify-center mb-10">
-            <button className="inline-flex font-tahoma rounded-full items-center gap-2 uppercase font-normal tracking-widest transition-all duration-300 px-6 py-3 text-sm bg-black text-white mt-6 text-center mx-auto">
+            <button className="inline-flex font-tahoma rounded-full items-center gap-2 uppercase font-normal tracking-widest transition-all duration-300 px-6 py-3 text-sm bg-black text-white mt-6">
               CHARGER PLUS D’OFFRES
             </button>
           </div>

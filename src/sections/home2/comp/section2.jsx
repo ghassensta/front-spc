@@ -7,7 +7,6 @@ const Section3 = () => {
 
   const section = sections?.find((s) => s.key === "section3");
   if (!section) return null;
-    console.log('xxxxxxxxxxx',section);
   return (
     <div
       className="w-screen relative left-[calc(-50vw+50%)] min-h-32 overflow-hidden"

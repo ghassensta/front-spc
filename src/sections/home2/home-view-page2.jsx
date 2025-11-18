@@ -2,28 +2,28 @@ import React from "react";
 import Header from "./comp/header";
 import Section from "./comp/section";
 import { paths } from "src/router/paths";
-import { useLayout } from "src/actions/layout";
 import { CONFIG } from "src/config-global";
 import ProchainementSection from "./comp/prochainement-section";
 import InformationsSection from "./comp/informations-section";
 import { useGetLastNews } from "src/actions/actualites";
 import { Link } from "react-router-dom";
 import { Swiper, SwiperSlide } from "swiper/react";
-import { Autoplay, Navigation } from "swiper/modules";
+import { Autoplay } from "swiper/modules"; 
 import Section2 from "./comp/section2";
 import { useGetHomePage } from "src/actions/homepage";
 import "swiper/css";
 
 export default function HomePageView() {
   const { sections } = useGetHomePage();
-  const section4 = sections?.find((s) => s.key === "section4");
   const { actualites } = useGetLastNews(3);
-  const { prochainement, marques } = useLayout();
 
-  if (!section4) return null;
+  const section4 = sections?.find((s) => s.key === "section4");
+  const section5 = sections?.find((s) => s.key === "section5");
+  const section6 = sections?.find((s) => s.key === "section6"); 
+
+  if (!sections || !section4 || !section5) return null;
 
   const dynamicSections = section4.extra_data.categories.map((cat) => ({
-    // Fond dynamique : "blanc" → white, "beige" → beige
     bg: cat.background === "beige" ? "beige" : "white",
     header: cat.title,
     subheader: cat.description || "",
@@ -34,9 +34,9 @@ export default function HomePageView() {
       slug: card.adresse,
       name: card.title,
       image: card.image,
-      adresse_etab: card.adresse_etab, 
-      spaName: card.etablissement_name ?? "dddddddddd",  
-      spaLocation: card.adresse_etab || "", 
+      adresse_etab: card.adresse_etab,
+      spaName: card.etablissement_name ?? "dddddddddd",
+      spaLocation: card.adresse_etab || "",
       offre: card.remise ? `${card.remise}% de remise` : "",
       offreValue: card.remise ? parseInt(card.remise) : 0,
     })),
@@ -59,8 +59,8 @@ export default function HomePageView() {
         ))}
       </div>
 
-      {/* PROCHAINEMENT DISPONIBLE */}
-      <ProchainementSection prochainement={prochainement} />
+      <ProchainementSection prochainement={section5} />
+
       <InformationsSection />
 
       {/* ACTUALITÉS */}
@@ -72,9 +72,7 @@ export default function HomePageView() {
               <span className="text-[#B6B499]">Nos derniers articles</span>
             </h2>
 
-            <div
-              className={`grid grid-cols-1 md:grid-cols-${actualites.length} gap-4 mt-4`}
-            >
+            <div className={`grid grid-cols-1 md:grid-cols-${actualites.length} gap-4 mt-4`}>
               {actualites.map((actualite) => (
                 <div className="flex flex-col" key={actualite.id}>
                   <Link to={paths.actualitesDetails(actualite.slug)}>
@@ -107,62 +105,64 @@ export default function HomePageView() {
         </div>
       )}
 
-      {/* MARQUES PARTENAIRES */}
-      {marques?.extra_data?.logos && (
-        <div className="bg-white">
-          <div className="max-w-6xl mx-auto py-12">
-            <h2 className="text-3xl font-bold text-center">
-              {marques.title || "Nos marques partenaires"}
+      {/* === SECTION 6 : Marques partenaires === */}
+      {section6 && section6.extra_data?.logos && section6.extra_data.logos.length > 0 && (
+        <div className="bg-white py-16">
+          <div className="max-w-7xl mx-auto px-4 text-center">
+            <h2 className="text-4xl md:text-5xl font-bold mb-4">
+              {section6.title}
             </h2>
-            <p className="text-center text-gray-500 mt-2 mb-10">
-              {marques.description}
-            </p>
-
-            {Object.keys(marques.extra_data.logos).length > 0 ? (
-              <Swiper
-                spaceBetween={20}
-                modules={[Autoplay, Navigation]}
-                autoplay={{ delay: 3000 }}
-                loop
-                breakpoints={{
-                  320: { slidesPerView: 2 },
-                  640: { slidesPerView: 3 },
-                  768: { slidesPerView: 4 },
-                  1024: { slidesPerView: 5 },
-                }}
-              >
-                {Object.values(marques.extra_data.logos || {}).map(
-                  (marque, i) => (
-                    <SwiperSlide
-                      key={i}
-                      className="flex justify-center items-center h-40"
-                    >
-                      <a
-                        href={marque.link || "#"}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="block w-full h-full flex items-center justify-center"
-                      >
-                        <img
-                          loading="lazy"
-                          src={
-                            marque.image
-                              ? `${CONFIG.serverUrl}/storage/${marque.image}`
-                              : "/assets/img/placeholder.png"
-                          }
-                          alt={`Logo partenaire ${i + 1}`}
-                          className="max-h-24 object-contain"
-                        />
-                      </a>
-                    </SwiperSlide>
-                  )
-                )}
-              </Swiper>
-            ) : (
-              <p className="text-center text-gray-400">
-                Aucune marque partenaire disponible pour le moment.
+            {section6.description && (
+              <p className="text-gray-600 text-lg max-w-3xl mx-auto mb-12">
+                {section6.description}
               </p>
             )}
+
+            {/* CORRECTION 2 : Module Navigation retiré car tu ne l'utilises pas */}
+            <Swiper
+              modules={[Autoplay]} // ← Seulement Autoplay (pas Navigation = pas d'erreur)
+              spaceBetween={40}
+              slidesPerView={2}
+              loop={true}
+              autoplay={{
+                delay: 3000,
+                disableOnInteraction: false,
+              }}
+              breakpoints={{
+                640: { slidesPerView: 3 },
+                768: { slidesPerView: 4 },
+                1024: { slidesPerView: 5 },
+                1280: { slidesPerView: 6 },
+              }}
+              className="py-8"
+            >
+              {section6.extra_data.logos.map((logo, index) => (
+                <SwiperSlide key={index} className="flex items-center justify-center">
+                  {logo.link ? (
+                    <a
+                      href={logo.link}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="block p-6 hover:scale-110 transition-all duration-300"
+                    >
+                      <img
+                        src={`${CONFIG.serverUrl}/storage/${logo.image}`}
+                        alt={`Partenaire ${index + 1}`}
+                        className="max-h-24 object-contain filter grayscale hover:grayscale-0 transition-all"
+                        loading="lazy"
+                      />
+                    </a>
+                  ) : (
+                    <img
+                      src={`${CONFIG.serverUrl}/storage/${logo.image}`}
+                      alt={`Partenaire ${index + 1}`}
+                      className="max-h-24 object-contain opacity-70"
+                      loading="lazy"
+                    />
+                  )}
+                </SwiperSlide>
+              ))}
+            </Swiper>
           </div>
         </div>
       )}

@@ -1,9 +1,14 @@
-import { useMemo, Suspense, useEffect, useCallback, createContext } from 'react';
+import {
+  useMemo,
+  Suspense,
+  useEffect,
+  useCallback,
+  createContext,
+} from 'react';
 import { useRouter } from '../../../hooks';
 import { getStorage, useLocalStorage } from '../../../hooks/use-local-storage';
 
 export const CheckoutContext = createContext(undefined);
-
 export const CheckoutConsumer = CheckoutContext.Consumer;
 
 const STORAGE_KEY = 'app-checkout';
@@ -17,6 +22,7 @@ const initialState = {
   billing: {},
   expediteur: {},
   totalItems: 0,
+  selectedCreditIds: [], // ←←← AJOUTÉ ICI
 };
 
 // ----------------------------------------------------------------------
@@ -39,124 +45,130 @@ function Container({ children }) {
     initialState
   );
 
+  // Mise à jour automatique des totaux quand les items/discount/shipping changent
   const updateTotalField = useCallback(() => {
-    const totalItems = state.items.reduce((total, item) => total + item.quantity, 0);
-    const subtotal = state.items.reduce((total, item) => total + item.quantity * item.price, 0);
+    const totalItems = state.items.reduce((acc, item) => acc + item.quantity, 0);
+    const subtotal = state.items.reduce((acc, item) => acc + item.quantity * item.price, 0);
+    const total = subtotal - state.discount + state.shipping;
 
     setField('subtotal', subtotal);
     setField('totalItems', totalItems);
-    setField('total', subtotal - state.discount + state.shipping);
-  }, [setField, state.discount, state.items, state.shipping]);
+    setField('total', total);
+  }, [state.items, state.discount, state.shipping, setField]);
 
+  // Au chargement initial, recalculer si données restaurées
   useEffect(() => {
-    const restoredValue = getStorage(STORAGE_KEY);
-    if (restoredValue) {
+    if (state.items.length > 0 || state.discount > 0 || state.shipping > 0) {
       updateTotalField();
     }
-  }, [updateTotalField]);
+  }, []); // Une seule fois au montage
 
+  // Recalculer à chaque changement critique
+  useEffect(() => {
+    updateTotalField();
+  }, [state.items, state.discount, state.shipping, updateTotalField]);
+
+  // Ajouter au panier
   const onAddToCart = useCallback(
     (newItem) => {
       const updatedItems = [...state.items];
-      const existingItemIndex = updatedItems.findIndex((item) => item.id === newItem.id);
+      const existingIndex = updatedItems.findIndex((i) => i.id === newItem.id);
 
-      // Filter out duplicate destinataires based on email
-      // const newDestinataires = newItem.destinataires.filter(
-      //   (newDest) => !updatedItems.some((item) =>
-      //     item.destinataires?.some((dest) => dest.email.toLowerCase() === newDest.email.toLowerCase())
-      //   )
-      // );
-
-      if (existingItemIndex !== -1) {
-        // Item exists, append new unique destinataires and update quantity
-        const existingItem = updatedItems[existingItemIndex];
-        const updatedDestinataires = [...existingItem.destinataires, ...newItem.destinataires];
-        updatedItems[existingItemIndex] = {
-          ...existingItem,
-          destinataires: updatedDestinataires,
-          quantity: updatedDestinataires.length, // Quantity is number of destinataires
+      if (existingIndex > -1) {
+        const existing = updatedItems[existingIndex];
+        const newDest = newItem.destinataires.filter(
+          (d) =>
+            !existing.destinataires.some(
+              (e) => e.email.toLowerCase() === d.email.toLowerCase()
+            )
+        );
+        updatedItems[existingIndex] = {
+          ...existing,
+          destinataires: [...existing.destinataires, ...newDest],
+          quantity: existing.destinataires.length + newDest.length,
         };
       } else {
-        // New item, add with unique destinataires list
         updatedItems.push({
           ...newItem,
-          destinataires: newItem.destinataires,
-          quantity: newItem.destinataires.length, // Quantity is number of destinataires
+          quantity: newItem.destinataires.length,
         });
       }
 
       setField('items', updatedItems);
-      updateTotalField();
     },
-    [setField, state.items, updateTotalField]
+    [state.items, setField]
   );
 
   const onDeleteCart = useCallback(
     (itemId) => {
-      const updatedItems = state.items.filter((item) => item.id !== itemId);
-      setField('items', updatedItems);
-      updateTotalField();
+      setField(
+        'items',
+        state.items.filter((item) => item.id !== itemId)
+      );
     },
-    [setField, state.items, updateTotalField]
+    [state.items, setField]
   );
 
   const onCreateExpediteur = useCallback(
-    (expediteur) => {
-      setField('expediteur', expediteur);
-    },
+    (expediteur) => setField('expediteur', expediteur),
     [setField]
   );
 
   const onCreateBilling = useCallback(
-    (address) => {
-      setField('billing', address);
+    (billing) => setField('billing', billing),
+    [setField]
+  );
+
+  const onApplyDiscount = useCallback(
+    (discount) => setField('discount', discount),
+    [setField]
+  );
+
+  const onApplyShipping = useCallback(
+    (shipping) => setField('shipping', shipping),
+    [setField]
+  );
+
+  // ←←← NOUVELLE FONCTION POUR LES CRÉDITS
+  const onSelectCredit = useCallback(
+    (creditId) => {
+      setField('selectedCreditIds', (prev = []) => {
+        if (prev.includes(creditId)) {
+          return prev.filter((id) => id !== creditId);
+        }
+        return [...prev, creditId];
+      });
     },
     [setField]
   );
 
- 
-
-  const onApplyDiscount = useCallback(
-    (discount) => {
-      setField('discount', discount);
-      updateTotalField();
-    },
-    [setField, updateTotalField]
-  );
-
-  const onApplyShipping = useCallback(
-    (shipping) => {
-      setField('shipping', shipping);
-      updateTotalField();
-    },
-    [setField, updateTotalField]
-  );
-
+  // Reset complet
   const onReset = useCallback(() => {
     resetState();
+    localStorage.removeItem(STORAGE_KEY);
   }, [resetState]);
 
   const memoizedValue = useMemo(
     () => ({
       ...state,
+      selectedCreditIds: state.selectedCreditIds || [], // ←←← Toujours un tableau
       canReset,
       onReset,
       onUpdate: setState,
       onUpdateField: setField,
-      // setAmount: onSetAmount,
       onAddToCart,
       onDeleteCart,
       onCreateBilling,
       onCreateExpediteur,
       onApplyDiscount,
       onApplyShipping,
+      onSelectCredit,        // ←←← Exposée !
+      setSelectedCreditIds: (ids) => setField('selectedCreditIds', ids), // ←←← Setter direct aussi
     }),
     [
       state,
-      onReset,
       canReset,
       setState,
-      // onSetAmount,
       setField,
       onAddToCart,
       onDeleteCart,
@@ -164,8 +176,13 @@ function Container({ children }) {
       onCreateExpediteur,
       onApplyDiscount,
       onApplyShipping,
+      onReset,
     ]
   );
 
-  return <CheckoutContext.Provider value={memoizedValue}>{children}</CheckoutContext.Provider>;
+  return (
+    <CheckoutContext.Provider value={memoizedValue}>
+      {children}
+    </CheckoutContext.Provider>
+  );
 }

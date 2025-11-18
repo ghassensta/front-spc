@@ -33,7 +33,7 @@ export default function LayoutTheme({ children }) {
   });
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen bg-background overflow-hidden">
       <div className="min-h-screen relative m-auto flex flex-col">
         <LanguageNav />
         <Navbar />

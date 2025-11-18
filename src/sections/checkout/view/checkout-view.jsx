@@ -8,7 +8,6 @@ import { CONFIG } from "src/config-global";
 import { useAuthContext } from "src/auth/hooks/use-auth-context";
 import { toast } from "react-toastify";
 import { useRouter } from "src/hooks";
-import CreditOption from "src/components/checkout/CreditOption";
 
 export default function CheckoutView() {
   const checkout = useCheckoutContext();
@@ -149,7 +148,6 @@ useEffect(() => {
               )}
             </tbody>
           </table>
-              <CreditOption />
           {/* Totaux */}
           <div className="flex flex-col items-end mt-6 space-y-1 text-sm font-medium">
             <div>Sous-total HT : {subtotal.toFixed(2)} €</div>

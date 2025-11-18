@@ -4,14 +4,20 @@ import { motion, AnimatePresence } from "framer-motion";
 import { CONFIG } from "src/config-global";
 
 export default function ProchainementSection({ prochainement }) {
-  if (!prochainement || !prochainement?.extra_data || !prochainement?.is_visible) return null;
+  if (
+    !prochainement ||
+    !prochainement.extra_data ||
+    !prochainement.extra_data.cards ||
+    prochainement.extra_data.cards.length === 0
+  ) {
+    return null;
+  }
 
   const [currentIndex, setCurrentIndex] = useState(0);
-  const cards = prochainement.extra_data.cards || [];
+  const cards = prochainement.extra_data.cards;
   const backgroundColor = prochainement.extra_data.background || "white";
   const timerRef = useRef(null);
 
-  // --- Navigation Handlers ---
   const nextSlide = () => {
     setCurrentIndex((prevIndex) => (prevIndex + 1) % cards.length);
     resetTimer();
@@ -27,11 +33,11 @@ export default function ProchainementSection({ prochainement }) {
     resetTimer();
   };
 
-  // --- Timer Handling ---
   const startTimer = () => {
+    if (cards.length <= 1) return;
     timerRef.current = setInterval(() => {
       setCurrentIndex((prevIndex) => (prevIndex + 1) % cards.length);
-    }, 4000); // 4 seconds
+    }, 4000);
   };
 
   const resetTimer = () => {
@@ -40,37 +46,29 @@ export default function ProchainementSection({ prochainement }) {
   };
 
   useEffect(() => {
-    if (cards.length > 1) startTimer();
+    startTimer();
     return () => clearInterval(timerRef.current);
   }, [cards.length]);
 
-  // --- Render ---
+  const getImageUrl = (path) => {
+    if (!path) return "";
+    if (path.startsWith("http")) return path;
+    if (path.startsWith("/storage/")) return `${CONFIG.serverUrl}${path}`;
+    return `${CONFIG.serverUrl}/storage/${path}`;
+  };
+
   return (
     <div
       className={`bg-[${backgroundColor}] w-screen relative bg-center left-[calc(-50vw+50%)] min-h-32 overflow-hidden py-4 px-3`}
     >
       <div className="max-w-6xl mx-auto">
         <div className="flex flex-col md:flex-row gap-2 md:gap-6">
+
           {/* LEFT SECTION */}
           <div className="w-full md:w-1/2 py-8 px-3">
-            {/* <div className="flex gap-3 mb-4">
-              <span
-                onClick={prevSlide}
-                className="text-2xl border border-black rounded-full p-3 cursor-pointer hover:bg-[#B6B499]/20 transition"
-              >
-                <FiChevronLeft />
-              </span>
-              <span
-                onClick={nextSlide}
-                className="text-2xl border border-black rounded-full p-3 cursor-pointer hover:bg-[#B6B499]/20 transition"
-              >
-                <FiChevronRight />
-              </span>
-            </div> */}
-
-            <h2 className="text-3xl">{prochainement?.title}</h2>
+            <h2 className="text-3xl">{prochainement.title}</h2>
             <h3 className="text-[#B6B499] text-2xl mb-4">
-              {prochainement?.description}
+              {prochainement.description}
             </h3>
 
             <AnimatePresence mode="wait">
@@ -96,13 +94,13 @@ export default function ProchainementSection({ prochainement }) {
                 <motion.img
                   key={currentIndex}
                   loading="lazy"
-                  src={CONFIG.serverUrl + cards[currentIndex]?.image}
+                  src={getImageUrl(cards[currentIndex]?.image)}
                   initial={{ opacity: 0 }}
                   animate={{ opacity: 1 }}
                   exit={{ opacity: 0 }}
                   transition={{ duration: 0.5 }}
-                  className="w-full h-auto"
-                  alt={cards[currentIndex].title}
+                  className="w-full h-96 object-cover"   // ← ICI : toutes les images ont la même hauteur fixe
+                  alt={cards[currentIndex]?.title || ""}
                 />
               </AnimatePresence>
 
