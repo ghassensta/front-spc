@@ -28,7 +28,7 @@ export default function Section({
           )}
         </h2>
 
-        <div className="mt-8 px-12">
+        <div className="mt-8 px-1">
           <SwiperContent slidesPerView={max} data={data} />
         </div>
 

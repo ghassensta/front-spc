@@ -2,6 +2,7 @@
 import React, { useState } from "react";
 import { MapPin, X, Loader2, Search } from "lucide-react";
 import { FaSearch as FaSearchIcon } from "react-icons/fa";
+
 import {
   useLocationSearch,
   useServiceCategoriesSearch,
@@ -29,7 +30,6 @@ const Serach = () => {
   const [selectedService, setSelectedService] = useState("");
   const [showServiceDropdown, setShowServiceDropdown] = useState(false);
 
-  // Maintenant on peut filtrer la section
   const section = sections?.find((s) => s.key === "section2");
   if (!section) return null;
 
@@ -262,28 +262,29 @@ const Serach = () => {
             )}
           </div>
 
-          <div className="flex flex-col items-start  md:items-center justify-end">
-            <label className="block text-sm text-gray-700 mb-1 text-left md:text-center">
-              Rechercher
+          {/* BOUTON RECHERCHER – Maintenant avec le texte "Rechercher" */}
+          <div className="flex flex-col items-start md:items-center justify-end w-full md:w-auto">
+            <label className="block text-sm text-gray-700 mb-1 text-left md:text-center w-full">
             </label>
 
             {hasSearch && searchUrl ? (
               <Link
                 to={searchUrl}
-                className="bg-black text-white p-3 rounded-md hover:bg-gray-900 transition w-full flex items-center"
+                className="bg-black text-white p-3 rounded-md hover:bg-gray-900 transition w-full md:w-auto flex items-center justify-center min-w-0 font-medium text-sm uppercase tracking-wider"
               >
                 <span className="mx-auto">
-                  <FaSearchIcon />
+                  Rechercher
                 </span>
               </Link>
             ) : (
               <button
                 type="button"
                 disabled
-                className="bg-gray-300 text-gray-500 p-3 rounded-md cursor-not-allowed w-full flex items-center"
+                className="bg-gray-300 text-gray-500 p-3 rounded-md cursor-not-allowed w-full md:w-auto flex items-center justify-center min-w-0 font-medium text-sm uppercase tracking-wider mt-1"
               >
                 <span className="mx-auto">
-                  <FaSearchIcon />
+                  Rechercher              
+
                 </span>
               </button>
             )}

@@ -9,23 +9,38 @@ import { paths } from "src/router/paths";
 import { CONFIG } from "src/config-global";
 
 export default function SwiperContent({ slidesPerView = 3, data }) {
-  // Generate a unique ID for each Swiper instance
   const uniqueId = useId();
   const prevId = `prev-${uniqueId}`;
   const nextId = `next-${uniqueId}`;
-  console.info("THIS IS DATA: ", data)
+  console.info("THIS IS DATA: ", data);
 
   return (
     <div className="relative max-w-[1200px] mx-auto px-12">
       <Swiper
-      
         rewind
         spaceBetween={20}
         slidesPerView={slidesPerView}
+        initialSlide={2}                     
+        centeredSlides={true}                
         breakpoints={{
-          320: { slidesPerView: 1, spaceBetween: 10 },
-          768: { slidesPerView: 2, spaceBetween: 15 },
-          1024: { slidesPerView, spaceBetween: 20 },
+          320: { 
+            slidesPerView: 1, 
+            spaceBetween: 10,
+            initialSlide: 1,
+            centeredSlides: true 
+          },
+          768: { 
+            slidesPerView: 2, 
+            spaceBetween: 15,
+            initialSlide: 1,
+            centeredSlides: true 
+          },
+          1024: { 
+            slidesPerView, 
+            spaceBetween: 20,
+            initialSlide: 0,                 
+            centeredSlides: false 
+          },
         }}
         modules={[Navigation]}
         navigation={{
@@ -33,7 +48,6 @@ export default function SwiperContent({ slidesPerView = 3, data }) {
           nextEl: `#${nextId}`,
         }}
         className=""
-        // style={{ overflow: "visible"}}
       >
         {data.map((item) => (
           <SwiperSlide className="pt-8" key={item.slug}>
@@ -52,7 +66,6 @@ export default function SwiperContent({ slidesPerView = 3, data }) {
         ))}
       </Swiper>
 
-      {/* Custom unique navigation buttons */}
       <div
         id={prevId}
         className="absolute left-0 top-1/2 transform bg-[#B6B499] rounded-full w-[30px!important] h-[30px!important] -translate-y-3/4 z-10 cursor-pointer flex items-center justify-center"

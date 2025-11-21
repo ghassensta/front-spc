@@ -50,7 +50,7 @@ export default function WhoPageView() {
 
   return (
     <div className="">
-      <div className="flex bg-[#FBF6EC] w-screen relative left-[calc(-50vw+50%)] ">
+      <div className="flex bg-[#FBF6EC] w-screen relative left-[calc(-50vw+50%)] px-5 ">
         <div className="max-w-6xl mx-auto py-6 px-1">
           <h2 className="text-4xl font-bold mb-4">
             L'Essence de Spa & Prestige Collection

@@ -43,7 +43,7 @@ export default function CarteCadeau() {
   return (
     <>
       {/* Intro Section */}
-      <div className="flex bg-[#FBF6EC] w-screen relative left-[calc(-50vw+50%)] p-1">
+      <div className="flex bg-[#FBF6EC] w-screen relative left-[calc(-50vw+50%)] px-5">
         <div className="max-w-6xl mx-auto py-6">
           <div className="flex flex-col md:flex-row gap-6">
             <div className="md:w-1/2">

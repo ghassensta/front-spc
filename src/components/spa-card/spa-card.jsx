@@ -45,7 +45,7 @@ export default function SpaCard({
     if (!remise_offres) return null;
 
     return (
-      <span className="bg-[#B6B499] w-max text-black font-bold font-roboto px-2 py-1 absolute -bottom-1 left-1/2 -translate-x-1/2">
+      <span className="bg-[#B6B499] w-max text-black font-bold font-roboto px-2 py-1 absolute -bottom-1 left-1/2 -translate-x-1/2 rounded-3xl">
         Jusqu'à {remise_offres}% de remise
       </span>
     );

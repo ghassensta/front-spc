@@ -1,96 +1,112 @@
-import React, { useState, useContext, useRef } from "react";
+import React, { useState, useRef } from "react";
 import {
-  IoIosHeartEmpty,
-  IoMdCart,
+  IoMdMenu,
   IoMdClose,
   IoMdLogIn,
-  IoMdMenu,
+  IoMdCart,
 } from "react-icons/io";
+import { MdDashboard } from "react-icons/md";
+import { FaRegHeart } from "react-icons/fa";
+
 import Logo from "../logo/logo";
-import Menu from "../menu/menu";
+import MenuPopover from "../menu/menu-popover";
+import LanguageNav from "src/components/language-nav/language-nav";
 import { Link } from "react-router-dom";
 import { paths } from "../../router/paths";
 import { CheckoutContext } from "../../sections/checkout/context/checkout-provider";
-import { MdDashboard } from "react-icons/md";
 import { useAuthContext } from "src/auth/hooks/use-auth-context";
-import { FaRegHeart } from "react-icons/fa";
-import MenuPopover from "../menu/menu-popover";
-import LanguageNav from "src/components/language-nav/language-nav";
+import { useContext } from "react";
 
 export default function Navbar() {
-  const [show, setShow] = useState(false);
+  const [showMenu, setShowMenu] = useState(false);
+  const buttonRef = useRef(null);
 
   const { items } = useContext(CheckoutContext);
-
   const { user } = useAuthContext();
 
-  const buttonRef = useRef(null);
+  const cartCount = items?.length || 0;
 
   return (
     <>
       <LanguageNav />
-      <div className="w-full px-2 md:px-7 py-8 flex flex-col md:flex-row justify-between relative gap-6">
-        <div className="flex justify-between ">
+
+      <div className="w-full px-4 md:px-8 py-6 flex flex-col md:flex-row items-center justify-between relative gap-4">
+        
+        {/* Bouton Menu Mobile + Icônes droite mobile */}
+        <div className="w-full md:w-auto flex justify-between items-center">
+          {/* Bouton Menu */}
           <button
             ref={buttonRef}
-            className="text-base cursor-pointer flex items-center h-max p-1 gap-2 text-[#33373d] bg-black/5 font-arial font-sans font-medium "
-            onClick={() => setShow(!show)}
+            onClick={() => setShowMenu(!showMenu)}
+            className="flex items-center gap-2.5 px-3 py-2 bg-black/5 rounded-lg text-[#33373d] font-medium text-sm hover:bg-black/10 transition"
           >
-            {show ? (
-              <IoMdClose className="text-2xl" />
-            ) : (
-              <IoMdMenu className="text-2xl" />
-            )}
-            <span>Menu</span>
+            {showMenu ? <IoMdClose size={26} /> : <IoMdMenu size={26} />}
+            <span className="hidden sm:inline">Menu</span>
           </button>
-          <div className="gap-3 flex md:hidden">
-            <Link to={paths.auth.root} className="relative">
-              <IoMdLogIn className="text-2xl" />
-            </Link>
+
+          {/* Icônes droite sur mobile */}
+          <div className="flex items-center gap-5 md:hidden">
+            {user ? (
+              <Link to={paths.dashboard.root}>
+                <MdDashboard size={24} className="text-gray-700" />
+              </Link>
+            ) : (
+              <Link to={paths.auth.root}>
+                <IoMdLogIn size={24} className="text-gray-700" />
+              </Link>
+            )}
+
             <Link to={paths.checkout} className="relative">
-              <IoMdCart className="text-2xl" />
-              {items?.length > 0 && (
-                <span className="absolute -top-2 -right-2 bg-red-500 text-white rounded-full text-xs w-5 h-5 flex items-center justify-center font-tahoma">
-                  {items.length}
+              <IoMdCart size={26} className="text-gray-700" />
+              {cartCount > 0 && (
+                <span className="absolute -top-2 -right-2 bg-red-500 text-white text-xs font-bold rounded-full w-5 h-5 flex items-center justify-center">
+                  {cartCount}
                 </span>
               )}
             </Link>
           </div>
         </div>
-        <MenuPopover
-          anchorRef={buttonRef}
-          open={show}
-          onClose={() => setShow(false)}
-        />
 
-        <Logo className="max-w-min mx-auto" />
+        {/* Logo centré */}
+        <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 md:static md:transform-none">
+          <Logo className="h-10 md:h-12" />
+        </div>
 
-        <div className="gap-3 hidden md:flex">
+        {/* Icônes droite sur desktop */}
+        <div className="hidden md:flex items-center gap-6">
           {user && (
-            <Link>
-              <FaRegHeart className="text-2xl" />
+            <Link to="/favorites" className="hover:text-gray-600 transition">
+              <FaRegHeart size={24} />
             </Link>
           )}
+
           {user ? (
-            <Link to={paths.dashboard.root} className="relative">
-              <MdDashboard className="text-2xl" />
+            <Link to={paths.dashboard.root} className="hover:text-gray-600 transition">
+              <MdDashboard size={26} />
             </Link>
           ) : (
-            <Link to={paths.auth.root} className="relative">
-              <IoMdLogIn className="text-2xl" />
+            <Link to={paths.auth.root} className="hover:text-gray-600 transition">
+              <IoMdLogIn size={26} />
             </Link>
           )}
 
-          <Link to={paths.checkout} className="relative">
-            <IoMdCart className="text-2xl" />
-            {items?.length > 0 && (
-              <span className="absolute -top-2 -right-2 bg-red-500 text-white rounded-full text-xs w-5 h-5 flex items-center justify-center font-tahoma">
-                {items.length}
+          <Link to={paths.checkout} className="relative hover:text-gray-600 transition">
+            <IoMdCart size={28} />
+            {cartCount > 0 && (
+              <span className="absolute -top-2 -right-2 bg-red-500 text-white text-xs font-bold rounded-full w-5 h-5 flex items-center justify-center">
+                {cartCount}
               </span>
             )}
           </Link>
         </div>
       </div>
+
+      {/* Popover Menu */}
+      <MenuPopover
+        anchorRef={buttonRef}
+        open={showMenu}
+        onClose={() => setShowMenu(false)}
+      />
     </>
   );
 }

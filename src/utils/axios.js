@@ -5,7 +5,7 @@ import { CONFIG } from "src/config-global";
 // ----------------------------------------------------------------------
 
 const axiosInstance = axios.create({
-  baseURL: CONFIG.serverUrl || "http://127.0.0.1:8000",
+  baseURL: CONFIG.serverUrl || "https://spc.emc1001.online",
 });
 
 axiosInstance.interceptors.response.use(

@@ -8,26 +8,20 @@ import { FaChevronUp } from "react-icons/fa";
 import { useScrollToTop } from "src/hooks/use-scroll-to-top";
 import { Link } from "react-router-dom";
 import { paths } from "src/router/paths";
-import etab from '../assets/spa-icons/SPC-picto-categorie-etablissement.svg'
+import etab from '../assets/spa-icons/SPC-picto-categorie-etablissement.svg';
 import { motion } from "framer-motion";
 
 export default function LayoutTheme({ children }) {
-  // Auto scroll on route change
   useScrollToTop();
 
   const { categories } = useGetCategories();
 
   const handleScrollToTop = () => {
-    window.scrollTo({
-      top: 0,
-      behavior: "smooth",
-    });
+    window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
   const sortedCategories = [...(categories || [])].sort((a, b) => {
-    if (a.order === b.order) {
-      return new Date(a.created_at) - new Date(b.created_at);
-    }
+    if (a.order === b.order) return new Date(a.created_at) - new Date(b.created_at);
     return a.order - b.order;
   });
 
@@ -36,40 +30,45 @@ export default function LayoutTheme({ children }) {
       <div className="min-h-screen relative m-auto flex flex-col">
         <Navbar />
 
-        <div className="flex-1 h-full">
-          {/* CATEGORIES */}
-          <div className="grid grid-cols-2 px-8 md:flex md:flex-wrap gap-4 mx-auto items-center justify-center mb-4">
-            <motion.div
-              whileHover={{ scale: 1.05 }}
-              transition={{ type: "spring", stiffness: 300 }}
-            >
-              <Link
-                to={paths.spa.list}
-                className="group w-full inline-block rounded-full min-w-24  pr-6 pl-1  duration-300 "
-              >
-                <div className="flex items-center gap-1 text-center text-black relative">
-                  
-                    <span className="rounded-full p-0">
-                      <img lazyload="lazy" src={etab} alt="ÉTABLISSEMENTS" className="w-8 h-8 object-contain" />
-                    </span>
-              
-                  <div className="relative flex-1">
-                    <span className="text-black text-sm text-left md:text-center font-tahoma uppercase">ÉTABLISSEMENTS</span>
-                    <motion.span
-                      className="block h-0.5 bg-primary absolute left-0 -bottom-1 origin-left scale-x-0 group-hover:scale-x-100"
-                      transition={{ duration: 0.3 }}
-                    />
-                  </div>
-                </div>
-              </Link>
-            </motion.div>
+        <div className="flex-1">
+          <div className="
+            grid grid-cols-4 
+            gap-x-2 gap-y-6 
+            px-3 
+            sm:grid-cols-5 sm:gap-x-4 
+            md:flex md:flex-wrap md:gap-10 
+            justify-center items-center 
+            mt-2
+          ">
+            <div className="flex justify-center">
+              <motion.div whileHover={{ scale: 1.08 }} transition={{ type: "spring", stiffness: 300 }}>
+                <Link
+                  to={paths.spa.list}
+                  className="group flex flex-col items-center gap-1.5 py-2 px-3 rounded-full hover:bg-beige/30 transition-all duration-300"
+                >
+                  <img
+                    loading="lazy"
+                    src={etab}
+                    alt="Établissements"
+                    className="w-9 h-9 md:w-12 md:h-7 object-contain"
+                  />
+                  <span className="text-black text-[10px] md:text-[10px] font-tahoma uppercase tracking-wider leading-none text-center">
+                    Établissements
+                  </span>
+                  <motion.span className="h-0.5 bg-primary w-full origin-center scale-x-0 group-hover:scale-x-100 transition-transform duration-300 mt-1" />
+                </Link>
+              </motion.div>
+            </div>
+
+            {/* Autres catégories */}
             {sortedCategories.map((category) => (
-              <CategoryPuce
-                key={category.id}
-                name={category.name}
-                icon={`${CONFIG.serverUrl}/storage/${category.image}`}
-                slug={category.slug}
-              />
+              <div key={category.id} className="flex justify-center">
+                <CategoryPuce
+                  name={category.name}
+                  icon={`${CONFIG.serverUrl}/storage/${category.image}`}
+                  slug={category.slug}
+                />
+              </div>
             ))}
           </div>
 
@@ -79,12 +78,12 @@ export default function LayoutTheme({ children }) {
 
         <Footer />
 
-        {/* SCROLL TO TOP BUTTON */}
+        {/* SCROLL TO TOP */}
         <button
           onClick={handleScrollToTop}
-          className="fixed bottom-4 right-4 z-50 bg-[#787766] hover:bg-[#676556] transition text-white rounded-md shadow-lg p-3"
+          className="fixed bottom-6 right-6 z-50 bg-[#787766] hover:bg-[#676556] text-white rounded-full shadow-2xl p-4 transition-all duration-300"
         >
-          <FaChevronUp />
+          <FaChevronUp size={24} />
         </button>
       </div>
     </div>
