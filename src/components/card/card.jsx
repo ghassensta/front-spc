@@ -30,7 +30,7 @@ export default function Card({
       viewport={{ once: true }}
       className="relative mb-2 cursor-pointer transition-all duration-300"
     >
-      <div className="relative w-full h-64 rounded-xl bg-gray-100">
+      <div className="relative rounded-xl mb-6 cursor-pointer transition-all duration-300">
         {location && (
           <span className="bg-[#020100C9] z-10 text-white font-tahoma uppercase flex items-center justify-start w-max py-2 px-2 gap-2 absolute left-1/2 -translate-x-1/2 top-0 -translate-y-2 font-light text-[10px] tracking-[2px] max-w-[95%] rounded-full">
             <FiMapPin className="text-white" />

@@ -157,14 +157,20 @@ export const endpoints = {
   search: {
     locations: "/api/search/locations",
     serviceOrCategorie: "/api/search/services-categories",
-    produits: "/api/search", 
+    produits: "/api/search",
   },
 
-  homesections:{
-    get:"/api/homepage/sections"
+  homesections: {
+    get: "/api/homepage/sections",
   },
 
-  credits:{
-    get:"/api/auth/credits-panier"
-  }
+  credits: {
+    get: "/api/auth/credits-panier",
+  },
+
+  paiment: {
+    createSession: "/api/payment/create-session",
+    success: "/api/payment/success",
+    cancel: "/api/payment/cancel",
+  },
 };

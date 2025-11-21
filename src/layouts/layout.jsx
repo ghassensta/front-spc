@@ -4,7 +4,6 @@ import Footer from "../components/footer/footer";
 import CategoryPuce from "../components/category-puce/categoryPuce";
 import { useGetCategories } from "src/actions/categories";
 import { CONFIG } from "src/config-global";
-import LanguageNav from "src/components/language-nav/language-nav";
 import { FaChevronUp } from "react-icons/fa";
 import { useScrollToTop } from "src/hooks/use-scroll-to-top";
 import { Link } from "react-router-dom";
@@ -35,7 +34,6 @@ export default function LayoutTheme({ children }) {
   return (
     <div className="min-h-screen bg-background overflow-hidden">
       <div className="min-h-screen relative m-auto flex flex-col">
-        <LanguageNav />
         <Navbar />
 
         <div className="flex-1 h-full">
@@ -57,7 +55,6 @@ export default function LayoutTheme({ children }) {
               
                   <div className="relative flex-1">
                     <span className="text-black text-sm text-left md:text-center font-tahoma uppercase">ÉTABLISSEMENTS</span>
-                    {/* Underline animation */}
                     <motion.span
                       className="block h-0.5 bg-primary absolute left-0 -bottom-1 origin-left scale-x-0 group-hover:scale-x-100"
                       transition={{ duration: 0.3 }}

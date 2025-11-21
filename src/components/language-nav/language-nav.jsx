@@ -13,7 +13,8 @@ export default function LanguageNav() {
   const { currentLanguage, setLanguage } = useTranslation();
 
   return (
-    <div className="flex items-end gap-1 bg-[#F6F5E9] px-4 py-3 w-full justify-end">
+    <div className="flex items-end gap-1 bg-[#F6F5E9] px-4 py-3 w-full justify-end sm:justify-end">
+    
       <button
         className="text-lg font-tahoma text-[#33373D]"
         onClick={() => setLanguage("en")}

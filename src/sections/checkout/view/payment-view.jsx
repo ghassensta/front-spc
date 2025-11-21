@@ -7,7 +7,7 @@ import { useAuthContext } from "src/auth/hooks/use-auth-context";
 import CreditOption from "src/components/checkout/CreditOption";
 import { useGetCreditsPanier } from "src/actions/credis-panier";
 import toast from "react-hot-toast";
-import axios from "axios";
+const TAX_RATE = 0.2; 
 export default function PaymentView() {
   const checkout = useCheckoutContext();
   const navigate = useNavigate();
@@ -16,13 +16,9 @@ export default function PaymentView() {
   const [expediteurEmail, setExpediteurEmail] = useState("");
   const { user } = useAuthContext();
 
-  // Récupération réelle des crédits
   const { credits = [], loading: creditsLoading } = useGetCreditsPanier();
 
-  const TAX_RATE = 0.2;
-
-  // Calculs totaux
-  const subtotal = useMemo(() => {
+  const totalTTC = useMemo(() => {
     return (
       checkout.items?.reduce(
         (acc, item) => acc + Number(item.price || 0) * item.quantity,
@@ -31,76 +27,100 @@ export default function PaymentView() {
     );
   }, [checkout.items]);
 
-  const tax = subtotal * TAX_RATE;
-  const totalAvantCredits = subtotal + tax;
+  const totalHT = Number((totalTTC / (1 + TAX_RATE)).toFixed(2));
+  const tvaAmount = Number((totalTTC - totalHT).toFixed(2));
 
-  // Crédits utilisables (non utilisés + non expirés)
-  const creditsUtilisables = useMemo(() => {
-    return credits.filter(
-      (c) =>
-        c.utilise === false &&
-        (c.date_expiration === null ||
-          new Date(c.date_expiration) >= new Date())
-    );
+  // === Séparation crédits ===
+  const { creditsParrainage, creditsNormaux } = useMemo(() => {
+    const parrainage = [];
+    const normaux = [];
+
+    credits.forEach((credit) => {
+      const desc = (credit.description || "").toLowerCase();
+      const isParrainage =
+        desc.includes("parrain") ||
+        desc.includes("parrainage") ||
+        desc.includes("filleul") ||
+        credit.source_id === 1;
+
+      if (isParrainage) parrainage.push(credit);
+      else normaux.push(credit);
+    });
+
+    return { creditsParrainage: parrainage, creditsNormaux: normaux };
   }, [credits]);
 
-  // Montant total des crédits sélectionnés
-  const montantCredits = useMemo(() => {
-    const selected = checkout.selectedCreditIds || [];
-    return creditsUtilisables
-      .filter((c) => selected.includes(c.id))
-      .reduce((sum, c) => sum + Number(c.montant), 0);
-  }, [creditsUtilisables, checkout.selectedCreditIds]);
+  const [appliedParrainage, setAppliedParrainage] = useState(0);
+  const [appliedNormaux, setAppliedNormaux] = useState(0);
+  const [parrainageIds, setParrainageIds] = useState([]);
+  const [normauxIds, setNormauxIds] = useState([]);
 
-  const totalAPayer = Math.max(0, totalAvantCredits - montantCredits);
-  const creditsDepassent = montantCredits > totalAvantCredits;
+  const totalCreditsApplied = appliedParrainage + appliedNormaux;
+  const totalAPayer = Math.max(0, totalTTC - totalCreditsApplied);
+  const creditsDepassent = totalCreditsApplied > totalTTC;
 
-  // Envoi de la commande
-  const handleSubmit = async () => {
-    if (
-      !checkout.expediteur ||
-      !checkout.items ||
-      checkout.items.length === 0
-    ) {
-      toast.error(
-        "Veuillez remplir toutes les informations et ajouter des articles."
-      );
-      return;
-    }
+ const handleSubmit = async () => {
+  if (!checkout.expediteur || !checkout.items || checkout.items.length === 0) {
+    toast.error("Veuillez remplir toutes les informations et ajouter des articles.");
+    return;
+  }
+  if (creditsDepassent) {
+    toast.error("Les crédits sélectionnés dépassent le montant total.");
+    return;
+  }
 
-    if (creditsDepassent) {
-      toast.error(
-        "Les crédits sélectionnés dépassent le montant total de la commande."
-      );
-      return;
-    }
+  setLoading(true);
 
-    setLoading(true);
+  try {
+    const res = await fetch(`${CONFIG.serverUrl}/api/commandes`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        expediteur: checkout.expediteur,
+        items: checkout.items,
+        subtotal: totalHT,
+        tax: tvaAmount,
+        total: totalTTC,
+        montant_apres_credits: totalAPayer,
+        credit_ids: [...parrainageIds, ...normauxIds],
+        payment_method: totalAPayer > 0 ? "stripe" : "credits_only",
+      }),
+    });
 
-    const payload = {
-      expediteur: checkout.expediteur,
-      items: checkout.items,
-      subtotal,
-      tax,
-      total: totalAvantCredits,
-      montant_apres_credits: totalAPayer,
-      credit_ids: checkout.selectedCreditIds || [],
-      payment_method: totalAPayer > 0 ? "stripe" : "credits_only",
-    };
+    const data = await res.json();
 
-    try {
-      await axios.post(`${CONFIG.serverUrl}/api/commandes`, payload);
-      toast.success("Commande passée avec succès ! 🎉");
+    if (!data.success) throw new Error(data.message);
+
+    const commandesIds = data.commandes_id;
+
+    if (totalAPayer > 0) {
+      const sessionRes = await fetch(`${CONFIG.serverUrl}/api/payment/create-session`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ commandes_ids: commandesIds }),
+      });
+
+      const sessionData = await sessionRes.json();
+
+      if (sessionData?.url) {
+        window.location.href = sessionData.url;
+      } else {
+        throw new Error("Impossible de créer la session Stripe.");
+      }
+    } else {
+      toast.success("Commande payée intégralement avec vos crédits !");
       navigate("/checkout/details");
       localStorage.removeItem("app-checkout");
       checkout.resetCheckout?.();
-    } catch (error) {
-      console.error("Erreur commande :", error);
-      toast.error("Une erreur est survenue. Veuillez réessayer.");
-    } finally {
-      setLoading(false);
     }
-  };
+  } catch (error) {
+    console.error("Erreur paiement :", error);
+    toast.error(error?.message || "Une erreur est survenue lors du paiement.");
+  } finally {
+    setLoading(false);
+  }
+};
+
 
   const handleExpediteurChange = (field, value) => {
     checkout.onCreateExpediteur({
@@ -110,11 +130,11 @@ export default function PaymentView() {
   };
 
   useEffect(() => {
-    if (user && user.email && !checkout.expediteur?.email) {
+    if (user?.email && !checkout.expediteur?.email) {
       const updated = {
         ...checkout.expediteur,
         email: user.email,
-        fullName: user.name || "",
+        fullName: user.name || user.displayName || "",
       };
       setExpediteurEmail(user.email);
       checkout.onCreateExpediteur(updated);
@@ -123,7 +143,7 @@ export default function PaymentView() {
 
   return (
     <div className="container font-tahoma mx-auto p-6 grid grid-cols-1 md:grid-cols-3 gap-6">
-      {/* Colonne gauche - Formulaire */}
+      {/* === COLONNE GAUCHE === */}
       <div className="col-span-2 space-y-6">
         {/* Email */}
         <div className="bg-white rounded-md p-6 shadow">
@@ -144,15 +164,36 @@ export default function PaymentView() {
           </div>
         </div>
 
-        {/* Crédits - passe les vrais crédits */}
-        <CreditOption
-          credits={creditsUtilisables}
-          totalTTC={totalAvantCredits}
-          onValueChange={(newTotal, creditsUsed) => {
-        setTotalAprèsCredits(newTotal);
-        setCreditsIds(credits_ids); 
-    }}
-        />
+        {/* Crédits */}
+        {creditsParrainage.length > 0 && (
+          <CreditOption
+            key="parrainage"
+            credits={creditsParrainage}
+            totalTTC={totalTTC}
+            title="Crédit Parrainage"
+            theme="parrainage"
+            forceSingleUse={true}
+            onValueChange={(amount, ids) => {
+              setAppliedParrainage(amount);
+              setParrainageIds(ids);
+            }}
+          />
+        )}
+
+        {creditsNormaux.length > 0 && (
+          <CreditOption
+            key="normaux"
+            credits={creditsNormaux}
+            totalTTC={totalTTC - appliedParrainage}
+            title="Crédits fidélité & cadeaux"
+            theme="normal"
+            onValueChange={(amount, ids) => {
+              setAppliedNormaux(amount);
+              setNormauxIds(ids);
+            }}
+          />
+        )}
+
         {/* Adresse de facturation */}
         <div className="bg-white rounded-md p-6 shadow">
           <div className="flex justify-between items-center mb-4">
@@ -167,29 +208,31 @@ export default function PaymentView() {
 
           {!isEditingAddress ? (
             <div className="space-y-1 text-sm">
-              <p>{checkout.expediteur.fullName}</p>
-              <p>{checkout.expediteur.address}</p>
-              {checkout.expediteur.address2 && (
+              <p className="font-medium">
+                {checkout.expediteur?.fullName || "Non renseigné"}
+              </p>
+              <p>{checkout.expediteur?.address || "Non renseigné"}</p>
+              {checkout.expediteur?.address2 && (
                 <p>{checkout.expediteur.address2}</p>
               )}
               <p>
-                {checkout.expediteur.city} {checkout.expediteur.state}{" "}
-                {checkout.expediteur.postalCode}
+                {checkout.expediteur?.city} {checkout.expediteur?.state}{" "}
+                {checkout.expediteur?.postalCode}
               </p>
-              <p>{checkout.expediteur.country}</p>
-              {checkout.expediteur.phone && (
+              <p>{checkout.expediteur?.country || "France"}</p>
+              {checkout.expediteur?.phone && (
                 <p>Téléphone : {checkout.expediteur.phone}</p>
               )}
             </div>
           ) : (
-            <div className="space-y-4">
-              {/* Tous les champs d'adresse (inchangés) */}
+            <div className="space-y-4 mt-4">
+              {/* Tous les inputs d'adresse (identiques à avant) */}
               <div>
                 <label className="block text-sm font-medium">Nom complet</label>
                 <input
                   type="text"
                   className="w-full border rounded-md p-2"
-                  value={checkout.expediteur.fullName || ""}
+                  value={checkout.expediteur?.fullName || ""}
                   onChange={(e) =>
                     handleExpediteurChange("fullName", e.target.value)
                   }
@@ -201,7 +244,7 @@ export default function PaymentView() {
                 <input
                   type="text"
                   className="w-full border rounded-md p-2"
-                  value={checkout.expediteur.address || ""}
+                  value={checkout.expediteur?.address || ""}
                   onChange={(e) =>
                     handleExpediteurChange("address", e.target.value)
                   }
@@ -210,16 +253,16 @@ export default function PaymentView() {
               </div>
               <div>
                 <label className="block text-sm font-medium">
-                  Complément d'adresse
+                  Complément d’adresse
                 </label>
                 <input
                   type="text"
                   className="w-full border rounded-md p-2"
-                  value={checkout.expediteur.address2 || ""}
+                  value={checkout.expediteur?.address2 || ""}
                   onChange={(e) =>
                     handleExpediteurChange("address2", e.target.value)
                   }
-                  placeholder="Appartement, étage, etc."
+                  placeholder="Appartement, étage..."
                 />
               </div>
               <div className="grid grid-cols-2 gap-4">
@@ -228,7 +271,7 @@ export default function PaymentView() {
                   <input
                     type="text"
                     className="w-full border rounded-md p-2"
-                    value={checkout.expediteur.city || ""}
+                    value={checkout.expediteur?.city || ""}
                     onChange={(e) =>
                       handleExpediteurChange("city", e.target.value)
                     }
@@ -237,16 +280,15 @@ export default function PaymentView() {
                 </div>
                 <div>
                   <label className="block text-sm font-medium">
-                    État / Province
+                    État / Région
                   </label>
                   <input
                     type="text"
                     className="w-full border rounded-md p-2"
-                    value={checkout.expediteur.state || ""}
+                    value={checkout.expediteur?.state || ""}
                     onChange={(e) =>
                       handleExpediteurChange("state", e.target.value)
                     }
-                    placeholder="Île-de-France"
                   />
                 </div>
               </div>
@@ -258,7 +300,7 @@ export default function PaymentView() {
                   <input
                     type="text"
                     className="w-full border rounded-md p-2"
-                    value={checkout.expediteur.postalCode || ""}
+                    value={checkout.expediteur?.postalCode || ""}
                     onChange={(e) =>
                       handleExpediteurChange("postalCode", e.target.value)
                     }
@@ -270,7 +312,7 @@ export default function PaymentView() {
                   <input
                     type="text"
                     className="w-full border rounded-md p-2"
-                    value={checkout.expediteur.country || ""}
+                    value={checkout.expediteur?.country || "France"}
                     onChange={(e) =>
                       handleExpediteurChange("country", e.target.value)
                     }
@@ -283,7 +325,7 @@ export default function PaymentView() {
                 <input
                   type="tel"
                   className="w-full border rounded-md p-2"
-                  value={checkout.expediteur.phone || ""}
+                  value={checkout.expediteur?.phone || ""}
                   onChange={(e) =>
                     handleExpediteurChange("phone", e.target.value)
                   }
@@ -297,28 +339,30 @@ export default function PaymentView() {
         {/* Paiement */}
         <div className="bg-white rounded-md p-6 shadow">
           <h2 className="text-base font-semibold mb-4">Paiement</h2>
-          <p>
+          <p className="text-sm">
             {totalAPayer > 0
-              ? "Le montant restant sera payé par carte via Stripe."
+              ? `Le montant restant de ${totalAPayer.toFixed(
+                  2
+                )} € sera payé par carte via Stripe.`
               : "Votre commande est intégralement réglée avec vos crédits !"}
           </p>
         </div>
 
         {/* Bouton Commander */}
-        <div className="flex justify-between mt-6">
+        <div className="mt-8">
           <button
             onClick={handleSubmit}
             disabled={loading || creditsLoading || creditsDepassent}
-            className="inline-flex font-tahoma rounded-sm items-center gap-2 uppercase font-normal tracking-widest transition-all duration-300 px-6 py-3 text-sm bg-black text-white disabled:opacity-50 disabled:cursor-not-allowed"
+            className="w-full md:w-auto inline-flex justify-center font-tahoma rounded-sm items-center uppercase tracking-widest px-8 py-4 text-sm bg-black text-white disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-900 transition"
           >
             {loading ? "Envoi en cours..." : "Commander"}
           </button>
         </div>
       </div>
 
-      {/* Colonne droite - Résumé */}
+      {/* === RÉSUMÉ DROITE === */}
       <div>
-        <div className="bg-white rounded-md p-6 shadow space-y-4 mb-3">
+        <div className="bg-white rounded-md p-6 shadow space-y-4">
           <h2 className="text-base font-semibold mb-4">
             Résumé de la commande
           </h2>
@@ -326,7 +370,7 @@ export default function PaymentView() {
           {checkout.items?.map((item) => (
             <div
               key={item.id}
-              className="flex gap-4 items-center border-b pb-2"
+              className="flex gap-4 items-center border-b pb-3 last:border-0"
             >
               <img
                 loading="lazy"
@@ -336,9 +380,7 @@ export default function PaymentView() {
               />
               <div className="flex-1">
                 <p className="font-medium">{item.name}</p>
-                <p className="text-sm text-gray-500">
-                  Quantité: {item.quantity}
-                </p>
+                <p className="text-sm text-gray-500">Qté : {item.quantity}</p>
               </div>
               <div className="font-bold">
                 {(Number(item.price || 0) * item.quantity).toFixed(2)} €
@@ -349,25 +391,32 @@ export default function PaymentView() {
           <div className="border-t pt-4 space-y-2">
             <div className="flex justify-between text-sm">
               <span>Sous-total HT</span>
-              <span>{subtotal.toFixed(2)} €</span>
+              <span>{totalHT.toFixed(2)} €</span>
             </div>
             <div className="flex justify-between text-sm">
               <span>TVA 20%</span>
-              <span>{tax.toFixed(2)} €</span>
+              <span>{tvaAmount.toFixed(2)} €</span>
             </div>
             <div className="flex justify-between font-bold">
               <span>Total TTC</span>
-              <span>{totalAvantCredits.toFixed(2)} €</span>
+              <span>{totalTTC.toFixed(2)} €</span>
             </div>
 
-            {montantCredits > 0 && (
-              <div className="flex justify-between text-sm font-medium text-green-600">
-                <span>Crédits appliqués</span>
-                <span>- {montantCredits.toFixed(2)} €</span>
+            {appliedParrainage > 0 && (
+              <div className="flex justify-between text-green-600 font-medium">
+                <span>Crédit parrainage</span>
+                <span>- {appliedParrainage.toFixed(2)} €</span>
               </div>
             )}
 
-            <div className="flex justify-between font-bold text-lg border-t pt-3 mt-2">
+            {appliedNormaux > 0 && (
+              <div className="flex justify-between text-green-600 font-medium">
+                <span>Crédits fidélité & cadeaux</span>
+                <span>- {appliedNormaux.toFixed(2)} €</span>
+              </div>
+            )}
+
+            <div className="flex justify-between font-bold text-xl border-t pt-4 mt-4">
               <span>Montant à payer</span>
               <span className={totalAPayer === 0 ? "text-green-600" : ""}>
                 {totalAPayer.toFixed(2)} €
@@ -376,13 +425,14 @@ export default function PaymentView() {
           </div>
         </div>
 
-        {/* Note */}
-        <div className="bg-white rounded-md p-6 shadow">
-          <h2 className="text-base font-semibold mb-4">Note de commande</h2>
+        <div className="bg-white rounded-md p-6 shadow mt-4">
+          <h2 className="text-base font-semibold mb-3">
+            Note de commande (facultatif)
+          </h2>
           <textarea
-            className="w-full border rounded-md p-2 focus:outline-none focus:ring-2 focus:ring-blue-400"
-            placeholder="Ex : Laisser la commande devant la porte..."
-            value={checkout.expediteur.note || ""}
+            className="w-full border rounded-md p-3 focus:outline-none focus:ring-2 focus:ring-blue-400"
+            placeholder="Ex : Laisser devant la porte..."
+            value={checkout.expediteur?.note || ""}
             onChange={(e) => handleExpediteurChange("note", e.target.value)}
             rows={4}
           />

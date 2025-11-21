@@ -12,7 +12,6 @@ import { useGetHomePage } from "src/actions/homepage";
 const Serach = () => {
   const { sections } = useGetHomePage();
 
-  // ✅ Tous les hooks doivent être appelés avant tout return conditionnel
   const {
     query: villeQuery,
     setQuery: setVilleQuery,
@@ -263,8 +262,7 @@ const Serach = () => {
             )}
           </div>
 
-          {/* RECHERCHER → /spa/paris-75001 */}
-          <div className="flex flex-col items-start md:items-center justify-end">
+          <div className="flex flex-col items-start  md:items-center justify-end">
             <label className="block text-sm text-gray-700 mb-1 text-left md:text-center">
               Rechercher
             </label>

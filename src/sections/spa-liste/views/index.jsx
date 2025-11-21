@@ -1,9 +1,10 @@
-import React, { useState } from "react";
+import React, { useState, useMemo } from "react";
 import SpaCard from "src/components/spa-card/spa-card";
 import { paths } from "src/router/paths";
 import CategoriesSkeleton from "../categories-skeleton";
 import FiltersSkeleton from "../filters-skeleton";
 import ButtonIcon from "src/components/button-icon/button-icon";
+import Select from "react-select";   // ← Ajouté
 
 export default function CategoriesPageView({
   cardsByCategory = [],
@@ -14,33 +15,68 @@ export default function CategoriesPageView({
   filterLoading,
 }) {
   const [filters, setFilters] = useState({
-    etablissement: "",
-    region: "",
-    service: "",
+    etablissement: null,
+    region: null,
+    service: null,
   });
 
-  console.log(cardsByCategory)
+  // Conversion des données pour react-select
+  const typeOptions = types.map((t) => ({ value: t.id, label: t.name }));
+  const villeOptions = villes.map((v) => ({ value: v.id, label: v.name }));
+  const serviceOptions = services.map((s) => ({ value: s.id, label: s.name }));
 
-  const handleChange = (e) => {
-    setFilters({ ...filters, [e.target.name]: e.target.value });
+  // Styles personnalisés (proche de ton design actuel)
+  const customStyles = {
+    control: (base) => ({
+      ...base,
+      border: "none",
+      borderRadius: "0.5rem",
+      boxShadow: "none",
+      minHeight: "48px",
+      backgroundColor: "transparent",
+    }),
+    placeholder: (base) => ({
+      ...base,
+      color: "#9ca3af",
+    }),
+    singleValue: (base) => ({
+      ...base,
+      color: "#111",
+    }),
+    menu: (base) => ({
+      ...base,
+      borderRadius: "0.5rem",
+      marginTop: "4px",
+      zIndex: 9999,
+    }),
+    menuPortal: (base) => ({ ...base, zIndex: 9999 }),
   };
 
-  // Apply filters
-  const filteredCards = cardsByCategory.filter((card) => {
-    return (
-      (filters.etablissement
-        ? card.types_etablissement_ids?.includes(
-            parseInt(filters.etablissement)
-          )
-        : true) &&
-      (filters.region
+  const handleSelectChange = (name) => (selected) => {
+    setFilters((prev) => ({
+      ...prev,
+      [name]: selected ? selected.value : null,
+    }));
+  };
+
+  // Filtrage optimisé avec useMemo
+  const filteredCards = useMemo(() => {
+    return cardsByCategory.filter((card) => {
+      const matchType = filters.etablissement
+        ? card.types_etablissement_ids?.includes(parseInt(filters.etablissement))
+        : true;
+
+      const matchRegion = filters.region
         ? card.region_ids?.includes(parseInt(filters.region))
-        : true) &&
-      (filters.service
+        : true;
+
+      const matchService = filters.service
         ? card.type_equipement_ids?.includes(parseInt(filters.service))
-        : true)
-    );
-  });
+        : true;
+
+      return matchType && matchRegion && matchService;
+    });
+  }, [cardsByCategory, filters]);
 
   if (filterLoading) {
     return <FiltersSkeleton />;
@@ -48,83 +84,73 @@ export default function CategoriesPageView({
 
   return (
     <div className="max-w-6xl mx-auto p-1">
-      <div className="text-center w-full flex flex-col z-10 relative items-center p-4">
-        <p className="text-secondary text-2xl font-medium lg:w-3/4 mb-4">
-          Rejoignez la Communauté Privée Spa & Prestige Collection ! Plongez
-          dans un univers d’exception et{" "}
-          <span className="underline">
-            laissez-vous séduire par des privilèges rares et uniques…
-          </span>
-        </p>
-
-        {/* Bouton vers la page carte cadeau */}
-        <ButtonIcon
-          title="Découvrir les offres"
-          link={paths.spa.list}
-          variant="filled"
-          size="md"
-        />
-      </div>
-      {/* Filters */}
+      {/* Titre des filtres */}
       <p className="text-center text-4xl font-semibold my-4">Filtrer par</p>
+
+      {/* Filtres avec react-select */}
       <div className="grid grid-cols-1 md:grid-cols-3 px-2 gap-4 font-roboto mb-16">
-        {/* Types (Établissements) */}
+        {/* Type d'établissement */}
         <div className="border rounded-lg">
-          <select
-            className="w-full p-2 border-none focus:outline-none"
-            name="etablissement"
-            value={filters.etablissement}
-            onChange={handleChange}
-          >
-            <option value="">Sélectionnez type d'établissement</option>
-            {types.map((type) => (
-              <option key={type.id} value={type.id}>
-                {type.name}
-              </option>
-            ))}
-          </select>
+          <Select
+            instanceId="select-etablissement"
+            styles={customStyles}
+            placeholder="Sélectionnez type d'établissement"
+            options={typeOptions}
+            value={typeOptions.find((opt) => opt.value === filters.etablissement) || null}
+            onChange={handleSelectChange("etablissement")}
+            isClearable
+            isSearchable
+            menuPortalTarget={document.body}   // ← Z-index parfait
+            menuPosition="fixed"
+          />
         </div>
 
-        {/* Villes */}
+        {/* Région / Ville */}
         <div className="border rounded-lg">
-          <select
-            className="w-full p-2 border-none focus:outline-none"
-            name="region"
-            value={filters.region}
-            onChange={handleChange}
-          >
-            <option value="">Région ou ville</option>
-            {villes.map((ville) => (
-              <option key={ville.id} value={ville.id}>
-                {ville.name}
-              </option>
-            ))}
-          </select>
+          <Select
+            instanceId="select-region"
+            styles={customStyles}
+            placeholder="Région ou ville"
+            options={villeOptions}
+            value={villeOptions.find((opt) => opt.value === filters.region) || null}
+            onChange={handleSelectChange("region")}
+            isClearable
+            isSearchable
+            menuPortalTarget={document.body}
+            menuPosition="fixed"
+          />
         </div>
 
-        {/* Services / Équipements */}
+        {/* Services & équipements */}
         <div className="border rounded-lg">
-          <select
-            className="w-full p-2 border-none focus:outline-none"
-            name="service"
-            value={filters.service}
-            onChange={handleChange}
-          >
-            <option value="">Services et équipements</option>
-            {services.map((service) => (
-              <option key={service.id} value={service.id}>
-                {service.name}
-              </option>
-            ))}
-          </select>
+          <Select
+            instanceId="select-service"
+            styles={customStyles}
+            placeholder="Services et équipements"
+            options={serviceOptions}
+            value={serviceOptions.find((opt) => opt.value === filters.service) || null}
+            onChange={handleSelectChange("service")}
+            isClearable
+            isSearchable
+            menuPortalTarget={document.body}
+            menuPosition="fixed"
+          />
         </div>
       </div>
 
-      {/* Cards */}
+      {/* Titre de la section */}
+      <div className="mb-10">
+        <p className="text-center text-4xl font-normal my-4">Nos établissements</p>
+        <p className="text-center text-3xl font-normal my-4 text-[#777765]">
+          Une collection choisie avec soin, pour celles et ceux en quête d’exceptions.
+        </p>
+      </div>
+
+      {/* Cartes */}
       {loading ? (
         <CategoriesSkeleton />
       ) : (
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-x-4 gap-y-12">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-x-4 gap-y-12 px-3">
           {filteredCards.length > 0 ? (
             filteredCards.map((card) => (
               <SpaCard

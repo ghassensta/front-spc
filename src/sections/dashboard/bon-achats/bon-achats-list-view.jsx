@@ -13,8 +13,19 @@ export default function BonAchatsListView() {
     return bonachats?.slice(start, start + itemsPerPage);
   }, [bonachats, currentPage, itemsPerPage]);
 
+  console.log("Lignes par page :", currentData);
   const handlePrev = () => setCurrentPage((prev) => Math.max(prev - 1, 1));
-  const handleNext = () => setCurrentPage((prev) => Math.min(prev + 1, totalPages));
+  const handleNext = () =>
+    setCurrentPage((prev) => Math.min(prev + 1, totalPages));
+
+  const formatDateFR = (dateStr) => {
+    if (!dateStr) return "—";
+
+    const [day, month, yearAndTime] = dateStr.split("/");
+    const [year, time] = yearAndTime.split(" "); // année et heure
+    const isoString = `${year}-${month}-${day}T${time}:00`; // ISO 8601
+    return new Date(isoString).toLocaleDateString("fr-FR");
+  };
 
   if (loading || validating) {
     return (
@@ -79,12 +90,14 @@ export default function BonAchatsListView() {
             <th>Source</th>
             <th>Description</th>
             <th>Statut</th>
+            <th>Utilisé le</th>
           </tr>
         </thead>
+
         <tbody className="text-center text-secondary text-sm">
           {!bonachats?.length && (
             <tr>
-              <td colSpan={4}>
+              <td colSpan={5}>
                 <div className="flex flex-col items-center">
                   <p className="py-2">Vous n'avez pas de bons d'achat</p>
                 </div>
@@ -98,24 +111,27 @@ export default function BonAchatsListView() {
                 ? "Parrainage"
                 : bon.source === 1
                 ? "Fidélité"
-                : "Échange";
+                : bon.source;
+
             const typeLabel =
               bon.type === "points"
                 ? `${bon.montant} points`
                 : `${bon.montant} €`;
-            const statusClass = bon.utilise
-              ? "text-red-600"
-              : "text-green-600";
-            const statusLabel = bon.utilise
-              ? "Utilisé"
-              : "Disponible";
+
+            const statusClass = bon.used ? "text-red-600" : "text-green-600";
+            const statusLabel = bon.used ? "Utilisé" : "Disponible";
+
+            const usedDate = formatDateFR(bon.used_at);
 
             return (
               <tr key={bon.id} className="border-b-2 py-2">
                 <td>{typeLabel}</td>
                 <td>{sourceLabel}</td>
-                <td className="text-left max-w-xs truncate">{bon.description}</td>
+                <td className="text-left max-w-xs truncate">
+                  {bon.description}
+                </td>
                 <td className={statusClass}>{statusLabel}</td>
+                <td>{usedDate}</td>
               </tr>
             );
           })}
