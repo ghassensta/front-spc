@@ -11,23 +11,22 @@ export default function InformationsSection() {
       link: paths.who,
       title: "Qui sommes-nous ?",
       description:
-        "1 Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua mundis estabien estrama lorium ispolium.",
-      image:
-        "https://spa-prestige-collection.com/wp-content/uploads/2025/03/SPC-Essence-1975x1318-02.jpg",
+        "Spa & Prestige Collection réunit des établissements d’exception, soigneusement sélectionnés pour leur confort, leur ambiance singulière et leur service sur-mesure. Spas urbains, thermes apaisants, hôtels de charme ou refuges insolites, chaque lieu a été choisi pour offrir des instants mémorables alliant authenticité et bienveillance.",
+      image:"https://spa-prestige-collection.com/wp-content/uploads/2025/02/SPA-images-1975x1318-Qui-Sommes-Nous-03.jpg",
     },
     {
       link: paths.referentiel,
       title: "Référentiel de candidature",
       description:
-        "2 Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua mundis estabien estrama lorium ispolium.",
+        "Les établissements souhaitant rejoindre Spa & Prestige Collection doivent fournir une documentation détaillant leur conformité aux critères de ce référentiel (certifications, photos, etc.).",
       image:
-        "https://spa-prestige-collection.com/wp-content/uploads/2025/03/SPC-Essence-1975x1318-02.jpg",
+        "https://spc.emc1001.online/storage/blogs/thumbnails/6901d96653fb8_1761728870.webp",
     },
     {
       link: paths.collection,
       title: "Collection Prestige",
       description:
-        "3 Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua mundis estabien estrama lorium ispolium.",
+        "Bientôt disponible, Collection Prestige revient avec une nouvelle édition dédiée aux plus belles adresses bien-être de notre réseau.",
       image:
         "https://spa-prestige-collection.com/wp-content/uploads/2025/03/SPC-Essence-1975x1318-02.jpg",
     },

@@ -19,7 +19,7 @@ export default function ContactPageView() {
 
           {/* Content */}
           <div className="mx-auto relative z-10">
-            <h2 className="text-4xl font-serif mb-4">Contactez nous</h2>
+            <h1 className="text-4xl font-serif mb-4">Contactez nous</h1>
             <p className="mb-2 font-bricolage">
               Nous serions ravis de vous parler.
               <br />

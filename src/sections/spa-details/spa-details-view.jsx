@@ -305,9 +305,9 @@ export default function SpaDetailsView({
             alt="Logo Spa & Prestige Collection"
             className="w-36 mb-4"
           />
-          <h3 className="text-3xl font-bold mb-4">
+          <span className="text-3xl font-bold mb-4">
             – Le conseil Spa & Prestige Collection –
-          </h3>
+          </span>
           <p className="text-lg font-normal font-tahoma">
             {spaData?.text_conseil}
           </p>

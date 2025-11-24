@@ -23,9 +23,9 @@ export default function RecompensePageView() {
       </div>
 
       <div className="my-8 font-tahoma font-sans text-base">
-        <h5 className="font-bold text-center">
+        <p className="font-bold text-center">
           Le programme n’est pas encore disponible,
-        </h5>
+        </p>
         <p className="text-center">
           mais nous incitons les utilisateurs à s’inscrire à la newsletter pour
           être informés de son lancement.
@@ -36,7 +36,7 @@ export default function RecompensePageView() {
         <div className="flex flex-col md:flex-row gap-4 max-w-6xl mx-auto px-4 py-6">
           <img lazyload="lazy"
             src="https://spa-prestige-collection.com/wp-content/uploads/2025/02/SPC-images-1975x1318-Programme-Parrainage-01-1024x683.jpg"
-            alt=""
+            alt="Récompenses Spa & Prestige Collection"
             className="md:w-1/2"
           />
           <div className="text-base">

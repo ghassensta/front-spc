@@ -69,16 +69,16 @@ const Serach = () => {
   return (
     <div className="relative w-screen left-[calc(-50vw+50%)] bg-white py-12">
       <div className="max-w-4xl mx-auto text-center px-8">
-        <h2
+        <h1
           className="text-2xl md:text-3xl font-semibold mb-2"
           style={{ fontFamily: "Cormorant Garamond" }}
         >
           {section.title}
-        </h2>
+        </h1>
 
-        <p className="mb-8 font-light text-2xl md:text-3xl text-[#B6B499]">
+        <h2 className="mb-8 font-light text-2xl md:text-3xl text-[#B6B499]">
           {section.description}
-        </p>
+        </h2>
 
         <form
           className="flex flex-col md:flex-row justify-center items-center gap-4 font-tahoma"

@@ -21,10 +21,10 @@ export default function CollectionPrestigePage() {
 
       {/* Intro Section */}
       <div className="my-8 px-4">
-        <h5 className="text-2xl md:text-3xl text-center mb-6 italic font-bold py-6 md:max-w-[70%] tracking-wider mx-auto" style={{ wordSpacing: "8px"}}>
+        <h2 className="text-2xl md:text-3xl text-center mb-6 italic font-bold py-6 md:max-w-[70%] tracking-wider mx-auto" style={{ wordSpacing: "8px"}}>
           Bientôt disponible, Collection Prestige revient avec une nouvelle
           édition dédiée aux plus belles adresses bien-être de notre réseau.
-        </h5>
+        </h2>
         <div className="bg-[#FBF6EC] w-screen relative left-[calc(-50vw+50%)] text-center font-bricolage py-8 text-lg">
           <div className="max-w-3xl mx-auto mb-6 px-4">
             Imprimé avec soin et diffusé chaque année, ce guide haut de gamme

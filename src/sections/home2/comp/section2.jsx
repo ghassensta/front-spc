@@ -18,9 +18,9 @@ const Section3 = () => {
           <h2 className="text-4xl font-semibold">{section.title}</h2>
 
           {section.extra_data?.sousTitre && (
-            <h1 className="text-[#B6B599] text-4xl font-semibold">
+            <h2 className="text-[#B6B599] text-4xl font-semibold">
               {section.extra_data.sousTitre}
-            </h1>
+            </h2>
           )}
 
           <p className="mt-2 text-3xl mb-8">{section.description}</p>

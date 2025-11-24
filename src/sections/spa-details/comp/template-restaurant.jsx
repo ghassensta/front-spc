@@ -25,9 +25,9 @@ export default function TemplateRestaurant({ data = [] }) {
 
         {/* Content Section */}
         <div className="w-full">
-          <h3 className="text-lg md:text-xl font-bold text-gray-900 mb-2">
+          <span className="text-lg md:text-xl font-bold text-gray-900 mb-2">
             {data.title || "Nom du Restaurant"}
-          </h3>
+          </span>
 
           <p className="text-base font-normal font-tahoma text-gray-800 mt-1">
             {data.description || "Description du restaurant. Un lieu d'exception pour vos repas."}

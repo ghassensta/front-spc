@@ -17,9 +17,9 @@ export default function ServicesTemplates({ data = {} }) {
       {/* Content Section */}
       <div className="w-full text-center">
         <div className="p-2 bg-[#F6F5E9] rounded-xl">
-          <h3 className="text-2xl md:text-3xl font-bold text-gray-900 mb-2">
+          <h2 className="text-2xl md:text-3xl font-bold text-gray-900 mb-2">
             Équipements
-          </h3>
+          </h2>
           <p className="text-base font-normal font-tahoma text-gray-800 mt-1">
             {data.description}
           </p>

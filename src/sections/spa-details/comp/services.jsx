@@ -9,7 +9,7 @@ export default function Tabs({ data = [] }) {
   const [tabs, setTabs] = useState([]);
   const [active, setActive] = useState(null);
 
-  console.log(data)
+  console.log(data);
   useEffect(() => {
     if (data.length > 0) {
       // Crée les tabs dynamiquement à partir des type_soin
@@ -54,7 +54,7 @@ export default function Tabs({ data = [] }) {
   return (
     <div className="w-full max-w-7xl mx-auto mt-10">
       {/* Tab Buttons */}
-      <div className="relative flex flex-wrap justify-center gap-2 md:gap-10 items-center space-x-1 max-w-[75%] mx-auto">
+      <div className="relative flex flex-no-wrap justify-center gap-0 w-full md:gap-5 items-center space-x-1 max-w-[100%] text-sm md:text-base overflow-x-auto pb-2">
         {tabs.filter((tab) => tab.visible).map((tab, index) => (
           <React.Fragment key={tab.label}>
             <TabButton
@@ -63,7 +63,7 @@ export default function Tabs({ data = [] }) {
               onClick={() => setActive(tab)}
             />
             {index < tabs.filter((tab) => tab.visible).length - 1 && (
-              <span className="text-secondary text-2xl font-medium">/</span>
+              <span className="text-secondary text-xl md:text-2xl font-medium">/</span>
             )}
           </React.Fragment>
         ))}

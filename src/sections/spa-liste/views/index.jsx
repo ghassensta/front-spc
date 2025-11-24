@@ -140,10 +140,10 @@ export default function CategoriesPageView({
 
       {/* Titre de la section */}
       <div className="mb-10">
-        <p className="text-center text-4xl font-normal my-4">Nos établissements</p>
-        <p className="text-center text-3xl font-normal my-4 text-[#777765]">
+        <h1 className="text-center text-4xl font-normal my-4">Nos établissements</h1>
+        <h2 className="text-center text-3xl font-normal my-4 text-[#777765]">
           Une collection choisie avec soin, pour celles et ceux en quête d’exceptions.
-        </p>
+        </h2>
       </div>
 
       {/* Cartes */}

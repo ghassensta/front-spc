@@ -31,6 +31,7 @@ export function useGetSpaByCategory(category) {
         () => ({
             spaList: data?.produits || [],
             catLoading: isLoading,
+            category: data?.categorie || [],
         }),
         [data]
     );

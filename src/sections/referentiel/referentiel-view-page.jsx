@@ -90,7 +90,7 @@ export default function ReferentielViewPage() {
             <div key={i} className="flex items-start text-3xl space-x-3">
               <span className="leading-none mt-6">✔</span>
               <div>
-                <p className="mb-3">{text.title}</p>
+                <h2 className="mb-3">{text.title}</h2>
                 <p className="text-base font-bricolage">{text.description}</p>
               </div>
             </div>

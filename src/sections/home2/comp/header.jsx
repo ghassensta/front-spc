@@ -76,12 +76,12 @@ export default function Header() {
                 </p>
               )}
 
-              <h2
+              <p
                 className="text-2xl md:text-3xl font-bold mb-1"
                 style={{ fontFamily: "Cormorant Garamond" }}
               >
                 {current?.title}
-              </h2>
+              </p>
 
               <p className="text-base text-gray-900 mb-2 leading-snug font-bold">
                 {current?.description}

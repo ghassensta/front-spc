@@ -12,7 +12,6 @@ export default function SwiperContent({ slidesPerView = 3, data }) {
   const uniqueId = useId();
   const prevId = `prev-${uniqueId}`;
   const nextId = `next-${uniqueId}`;
-  console.info("THIS IS DATA: ", data);
 
   return (
     <div className="relative max-w-[1200px] mx-auto px-12">
@@ -68,13 +67,13 @@ export default function SwiperContent({ slidesPerView = 3, data }) {
 
       <div
         id={prevId}
-        className="absolute left-0 top-1/2 transform bg-[#B6B499] rounded-full w-[30px!important] h-[30px!important] -translate-y-3/4 z-10 cursor-pointer flex items-center justify-center"
+        className="absolute left-0 top-1/3 transform bg-[#B6B499] rounded-full w-[30px!important] h-[30px!important] -translate-y-3/4 z-10 cursor-pointer flex items-center justify-center"
       >
         <FaChevronLeft className="text-black w-[12px!important]" />
       </div>
       <div
         id={nextId}
-        className="absolute right-0 top-1/2 transform bg-[#B6B499] rounded-full w-[30px!important] h-[30px!important] -translate-y-3/4 z-10 cursor-pointer flex items-center justify-center"
+        className="absolute right-0 top-1/3 transform bg-[#B6B499] rounded-full w-[30px!important] h-[30px!important] -translate-y-3/4 z-10 cursor-pointer flex items-center justify-center"
       >
         <FaChevronRight className="text-black w-[12px!important]" />
       </div>

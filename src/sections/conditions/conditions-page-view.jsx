@@ -8,9 +8,9 @@ export default function ConditionsPageView() {
       </h1>
 
       <div className="space-y-6 text-justify font-bricolage">
-        <p>
+        <h2>
           <strong>Préambule</strong>
-        </p>
+        </h2>
         <p>
           <strong>1.1. Définitions</strong>
         </p>

@@ -296,7 +296,7 @@ export default function HomeView() {
       </div>
 
       {/* L'UNIVERS SECTION  */}
-      <div className=" relative w-screen left-[calc(-50vw+50%)] bg-[beige]">
+      <div className=" relative w-screen left-[calc(-50vw+50%)] bg-[#f6f5e9]">
         <div className="max-w-6xl mx-auto py-4">
           <h2 className="text-4xl font-bold text-center">
             L’univers Spa & Prestige Collection.{" "}

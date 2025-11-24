@@ -16,7 +16,7 @@ export default function Section({
   return (
     <div
       className={`relative w-screen left-[calc(-50vw+50%)] overflow-hidden py-10 ${
-        bg === "white" ? "bg-white" : "bg-[beige]"
+        bg === "white" ? "bg-white" : "bg-[#f6f5e9]"
       }`}
     >
       <div className="max-w-6xl mx-auto">

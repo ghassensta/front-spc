@@ -13,12 +13,11 @@ export default function WhoPageView() {
   const [currentSlide, setCurrentSlide] = useState(0);
   const timerRef = useRef(null);
 
-  // Auto-slide functionality
   useEffect(() => {
     const startTimer = () => {
       timerRef.current = setInterval(() => {
         setCurrentSlide((prev) => (prev + 1) % images.length);
-      }, 5000); // Change slide every 5 seconds
+      }, 5000); 
     };
 
     startTimer();
@@ -52,9 +51,9 @@ export default function WhoPageView() {
     <div className="">
       <div className="flex bg-[#FBF6EC] w-screen relative left-[calc(-50vw+50%)] px-5 ">
         <div className="max-w-6xl mx-auto py-6 px-1">
-          <h2 className="text-4xl font-bold mb-4">
+          <h1 className="text-4xl font-bold mb-4">
             L'Essence de Spa & Prestige Collection
-          </h2>
+          </h1>
           <div className="flex flex-col md:flex-row">
             <p className="font-roboto md:w-1/2 pr-6">
               <p className="mb-3">

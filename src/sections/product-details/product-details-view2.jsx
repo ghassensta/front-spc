@@ -226,9 +226,9 @@ export default function ProductDetailsView({
         </div>
 
         <div className="bg-[#f9f7ed] px-8 py-4 col-span-2 lg:col-span-1 rounded-2xl">
-          <h4 className="text-4xl font-bold mb-4 text-[#333]">
+          <span className="text-4xl font-bold mb-4 text-[#333]">
             {etablissement?.nom}
-          </h4>
+          </span>
 
           <div className="relative">
             {user && (
@@ -252,9 +252,9 @@ export default function ProductDetailsView({
             ))}
           </div>
 
-          <h4 className="text-4xl font-bold mb-4 text-[#333] my-2">
+          <h1 className="text-4xl font-bold mb-4 text-[#333] my-2">
             {product?.nom}
-          </h4>
+          </h1>
 
           <div className="flex font-tahoma items-center gap-1 mb-2">
             {[1, 2, 3, 4, 5].map((i) => (
@@ -324,15 +324,15 @@ export default function ProductDetailsView({
             />
           )}
           <div className="mt-6 font-tahoma">
-            <h5 className="text-xl font-semibold mb-4">
+            <span className="text-xl font-semibold mb-4">
               Destinataire : {recipients.length}
-            </h5>
+            </span>
             {recipients.map((recipient, index) => (
               <div key={index} className="mb-4">
                 <div className="flex justify-between items-center mb-2">
-                  <h6 className="text-sm font-normal">
+                  <span className="text-sm font-normal">
                     Destinataire {index + 1}
-                  </h6>
+                  </span>
                   {recipients.length > 1 && (
                     <button
                       onClick={() => handleRemoveRecipient(index)}
@@ -503,9 +503,9 @@ export default function ProductDetailsView({
                 <div className="bg-white p-4 rounded-lg border border-black">
                   {user ? (
                     <>
-                      <h6 className="font-semibold text-lg mb-2">
+                      <span className="font-semibold text-lg mb-2">
                         Laisser un avis
-                      </h6>
+                      </span>
                       <input
                         type="text"
                         className="w-full border border-gray-300 rounded-lg p-2 mb-3"

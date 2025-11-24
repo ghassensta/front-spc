@@ -15,6 +15,7 @@ export default function CategoriesPageView({
   services = [],
   loading,
   filterLoading,
+  nomcat=''
 }) {
   const [filters, setFilters] = useState({
     etablissement: null,
@@ -155,10 +156,10 @@ export default function CategoriesPageView({
       </div>
 
       <div className="mb-10">
-        <p className="text-center text-4xl font-normal my-4">Soins Visage</p>
-        <p className="text-center text-3xl font-normal my-4 text-[#777765]">
+        <h1 className="text-center text-4xl font-normal my-4">{nomcat}</h1>
+        <h2 className="text-center text-3xl font-normal my-4 text-[#777765]">
           Sublimez votre peau et révélez votre éclat grâce à nos soins experts.
-        </p>
+        </h2>
       </div>
 
       {loading ? (

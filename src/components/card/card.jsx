@@ -63,7 +63,7 @@ export default function Card({
         {!!headTitle && (
           <p className="text-center text-xl md:text-2xl">{headTitle}</p>
         )}
-        <h5 className="font-normal text-center text-lg">{title}</h5>
+        <h3 className="font-normal text-center text-lg">{title}</h3>
 
         {!!offreValue && (
           <div className="flex gap-1 items-center justify-center">

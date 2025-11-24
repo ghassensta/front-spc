@@ -38,9 +38,9 @@ export default function ProgrammePageView() {
           <p className="font-tahoma">
             <strong>Bientôt disponible :</strong> notre programme de parrainage.
           </p>
-          <h3 className="text-4xl font-bold">
+          <h2 className="text-4xl font-bold">
             Offrez 5€, et recevez 5€ en retour.
-          </h3>
+          </h2>
           <p className="text-center font-tahoma mb-8">
             Un instant de détente, une attention, une belle découverte… Très
             bientôt, vous pourrez inviter vos proches à rejoindre Spa & Prestige
@@ -146,7 +146,7 @@ export default function ProgrammePageView() {
 
       <div className="w-screen relative max-w-6xl mx-auto mb-4 px-4 py-4 grid grid-cols-1 md:grid-cols-2 gap-8">
         <div>
-          <h3 className="text-3xl font-semibold mb-6">Les conditions</h3>
+          <h2 className="text-3xl font-semibold mb-6">Les conditions</h2>
           <p className="font-tahoma mb-3">
             Code unique d’une valeur de 5 € à valoir sur le site Spa & Prestige
             Collection, pour toute commande réalisée sur une vente privée d’un

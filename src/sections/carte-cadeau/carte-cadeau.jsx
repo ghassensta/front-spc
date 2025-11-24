@@ -47,9 +47,9 @@ export default function CarteCadeau() {
         <div className="max-w-6xl mx-auto py-6">
           <div className="flex flex-col md:flex-row gap-6">
             <div className="md:w-1/2">
-              <h2 className="text-4xl font-bold mb-4">
+              <h1 className="text-4xl font-bold mb-4">
                 Un cadeau qui fait la différence
-              </h2>
+              </h1>
               <p className="font-roboto pr-6 text-[#5E5E5E]">
                 Instantanée. Attentionnée. La carte cadeau Spa & Prestige
                 Collection vous permet d’offrir une expérience bien-être unique
@@ -81,27 +81,27 @@ export default function CarteCadeau() {
       <div className="max-w-6xl mx-auto gap-6 py-8">
         <div className="grid grid-cols-1 md:grid-cols-3 items-start">
           <div className="flex flex-col items-center justify-center">
-            <h4 className="text-center text-2xl mb-4 font-bold">
+            <h2 className="text-center text-2xl mb-4 font-bold">
               Un cadeau instantané et pratique
-            </h4>
+            </h2>
             <p className="font-roboto text-center">
               Offrez un moment de sérénité immédiate, sans attente ni
               contrainte.
             </p>
           </div>
           <div className="flex flex-col items-center justify-center">
-            <h4 className="text-center text-2xl mb-4 font-bold">
+            <h2 className="text-center text-2xl mb-4 font-bold">
               Un choix infini
-            </h4>
+            </h2>
             <p className="font-roboto text-center">
               Des prestations variées pour toutes les occasions et tous les
               budgets, à savourer en toute liberté.
             </p>
           </div>
           <div className="flex flex-col items-center justify-center">
-            <h4 className="text-center text-2xl mb-4 font-bold">
+            <h2 className="text-center text-2xl mb-4 font-bold">
               Un bien-être sur mesure
-            </h4>
+            </h2>
             <p className="font-roboto text-center">
               Une invitation à se détendre, à la manière de chacune. Un cadeau
               valable pendant 1 an pour un moment de pure évasion.
@@ -122,7 +122,7 @@ export default function CarteCadeau() {
             alt=""
           />
           <div className="font-roboto space-y-2">
-            <h5 className="text-2xl font-bold">Sélectionnez le montant</h5>
+            <h3 className="text-2xl font-bold">Sélectionnez le montant</h3>
             <div className="grid grid-cols-4 w-full gap-4">
               {amounts.map((amt) => (
                 <button
@@ -143,9 +143,9 @@ export default function CarteCadeau() {
             <div className="flex flex-col gap-4">
               {/* Recipient Form */}
               <div className="">
-                <h5 className="text-xl font-tahoma font-normal mb-4">
+                <h3 className="text-xl font-tahoma font-normal mb-4">
                   Nom et prénom de la personne qui recevra la carte Cadeau
-                </h5>
+                </h3>
                 <div className="space-y-4">
                   <div className="flex gap-6">
                     <label className="block w-40 text-sm font-tahoma font-medium mb-1">
@@ -178,9 +178,9 @@ export default function CarteCadeau() {
 
               {/* Sender Form */}
               <div className="">
-                <h5 className="text-xl font-tahoma font-normal mb-4">
+                <h3 className="text-xl font-tahoma font-normal mb-4">
                   Nom et prénom de la personne qui commande
-                </h5>
+                </h3>
                 <div className="space-y-4">
                   <div className="flex gap-6">
                     <label className="block w-40 text-sm font-tahoma font-medium mb-1">

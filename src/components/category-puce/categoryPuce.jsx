@@ -7,7 +7,7 @@ export default function CategoryPuce({ slug, icon = null, name = "" }) {
     <motion.div whileHover={{ scale: 1.08 }} transition={{ type: "spring", stiffness: 300 }}>
       <Link
         to={slug ? `/categories/${slug}` : "#"}
-        className="group flex flex-col items-center gap-1.5 py-2 px-3 rounded-full hover:bg-beige/30 transition-all duration-300"
+        className="group flex flex-col items-center gap-1.5 py-2 px-3 rounded-full hover:bg-[#f6f5e9]/30 transition-all duration-300"
       >
         {icon && (
           <img

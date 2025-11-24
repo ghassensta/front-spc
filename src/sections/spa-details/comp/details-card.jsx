@@ -152,7 +152,7 @@ export default function ServiceCard({
           />
         )}
         <div>
-          <h4 className="font-black text-5xl">{details?.nom}</h4>
+          <h1 className="font-black text-5xl">{details?.nom}</h1>
           <div className="flex items-center gap-1 mt-1">
             {[1, 2, 3, 4, 5].map((i) => (
               <Star
