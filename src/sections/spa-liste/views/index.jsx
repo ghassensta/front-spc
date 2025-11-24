@@ -89,6 +89,21 @@ export default function CategoriesPageView({
 
       {/* Filtres avec react-select */}
       <div className="grid grid-cols-1 md:grid-cols-3 px-2 gap-4 font-roboto mb-16">
+           {/* Région / Ville */}
+        <div className="border rounded-lg">
+          <Select
+            instanceId="select-region"
+            styles={customStyles}
+            placeholder="Région ou ville"
+            options={villeOptions}
+            value={villeOptions.find((opt) => opt.value === filters.region) || null}
+            onChange={handleSelectChange("region")}
+            isClearable
+            isSearchable
+            menuPortalTarget={document.body}
+            menuPosition="fixed"
+          />
+        </div>
         {/* Type d'établissement */}
         <div className="border rounded-lg">
           <Select
@@ -105,21 +120,7 @@ export default function CategoriesPageView({
           />
         </div>
 
-        {/* Région / Ville */}
-        <div className="border rounded-lg">
-          <Select
-            instanceId="select-region"
-            styles={customStyles}
-            placeholder="Région ou ville"
-            options={villeOptions}
-            value={villeOptions.find((opt) => opt.value === filters.region) || null}
-            onChange={handleSelectChange("region")}
-            isClearable
-            isSearchable
-            menuPortalTarget={document.body}
-            menuPosition="fixed"
-          />
-        </div>
+     
 
         {/* Services & équipements */}
         <div className="border rounded-lg">

@@ -18,6 +18,7 @@ import StarRatingInput from "src/components/star-rating-input/star-rating-input"
 import { usePostProductAvis } from "src/actions/products";
 import ProductDetailsSkeleton from "./product-details-skeleton";
 import { CONFIG } from "src/config-global";
+import Section3 from "src/sections/home2/comp/section2";
 
 export default function ProductDetailsView({
   product,
@@ -219,7 +220,8 @@ export default function ProductDetailsView({
     return;
   };
   return (
-    <div className="max-w-7xl mx-auto px-4 py-12">
+    <div className="max-w-7xl mx-auto px-4 ">
+      <div className="py-12">
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         <div className="flex flex-col col-span-2 h-[300px] md:h-[600px]">
           <ImageCarousel images={gallery} height="300px" />
@@ -494,7 +496,9 @@ export default function ProductDetailsView({
                     </>
                   )}
                 </div>
+
               </motion.div>
+              
             )}
 
             {activeTab === "createReview" && (
@@ -561,6 +565,8 @@ export default function ProductDetailsView({
           </AnimatePresence>
         </div>
       </div>
+      </div>
+              <Section3 />
     </div>
   );
 }

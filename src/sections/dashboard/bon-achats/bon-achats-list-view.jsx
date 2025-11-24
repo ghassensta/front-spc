@@ -30,39 +30,41 @@ export default function BonAchatsListView() {
   if (loading || validating) {
     return (
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-        <table className="table w-full">
-          <thead className="bg-gray-300">
-            <tr>
-              <th>Montant</th>
-              <th>Source</th>
-              <th>Description</th>
-              <th>Statut</th>
-            </tr>
-          </thead>
-          <tbody className="text-center text-sm">
-            {[...Array(5)].map((_, index) => (
-              <tr key={index} className="border-b-2 py-2">
-                {[...Array(4)].map((__, i) => (
-                  <td key={i}>
-                    <div className="h-4 bg-gray-200 animate-pulse w-24 mx-auto rounded" />
-                  </td>
-                ))}
+        <div className="overflow-x-auto">
+          <table className="table w-full">
+            <thead className="bg-gray-300">
+              <tr>
+                <th>Montant</th>
+                <th>Source</th>
+                <th>Description</th>
+                <th>Statut</th>
               </tr>
-            ))}
-          </tbody>
-        </table>
+            </thead>
+            <tbody className="text-center text-sm">
+              {[...Array(5)].map((_, index) => (
+                <tr key={index} className="border-b-2 py-2">
+                  {[...Array(4)].map((__, i) => (
+                    <td key={i}>
+                      <div className="h-4 bg-gray-200 animate-pulse w-24 mx-auto rounded" />
+                    </td>
+                  ))}
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
       </div>
     );
   }
 
   return (
     <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-      <div className="flex justify-between items-center mb-4">
+      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 mb-4">
         <p className="text-sm text-gray-600">
           Page {currentPage} sur {totalPages || 1}
         </p>
         <div className="flex items-center gap-2">
-          <label htmlFor="itemsPerPage" className="text-sm text-gray-600">
+          <label htmlFor="itemsPerPage" className="text-sm text-gray-600 whitespace-nowrap">
             Lignes par page :
           </label>
           <select
@@ -83,63 +85,69 @@ export default function BonAchatsListView() {
         </div>
       </div>
 
-      <table className="table w-full">
-        <thead className="bg-gray-300">
-          <tr>
-            <th>Montant</th>
-            <th>Source</th>
-            <th>Description</th>
-            <th>Statut</th>
-            <th>Utilisé le</th>
-          </tr>
-        </thead>
+      <div className="overflow-x-auto -mx-4 sm:mx-0">
+        <div className="inline-block min-w-full align-middle">
+          <div className="overflow-hidden">
+            <table className="table w-full min-w-[640px]">
+              <thead className="bg-gray-300">
+                <tr>
+                  <th className="whitespace-nowrap">Montant</th>
+                  <th className="whitespace-nowrap">Source</th>
+                  <th className="whitespace-nowrap">Description</th>
+                  <th className="whitespace-nowrap">Statut</th>
+                  <th className="whitespace-nowrap">Utilisé le</th>
+                </tr>
+              </thead>
 
-        <tbody className="text-center text-secondary text-sm">
-          {!bonachats?.length && (
-            <tr>
-              <td colSpan={5}>
-                <div className="flex flex-col items-center">
-                  <p className="py-2">Vous n'avez pas de bons d'achat</p>
-                </div>
-              </td>
-            </tr>
-          )}
+              <tbody className="text-center text-secondary text-sm">
+                {!bonachats?.length && (
+                  <tr>
+                    <td colSpan={5}>
+                      <div className="flex flex-col items-center">
+                        <p className="py-2">Vous n'avez pas de bons d'achat</p>
+                      </div>
+                    </td>
+                  </tr>
+                )}
 
-          {currentData?.map((bon) => {
-            const sourceLabel =
-              bon.source === 0
-                ? "Parrainage"
-                : bon.source === 1
-                ? "Fidélité"
-                : bon.source;
+                {currentData?.map((bon) => {
+                  const sourceLabel =
+                    bon.source === 0
+                      ? "Parrainage"
+                      : bon.source === 1
+                      ? "Fidélité"
+                      : bon.source;
 
-            const typeLabel =
-              bon.type === "points"
-                ? `${bon.montant} points`
-                : `${bon.montant} €`;
+                  const typeLabel =
+                    bon.type === "points"
+                      ? `${bon.montant} points`
+                      : `${bon.montant} €`;
 
-            const statusClass = bon.used ? "text-red-600" : "text-green-600";
-            const statusLabel = bon.used ? "Utilisé" : "Disponible";
+                  const statusClass = bon.used ? "text-red-600" : "text-green-600";
+                  const statusLabel = bon.used ? "Utilisé" : "Disponible";
 
-            const usedDate = formatDateFR(bon.used_at);
+                  const usedDate = formatDateFR(bon.used_at);
 
-            return (
-              <tr key={bon.id} className="border-b-2 py-2">
-                <td>{typeLabel}</td>
-                <td>{sourceLabel}</td>
-                <td className="text-left max-w-xs truncate">
-                  {bon.description}
-                </td>
-                <td className={statusClass}>{statusLabel}</td>
-                <td>{usedDate}</td>
-              </tr>
-            );
-          })}
-        </tbody>
-      </table>
+                  return (
+                    <tr key={bon.id} className="border-b-2 py-2">
+                      <td className="whitespace-nowrap">{typeLabel}</td>
+                      <td className="whitespace-nowrap">{sourceLabel}</td>
+                      <td className="text-left max-w-xs truncate px-2">
+                        {bon.description}
+                      </td>
+                      <td className={`${statusClass} whitespace-nowrap`}>{statusLabel}</td>
+                      <td className="whitespace-nowrap">{usedDate}</td>
+                    </tr>
+                  );
+                })}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
 
       {totalPages > 1 && (
-        <div className="flex justify-center items-center gap-3 mt-4">
+        <div className="flex justify-center items-center gap-3 mt-4 flex-wrap">
           <button
             onClick={handlePrev}
             disabled={currentPage === 1}

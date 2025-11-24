@@ -1,8 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import { motion } from "framer-motion";
-import { FaChevronLeft, FaChevronRight, FaShoppingBag } from "react-icons/fa";
+import { FaChevronLeft, FaChevronRight } from "react-icons/fa";
 import exclusive from "../../assets/exclusive.png";
-import ButtonIcon from "../button-icon/button-icon";
 import { CONFIG } from "src/config-global";
 import { Link } from "react-router-dom";
 import { paths } from "src/router/paths";
@@ -44,8 +43,6 @@ export default function CardItem({
     setImages(newImages);
   }, [image, gallery]);
 
-  console.log(images);
-
   useEffect(() => {
     if (!date_fin) return;
 
@@ -78,46 +75,46 @@ export default function CardItem({
 
   const timerRef = useRef(null);
   
-    // Auto-slide functionality
-    useEffect(() => {
-      const startTimer = () => {
-        timerRef.current = setInterval(() => {
-          setCurrentSlide((prev) => (prev + 1) % images.length);
-        }, 5000); // Change slide every 5 seconds
-      };
-  
-      startTimer();
-  
-      return () => clearInterval(timerRef.current);
-    }, [images.length]);
-  
-    const resetTimer = () => {
-      clearInterval(timerRef.current);
+  // Auto-slide functionality
+  useEffect(() => {
+    const startTimer = () => {
       timerRef.current = setInterval(() => {
         setCurrentSlide((prev) => (prev + 1) % images.length);
       }, 5000);
     };
-  
-    const goToSlide = (index) => {
-      setCurrentSlide(index);
-      resetTimer();
-    };
-  
-    const goToPrev = () => {
-      setCurrentSlide((prev) => (prev - 1 + images.length) % images.length);
-      resetTimer();
-    };
-  
-    const goToNext = () => {
+
+    startTimer();
+
+    return () => clearInterval(timerRef.current);
+  }, [images.length]);
+
+  const resetTimer = () => {
+    clearInterval(timerRef.current);
+    timerRef.current = setInterval(() => {
       setCurrentSlide((prev) => (prev + 1) % images.length);
-      resetTimer();
-    };
+    }, 5000);
+  };
+
+  const goToSlide = (index) => {
+    setCurrentSlide(index);
+    resetTimer();
+  };
+
+  const goToPrev = () => {
+    setCurrentSlide((prev) => (prev - 1 + images.length) % images.length);
+    resetTimer();
+  };
+
+  const goToNext = () => {
+    setCurrentSlide((prev) => (prev + 1) % images.length);
+    resetTimer();
+  };
 
   return (
-    <motion.div className="flex flex-col md:flex-row gap-4 py-7 border-b border-gray-400">
+    <motion.div className="flex flex-col gap-4 py-7 border-b border-gray-400 md:flex-row">
       {/* Image */}
       <div className="relative w-full md:w-[30%]">
-        <div className=" w-full  h-[190px] rounded-md relative overflow-hidden">
+        <div className="w-full h-[190px] rounded-md relative overflow-hidden">
           {images.map((src, index) => (
             <img
               key={index}
@@ -133,7 +130,6 @@ export default function CardItem({
               loading="lazy"
             />
           ))}
-          
         </div>
         <button
           onClick={goToPrev}
@@ -163,7 +159,9 @@ export default function CardItem({
           ))}
         </div>
       </div>
-      <div className="md:w-[40%]">
+
+      {/* Description */}
+      <div className="w-full md:w-[40%]">
         <h3 className="text-2xl text-left font-normal text-gray-900">{nom}</h3>
         <p className="text-left font-normal font-tahoma text-black mt-1">
           {showFullDescription
@@ -180,11 +178,13 @@ export default function CardItem({
             </span>
           )}
         </p>
-        <p className="text-left font-roboto text-base text-[#333]">
+        <p className="text-left font-roboto text-base text-[#333] mt-2">
           {access_spa}
         </p>
       </div>
-      <div className="md:w-[10%] flex gap-2 md:gap-0 items-center justify-center md:flex-col font-tahoma">
+
+      {/* Prix - Desktop only */}
+      <div className="hidden md:flex md:w-[10%] gap-2 md:gap-0 items-center justify-center md:flex-col font-tahoma">
         {prix &&
           !prix_au_lieu_de &&
           parseFloat(prix) !== 0 &&
@@ -213,7 +213,9 @@ export default function CardItem({
             </span>
           )}
       </div>
-      <div className="md:w-[20%] flex flex-col items-center justify-center">
+
+      {/* Badges et Bouton - Desktop only */}
+      <div className="hidden md:flex md:w-[20%] flex-col items-center justify-center">
         {exclusivite_spc === 1 && (
           <img
             loading="lazy"
@@ -236,11 +238,76 @@ export default function CardItem({
           <>
             <div />
             <Link to={paths.product(slug)} className="w-full">
-              <button className="w-auto mx-auto mt-4 px-4 py-3 bg-black leading-4 text-white uppercase font-normal text-xs tracking-[3px] hover:bg-gray-800 transition font-tahoma flex items-center justify-center gap-2">
+              <button className="w-auto mx-auto mt-4 px-4 py-3 bg-black leading-4 rounded-2xl text-white uppercase font-normal text-xs tracking-[3px] hover:bg-gray-800 transition font-tahoma flex items-center justify-center gap-2">
                 Offrir
               </button>
             </Link>
           </>
+        )}
+      </div>
+
+      {/* Mobile: Badges + Prix + Bouton en ligne */}
+      <div className="flex md:hidden w-full items-center justify-between gap-3">
+        
+
+        {/* Prix au centre */}
+        <div className="flex flex-col items-center font-tahoma">
+          {prix &&
+            !prix_au_lieu_de &&
+            parseFloat(prix) !== 0 &&
+            parseFloat(prix_barre) !== 0 &&
+            parseFloat(prix_au_lieu_de) !== 0 && (
+              <span className="text-base font-normal text-gray-900">
+                {parseFloat(prix).toFixed(2)} €
+              </span>
+            )}
+          {prix_barre &&
+            parseFloat(prix_barre) !== 0 &&
+            parseFloat(prix_barre) !== parseFloat(prix) && (
+              <span className="text-gray-500 line-through text-sm">
+                {parseFloat(prix_barre).toFixed(2)} €
+              </span>
+            )}
+          {prix_au_lieu_de &&
+            parseFloat(prix_au_lieu_de) !== 0 &&
+            parseFloat(prix_au_lieu_de) !== parseFloat(prix) && (
+              <span className="text-center text-base text-gray-900">
+                <div className="font-bold">{parseFloat(prix).toFixed(2)} €</div>
+                <div className="text-xs">Au lieu de </div>
+                <div className="text-xs">
+                  {parseFloat(prix_au_lieu_de).toFixed(2)} €
+                </div>
+              </span>
+            )}
+        </div>
+{/* Badges à gauche */}
+        <div className="flex flex-col gap-2">
+          {exclusivite_spc === 1 && (
+            <img
+              loading="lazy"
+              src={exclusive}
+              alt="Exclusivité"
+              className="w-auto h-auto max-w-[100px]"
+            />
+          )}
+          {offre_flash === 1 && date_fin && (
+            <div className="flex flex-col items-center px-2 py-1 border-dashed rounded-lg border-2 font-tahoma">
+              <span className="text-xs font-medium text-red-600">
+                Offre flash
+              </span>
+              <div className="text-xs font-bold text-gray-800">
+                {remaining}
+              </div>
+            </div>
+          )}
+        </div>
+        {/* Bouton à droite */}
+        {slug && (
+          <Link to={paths.product(slug)}>
+            <button className="px-4 py-3 bg-black leading-4 rounded-2xl text-white uppercase font-normal text-xs tracking-[3px] hover:bg-gray-800 transition font-tahoma whitespace-nowrap">
+              Offrir
+            </button>
+          </Link>
         )}
       </div>
     </motion.div>

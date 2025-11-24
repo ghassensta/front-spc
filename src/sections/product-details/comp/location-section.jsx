@@ -1,6 +1,6 @@
 import { useEffect, useRef } from "react";
 import { motion } from "framer-motion";
-import { FaMapMarkerAlt, FaPhone, FaEnvelope } from "react-icons/fa";
+import { FaMapMarkerAlt, FaPhone, FaEnvelope, FaAngleRight } from "react-icons/fa";
 import { MdAccessTime } from "react-icons/md";
 
 export default function LocationSection({ data }) {
@@ -46,6 +46,10 @@ export default function LocationSection({ data }) {
           )}
         </div>
       </motion.div>
+      <div className="flex items-center gap-2 text-base font-normal text-gray-800">
+        <span>Comment s'y rendre ?</span>
+        <FaAngleRight className="text-gray-600" />
+      </div>
 
       {/* Info */}
       <motion.div

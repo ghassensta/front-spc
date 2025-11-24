@@ -15,13 +15,16 @@ export default function CategoriesPageView({
   services = [],
   loading,
   filterLoading,
-  nomcat=''
+  nomcat = ''
 }) {
   const [filters, setFilters] = useState({
     etablissement: null,
     region: null,
     service: null,
   });
+  
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 12;
 
   // Conversion des options pour react-select
   const typeOptions = types.map((t) => ({ value: t.id, label: t.name }));
@@ -67,6 +70,7 @@ export default function CategoriesPageView({
       ...prev,
       [name]: selectedOption ? selectedOption.value : null,
     }));
+    setCurrentPage(1); // Reset à la page 1 lors du changement de filtre
   };
 
   const filteredCards = useMemo(() => {
@@ -91,6 +95,64 @@ export default function CategoriesPageView({
     });
   }, [cardsByCategory, filters]);
 
+  // Calcul de la pagination
+  const totalPages = Math.ceil(filteredCards.length / itemsPerPage);
+  const currentData = useMemo(() => {
+    const start = (currentPage - 1) * itemsPerPage;
+    return filteredCards.slice(start, start + itemsPerPage);
+  }, [filteredCards, currentPage]);
+
+  const handlePrevPage = () => {
+    setCurrentPage((prev) => Math.max(prev - 1, 1));
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
+  const handleNextPage = () => {
+    setCurrentPage((prev) => Math.min(prev + 1, totalPages));
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
+  const handlePageClick = (pageNumber) => {
+    setCurrentPage(pageNumber);
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
+  // Générer les numéros de page à afficher
+  const getPageNumbers = () => {
+    const pages = [];
+    const maxPagesToShow = 5;
+    
+    if (totalPages <= maxPagesToShow) {
+      for (let i = 1; i <= totalPages; i++) {
+        pages.push(i);
+      }
+    } else {
+      if (currentPage <= 3) {
+        for (let i = 1; i <= 4; i++) {
+          pages.push(i);
+        }
+        pages.push('...');
+        pages.push(totalPages);
+      } else if (currentPage >= totalPages - 2) {
+        pages.push(1);
+        pages.push('...');
+        for (let i = totalPages - 3; i <= totalPages; i++) {
+          pages.push(i);
+        }
+      } else {
+        pages.push(1);
+        pages.push('...');
+        for (let i = currentPage - 1; i <= currentPage + 1; i++) {
+          pages.push(i);
+        }
+        pages.push('...');
+        pages.push(totalPages);
+      }
+    }
+    
+    return pages;
+  };
+
   if (filterLoading) {
     return <FiltersSkeleton />;
   }
@@ -99,7 +161,25 @@ export default function CategoriesPageView({
     <div className="max-w-6xl mx-auto p-1">
       <p className="text-center text-4xl font-semibold my-4">Filtrer par</p>
       <div className="grid grid-cols-1 md:grid-cols-3 px-2 gap-4 font-roboto mb-8">
+         {/* Région / Ville */}
         <div className="border rounded-lg">
+          <Select
+            instanceId="select-region"
+            styles={customStyles}
+            placeholder="Région ou ville"
+            options={villeOptions}
+            value={
+              villeOptions.find((opt) => opt.value === filters.region) || null
+            }
+            onChange={handleChange("region")}
+            isClearable
+            isSearchable
+            menuPortalTarget={document.body}
+            menuPosition="fixed"
+          />
+        </div>
+        <div className="border rounded-lg">
+          
           <Select
             instanceId="select-etablissement"
             styles={customStyles}
@@ -117,23 +197,7 @@ export default function CategoriesPageView({
           />
         </div>
 
-        {/* Région / Ville */}
-        <div className="border rounded-lg">
-          <Select
-            instanceId="select-region"
-            styles={customStyles}
-            placeholder="Région ou ville"
-            options={villeOptions}
-            value={
-              villeOptions.find((opt) => opt.value === filters.region) || null
-            }
-            onChange={handleChange("region")}
-            isClearable
-            isSearchable
-            menuPortalTarget={document.body}
-            menuPosition="fixed"
-          />
-        </div>
+       
 
         {/* Services & équipements */}
         <div className="border rounded-lg">
@@ -166,9 +230,23 @@ export default function CategoriesPageView({
         <CategoriesSkeleton />
       ) : (
         <>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-x-4 gap-y-12 px-3">
-            {filteredCards.length > 0 ? (
-              filteredCards.map((card) => (
+          {/* Affichage du nombre de résultats et de la page */}
+          {filteredCards.length > 0 && (
+            <div className="px-3 mb-4 flex justify-between items-center text-sm text-gray-600">
+              <p>
+                Affichage de {(currentPage - 1) * itemsPerPage + 1} à{" "}
+                {Math.min(currentPage * itemsPerPage, filteredCards.length)} sur{" "}
+                {filteredCards.length} résultat{filteredCards.length > 1 ? 's' : ''}
+              </p>
+              <p>
+                Page {currentPage} sur {totalPages}
+              </p>
+            </div>
+          )}
+
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-x-4 gap-y-12 px-3 mb-8">
+            {currentData.length > 0 ? (
+              currentData.map((card) => (
                 <Card
                   key={card.id}
                   to={paths.product(card.slug)}
@@ -181,17 +259,58 @@ export default function CategoriesPageView({
                 />
               ))
             ) : (
-              <p className="col-span-3 text-center text-xl text-gray-500">
+              <p className="col-span-3 text-center text-xl text-gray-500 py-12">
                 Aucun résultat trouvé.
               </p>
             )}
           </div>
 
-          <div className="w-full flex justify-center mb-10">
-            <button className="inline-flex font-tahoma rounded-full items-center gap-2 uppercase font-normal tracking-widest transition-all duration-300 px-6 py-3 text-sm bg-black text-white mt-6">
-              CHARGER PLUS D’OFFRES
-            </button>
-          </div>
+          {/* Pagination */}
+          {totalPages > 1 && (
+            <div className="w-full flex flex-col items-center gap-4 mb-10">
+              <div className="flex items-center gap-2 flex-wrap justify-center">
+                <button
+                  onClick={handlePrevPage}
+                  disabled={currentPage === 1}
+                  className="px-4 py-2 bg-gray-200 hover:bg-gray-300 rounded-lg disabled:opacity-50 disabled:cursor-not-allowed transition-colors text-sm font-medium"
+                >
+                  Précédent
+                </button>
+
+                {getPageNumbers().map((page, index) => (
+                  page === '...' ? (
+                    <span key={`ellipsis-${index}`} className="px-2 text-gray-500">
+                      ...
+                    </span>
+                  ) : (
+                    <button
+                      key={page}
+                      onClick={() => handlePageClick(page)}
+                      className={`w-10 h-10 rounded-lg font-medium text-sm transition-colors ${
+                        currentPage === page
+                          ? 'bg-black text-white'
+                          : 'bg-gray-200 hover:bg-gray-300 text-gray-700'
+                      }`}
+                    >
+                      {page}
+                    </button>
+                  )
+                ))}
+
+                <button
+                  onClick={handleNextPage}
+                  disabled={currentPage === totalPages}
+                  className="px-4 py-2 bg-gray-200 hover:bg-gray-300 rounded-lg disabled:opacity-50 disabled:cursor-not-allowed transition-colors text-sm font-medium"
+                >
+                  Suivant
+                </button>
+              </div>
+
+              <p className="text-sm text-gray-600">
+                Page {currentPage} sur {totalPages}
+              </p>
+            </div>
+          )}
         </>
       )}
     </div>

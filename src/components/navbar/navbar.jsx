@@ -75,7 +75,7 @@ export default function Navbar() {
         {/* Icônes droite sur desktop */}
         <div className="hidden md:flex items-center gap-6">
           {user && (
-            <Link to="/favorites" className="hover:text-gray-600 transition">
+            <Link to="/dashboard/wishlist" className="hover:text-gray-600 transition">
               <FaRegHeart size={24} />
             </Link>
           )}
