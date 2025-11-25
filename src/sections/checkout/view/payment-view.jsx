@@ -91,8 +91,7 @@ export default function PaymentView() {
 
     if (!data.success) throw new Error(data.message);
 
-    const commandesIds = data.commandes_id;
-
+    const commandesIds = data.commandes_ids;
     if (totalAPayer > 0) {
       const sessionRes = await fetch(`${CONFIG.serverUrl}/api/payment/create-session`, {
         method: "POST",
@@ -143,9 +142,7 @@ export default function PaymentView() {
 
   return (
     <div className="container font-tahoma mx-auto p-6 grid grid-cols-1 md:grid-cols-3 gap-6">
-      {/* === COLONNE GAUCHE === */}
       <div className="col-span-2 space-y-6">
-        {/* Email */}
         <div className="bg-white rounded-md p-6 shadow">
           <h2 className="text-base font-semibold mb-4">Coordonnées</h2>
           <div className="space-y-2">
@@ -164,7 +161,6 @@ export default function PaymentView() {
           </div>
         </div>
 
-        {/* Crédits */}
         {creditsParrainage.length > 0 && (
           <CreditOption
             key="parrainage"
@@ -194,7 +190,6 @@ export default function PaymentView() {
           />
         )}
 
-        {/* Adresse de facturation */}
         <div className="bg-white rounded-md p-6 shadow">
           <div className="flex justify-between items-center mb-4">
             <h2 className="text-base font-semibold">Adresse de facturation</h2>

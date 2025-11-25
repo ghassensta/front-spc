@@ -26,7 +26,7 @@ export default function CheckoutDetails() {
               <h2 className="text-2xl font-bold">Commande #777676</h2>
               <div className="flex gap-2">
                 <div className="bg-secondary text-primary rounded px-2 leading-4 py-1 text-xs">
-                  {checkoutBackup?.total.toFixed(2)} € {/* Display total */}
+                  {checkoutBackup?.total.toFixed(2)} € 
                 </div>
                 
               </div>

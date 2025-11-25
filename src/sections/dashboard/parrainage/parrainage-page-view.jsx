@@ -137,7 +137,7 @@ export default function ParrainagePageView({
       <div className="bg-white border rounded-xl shadow-sm p-6">
         <div className="flex justify-between items-start mb-4">
           <div className="flex items-center gap-2">
-            <Handshake className="w-5 h-5 text-orange-500" />
+            <Handshake className="w-5 h-5 text-[#b6b499]" />
             <h2 className="text-lg font-semibold text-gray-800">Parrainage</h2>
           </div>
           <span className="text-xs text-cyan-600 bg-cyan-50 px-2 py-1 rounded">
@@ -172,7 +172,7 @@ export default function ParrainagePageView({
 
         <div className="mt-6">
           <div className="flex items-center gap-2 mb-2">
-            <Gift className="w-5 h-5 text-yellow-500" />
+            <Gift className="w-5 h-5 text-[#b6b499]" />
             <h3 className="text-md font-semibold text-gray-800">Récompenses</h3>
           </div>
           <ul className="list-disc pl-6 text-sm text-gray-600 space-y-1">
@@ -267,7 +267,7 @@ export default function ParrainagePageView({
           <button
             onClick={handleSendInvites}
             disabled={isSending || emails.filter(Boolean).length === 0}
-            className="w-full bg-orange-400 text-white font-medium py-2 rounded-md hover:bg-orange-500 transition disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+            className="w-full bg-[#b6b499] text-white font-medium py-2 rounded-md hover:bg-[#b6b499] transition disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
           >
             {isSending ? (
               <>

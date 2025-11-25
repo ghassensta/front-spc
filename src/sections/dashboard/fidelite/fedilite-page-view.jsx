@@ -130,7 +130,7 @@ export default function FidelitePageView() {
               disabled={points < rate.points || isExchanging}
               className={`px-4 py-2 rounded-lg border font-medium ${
                 points >= rate.points
-                  ? "bg-orange-500 text-white hover:bg-orange-600"
+                  ? "bg-[#b6b499] text-white hover:bg-[#b6b499]"
                   : "bg-gray-100 text-gray-400 cursor-not-allowed"
               }`}
             >

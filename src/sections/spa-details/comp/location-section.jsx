@@ -80,12 +80,13 @@ export default function LocationSection({ data }) {
           </div>
           {data?.labellise_spa_a == 1 && (
             <div className="flex flex-col items-start mt-2 mb-2">
-              <img
-                src={`${CONFIG.serverUrl}/assets/img/SPC-logo-labellise-Spa-A-100x100.jpg`}
-                alt="Label Spa-A"
-                className="w-22 h-22 object-contain"
-              />
-
+              <a href="https://spa-a.org/" target="__blank">
+                <img
+                  src={`${CONFIG.serverUrl}/assets/img/SPC-logo-labellise-Spa-A-100x100.jpg`}
+                  alt="Label Spa-A"
+                  className="w-[90px] h-[90px] object-contain"
+                />
+              </a>
               <p className="text-sm italic text-gray-600 mt-1">
                 Labellisé Spa-A
               </p>

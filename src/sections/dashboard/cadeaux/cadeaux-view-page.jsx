@@ -26,12 +26,12 @@ export default function CadeauxViewPage() {
               key={index}
               className="bg-white border rounded-xl shadow-sm p-6 flex flex-col items-center text-center"
             >
-              <Icon className="w-8 h-8 text-orange-400 mb-3" />
+              <Icon className="w-8 h-8 text-[#b6b499] mb-3" />
               <h3 className="text-md font-semibold text-gray-800 mb-2">
                 {item.title}
               </h3>
               <p className="text-sm text-gray-600 mb-4">{item.description}</p>
-              <button className="text-sm text-orange-500 border border-orange-200 bg-orange-50 px-4 py-1 rounded-md font-medium">
+              <button className="text-sm text-[#fffffd] border border-[#b6b499] bg-[#b6b499] px-4 py-1 rounded-md font-medium">
                 Automatique
               </button>
             </div>

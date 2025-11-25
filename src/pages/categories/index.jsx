@@ -66,6 +66,7 @@ export default function Page() {
 
       <CategoriesPageView
         nomcat={category.nom}
+        slug_categorie={category.slug}
         cardsByCategory={spaList}
         villes={villes}
         types={types}

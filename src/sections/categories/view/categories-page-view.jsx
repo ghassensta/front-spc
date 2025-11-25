@@ -15,14 +15,15 @@ export default function CategoriesPageView({
   services = [],
   loading,
   filterLoading,
-  nomcat = ''
+  nomcat = "",
+  slug_categorie="",
 }) {
   const [filters, setFilters] = useState({
     etablissement: null,
     region: null,
     service: null,
   });
-  
+
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 12;
 
@@ -104,24 +105,24 @@ export default function CategoriesPageView({
 
   const handlePrevPage = () => {
     setCurrentPage((prev) => Math.max(prev - 1, 1));
-    window.scrollTo({ top: 0, behavior: 'smooth' });
+    window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
   const handleNextPage = () => {
     setCurrentPage((prev) => Math.min(prev + 1, totalPages));
-    window.scrollTo({ top: 0, behavior: 'smooth' });
+    window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
   const handlePageClick = (pageNumber) => {
     setCurrentPage(pageNumber);
-    window.scrollTo({ top: 0, behavior: 'smooth' });
+    window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
   // Générer les numéros de page à afficher
   const getPageNumbers = () => {
     const pages = [];
     const maxPagesToShow = 5;
-    
+
     if (totalPages <= maxPagesToShow) {
       for (let i = 1; i <= totalPages; i++) {
         pages.push(i);
@@ -131,25 +132,25 @@ export default function CategoriesPageView({
         for (let i = 1; i <= 4; i++) {
           pages.push(i);
         }
-        pages.push('...');
+        pages.push("...");
         pages.push(totalPages);
       } else if (currentPage >= totalPages - 2) {
         pages.push(1);
-        pages.push('...');
+        pages.push("...");
         for (let i = totalPages - 3; i <= totalPages; i++) {
           pages.push(i);
         }
       } else {
         pages.push(1);
-        pages.push('...');
+        pages.push("...");
         for (let i = currentPage - 1; i <= currentPage + 1; i++) {
           pages.push(i);
         }
-        pages.push('...');
+        pages.push("...");
         pages.push(totalPages);
       }
     }
-    
+
     return pages;
   };
 
@@ -161,7 +162,7 @@ export default function CategoriesPageView({
     <div className="max-w-6xl mx-auto p-1">
       <p className="text-center text-4xl font-semibold my-4">Filtrer par</p>
       <div className="grid grid-cols-1 md:grid-cols-3 px-2 gap-4 font-roboto mb-8">
-         {/* Région / Ville */}
+        {/* Région / Ville */}
         <div className="border rounded-lg">
           <Select
             instanceId="select-region"
@@ -179,7 +180,6 @@ export default function CategoriesPageView({
           />
         </div>
         <div className="border rounded-lg">
-          
           <Select
             instanceId="select-etablissement"
             styles={customStyles}
@@ -192,12 +192,10 @@ export default function CategoriesPageView({
             onChange={handleChange("etablissement")}
             isClearable
             isSearchable
-            menuPortalTarget={document.body} 
+            menuPortalTarget={document.body}
             menuPosition="fixed"
           />
         </div>
-
-       
 
         {/* Services & équipements */}
         <div className="border rounded-lg">
@@ -236,7 +234,8 @@ export default function CategoriesPageView({
               <p>
                 Affichage de {(currentPage - 1) * itemsPerPage + 1} à{" "}
                 {Math.min(currentPage * itemsPerPage, filteredCards.length)} sur{" "}
-                {filteredCards.length} résultat{filteredCards.length > 1 ? 's' : ''}
+                {filteredCards.length} résultat
+                {filteredCards.length > 1 ? "s" : ""}
               </p>
               <p>
                 Page {currentPage} sur {totalPages}
@@ -259,9 +258,18 @@ export default function CategoriesPageView({
                 />
               ))
             ) : (
-              <p className="col-span-3 text-center text-xl text-gray-500 py-12">
-                Aucun résultat trouvé.
-              </p>
+              <div className="col-span-3 text-center py-12">
+                {/* Message spécial Vitalité */}
+                {slug_categorie === "vitalite" && (
+                  <p className="text-3xl font-normal mt-6">
+                    Retrouvez ici prochainement les offres Vitalité.
+                  </p>
+                )}
+
+                <p className="text-xl text-gray-500 mt-4">
+                  Aucun résultat trouvé.
+                </p>
+              </div>
             )}
           </div>
 
@@ -277,9 +285,12 @@ export default function CategoriesPageView({
                   Précédent
                 </button>
 
-                {getPageNumbers().map((page, index) => (
-                  page === '...' ? (
-                    <span key={`ellipsis-${index}`} className="px-2 text-gray-500">
+                {getPageNumbers().map((page, index) =>
+                  page === "..." ? (
+                    <span
+                      key={`ellipsis-${index}`}
+                      className="px-2 text-gray-500"
+                    >
                       ...
                     </span>
                   ) : (
@@ -288,14 +299,14 @@ export default function CategoriesPageView({
                       onClick={() => handlePageClick(page)}
                       className={`w-10 h-10 rounded-lg font-medium text-sm transition-colors ${
                         currentPage === page
-                          ? 'bg-black text-white'
-                          : 'bg-gray-200 hover:bg-gray-300 text-gray-700'
+                          ? "bg-black text-white"
+                          : "bg-gray-200 hover:bg-gray-300 text-gray-700"
                       }`}
                     >
                       {page}
                     </button>
                   )
-                ))}
+                )}
 
                 <button
                   onClick={handleNextPage}

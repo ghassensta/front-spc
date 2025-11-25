@@ -111,7 +111,7 @@ export default function AidePageView({
         </p>
 
         {servicesError ? (
-          <p className="text-red-500 text-sm">Erreur lors du chargement des services. Veuillez réessayer plus tard.</p>
+          <p className="text-[#b6b499] text-sm">Erreur lors du chargement des services. Veuillez réessayer plus tard.</p>
         ) : servicesLoading || servicesValidating ? (
           <div className="space-y-4">
             <Skeleton className="h-10 w-full" />
@@ -131,7 +131,7 @@ export default function AidePageView({
                 name="service"
                 value={form.service}
                 onChange={handleFormChange}
-                className="w-full border rounded-lg px-3 py-2 text-sm text-gray-700 focus:outline-none focus:ring-2 focus:ring-orange-300"
+                className="w-full border rounded-lg px-3 py-2 text-sm text-gray-700 focus:outline-none focus:ring-2 focus:ring-[#b6b499]"
                 required
               >
                 <option value="">Selectionnez le service</option>
@@ -154,7 +154,7 @@ export default function AidePageView({
                 value={form.title}
                 onChange={handleFormChange}
                 placeholder="Ex: Demande de rendez-vous"
-                className="w-full border rounded-lg px-3 py-2 text-sm text-gray-700 focus:outline-none focus:ring-2 focus:ring-orange-300"
+                className="w-full border rounded-lg px-3 py-2 text-sm text-gray-700 focus:outline-none focus:ring-2 focus:ring-[#b6b499]"
                 required
               />
             </div>
@@ -169,14 +169,14 @@ export default function AidePageView({
                 value={form.description}
                 onChange={handleFormChange}
                 placeholder="Décrivez votre besoin ou question..."
-                className="w-full border rounded-lg px-3 py-2 text-sm text-gray-700 focus:outline-none focus:ring-2 focus:ring-orange-300"
+                className="w-full border rounded-lg px-3 py-2 text-sm text-gray-700 focus:outline-none focus:ring-2 focus:ring-[#b6b499]"
                 required
               />
             </div>
 
             <button
               type="submit"
-              className="bg-orange-300 text-white px-5 py-2 rounded-lg hover:bg-orange-400 transition"
+              className="bg-[#b6b499] text-white px-5 py-2 rounded-lg hover:bg-[#b6b499] transition"
             >
               Envoyer
             </button>
@@ -194,7 +194,7 @@ export default function AidePageView({
         </p>
 
         {messagesError ? (
-          <p className="text-red-500 text-sm">Erreur lors du chargement des demandes. Veuillez réessayer plus tard.</p>
+          <p className="text-[#b6b499] text-sm">Erreur lors du chargement des demandes. Veuillez réessayer plus tard.</p>
         ) : messagesLoading || messagesValidating ? (
           <div className="space-y-4">
             {[...Array(3)].map((_, i) => (
@@ -224,7 +224,7 @@ export default function AidePageView({
                 </div>
                 <button
                   onClick={() => handleVoir(d)}
-                  className="bg-orange-300 text-white text-sm px-3 py-1 rounded-lg hover:bg-orange-400 transition"
+                  className="bg-[#b6b499] text-white text-sm px-3 py-1 rounded-lg hover:bg-[#b6b499] transition"
                 >
                   Voir
                 </button>
@@ -268,7 +268,7 @@ export default function AidePageView({
                     className={`p-3 rounded-lg shadow text-sm ${
                       msg.type === "client"
                         ? "bg-gray-100 text-gray-700"
-                        : "bg-orange-300 text-white"
+                        : "bg-[#b6b499] text-white"
                     }`}
                   >
                     <p>{msg.text}</p>
@@ -284,11 +284,11 @@ export default function AidePageView({
                 value={reply}
                 onChange={(e) => setReply(e.target.value)}
                 placeholder="Écrire une réponse..."
-                className="flex-1 border rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-orange-300"
+                className="flex-1 border rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#b6b499]"
               />
               <button
                 onClick={handleSend}
-                className="bg-orange-300 text-white px-4 py-2 rounded-lg hover:bg-orange-400 transition"
+                className="bg-[#b6b499] text-white px-4 py-2 rounded-lg hover:bg-[#b6b499] transition"
               >
                 Envoyer
               </button>

@@ -239,7 +239,7 @@ const LogoutButton = ({ isMobile }) => {
         >
           <button
             onClick={handleLogout}
-            className="fflex items-center justify-center rounded-lg  transition-all duration-200 text-red-600"
+            className="fflex items-center justify-center rounded-lg  transition-all duration-200 text-[#b6b499]"
             aria-label="Se déconnecter"
           >
             <LogOut className="w-6 h-6" />
@@ -268,11 +268,11 @@ const LogoutButton = ({ isMobile }) => {
         whileHover={{ scale: 1.02, backgroundColor: "#fee2e2" }}
         whileTap={{ scale: 0.98 }}
         onClick={handleLogout}
-        className="flex items-center px-4 py-3 text-red-600 hover:bg-red-50 transition-all duration-200 rounded-lg group font-semibold w-full text-left"
+        className="flex items-center px-4 py-3 text-[#b6b499] hover:bg-[#b6b499] transition-all duration-200 rounded-lg group font-semibold w-full text-left"
         aria-label="Se déconnecter"
       >
-        <LogOut className="w-5 h-5 mr-3 group-hover:text-red-700 transition-colors duration-200" />
-        <span className="text-sm group-hover:text-red-700">Se déconnecter</span>
+        <LogOut className="w-5 h-5 mr-3 group-hover:text-black transition-colors duration-200" />
+        <span className="text-sm group-hover:text-black">Se déconnecter</span>
       </motion.button>
     </li>
   );
