@@ -173,38 +173,58 @@ export default function CheckoutView() {
 
         {/* Expéditeur */}
         <div className="w-full lg:w-80 flex flex-col gap-6">
-          <div className="bg-white p-4 rounded-lg shadow-sm">
-            <h4 className="text-xl font-semibold mb-4">Expéditeur</h4>
-            <div className="space-y-4">
-              <input
-                type="text"
-                className="w-full border border-gray-300 rounded-lg p-2"
-                placeholder="Nom et prénom"
-                value={expediteurFullName}
-                onChange={(e) => {
-                  setExpediteurFullName(e.target.value);
-                  handleExpediteurChange("fullName", e.target.value);
-                }}
-              />
-              <textarea
-                rows={4}
-                className="w-full border border-gray-300 rounded-lg p-2"
-                placeholder="Message (optionnel)"
-                value={expediteurMessage}
-                onChange={(e) => {
-                  setExpediteurMessage(e.target.value);
-                  handleExpediteurChange("message", e.target.value);
-                }}
-              />
-            </div>
-          </div>
+          {user ? (
+            <>
+              <div className="bg-white p-4 rounded-lg shadow-sm">
+                <h4 className="text-xl font-semibold mb-4">Expéditeur</h4>
+                <div className="space-y-4">
+                  <input
+                    type="text"
+                    className="w-full border border-gray-300 rounded-lg p-2"
+                    placeholder="Nom et prénom"
+                    value={expediteurFullName}
+                    onChange={(e) => {
+                      setExpediteurFullName(e.target.value);
+                      handleExpediteurChange("fullName", e.target.value);
+                    }}
+                  />
+                  <textarea
+                    rows={4}
+                    className="w-full border border-gray-300 rounded-lg p-2"
+                    placeholder="Message (optionnel)"
+                    value={expediteurMessage}
+                    onChange={(e) => {
+                      setExpediteurMessage(e.target.value);
+                      handleExpediteurChange("message", e.target.value);
+                    }}
+                  />
+                </div>
+              </div>
 
-          <button
-            onClick={gotCheckout}
-            className="inline-flex font-tahoma justify-center rounded-full items-center gap-2 uppercase font-normal tracking-widest transition-all duration-300 px-6 py-3 text-sm text-center bg-[#B6B499] hover:bg-black text-white"
-          >
-            Commander
-          </button>
+              <button
+                onClick={gotCheckout}
+                className="inline-flex font-tahoma justify-center rounded-full items-center gap-2 uppercase font-normal tracking-widest transition-all duration-300 px-6 py-3 text-sm text-center bg-[#B6B499] hover:bg-black text-white"
+              >
+                Commander
+              </button>
+            </>
+          ) : (
+            <div className="bg-white p-4 rounded-lg shadow-sm">
+              <p>Vous devez vous identifier pour commander</p>
+              <button
+                onClick={() =>
+                  router.push(
+                    `${paths.auth.root}?returnTo=${encodeURIComponent(
+                      "/payment"
+                    )}`
+                  )
+                }
+                className="inline-flex font-tahoma justify-center rounded-full items-center gap-2 uppercase font-normal tracking-widest transition-all duration-300 px-6 py-3 text-sm text-center bg-[#B6B499] hover:bg-black text-white"
+              >
+                Se connecter
+              </button>
+            </div>
+          )}
         </div>
       </div>
     </div>

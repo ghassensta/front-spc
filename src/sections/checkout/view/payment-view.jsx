@@ -156,17 +156,7 @@ export default function PaymentView() {
           <h2 className="text-base font-semibold mb-4">Coordonnées</h2>
           <div className="space-y-2">
             <label className="block text-sm font-medium">Adresse e-mail</label>
-            <input
-              type="email"
-              className="w-full border rounded-md p-2 focus:outline-none focus:ring-2 focus:ring-blue-400"
-              placeholder="contact@example.com"
-              value={expediteurEmail}
-              onChange={(e) => {
-                const email = e.target.value;
-                setExpediteurEmail(email);
-                handleExpediteurChange("email", email);
-              }}
-            />
+            {expediteurEmail}
           </div>
         </div>
 

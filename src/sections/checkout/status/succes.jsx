@@ -4,6 +4,7 @@ import CheckoutDetails from "src/sections/checkout/view/checkout-details";
 import { paymentSuccess } from "src/actions/paiment";
 import { useLocation } from "react-router-dom";
 import successAnimation from "src/animations/Confetti.json"; 
+import { useCheckoutContext } from "../context";
 
 export default function PageSuccess({ sessionId: propSessionId }) {
   const location = useLocation();
@@ -13,6 +14,7 @@ export default function PageSuccess({ sessionId: propSessionId }) {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [showAnimation, setShowAnimation] = useState(true);
+  const { onReset } = useCheckoutContext()
 
   useEffect(() => {
     if (!sessionId) {
@@ -28,6 +30,7 @@ export default function PageSuccess({ sessionId: propSessionId }) {
     const fetchData = async () => {
   setLoading(true);
   setError(null);
+  onReset();
 
   try {
     const res = await paymentSuccess(sessionId);

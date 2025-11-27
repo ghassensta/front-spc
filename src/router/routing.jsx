@@ -69,7 +69,14 @@ export const routes = [
       { element: <ViewProduct />, path: "produit2/:slug" },
       { element: <ViewProduct2 />, path: "produit/:slug" },
       { element: <Chekckout />, path: "checkout" },
-      { element: <ChekckoutPayement />, path: "payment" },
+      {
+        element: (
+          <AuthGuard>
+            <ChekckoutPayement />
+          </AuthGuard>
+        ),
+        path: "payment",
+      },
       { element: <CheckoutDetails />, path: "checkout/details" },
       { element: <SuccessPaiment />, path: "/succes" },
       { element: <FailedPaiment />, path: "/failed" },
@@ -110,72 +117,34 @@ export const routes = [
           </DashboardLayout>
         ),
         path: "dashboard",
+        element: (
+          <AuthGuard>
+            <DashboardLayout>
+              <Suspense fallback={<LoadingScreen />}>
+                <Outlet />
+              </Suspense>
+            </DashboardLayout>
+          </AuthGuard>
+        ),
         children: [
           { element: <DashboardMain />, index: true },
 
           // Commandes protégées
           {
             path: "commandes",
-            element: (
-              <AuthGuard>
-                <Outlet />
-              </AuthGuard>
-            ), // AuthGuard appliqué ici
             children: [
               { element: <DashboardCommandes />, index: true },
               { element: <ViewCommandes />, path: ":id/view" },
             ],
           },
 
-          {
-            path: "details",
-            element: (
-              <AuthGuard>
-                <DashboardDetails />
-              </AuthGuard>
-            ),
-          },
-          {
-            path: "wishlist",
-            element: (
-              <AuthGuard>
-                <DashboardWishlist />
-              </AuthGuard>
-            ),
-          },
-          { path: "aide", element: <DashboardAide /> }, // si tu veux public, pas besoin d'AuthGuard
-          {
-            path: "cadeau",
-            element: (
-              <AuthGuard>
-                <DashboardCadeaux />
-              </AuthGuard>
-            ),
-          },
-          {
-            path: "parrainage",
-            element: (
-              <AuthGuard>
-                <DashboardParrainage />
-              </AuthGuard>
-            ),
-          },
-          {
-            path: "fidelite",
-            element: (
-              <AuthGuard>
-                <DashboardFidelite />
-              </AuthGuard>
-            ),
-          },
-          {
-            path: "bon-achats",
-            element: (
-              <AuthGuard>
-                <DashboardBonAchats />
-              </AuthGuard>
-            ),
-          },
+          { element: <DashboardDetails />, path: "details" },
+          { element: <DashboardWishlist />, path: "wishlist" },
+          { element: <DashboardAide />, path: "aide" },
+          { element: <DashboardCadeaux />, path: "cadeau" },
+          { element: <DashboardParrainage />, path: "parrainage" },
+          { element: <DashboardFidelite />, path: "fidelite" },
+          { element: <DashboardBonAchats />, path: "bon-achats" },
 
           { path: "*", element: <DashboardMain /> },
         ],
