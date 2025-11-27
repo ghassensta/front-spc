@@ -1,134 +1,53 @@
-import React, { useEffect, useState } from "react";
-import { FaHome } from "react-icons/fa";
+import React from "react";
+import { FaHome, FaShoppingCart } from "react-icons/fa";
 import { MdDashboard } from "react-icons/md";
-import ButtonIcon from "src/components/button-icon/button-icon";
+import { Link } from "react-router-dom";
 import { paths } from "src/router/paths";
-import { useCheckoutContext } from "../context";
 
-export default function CheckoutDetails() {
-  const checkout = useCheckoutContext();
-  const [ checkoutBackup, setCheckoutBackup] = useState(null);
+const buttonStyle = "w-auto mx-auto mt-4 px-4 py-3 bg-black leading-4 rounded-2xl text-white uppercase font-normal text-xs tracking-[3px] hover:bg-gray-800 transition font-tahoma flex items-center justify-center gap-2";
 
-  useEffect(() => {
-    setCheckoutBackup(checkout);
-
-   
-  }, [])
-   if(checkoutBackup){
-      checkout.onReset()
-    }
+export default function PaymentCancelled() {
   return (
-    <>
-      <div className="max-w-6xl m-auto font-tahoma">
-        <div className="flex justify-between items-start flex-col lg:flex-row">
-          <div className="flex flex-col">
-            <div className="flex gap-2 items-center">
-              <h2 className="text-2xl font-bold">Commande #777676</h2>
-              <div className="flex gap-2">
-                <div className="bg-secondary text-primary rounded px-2 leading-4 py-1 text-xs">
-                  {checkoutBackup?.total.toFixed(2)} € 
-                </div>
-                
-              </div>
-            </div>
-            <div className="text-xs text-gray-500">
-              <span>{new Date().toLocaleDateString()}</span> -{" "}
-              <span>contact@ecom-fr.com</span>
-            </div>
+    <div className="max-w-2xl mx-auto p-6 text-center font-tahoma">
+      <div className="bg-red-50 border-l-4 border-red-500 p-4 mb-8">
+        <div className="flex items-center justify-center">
+          <div className="flex-shrink-0">
+            <svg className="h-6 w-6 text-red-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+            </svg>
           </div>
-          <div className="flex gap-2">
-            <ButtonIcon
-              title="Renvoyer l'e-mail de la carte-cadeau"
-              variant="outlined"
-              size="sm"
-            />
-            <ButtonIcon
-              title="Mon Tableau de bord"
-              icon={<MdDashboard />}
-              link={paths.dashboard.root}
-              variant=""
-              size="sm"
-            />
-            <ButtonIcon
-              sx="text-lg"
-              icon={<FaHome />}
-              variant="link"
-              link={paths.main}
-              size="sm"
-            />
-          </div>
-        </div>
-
-        {/* Summary and Items Section */}
-        <div className="mt-4 grid grid-cols-1 lg:grid-cols-3 gap-4">
-          {/* Items List - Left Column */}
-          <div className="border p-4 col-span-2">
-            <h4 className="mt-4 font-semibold text-xl">Articles commandés :</h4>
-            <table className="w-full mt-2 border-collapse">
-              <thead>
-                <tr>
-                  <th className="border p-2 text-left">Produit</th>
-                  <th className="border p-2 text-left">Quantité</th>
-                  <th className="border p-2 text-left">Prix</th>
-                </tr>
-              </thead>
-              <tbody>
-                {checkoutBackup?.items.map((item) => (
-                  <tr key={item.id} className="border-t">
-                    <td className="border p-2">{item.name}</td>
-                    <td className="border p-2">{item.quantity}</td>
-                    <td className="border p-2">
-                      {(parseFloat(item.price || 0) * item.quantity).toFixed(2)}{" "}
-                      €
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-            {/* Totals under the table */}
-            <div className="mt-4 border-t pt-2">
-              <div className="flex justify-between">
-                <span>Sous-total :</span>
-                <span>{checkoutBackup?.subtotal.toFixed(2)} €</span>
-              </div>
-              <div className="flex justify-between">
-                <span>Frais de livraison :</span>
-                <span>{checkoutBackup?.shipping.toFixed(2)} €</span>
-              </div>
-              {checkoutBackup?.discount > 0 && (
-                <div className="flex justify-between">
-                  <span>Remise :</span>
-                  <span>-{checkoutBackup?.discount.toFixed(2)} €</span>
-                </div>
-              )}
-              <div className="flex justify-between font-bold">
-                <span>Total :</span>
-                <span>{checkoutBackup?.total.toFixed(2)} €</span>
-              </div>
-            </div>
-          </div>
-
-          {/* Expediteur Information - Right Column */}
-          <div className="border p-4">
-            <h3 className="font-bold text-xl">Expéditeur</h3>
-            <div className="mt-2">
-              <div>{checkoutBackup?.expediteur.fullName}</div>
-              <div>{checkoutBackup?.expediteur.address}</div>
-              {checkoutBackup?.expediteur.address2 && (
-                <div>{checkoutBackup?.expediteur.address2}</div>
-              )}
-              <div>{checkoutBackup?.expediteur.city}</div>
-              <div>{checkoutBackup?.expediteur.state}</div>
-              <div>{checkoutBackup?.expediteur.postalCode}</div>
-              <div>{checkoutBackup?.expediteur.country}</div>
-              <div>{checkoutBackup?.expediteur.phone}</div>
-            </div>
-            <div className="mt-4">
-              <span>{checkoutBackup?.expediteur.email}</span>
-            </div>
+          <div className="ml-3">
+            <h2 className="text-2xl font-bold text-red-700">Paiement annulé</h2>
+            <p className="mt-2 text-red-600">Votre paiement a été annulé. Aucun montant n'a été débité.</p>
           </div>
         </div>
       </div>
-    </>
+
+      <div className="space-y-4 mt-8">
+        <p className="text-gray-600">
+          Si vous souhaitez réessayer votre achat, vous pouvez retourner à votre panier.
+        </p>
+        
+        <div className="flex flex-col sm:flex-row gap-4 justify-center mt-8">
+          <Link to={paths.checkout} className={`${buttonStyle}`}>
+            <FaShoppingCart /> Panier
+          </Link>
+          
+          <Link to={paths.main} className={buttonStyle}>
+            <FaHome /> Accueil
+          </Link>
+          
+          <Link to={paths.dashboard.root} className={buttonStyle}>
+            <MdDashboard /> Tableau de bord
+          </Link>
+        </div>
+        
+        <div className="mt-8 pt-6 border-t border-gray-200">
+          <p className="text-sm text-gray-500">
+            Besoin d'aide ? <a href={`mailto:contact@ecom-fr.com`} className="text-primary hover:underline">Contactez notre service client</a>
+          </p>
+        </div>
+      </div>
+    </div>
   );
 }

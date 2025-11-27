@@ -26,71 +26,83 @@ export default function PageSuccess({ sessionId: propSessionId }) {
     if (!sessionId) return;
 
     const fetchData = async () => {
-      setLoading(true);
-      setError(null);
+  setLoading(true);
+  setError(null);
 
-      try {
-        const res = await paymentSuccess(sessionId);
+  try {
+    const res = await paymentSuccess(sessionId);
 
-        if (!res.success) {
-          setError(
-            res.message || "Impossible de récupérer les détails de la commande."
-          );
-          return;
-        }
+    if (!res.success) {
+      setError(
+        res.message || "Impossible de récupérer les détails de la commande."
+      );
+      return;
+    }
 
-        setMessage(res.message);
+    setMessage(res.message);
 
-        let allItems = [];
-        let totalSubtotal = 0;
-        let totalTotal = 0;
-        let orderIds = [];
-        let cmdnumbers = [];
-        let expediteur = {};
-        let date = '';
+    let allItems = [];
+    let totalSubtotal = 0;
+    let totalTotal = 0;
+    let totalCredits = 0; // Initialize total credits
+    let orderIds = [];
+    let cmdnumbers = [];
+    let expediteur = {};
+    let date = '';
 
-        res.commandesPaied.forEach((commande) => {
-          orderIds.push(commande.id);
-          cmdnumbers.push(commande.numero_commande);
-          console.log("items-cat",commande.lignes_commande);
-          const items = commande.lignes_commande.map((ligne) => ({
-            id: ligne.id,
-            name: ligne.produit?.nom || `Produit #${ligne.produit_id}`, 
-            quantity: ligne.quantite,
-            price: ligne.prix_unitaire,
-          }));
-
-          allItems = [...allItems, ...items];
-
-          const sub = items.reduce((acc, item) => acc + parseFloat(item.price) * item.quantity, 0);
-          totalSubtotal += sub;
-          totalTotal += sub; 
-
-          if (!date) date = commande.created_at;
-          if (!Object.keys(expediteur).length) expediteur = commande.expediteur || {};
-        });
-
-        setCheckoutData({
-          id: orderIds.join(', '),
-          nbcmd:cmdnumbers,
-          items: allItems,
-          subtotal: totalSubtotal,
-          shipping: 0,
-          discount: 0,
-          total: totalTotal,
-          date,
-          expediteur,
-        });
-      } catch (err) {
-        console.error(err);
-        setError("Impossible de récupérer les détails de la commande.");
-      } finally {
-        setLoading(false);
+    res.commandesPaied.forEach((commande) => {
+      orderIds.push(commande.id);
+      cmdnumbers.push(commande.numero_commande);
+      
+      // Calculate credits for this command
+      if (commande.credits && commande.credits.length > 0) {
+        const commandCredits = commande.credits.reduce((sum, credit) => {
+          return sum + parseFloat(credit.montant || 0);
+        }, 0);
+        totalCredits += commandCredits;
       }
-    };
+
+      const items = commande.lignes_commande.map((ligne) => ({
+        id: ligne.id,
+        name: ligne.produit?.nom || `Produit #${ligne.produit_id}`, 
+        quantity: ligne.quantite,
+        price: ligne.prix_unitaire,
+      }));
+
+      allItems = [...allItems, ...items];
+
+      const sub = items.reduce((acc, item) => acc + parseFloat(item.price) * item.quantity, 0);
+      totalSubtotal += sub;
+      totalTotal += sub;
+
+      if (!date) date = commande.created_at;
+      if (!Object.keys(expediteur).length) expediteur = commande.expediteur || {};
+    });
+
+    setCheckoutData({
+      id: orderIds.join(', '),
+      nbcmd: cmdnumbers,
+      items: allItems,
+      subtotal: totalSubtotal,
+      shipping: 0,
+      discount: 0,
+      credits: totalCredits, // Add total credits to checkoutData
+      total: totalTotal - totalCredits, // Subtract credits from total
+      date,
+      expediteur,
+    });
+  } catch (err) {
+    console.error(err);
+    setError("Impossible de récupérer les détails de la commande.");
+  } finally {
+    setLoading(false);
+  }
+};
 
     fetchData();
   }, [sessionId]);
+
+  console.log(checkoutData)
 
   if (loading) return <div className="text-center mt-10">Chargement...</div>;
   if (error)

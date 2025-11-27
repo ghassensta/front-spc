@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { Link, useSearchParams } from "react-router-dom";
 import { toast } from "react-toastify";
-// import { resetPassword } from "src/actions/auth";
+import { resetPassword } from "src/actions/auth";
 import Logo from "src/components/logo/logo";
 import { useRouter } from "src/hooks";
 import { paths } from "src/router/paths";
@@ -32,7 +32,7 @@ export default function ResetPassword() {
 
     try {
       // Uncomment and implement the resetPassword function in your auth actions
-      // await resetPassword({ token, email, password });
+      await resetPassword({ token, email, password });
       toast.success("Votre mot de passe a été réinitialisé avec succès !");
       router.push(paths.auth.login);
     } catch (error) {

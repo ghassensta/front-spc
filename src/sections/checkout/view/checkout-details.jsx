@@ -20,10 +20,13 @@ export default function CheckoutDetails({ checkout }) {
     subtotal = 0,
     shipping = 0,
     discount = 0,
+    credits,
     total = 0,
     date,
     expediteur = {},
   } = checkout;
+
+  // console.log(nbcmd)
 
   localStorage.removeItem("app-checkout");
   checkout.resetCheckout?.();
@@ -33,7 +36,17 @@ export default function CheckoutDetails({ checkout }) {
       <div className="flex justify-between items-start flex-col lg:flex-row">
         <div className="flex flex-col">
           <div className="flex gap-2 items-center">
-            <h2 className="text-2xl font-bold">Commande #{nbcmd.slice(",")}</h2>
+            <h2 className="text-2xl font-bold">
+              Commande{Array.isArray(nbcmd) && nbcmd.length > 1 ? "s" : ""}
+              {Array.isArray(nbcmd)
+                ? nbcmd.map((item, index) => (
+                    <>
+                      {index > 0 ? ", #" : " #"}
+                      {item.slice("CMD")}
+                    </>
+                  ))
+                : ` #${nbcmd.slice("CMD")}`}
+            </h2>
             <div className="flex gap-2">
               <div className="bg-secondary text-primary rounded px-2 leading-4 py-1 text-xs">
                 {parseFloat(total).toFixed(2)} €
@@ -101,14 +114,18 @@ export default function CheckoutDetails({ checkout }) {
 
           {/* Totaux */}
           <div className="mt-4 border-t pt-2">
-            {discount > 0 && (
+            <div className="flex justify-between">
+              <span>Sous Total:</span>
+              <span>{parseFloat(subtotal).toFixed(2)} €</span>
+            </div>
+            {credits > 0 && (
               <div className="flex justify-between">
                 <span>Remise :</span>
-                <span>-{parseFloat(discount).toFixed(2)} €</span>
+                <span>-{parseFloat(credits).toFixed(2)} €</span>
               </div>
             )}
-            <div className="flex justify-between font-bold">
-              <span>Total payé:</span>
+            <div className="flex justify-between">
+              <span>Total:</span>
               <span>{parseFloat(total).toFixed(2)} €</span>
             </div>
           </div>
@@ -116,20 +133,24 @@ export default function CheckoutDetails({ checkout }) {
 
         {/* Expéditeur */}
         <div className="border p-4">
-          <h3 className="font-bold text-xl">Expéditeur</h3>
-          <div className="mt-2 space-y-1">
-            <div>{expediteur.fullName || expediteur.nom || "-"}</div>
-            <div>{expediteur.address || "-"}</div>
-            {expediteur.address2 && <div>{expediteur.address2}</div>}
-            <div>{expediteur.city || "-"}</div>
-            <div>{expediteur.state || "-"}</div>
-            <div>{expediteur.postalCode || "-"}</div>
-            <div>{expediteur.country || "-"}</div>
-            <div>{expediteur.phone || "-"}</div>
-          </div>
-          <div className="mt-4">
-            <span>{expediteur.email || "-"}</span>
-          </div>
+          {expediteur.fullName || expediteur.nom ? (
+            <>
+              <h3 className="font-bold text-xl">Expéditeur</h3>
+              <div className="mt-2 space-y-1">
+                <div>{expediteur.fullName || expediteur.nom}</div>
+                {expediteur.address && <div>{expediteur.address}</div>}
+                {expediteur.address2 && <div>{expediteur.address2}</div>}
+                {expediteur.city && <div>{expediteur.city}</div>}
+                {expediteur.state && <div>{expediteur.state}</div>}
+                {expediteur.postalCode && <div>{expediteur.postalCode}</div>}
+                {expediteur.country && <div>{expediteur.country}</div>}
+                {expediteur.phone && <div>{expediteur.phone}</div>}
+              </div>
+              <div className="mt-4">
+                <span>{expediteur.email || "-"}</span>
+              </div>
+            </>
+          ) : null}
         </div>
       </div>
     </div>

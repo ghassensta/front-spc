@@ -83,3 +83,35 @@ export const editUser = async (data) => {
     throw error;
   }
 };
+
+
+export const forgetPassword = async (data) => {
+  try {
+    const params = { email: data.email };
+
+    await axios.post(endpoints.auth.forgetPassword, params);
+  } catch (error) {
+    console.error("Error during forget password:", error);
+    throw error;
+  }
+
+}
+
+
+export const resetPassword = async (data) => {
+  try {
+    const params = {
+      token: data.token,
+      email: data.email,
+      password: data.password,
+      password_confirmation: data.confirmPassword,
+    };
+
+    const res = await axios.post(endpoints.auth.resetPassword, params);
+
+    return res;
+  } catch (error) {
+    console.error("❌ Erreur lors de la réinitialisation du mot de passe:", error);
+    throw error;
+  }
+};

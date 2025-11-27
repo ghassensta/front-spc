@@ -95,6 +95,8 @@ export const endpoints = {
     signUp: "/api/auth/register",
     logout: "/api/auth/logout",
     edit: "/api/auth/profile",
+    forgetPassword: "/api/auth/forget",
+    resetPassword: "/api/auth/reset"
   },
   categories: {
     list: "/api/categories",

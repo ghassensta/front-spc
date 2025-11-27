@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import { toast } from "react-toastify";
-// import { resetPassword } from "src/actions/auth";
+import { forgetPassword } from "src/actions/auth";
 import Logo from "src/components/logo/logo";
 import { useRouter } from "src/hooks";
 import { paths } from "src/router/paths";
@@ -16,7 +16,7 @@ export default function ForgotPassword() {
     setIsSubmitting(true);
 
     try {
-    //   await resetPassword(email);
+      await forgetPassword(email);
       toast.success("Un email de réinitialisation a été envoyé à votre adresse.");
       router.push(paths.auth.login);
     } catch (error) {
