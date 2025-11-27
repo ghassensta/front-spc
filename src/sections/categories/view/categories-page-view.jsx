@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from "react";
+import React, { useState, useMemo, useEffect } from "react";
 import SpaCard from "src/components/spa-card/spa-card";
 import { paths } from "src/router/paths";
 import CategoriesSkeleton from "../categories-skeleton";
@@ -27,7 +27,6 @@ export default function CategoriesPageView({
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 12;
 
-  // Conversion des options pour react-select
   const typeOptions = types.map((t) => ({ value: t.id, label: t.name }));
   const villeOptions = villes.map((v) => ({ value: v.id, label: v.name }));
   const serviceOptions = services.map((s) => ({ value: s.id, label: s.name }));
@@ -71,7 +70,7 @@ export default function CategoriesPageView({
       ...prev,
       [name]: selectedOption ? selectedOption.value : null,
     }));
-    setCurrentPage(1); // Reset à la page 1 lors du changement de filtre
+    setCurrentPage(1); 
   };
 
   const filteredCards = useMemo(() => {
@@ -96,7 +95,6 @@ export default function CategoriesPageView({
     });
   }, [cardsByCategory, filters]);
 
-  // Calcul de la pagination
   const totalPages = Math.ceil(filteredCards.length / itemsPerPage);
   const currentData = useMemo(() => {
     const start = (currentPage - 1) * itemsPerPage;
@@ -118,7 +116,6 @@ export default function CategoriesPageView({
     window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
-  // Générer les numéros de page à afficher
   const getPageNumbers = () => {
     const pages = [];
     const maxPagesToShow = 5;
@@ -154,6 +151,10 @@ export default function CategoriesPageView({
     return pages;
   };
 
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [slug_categorie]);
+
   if (filterLoading) {
     return <FiltersSkeleton />;
   }
@@ -162,7 +163,6 @@ export default function CategoriesPageView({
     <div className="max-w-6xl mx-auto p-1">
       <p className="text-center text-4xl font-semibold my-4">Filtrer par</p>
       <div className="grid grid-cols-1 md:grid-cols-3 px-2 gap-4 font-roboto mb-8">
-        {/* Région / Ville */}
         <div className="border rounded-lg">
           <Select
             instanceId="select-region"
@@ -248,6 +248,7 @@ export default function CategoriesPageView({
               currentData.map((card) => (
                 <Card
                   key={card.id}
+                  id={card.id}
                   to={paths.product(card.slug)}
                   headTitle={card.etablissement.nom}
                   image={`${CONFIG.serverUrl}/storage/${card.image}`}
@@ -255,11 +256,11 @@ export default function CategoriesPageView({
                   location={card.etablissement.adresse_complete}
                   title={card.nom}
                   offreValue={card.remise_produit}
+                  inWishlist={card.inWishlist}
                 />
               ))
             ) : (
               <div className="col-span-3 text-center py-12">
-                {/* Message spécial Vitalité */}
                 {slug_categorie === "vitalite" && (
                   <p className="text-3xl font-normal mt-6">
                     Retrouvez ici prochainement les offres Vitalité.
@@ -273,7 +274,6 @@ export default function CategoriesPageView({
             )}
           </div>
 
-          {/* Pagination */}
           {totalPages > 1 && (
             <div className="w-full flex flex-col items-center gap-4 mb-10">
               <div className="flex items-center gap-2 flex-wrap justify-center">

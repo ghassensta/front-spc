@@ -1,6 +1,5 @@
-// src/actions/paiement.js
 import { useMemo } from "react";
-import { endpoints, poster } from "src/utils/axios";
+import { endpoints, poster, fetcher } from "src/utils/axios";
 import useSWR from "swr";
 
 const swrOptions = {
@@ -10,7 +9,7 @@ const swrOptions = {
 };
 
 export function usePaymentSession(items, expediteur) {
-  const url = endpoints.paiment.createSession; // corrigé "paiement" -> "paiment" selon ton endpoints
+  const url = endpoints.paiement.createSession; // Corrected to "paiement" assuming standard French spelling; adjust if your endpoints use "paiment"
 
   const { data, error, isLoading, isValidating } = useSWR(
     items && items.length > 0 ? [url, { items, expediteur }] : null,
@@ -38,10 +37,13 @@ export const createPaymentSession = async (items, expediteur) => {
 
   try {
     const payload = { items, expediteur };
-    const res = await poster(endpoints.paiment.createSession, payload);
+    const res = await poster(endpoints.paiement.createSession, payload);
     return res; // { sessionId, publicKey, ... }
   } catch (error) {
-    console.error("Erreur lors de la création de la session de paiement :", error);
+    console.error(
+      "Erreur lors de la création de la session de paiement :",
+      error
+    );
     throw error;
   }
 };
@@ -50,7 +52,10 @@ export const paymentSuccess = async (sessionId) => {
   if (!sessionId) throw new Error("sessionId requis pour succès paiement.");
 
   try {
-    const res = await poster(`${endpoints.paiment.success}?session_id=${sessionId}`);
+    const res = await fetcher([
+      `${endpoints.paiment.success}?session_id=${sessionId}`,
+    ]);
+    console.log("object",res);
     return res;
   } catch (error) {
     console.error("Erreur lors du succès du paiement :", error);
@@ -62,7 +67,14 @@ export const paymentCancel = async (sessionId) => {
   if (!sessionId) throw new Error("sessionId requis pour annulation paiement.");
 
   try {
-    const res = await poster(`${endpoints.paiment.cancel}?session_id=${sessionId}`);
+    const res = await fetcher(endpoints.paiement.cancel, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ session_id: sessionId }),
+    });
+
     return res;
   } catch (error) {
     console.error("Erreur lors de l'annulation du paiement :", error);

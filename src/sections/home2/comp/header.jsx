@@ -69,9 +69,16 @@ export default function Header() {
         {/* Content Card */}
         {!!current && (
           <div className="absolute bottom-24 md:bottom-8  left-4 md:left-12 z-20 text-gray-900 rounded-md shadow-lg w-[90%] max-w-md backdrop-blur-sm">
-            <div className="relative z-10 p-6 ">
+            <Link
+              to={paths.spa.details(current?.slug)}
+              className="block relative z-10 p-6 no-underline hover:no-underline"
+            >
               {current?.remise_offres > 0 && (
-                <p className="text-xs absolute px-2 py-1 -translate-y-1/2 bg-[#B6B499] top-0 font-semibold text-gray-700 uppercase mb-2">
+                <p
+                  className="absolute top-0 -translate-y-1/2
+                  bg-[#B6B499] text-black font-bold font-roboto
+                  px-4 py-2 rounded-full text-sm z-10"
+                >
                   Jusqu’à {current.remise_offres}% de remise
                 </p>
               )}
@@ -83,29 +90,36 @@ export default function Header() {
                 {current?.title}
               </p>
 
-              <p className="text-base text-gray-900 mb-2 leading-snug font-bold">
+              <p className="text-base text-gray-900 mb-1 leading-snug font-bold">
                 {current?.description}
               </p>
 
-              <p className="text-base text-gray-700 mb-4 font-bold">
-                Offres exclusives à partir de{" "}
-                <span className="font-semibold text-black">
-                  {current?.prix_offres}€
-                </span>
-              </p>
+              {current?.prix_offres > 0 && (
+                <p className="text-base text-gray-700 mb-4 font-bold">
+                  Offres exclusives à partir de{" "}
+                  <span className="font-semibold text-black">
+                    {current.prix_offres}€
+                  </span>
+                </p>
+              )}
 
-              <div className="flex font-tahoma items-center gap-1 text-xs text-white uppercase px-4 py-2 mb-4 w-max bg-secondary font-light">
-                <MapPin className="w-4 h-4 text-gray-500" />
+              <div
+                className="
+    flex items-center gap-2 
+    bg-[#020100C9] text-white
+    font-tahoma font-light uppercase tracking-[2px]
+    w-max py-2 px-2
+    rounded-full text-[10px]
+  "
+              >
+                <MapPin className="w-4 h-4 text-white" />
                 {current?.adresse}
               </div>
 
-              <Link
-                to={paths.spa.details(current?.slug)}
-                className="text-sm font-tahoma text-secondary font-bold hover:underline"
-              >
+              <p className="text-sm font-tahoma text-secondary font-bold hover:underline">
                 En savoir plus →
-              </Link>
-            </div>
+              </p>
+            </Link>
 
             <div
               className="absolute rounded-md top-0 left-0 bg-white/95 h-full w-[105%]"

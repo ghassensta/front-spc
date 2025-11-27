@@ -43,8 +43,8 @@ export default function ProductDetailsView({
   ];
 
   if (loading) {
-      return <ProductDetailsSkeleton />;
-    }
+    return <ProductDetailsSkeleton />;
+  }
 
   const spaData = {
     iframeUrl: etablissement?.iframeUrl,
@@ -222,351 +222,356 @@ export default function ProductDetailsView({
   return (
     <div className="max-w-7xl mx-auto px-4 ">
       <div className="py-12">
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        <div className="flex flex-col col-span-2 h-[300px] md:h-[600px]">
-          <ImageCarousel images={gallery} height="300px" />
-        </div>
-
-        <div className="bg-[#f9f7ed] px-8 py-4 col-span-2 lg:col-span-1 rounded-2xl">
-          <span className="text-4xl font-bold mb-4 text-[#333]">
-            {etablissement?.nom}
-          </span>
-
-          <div className="relative">
-            {user && (
-              <button
-                onClick={toggleFav}
-                className="absolute z-10 text-red-500 top-3 right-3 text-xl"
-              >
-                {isFav ? <FaHeart /> : <FaRegHeart />}
-              </button>
-            )}
-            <ProductCarousel
-              gallery={product?.galleries_images}
-              image={product?.image}
-            />
-          </div>
-          <div className="flex flex-wrap gap-3 mt-10 font-tahoma">
-            {categories.map((cat) => (
-              <span className="bg-[#e2dfba] px-2 py-1 text-sm rounded">
-                {cat}
-              </span>
-            ))}
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+          <div className="flex flex-col col-span-2 h-[300px] md:h-[600px]">
+            <ImageCarousel images={gallery} height="300px" />
           </div>
 
-          <h1 className="text-4xl font-bold mb-4 text-[#333] my-2">
-            {product?.nom}
-          </h1>
+          <div className="bg-[#f9f7ed] px-8 py-4 col-span-2 lg:col-span-1 rounded-2xl">
+            <span className="text-4xl font-bold mb-4 text-[#333]">
+              {etablissement?.nom}
+            </span>
 
-          <div className="flex font-tahoma items-center gap-1 mb-2">
-            {[1, 2, 3, 4, 5].map((i) => (
-              <Star
-                key={i}
-                size={18}
-                fill={
-                  i <= Math.floor(roundedRating)
-                    ? "#facc15"
-                    : i === Math.ceil(roundedRating) && roundedRating % 1 !== 0
-                    ? "#facc15"
-                    : "none"
-                }
-                stroke="#facc15"
+            <div className="relative">
+              {user && (
+                <button
+                  onClick={toggleFav}
+                  className="absolute z-10 text-red-500 top-3 right-3 text-xl"
+                >
+                  {isFav ? <FaHeart /> : <FaRegHeart />}
+                </button>
+              )}
+              <ProductCarousel
+                gallery={product?.galleries_images}
+                image={product?.image}
               />
-            ))}
-            <span className="text-sm text-gray-600 ml-2">
-              ({stars.toFixed(1)} avis){" "}
-              <a href="#avis">
-                <TranslatedText text="Déposer un avis" />
-              </a>
-            </span>
-          </div>
-
-          {!!product?.prix_barre && (
-            <span className="text-sm text-gray-500 line-through font-tahoma">
-              {product?.prix_barre}
-            </span>
-          )}
-
-          <div className="font-normal text-[#333] text-lg font-tahoma mb-2">
-            {product?.prix ? `${product.prix} €` : "Prix non disponible"}
-          </div>
-          {!!product?.prix_au_lieu_de && (
-            <TranslatedText
-              text={`Au lieu de ${product?.prix_au_lieu_de}€`}
-              className="text-sm text-gray-500 font-tahoma"
-              as="span"
-            />
-          )}
-
-          <div className="leading-base text-base font-light font-tahoma text-[#333] my-3">
-            {product?.description || "Aucune description disponible."}
-          </div>
-
-          {product?.conditions_utilisation && (
-            <div className="leading-base text-base font-tahoma">
-              {product.conditions_utilisation}
             </div>
-          )}
+            <div className="flex flex-wrap gap-3 mt-10 font-tahoma">
+              {categories.map((cat) => (
+                <span className="bg-[#e2dfba] px-2 py-1 text-sm rounded">
+                  {cat}
+                </span>
+              ))}
+            </div>
 
-          <Link
-            to={paths.spa.details(etablissement?.slug)}
-            className="w-max rounded-md mx-auto mt-10 px-5 py-3 bg-black leading-4 text-white uppercase font-normal text-xs tracking-[3px] hover:bg-gray-800 transition font-tahoma flex items-center justify-center gap-2"
-          >
-            <TranslatedText text="Voir l'établissement" />
-          </Link>
-        </div>
+            {product?.remise_produit > 0 && (
+              <span className="inline-block bg-[#B6B499] text-black font-bold font-roboto px-4 py-2 rounded-full text-sm mt-4">
+                {product.remise_produit}% de remise
+              </span>
+            )}
 
-        <div className="bg-[#f9f7ed] px-8 py-4 col-span-2 lg:col-span-1 rounded-2xl">
-          {!!product?.exclusivite_spc && (
-            <img
-              loading="lazy"
-              src={exclusive}
-              alt="Exclusivité"
-              className="w-auto h-auto my-2"
-            />
-          )}
-          <div className="mt-6 font-tahoma">
-            <span className="text-xl font-semibold mb-4">
-              Destinataire : {recipients.length}
-            </span>
-            {recipients.map((recipient, index) => (
-              <div key={index} className="mb-4">
-                <div className="flex justify-between items-center mb-2">
-                  <span className="text-sm font-normal">
-                    Destinataire {index + 1}
-                  </span>
-                  {recipients.length > 1 && (
-                    <button
-                      onClick={() => handleRemoveRecipient(index)}
-                      className="mt-2 text-xs text-red-500 hover:text-red-700"
-                    >
-                      Supprimer ce destinataire
-                    </button>
-                  )}
-                </div>
-                <div className="space-y-4">
-                  <input
-                    type="text"
-                    className="w-full border border-gray-300 p-2"
-                    placeholder="Nom et prénom"
-                    value={recipient.fullName}
-                    onChange={(e) =>
-                      handleRecipientChange(index, "fullName", e.target.value)
-                    }
-                  />
-                  <input
-                    type="email"
-                    className="w-full border border-gray-300 p-2"
-                    placeholder="Email du destinataire"
-                    value={recipient.email}
-                    onChange={(e) =>
-                      handleRecipientChange(index, "email", e.target.value)
-                    }
-                  />
-                  <div className="flex items-center gap-2 text-xs">
-                    <span>Quantité :</span>
+            <h1 className="text-4xl font-bold mb-4 text-[#333] my-2">
+              {product?.nom}
+            </h1>
+
+            <div className="flex font-tahoma items-center gap-1 mb-2">
+              {[1, 2, 3, 4, 5].map((i) => (
+                <Star
+                  key={i}
+                  size={18}
+                  fill={
+                    i <= Math.floor(roundedRating)
+                      ? "#facc15"
+                      : i === Math.ceil(roundedRating) &&
+                        roundedRating % 1 !== 0
+                      ? "#facc15"
+                      : "none"
+                  }
+                  stroke="#facc15"
+                />
+              ))}
+              <span className="text-sm text-gray-600 ml-2">
+                ({stars.toFixed(1)} avis){" "}
+                <a href="#avis">
+                  <TranslatedText text="Déposer un avis" />
+                </a>
+              </span>
+            </div>
+
+            {!!product?.prix_barre && (
+              <span className="text-sm text-gray-500 line-through font-tahoma">
+                {product?.prix_barre}
+              </span>
+            )}
+
+            <div className="font-normal text-[#333] text-lg font-tahoma mb-2">
+              {product?.prix ? `${product.prix} €` : "Prix non disponible"}
+            </div>
+            {!!product?.prix_au_lieu_de && (
+              <TranslatedText
+                text={`Au lieu de ${product?.prix_au_lieu_de}€`}
+                className="text-sm text-gray-500 font-tahoma"
+                as="span"
+              />
+            )}
+
+            <div className="leading-base text-base font-light font-tahoma text-[#333] my-3">
+              {product?.description || "Aucune description disponible."}
+            </div>
+
+            {product?.conditions_utilisation && (
+              <div className="leading-base text-base font-tahoma">
+                {product.conditions_utilisation}
+              </div>
+            )}
+
+            <Link
+              to={paths.spa.details(etablissement?.slug)}
+              className="w-max rounded-md mx-auto mt-10 px-5 py-3 bg-black leading-4 text-white uppercase font-normal text-xs tracking-[3px] hover:bg-gray-800 transition font-tahoma flex items-center justify-center gap-2"
+            >
+              <TranslatedText text="Voir l'établissement" />
+            </Link>
+          </div>
+
+          <div className="bg-[#f9f7ed] px-8 py-4 col-span-2 lg:col-span-1 rounded-2xl">
+            {!!product?.exclusivite_spc && (
+              <img
+                loading="lazy"
+                src={exclusive}
+                alt="Exclusivité"
+                className="w-auto h-auto my-2"
+              />
+            )}
+            <div className="mt-6 font-tahoma">
+              <span className="text-xl font-semibold mb-4">
+                Destinataire : {recipients.length}
+              </span>
+              {recipients.map((recipient, index) => (
+                <div key={index} className="mb-4">
+                  <div className="flex justify-between items-center mb-2">
+                    <span className="text-sm font-normal">
+                      Destinataire {index + 1}
+                    </span>
+                    {recipients.length > 1 && (
+                      <button
+                        onClick={() => handleRemoveRecipient(index)}
+                        className="mt-2 text-xs text-red-500 hover:text-red-700"
+                      >
+                        Supprimer ce destinataire
+                      </button>
+                    )}
+                  </div>
+                  <div className="space-y-4">
                     <input
-                      type="number"
-                      className="w-16 border border-gray-300 p-2"
-                      value={1}
-                      disabled
+                      type="text"
+                      className="w-full border border-gray-300 p-2"
+                      placeholder="Nom et prénom"
+                      value={recipient.fullName}
+                      onChange={(e) =>
+                        handleRecipientChange(index, "fullName", e.target.value)
+                      }
                     />
+                    <input
+                      type="email"
+                      className="w-full border border-gray-300 p-2"
+                      placeholder="Email du destinataire"
+                      value={recipient.email}
+                      onChange={(e) =>
+                        handleRecipientChange(index, "email", e.target.value)
+                      }
+                    />
+                    <div className="flex items-center gap-2 text-xs">
+                      <span>Quantité :</span>
+                      <input
+                        type="number"
+                        className="w-16 border border-gray-300 p-2"
+                        value={1}
+                        disabled
+                      />
+                    </div>
                   </div>
                 </div>
-              </div>
-            ))}
-            <button
-              onClick={handleAddRecipient}
-              className="px-4 py-2 bg-gray-200 text-black text-sm rounded-md hover:bg-gray-300 transition mb-4"
-            >
-              Ajouter un autre destinataire
-            </button>
-
-            <div className="flex">
+              ))}
               <button
-                onClick={addProductToCheckout}
-                className="w-max px-5 py-3 bg-black leading-4 rounded-md text-white uppercase font-normal text-xs tracking-[3px] hover:bg-gray-800 transition font-tahoma flex items-center justify-center gap-2"
+                onClick={handleAddRecipient}
+                className="px-4 py-2 bg-gray-200 text-black text-sm rounded-md hover:bg-gray-300 transition mb-4"
               >
-                <span>Ajouter au panier</span>
+                Ajouter un autre destinataire
               </button>
-            </div>
-          </div>
 
-          <div className="border-b border-black my-4 font-tahoma">
-            <div className="py-3 flex items-center gap-2">
-              <FaHeart />
-              <TranslatedText text="Programme fidélité 1€ = 1 point : " />
-              <Link to={paths.recompense}>
-                <TranslatedText text="en savoir plus" className="underline" />
-              </Link>
+              <div className="flex">
+                <button
+                  onClick={addProductToCheckout}
+                  className="w-max px-5 py-3 bg-black leading-4 rounded-md text-white uppercase font-normal text-xs tracking-[3px] hover:bg-gray-800 transition font-tahoma flex items-center justify-center gap-2"
+                >
+                  <span>Ajouter au panier</span>
+                </button>
+              </div>
             </div>
-          </div>
-          <LocationSection data={spaData} />
-        </div>
-      </div>
 
-      <div
-        id="avis"
-        className="mt-10 bg-[#f9f7ed] p-4 font-tahoma rounded-xl shadow-sm"
-      >
-        <div className="flex gap-4 border-b border-gray-200">
-          <button
-            className={`px-4 py-2 font-semibold ${
-              activeTab === "reviews"
-                ? "border-b-2 border-secondary text-secondary"
-                : "text-gray-600"
-            }`}
-            onClick={() => setActiveTab("reviews")}
-          >
-            Avis
-          </button>
-          <button
-            className={`px-4 py-2 font-semibold ${
-              activeTab === "createReview"
-                ? "border-b-2 border-secondary text-secondary"
-                : "text-gray-600"
-            }`}
-            onClick={() => setActiveTab("createReview")}
-          >
-            Créer votre avis
-          </button>
+            <div className="border-b border-black my-4 font-tahoma">
+              <div className="py-3 flex items-center gap-2">
+                <FaHeart />
+                <TranslatedText text="Programme fidélité 1€ = 1 point : " />
+                <Link to={paths.recompense}>
+                  <TranslatedText text="en savoir plus" className="underline" />
+                </Link>
+              </div>
+            </div>
+            <LocationSection data={spaData} />
+          </div>
         </div>
 
-        <div className="min-h-[150px] mt-2">
-          <AnimatePresence mode="wait">
-            {activeTab === "reviews" && (
-              <motion.div
-                key="reviews"
-                initial={{ opacity: 0, y: 10 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: -10 }}
-                transition={{ duration: 0.3 }}
-              >
-                <div className="space-y-4">
-                  {avis.length > 0 ? (
-                    <>
-                      {avis.slice(0, visibleReviews).map((avis, index) => (
-                        <div
-                          key={index}
-                          className="bg-white border border-black p-4 rounded-md"
-                        >
-                          <div className="flex items-center gap-4">
-                            <div className="text-yellow-500 flex gap-1">
-                              {[1, 2, 3, 4, 5].map((i) => (
-                                <FaStar
-                                  key={i}
-                                  fill={
-                                    i <= avis.ratings ? "#facc15" : "#f4efe5"
-                                  }
-                                  stroke="#facc15"
-                                />
-                              ))}
-                            </div>
-                            <p className="font-normal">- {avis.name}</p>
-                          </div>
-                          <p className="text-base text-gray-600">
-                            {avis.comment}
-                          </p>
-                        </div>
-                      ))}
-                      {avis.length > visibleReviews && (
-                        <div className="flex justify-center mt-4">
-                          <button
-                            onClick={handleLoadMore}
-                            className="px-4 py-2 bg-gray-200 text-black text-sm rounded-md hover:bg-gray-300 transition"
+        <div
+          id="avis"
+          className="mt-10 bg-[#f9f7ed] p-4 font-tahoma rounded-xl shadow-sm"
+        >
+          <div className="flex gap-4 border-b border-gray-200">
+            <button
+              className={`px-4 py-2 font-semibold ${
+                activeTab === "reviews"
+                  ? "border-b-2 border-secondary text-secondary"
+                  : "text-gray-600"
+              }`}
+              onClick={() => setActiveTab("reviews")}
+            >
+              Avis
+            </button>
+            <button
+              className={`px-4 py-2 font-semibold ${
+                activeTab === "createReview"
+                  ? "border-b-2 border-secondary text-secondary"
+                  : "text-gray-600"
+              }`}
+              onClick={() => setActiveTab("createReview")}
+            >
+              Créer votre avis
+            </button>
+          </div>
+
+          <div className="min-h-[150px] mt-2">
+            <AnimatePresence mode="wait">
+              {activeTab === "reviews" && (
+                <motion.div
+                  key="reviews"
+                  initial={{ opacity: 0, y: 10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -10 }}
+                  transition={{ duration: 0.3 }}
+                >
+                  <div className="space-y-4">
+                    {avis.length > 0 ? (
+                      <>
+                        {avis.slice(0, visibleReviews).map((avis, index) => (
+                          <div
+                            key={index}
+                            className="bg-white border border-black p-4 rounded-md"
                           >
-                            Charger plus d'avis
+                            <div className="flex items-center gap-4">
+                              <div className="text-yellow-500 flex gap-1">
+                                {[1, 2, 3, 4, 5].map((i) => (
+                                  <FaStar
+                                    key={i}
+                                    fill={
+                                      i <= avis.ratings ? "#facc15" : "#f4efe5"
+                                    }
+                                    stroke="#facc15"
+                                  />
+                                ))}
+                              </div>
+                              <p className="font-normal">- {avis.name}</p>
+                            </div>
+                            <p className="text-base text-gray-600">
+                              {avis.comment}
+                            </p>
+                          </div>
+                        ))}
+                        {avis.length > visibleReviews && (
+                          <div className="flex justify-center mt-4">
+                            <button
+                              onClick={handleLoadMore}
+                              className="px-4 py-2 bg-gray-200 text-black text-sm rounded-md hover:bg-gray-300 transition"
+                            >
+                              Charger plus d'avis
+                            </button>
+                          </div>
+                        )}
+                      </>
+                    ) : (
+                      <>
+                        <p className="text-gray-600">
+                          Aucun avis pour le moment.
+                        </p>
+                        <p className="text-gray-600">
+                          Soyez le premier à laisser votre avis sur "
+                          {product?.nom || "ce produit"}" !
+                        </p>
+                        <p className="text-gray-600">
+                          Votre adresse e-mail ne sera pas publiée. Les champs
+                          obligatoires sont indiqués avec *
+                        </p>
+                      </>
+                    )}
+                  </div>
+                </motion.div>
+              )}
+
+              {activeTab === "createReview" && (
+                <>
+                  {/* Formulaire ajouter avis */}
+                  <div className="bg-white p-4 rounded-lg border border-black">
+                    {user ? (
+                      <>
+                        <span className="font-semibold text-lg mb-2">
+                          Laisser un avis
+                        </span>
+                        <input
+                          type="text"
+                          className="w-full border border-gray-300 rounded-lg p-2 mb-3"
+                          placeholder="Votre nom*"
+                          value={name}
+                          onChange={(e) => setName(e.target.value)}
+                          disabled={!!name}
+                        />
+                        <input
+                          type="email"
+                          className="w-full border border-gray-300 rounded-lg p-2 mb-3"
+                          placeholder="Votre email*"
+                          value={email}
+                          onChange={(e) => setEmail(e.target.value)}
+                          disabled={!!name}
+                        />
+                        <textarea
+                          rows={4}
+                          className="w-full border border-gray-300 rounded-lg p-2 mb-3"
+                          placeholder="Partagez votre expérience..."
+                          value={comment}
+                          onChange={(e) => setComment(e.target.value)}
+                        />
+                        <StarRatingInput value={rating} onChange={setRating} />
+                        <div className="flex justify-end mt-3">
+                          <button
+                            onClick={handleSubmit}
+                            className="w-max px-4 py-3 bg-black leading-4 text-white uppercase font-normal text-xs tracking-[3px] hover:bg-gray-800 transition font-tahoma flex items-center justify-center gap-2"
+                            type="button"
+                          >
+                            Envoyer l'avis
                           </button>
                         </div>
-                      )}
-                    </>
-                  ) : (
-                    <>
-                      <p className="text-gray-600">
-                        Aucun avis pour le moment.
-                      </p>
-                      <p className="text-gray-600">
-                        Soyez le premier à laisser votre avis sur "
-                        {product?.nom || "ce produit"}" !
-                      </p>
-                      <p className="text-gray-600">
-                        Votre adresse e-mail ne sera pas publiée. Les champs
-                        obligatoires sont indiqués avec *
-                      </p>
-                    </>
-                  )}
-                </div>
-
-              </motion.div>
-              
-            )}
-
-            {activeTab === "createReview" && (
-              <>
-                {/* Formulaire ajouter avis */}
-                <div className="bg-white p-4 rounded-lg border border-black">
-                  {user ? (
-                    <>
-                      <span className="font-semibold text-lg mb-2">
-                        Laisser un avis
-                      </span>
-                      <input
-                        type="text"
-                        className="w-full border border-gray-300 rounded-lg p-2 mb-3"
-                        placeholder="Votre nom*"
-                        value={name}
-                        onChange={(e) => setName(e.target.value)}
-                        disabled={!!name}
-                      />
-                      <input
-                        type="email"
-                        className="w-full border border-gray-300 rounded-lg p-2 mb-3"
-                        placeholder="Votre email*"
-                        value={email}
-                        onChange={(e) => setEmail(e.target.value)}
-                        disabled={!!name}
-                      />
-                      <textarea
-                        rows={4}
-                        className="w-full border border-gray-300 rounded-lg p-2 mb-3"
-                        placeholder="Partagez votre expérience..."
-                        value={comment}
-                        onChange={(e) => setComment(e.target.value)}
-                      />
-                      <StarRatingInput value={rating} onChange={setRating} />
-                      <div className="flex justify-end mt-3">
-                        <button
-                          onClick={handleSubmit}
-                          className="w-max px-4 py-3 bg-black leading-4 text-white uppercase font-normal text-xs tracking-[3px] hover:bg-gray-800 transition font-tahoma flex items-center justify-center gap-2"
-                          type="button"
-                        >
-                          Envoyer l'avis
-                        </button>
-                      </div>
-                    </>
-                  ) : (
-                    <>
-                      <div className="h-60 flex flex-col justify-center items-center">
-                        <p className="text-xl mb-2">
-                          Veuillez vous connecter pour mettre un avis
-                        </p>
-                        <button
-                          onClick={() => goToAuth()}
-                          className="w-max px-4 py-3 bg-black leading-4 text-white uppercase font-normal text-xs tracking-[3px] hover:bg-gray-800 transition font-tahoma flex items-center justify-center gap-2"
-                        >
-                          Connecter Vous
-                        </button>
-                      </div>
-                    </>
-                  )}
-                </div>
-              </>
-            )}
-          </AnimatePresence>
+                      </>
+                    ) : (
+                      <>
+                        <div className="h-60 flex flex-col justify-center items-center">
+                          <p className="text-xl mb-2">
+                            Veuillez vous connecter pour mettre un avis
+                          </p>
+                          <button
+                            onClick={() => goToAuth()}
+                            className="w-max px-4 py-3 bg-black leading-4 text-white uppercase font-normal text-xs tracking-[3px] hover:bg-gray-800 transition font-tahoma flex items-center justify-center gap-2"
+                          >
+                            Connecter Vous
+                          </button>
+                        </div>
+                      </>
+                    )}
+                  </div>
+                </>
+              )}
+            </AnimatePresence>
+          </div>
         </div>
       </div>
-      </div>
-              <Section3 />
+      <Section3 />
     </div>
   );
 }

@@ -10,9 +10,8 @@ import { Link } from "react-router-dom";
 import { CONFIG } from "src/config-global";
 import { paths } from "src/router/paths";
 
-
 export default function BlogDetails({ actualitie }) {
-  console.log(actualitie)
+  console.log(actualitie);
   return (
     <>
       <div
@@ -71,18 +70,20 @@ export default function BlogDetails({ actualitie }) {
               <FaChevronRight />
             </Link>
           </div>
-          <div className="font-bricolage flex items-center gap-4 text-xl">
+          {/*  <div className="font-bricolage flex items-center gap-4 text-xl">
             <strong>Partager la publication: </strong>
             <div className="flex gap-2">
               <FaFacebook />
               <FaXTwitter />
               <FaLinkedin />
             </div>
-          </div>
+          </div> */}
+          {actualitie?.similaires > 0 && (
+            <h5 className="text-4xl text-center font-semibold">
+              Articles Similaires
+            </h5>
+          )}
 
-          <h5 className="text-4xl text-center font-semibold">
-            Articles Similaires
-          </h5>
           <div className="md:col-span-2 grid grid-cols-1 sm:grid-cols-2 gap-6">
             {actualitie?.similaires.map((article, index) => (
               <div

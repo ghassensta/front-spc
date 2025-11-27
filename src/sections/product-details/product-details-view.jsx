@@ -68,13 +68,11 @@ export default function ProductDetailsView({
       return;
     }
 
-    // Check for required fields
     if (recipients.some((r) => !r.fullName || !r.email)) {
       toast.error("Veuillez remplir tous les champs pour chaque destinataire.");
       return;
     }
 
-    // Check for duplicate emails
     const emailSet = new Set(recipients.map((r) => r.email.toLowerCase()));
     if (emailSet.size !== recipients.length) {
       toast.error(
@@ -83,12 +81,11 @@ export default function ProductDetailsView({
       return;
     }
 
-    // Get unique recipients
+  
     const uniqueRecipients = Array.from(
       new Map(recipients.map((r) => [r.email.toLowerCase(), r])).values()
     );
 
-    // Add all recipients to checkout in a single call
     const existingItem = checkout.items.find((item) => item.id === product.id);
     checkout.onAddToCart({
       id: product.id,
@@ -103,7 +100,7 @@ export default function ProductDetailsView({
         : uniqueRecipients.length,
     });
 
-    // Clear repeater state after adding
+  
     setRecipients([{ fullName: "", email: "" }]);
     navigate(paths.checkout);
   };

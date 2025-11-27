@@ -7,7 +7,7 @@ import { useAuthContext } from "src/auth/hooks/use-auth-context";
 import CreditOption from "src/components/checkout/CreditOption";
 import { useGetCreditsPanier } from "src/actions/credis-panier";
 import toast from "react-hot-toast";
-const TAX_RATE = 0.2; 
+const TAX_RATE = 0.2;
 export default function PaymentView() {
   const checkout = useCheckoutContext();
   const navigate = useNavigate();
@@ -30,7 +30,6 @@ export default function PaymentView() {
   const totalHT = Number((totalTTC / (1 + TAX_RATE)).toFixed(2));
   const tvaAmount = Number((totalTTC - totalHT).toFixed(2));
 
-  // === Séparation crédits ===
   const { creditsParrainage, creditsNormaux } = useMemo(() => {
     const parrainage = [];
     const normaux = [];
@@ -59,67 +58,77 @@ export default function PaymentView() {
   const totalAPayer = Math.max(0, totalTTC - totalCreditsApplied);
   const creditsDepassent = totalCreditsApplied > totalTTC;
 
- const handleSubmit = async () => {
-  if (!checkout.expediteur || !checkout.items || checkout.items.length === 0) {
-    toast.error("Veuillez remplir toutes les informations et ajouter des articles.");
-    return;
-  }
-  if (creditsDepassent) {
-    toast.error("Les crédits sélectionnés dépassent le montant total.");
-    return;
-  }
+  const handleSubmit = async () => {
+    if (
+      !checkout.expediteur ||
+      !checkout.items ||
+      checkout.items.length === 0
+    ) {
+      toast.error(
+        "Veuillez remplir toutes les informations et ajouter des articles."
+      );
+      return;
+    }
+    if (creditsDepassent) {
+      toast.error("Les crédits sélectionnés dépassent le montant total.");
+      return;
+    }
 
-  setLoading(true);
+    setLoading(true);
 
-  try {
-    const res = await fetch(`${CONFIG.serverUrl}/api/commandes`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        expediteur: checkout.expediteur,
-        items: checkout.items,
-        subtotal: totalHT,
-        tax: tvaAmount,
-        total: totalTTC,
-        montant_apres_credits: totalAPayer,
-        credit_ids: [...parrainageIds, ...normauxIds],
-        payment_method: totalAPayer > 0 ? "stripe" : "credits_only",
-      }),
-    });
-
-    const data = await res.json();
-
-    if (!data.success) throw new Error(data.message);
-
-    const commandesIds = data.commandes_ids;
-    if (totalAPayer > 0) {
-      const sessionRes = await fetch(`${CONFIG.serverUrl}/api/payment/create-session`, {
+    try {
+      const res = await fetch(`${CONFIG.serverUrl}/api/commandes`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ commandes_ids: commandesIds }),
+        body: JSON.stringify({
+          expediteur: checkout.expediteur,
+          items: checkout.items,
+          subtotal: totalHT,
+          tax: tvaAmount,
+          total: totalTTC,
+          montant_apres_credits: totalAPayer,
+          credit_ids: [...parrainageIds, ...normauxIds],
+          payment_method: totalAPayer > 0 ? "stripe" : "credits_only",
+        }),
       });
 
-      const sessionData = await sessionRes.json();
+      const data = await res.json();
 
-      if (sessionData?.url) {
-        window.location.href = sessionData.url;
+      if (!data.success) throw new Error(data.message);
+
+      const commandesIds = data.commandes_ids;
+      if (totalAPayer > 0) {
+        const sessionRes = await fetch(
+          `${CONFIG.serverUrl}/api/payment/create-session`,
+          {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ commandes_ids: commandesIds }),
+          }
+        );
+
+        const sessionData = await sessionRes.json();
+        console.log("sessionData",sessionData);
+        if (sessionData?.url) {
+          window.location.href = sessionData.url;
+        } else {
+          throw new Error("Impossible de créer la session Stripe.");
+        }
       } else {
-        throw new Error("Impossible de créer la session Stripe.");
+        toast.success("Commande payée intégralement avec vos crédits !");
+        navigate("/checkout/details");
+        localStorage.removeItem("app-checkout");
+        checkout.resetCheckout?.();
       }
-    } else {
-      toast.success("Commande payée intégralement avec vos crédits !");
-      navigate("/checkout/details");
-      localStorage.removeItem("app-checkout");
-      checkout.resetCheckout?.();
+    } catch (error) {
+      console.error("Erreur paiement :", error);
+      toast.error(
+        error?.message || "Une erreur est survenue lors du paiement."
+      );
+    } finally {
+      setLoading(false);
     }
-  } catch (error) {
-    console.error("Erreur paiement :", error);
-    toast.error(error?.message || "Une erreur est survenue lors du paiement.");
-  } finally {
-    setLoading(false);
-  }
-};
-
+  };
 
   const handleExpediteurChange = (field, value) => {
     checkout.onCreateExpediteur({

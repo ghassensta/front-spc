@@ -8,33 +8,47 @@ const swrOptions = {
   revalidateOnReconnect: true,
 };
 
-
 export function useGetWishlist() {
+  const url = endpoints.wishlist.list;
+
+  const { data, isLoading, isValidating } = useSWR(url, fetcher, swrOptions);
+
+  const memoizedValue = useMemo(
+    () => ({
+      wishlist: data?.data || [],
+      loading: isLoading,
+      validating: isValidating,
+    }),
+    [data]
+  );
+
+  return memoizedValue;
+}
+
+export const useToggleWishlist = async (id) => {
+  try {
+    const url = endpoints.wishlist.toggle;
+
+    const params = { produit_id: id };
+
+    const res = await poster(url, params);
+    mutate(endpoints.wishlist.list);
+    return res;
+  } catch (error) {
+    console.error(error);
+  }
+};
+
+export async function getIsWishlisted(id) {
+  try {
     const url = endpoints.wishlist.list;
+    const res = await fetcher(url);
+    console.log("reswish", res);
 
-    const { data, isLoading, isValidating } = useSWR(url, fetcher, swrOptions);
-
-    const memoizedValue = useMemo(
-        () => ({
-            wishlist: data?.data || [],
-            loading: isLoading,
-            validating: isValidating
-        }), [data]
-    );
-
-    return memoizedValue;
+    return res?.data.some((item) => item.id === id) || false;
+  } catch (error) {
+    console.error(error);
+    return false;
+  }
 }
 
-export const useToggleWishlist= async(id) => {
-    try {
-        const url = endpoints.wishlist.toggle;
-
-        const params = { produit_id : id };
-
-        const res = await poster(url, params);
-        mutate(endpoints.wishlist.list)
-        return res
-    } catch (error) {
-        console.error(error)
-    }
-}

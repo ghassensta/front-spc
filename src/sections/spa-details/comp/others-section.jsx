@@ -48,13 +48,13 @@ export default function TestimonialsSection({ testimonials = [] }) {
           },
         }}
         loop={true}
-        className="mySwiper"
-      >
+        className="mySwiper">
         {testimonials.map((testimonial) => (
           <SwiperSlide key={testimonial.id}>
             <div className="rounded-2xl border w-full">
               <div className="flex flex-col items-center">
                 <img
+                className="w-full h-full"
                   loading="lazy"
                   src={
                     testimonial.logo
@@ -63,8 +63,6 @@ export default function TestimonialsSection({ testimonials = [] }) {
                   }
                   alt={testimonial.slug}
                   style={{
-                    width: "100%",
-                    height: "240px",
                     objectFit: "cover",
                     borderRadius: "12px 12px 0 0",
                   }}

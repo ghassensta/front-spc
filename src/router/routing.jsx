@@ -16,7 +16,10 @@ const Chekckout = lazy(() => import("../pages/checkout/index"));
 const ChekckoutPayement = lazy(() => import("../pages/checkout/checkout"));
 const CheckoutDetails = lazy(() => import("../pages/checkout/details"));
 const SearchPage = lazy(() => import("../pages/serach/index"));
-
+const SuccessPaiment = lazy(() =>
+  import("../pages/payment-status/succes-view")
+);
+const FailedPaiment = lazy(() => import("../pages/payment-status/failed-view"));
 // Dashboard
 const DashboardMain = lazy(() => import("../pages/dashboard/index"));
 const DashboardCommandes = lazy(() => import("../pages/dashboard/commandes"));
@@ -68,6 +71,8 @@ export const routes = [
       { element: <Chekckout />, path: "checkout" },
       { element: <ChekckoutPayement />, path: "payment" },
       { element: <CheckoutDetails />, path: "checkout/details" },
+      { element: <SuccessPaiment />, path: "/succes" },
+      { element: <FailedPaiment />, path: "/failed" },
 
       // === Nouvelles routes statiques ===
       // { element: <ViewProduct />, path: "spa" },
@@ -88,6 +93,7 @@ export const routes = [
       { element: <Contact />, path: "assistance-contact" },
       { element: <Mentions />, path: "mentions-legales" },
       { element: <Conditions />, path: "conditions" },
+
       // === DANS LE TABLEAU `children` DE LA RACINE ===
       {
         element: <SearchPage />,
@@ -97,31 +103,80 @@ export const routes = [
       // === Dashboard ===
       {
         element: (
-          <AuthGuard>
-            <DashboardLayout>
-              <Suspense fallback={<LoadingScreen />}>
-                <Outlet />
-              </Suspense>
-            </DashboardLayout>
-          </AuthGuard>
+          <DashboardLayout>
+            <Suspense fallback={<LoadingScreen />}>
+              <Outlet />
+            </Suspense>
+          </DashboardLayout>
         ),
         path: "dashboard",
         children: [
           { element: <DashboardMain />, index: true },
+
+          // Commandes protégées
           {
             path: "commandes",
+            element: (
+              <AuthGuard>
+                <Outlet />
+              </AuthGuard>
+            ), // AuthGuard appliqué ici
             children: [
               { element: <DashboardCommandes />, index: true },
               { element: <ViewCommandes />, path: ":id/view" },
             ],
           },
-          { path: "details", element: <DashboardDetails /> },
-          { path: "wishlist", element: <DashboardWishlist /> },
-          { path: "aide", element: <DashboardAide /> },
-          { path: "cadeau", element: <DashboardCadeaux /> },
-          { path: "parrainage", element: <DashboardParrainage /> },
-          { path: "fidelite", element: <DashboardFidelite /> },
-          { path: "bon-achats", element: <DashboardBonAchats /> },
+
+          {
+            path: "details",
+            element: (
+              <AuthGuard>
+                <DashboardDetails />
+              </AuthGuard>
+            ),
+          },
+          {
+            path: "wishlist",
+            element: (
+              <AuthGuard>
+                <DashboardWishlist />
+              </AuthGuard>
+            ),
+          },
+          { path: "aide", element: <DashboardAide /> }, // si tu veux public, pas besoin d'AuthGuard
+          {
+            path: "cadeau",
+            element: (
+              <AuthGuard>
+                <DashboardCadeaux />
+              </AuthGuard>
+            ),
+          },
+          {
+            path: "parrainage",
+            element: (
+              <AuthGuard>
+                <DashboardParrainage />
+              </AuthGuard>
+            ),
+          },
+          {
+            path: "fidelite",
+            element: (
+              <AuthGuard>
+                <DashboardFidelite />
+              </AuthGuard>
+            ),
+          },
+          {
+            path: "bon-achats",
+            element: (
+              <AuthGuard>
+                <DashboardBonAchats />
+              </AuthGuard>
+            ),
+          },
+
           { path: "*", element: <DashboardMain /> },
         ],
       },

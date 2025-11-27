@@ -21,7 +21,6 @@ export default function RegisterPageView({ code }) {
   const router = useRouter();
   const location = useLocation();
 
-  // Autofill referral_code from query string
   useEffect(() => {
     const params = new URLSearchParams(location.search);
     const referralCode = params.get("code");
@@ -35,7 +34,7 @@ export default function RegisterPageView({ code }) {
       ...form,
       [e.target.name]: e.target.value,
     });
-    setErrors((prev) => ({ ...prev, [e.target.name]: null })); // clear error on change
+    setErrors((prev) => ({ ...prev, [e.target.name]: null })); 
   };
 
   const handleSubmit = async (e) => {
@@ -47,12 +46,10 @@ export default function RegisterPageView({ code }) {
     toast.promise(promise, {
       pending: "Inscription en cours...",
       success: "Compte créé avec succès !",
-    //   error: "Échec de l'inscription. Vérifiez vos informations.",
     });
 
     try {
       await promise;
-    //   router.push(paths.dashboard.root);
     router.refresh()
     } catch (error) {
       console.error("Error during registration:", error);
@@ -60,19 +57,18 @@ export default function RegisterPageView({ code }) {
             toast.error(error.message)
         }
       if (error?.errors) {
-        setErrors(error.errors); // Laravel errors (mapped by field)
+        setErrors(error.errors); 
       }
     }
   };
 
-  // helper to render error under input
   const renderError = (field) =>
     errors[field] ? (
       <p className="absolute text-xs text-red-500 mt-1">{errors[field][0]}</p>
     ) : null;
 
   return (
-    <div className="font-tahoma">
+    <div className="font-tahoma max-w-lg mx-auto p-4">
       <div className="flex items-center w-full justify-center mb-4">
         <Link to={paths.main}>
           <Logo />
@@ -148,7 +144,7 @@ export default function RegisterPageView({ code }) {
           </div>
 
           {/* Referral code */}
-          <div className="col-span-2 relative">
+          <div className="col-span-1 md:col-span-2 relative">
             <label htmlFor="referral_code" className="text-sm text-gray-600">
               Code
             </label>

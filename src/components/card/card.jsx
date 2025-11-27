@@ -1,15 +1,18 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import { FiMapPin } from "react-icons/fi";
 import { FaBagShopping } from "react-icons/fa6";
 import { Link } from "react-router-dom";
 import ButtonIcon from "../button-icon/button-icon";
 import { TranslatedText } from "../translated-text/translated-text";
-import { FaRegHeart } from "react-icons/fa";
+import { FaRegHeart, FaHeart } from "react-icons/fa";
 import { useAuthContext } from "src/auth/hooks/use-auth-context";
+import { useToggleWishlist, getIsWishlisted } from "src/actions/wishlists";
+import { toast } from "react-toastify";
 
 export default function Card({
   to = "/",
+  id,
   image,
   title,
   location,
@@ -19,8 +22,53 @@ export default function Card({
   offreValue,
   price,
   duration,
+  inWishlist, 
 }) {
   const { user } = useAuthContext();
+  const [isFav, setIsFav] = useState(inWishlist); 
+
+  useEffect(() => {
+    let isMounted = true;
+
+    const loadInitialState = async () => {
+      if (!inWishlist) {
+        const status = await getIsWishlisted(id);
+        if (isMounted) setIsFav(status);
+      }
+    };
+
+    loadInitialState();
+
+    return () => {
+      isMounted = false;
+    };
+  }, [id, inWishlist]);
+
+  const toggleFav = async () => {
+    if (!user) return;
+
+    setIsFav((prev) => !prev);
+
+    const promise = useToggleWishlist(id);
+
+    toast.promise(promise, {
+      pending: isFav
+        ? `Retrait de "${title}" de vos favoris...`
+        : `Ajout de "${title}" à vos favoris...`,
+      success: isFav
+        ? `"${title}" a été retiré de vos favoris !`
+        : `"${title}" a été ajouté à vos favoris !`,
+      error: `Impossible de mettre à jour "${title}"`,
+      autoClose: 10000,
+    });
+
+    try {
+      await promise;
+    } catch (err) {
+      console.error(err);
+      setIsFav((prev) => !prev);
+    }
+  };
 
   return (
     <motion.div
@@ -37,11 +85,18 @@ export default function Card({
             {location}
           </span>
         )}
+
         {user && (
-          <FaRegHeart className="absolute top-8 right-4 text-white text-xl z-10 cursor-pointer hover:text-red-500 transition" />
+          <button
+            onClick={toggleFav}
+            className="absolute z-10 text-red-500 top-3 right-3 text-xl"
+          >
+            {isFav ? <FaHeart /> : <FaRegHeart />}
+          </button>
         )}
+
         {!!image && (
-          <Link to={to}>
+          <Link to={to} className="block w-full h-64">
             <img
               src={image}
               alt={title || "spa"}
@@ -58,11 +113,11 @@ export default function Card({
         )}
       </div>
 
-      {/* Content - INCHANGÉ */}
       <Link to={to} className="p-2 mt-3 space-y-1">
         {!!headTitle && (
           <p className="text-center text-xl md:text-2xl">{headTitle}</p>
         )}
+
         <h3 className="font-normal text-center text-lg">{title}</h3>
 
         {!!offreValue && (
