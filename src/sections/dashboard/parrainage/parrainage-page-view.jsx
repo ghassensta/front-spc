@@ -109,6 +109,8 @@ export default function ParrainagePageView({
         }
 
         setEmails([""]);
+      }else{
+        toast.error(data.message)
       }
     } catch (error) {
       console.error("API Error Response :", error);

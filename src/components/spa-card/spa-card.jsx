@@ -34,7 +34,7 @@ export default function SpaCard({
           lazyload="lazy"
           src={CONFIG.serverUrl + "/storage/" + image}
           alt={title}
-          className="w-full  rounded-3xl object-cover overflow-hidden"
+          className="w-full  rounded-3xl object-cover overflow-hidden max-h-[242px]"
         />
         {renderRemisePer()}
       </div>

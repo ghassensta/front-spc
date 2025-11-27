@@ -156,7 +156,7 @@ export default function PaymentView() {
           <h2 className="text-base font-semibold mb-4">Coordonnées</h2>
           <div className="space-y-2">
             <label className="block text-sm font-medium">Adresse e-mail</label>
-            {expediteurEmail}
+            {user.email}
           </div>
         </div>
 

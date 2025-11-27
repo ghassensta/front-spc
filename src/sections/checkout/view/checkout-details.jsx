@@ -35,8 +35,8 @@ export default function CheckoutDetails({ checkout }) {
       {/* Header */}
       <div className="flex justify-between items-start flex-col lg:flex-row">
         <div className="flex flex-col">
-          <div className="flex gap-2 items-center">
-            <h2 className="text-2xl font-bold">
+          <div className="flex gap-4 items-center">
+            <h2 className="text-2xl font-bold text-wrap">
               Commande{Array.isArray(nbcmd) && nbcmd.length > 1 ? "s" : ""}
               {Array.isArray(nbcmd)
                 ? nbcmd.map((item, index) => (
@@ -48,7 +48,7 @@ export default function CheckoutDetails({ checkout }) {
                 : ` #${nbcmd.slice("CMD")}`}
             </h2>
             <div className="flex gap-2">
-              <div className="bg-secondary text-primary rounded px-2 leading-4 py-1 text-xs">
+              <div className="bg-secondary text-nowrap text-primary rounded px-2 leading-4 py-1 text-xs">
                 {parseFloat(total).toFixed(2)} €
               </div>
             </div>
@@ -71,7 +71,7 @@ export default function CheckoutDetails({ checkout }) {
             icon={<FaHome />}
             variant="link"
             link={paths.main}
-            size="sm"
+            size="lg"
           />
         </div>
       </div>
