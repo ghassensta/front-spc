@@ -5,6 +5,8 @@ import AuthLayout from "src/layouts/authLayout";
 
 const Login = lazy(() => import("../pages/auth/login"));
 const Register = lazy(() => import("../pages/auth/register"));
+const Forgot = lazy(() => import("../pages/auth/forgot"))
+const Reset = lazy(() => import("../pages/auth/reset"))
 
 export const authRoutes = [
   {
@@ -19,6 +21,8 @@ export const authRoutes = [
     children: [
       { element: <Login />, index: true },
       { element: <Register />, path: "register" },
+      { element: <Forgot />, path: "forget-password"},
+      { element: <Reset />, path: "reset-password"}
     ],
   },
 ];

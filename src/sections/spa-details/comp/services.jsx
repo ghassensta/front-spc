@@ -52,7 +52,7 @@ export default function Tabs({ data = [] }) {
   if (!active) return null;
 
   return (
-    <div className="w-full max-w-7xl mx-auto mt-10">
+    <div className="w-full max-w-7xl mx-auto mt-10" id="etab-services">
       {/* Tab Buttons */}
       <div className="relative flex flex-no-wrap justify-center gap-0 w-full md:gap-5 items-center space-x-1 max-w-[100%] text-sm md:text-base overflow-x-auto pb-2">
         {tabs.filter((tab) => tab.visible).map((tab, index) => (

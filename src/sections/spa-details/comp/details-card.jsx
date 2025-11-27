@@ -10,7 +10,7 @@ export default function ServiceCard({
   avisTotals = 0,
   marquesPartenaires,
 }) {
-  console.log(details);
+  console.log("here",details);
   const [isExpanded, setIsExpanded] = useState(false);
   const [openSection, setOpenSection] = useState(null);
 
@@ -138,7 +138,22 @@ export default function ServiceCard({
     <div className="p-4 bg-white">
       {/* Header */}
       <div className="flex flex-col mb-4">
-        { !!details?.remise_offres && <span className="bg-[#B6B499] w-max mb-2 text-black font-bold font-roboto px-2 py-1 rounded-2xl">Jusqu'à {details.remise_offres}% de remise</span>}
+        { !!details?.remise_offres && (
+          <Link
+            to="#etab-services"
+            className="bg-[#B6B499] w-max mb-2 text-black font-bold font-roboto px-2 py-1 rounded-2xl"
+            onClick={(e) => {
+              e.preventDefault();
+              window.scrollTo({
+                left: 0,
+                top: document.getElementById("etab-services")?.offsetTop,
+                behavior: "smooth",
+              });
+            }}
+          >
+            Jusqu'à {details.remise_offres}% de remise
+          </Link>
+        )}
         {notEmpty(details?.logo) && (
           <img
             lazyload="lazy"

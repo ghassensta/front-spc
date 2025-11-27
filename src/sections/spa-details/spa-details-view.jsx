@@ -182,7 +182,7 @@ export default function SpaDetailsView({
                             </div>
                             <p className="font-normal">- {avis.name}</p>
                           </div>
-                          <p className="text-base text-gray-600">
+                          <p className="whitespace-pre-wrap break-words text-base text-gray-600">
                             {avis.comment}
                           </p>
                         </div>

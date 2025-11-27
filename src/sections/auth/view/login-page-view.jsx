@@ -68,6 +68,7 @@ export default function LoginPageView() {
             value={password}
             onChange={(e) => setPassword(e.target.value)}
           />
+        <Link className="text-xs text-gray-400" to={paths.auth.forget}>Mot de passe oublié?</Link>
         </div>
 
         <button
