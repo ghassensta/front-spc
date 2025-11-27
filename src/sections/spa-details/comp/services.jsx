@@ -54,7 +54,7 @@ export default function Tabs({ data = [] }) {
   return (
     <div className="w-full max-w-7xl mx-auto mt-10" id="etab-services">
       {/* Tab Buttons */}
-      <div className="relative flex flex-no-wrap justify-center gap-0 w-full md:gap-5 items-center space-x-1 max-w-[100%] text-sm md:text-base overflow-x-auto pb-2">
+      <div className="relative flex flex-wrap justify-center items-center space-x-1 max-w-[100%] text-sm md:text-base overflow-x-auto pb-2">
         {tabs.filter((tab) => tab.visible).map((tab, index) => (
           <React.Fragment key={tab.label}>
             <TabButton
@@ -63,7 +63,7 @@ export default function Tabs({ data = [] }) {
               onClick={() => setActive(tab)}
             />
             {index < tabs.filter((tab) => tab.visible).length - 1 && (
-              <span className="text-secondary text-xl md:text-2xl font-medium">/</span>
+              <span className={`text-secondary text-xl md:text-2xl font-medium ${window.innerWidth >= 768 ? 'mx-1' : 'inline'}`}>/</span>
             )}
           </React.Fragment>
         ))}

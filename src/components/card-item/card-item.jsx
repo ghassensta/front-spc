@@ -30,6 +30,25 @@ export default function CardItem({
   const [images, setImages] = useState([]);
   const [currentSlide, setCurrentSlide] = useState(0);
 
+  const dotsContainerRef = useRef(null);
+const dotRefs = useRef([]);
+
+useEffect(() => {
+  const activeDot = dotRefs.current[currentSlide];
+  if (activeDot && dotsContainerRef.current) {
+    const container = dotsContainerRef.current;
+    const containerWidth = container.offsetWidth;
+    const dotLeft = activeDot.offsetLeft;
+    const dotWidth = activeDot.offsetWidth;
+    const scrollTo = dotLeft - (containerWidth / 2) + (dotWidth / 2);
+    
+    container.scrollTo({
+      left: scrollTo,
+      behavior: 'smooth'
+    });
+  }
+}, [currentSlide]);
+
   // Combine image and gallery into images state
   useEffect(() => {
     const newImages = [];
@@ -110,6 +129,21 @@ export default function CardItem({
     resetTimer();
   };
 
+  const dotsStyle = `
+  .dots-container::-webkit-scrollbar {
+    display: none;
+  }
+  .dots-container {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+`;
+// Add this function to calculate visible dots range
+const getVisibleDots = (current, total, visibleCount = 5) => {
+  let start = Math.max(0, Math.min(current - Math.floor(visibleCount / 2), total - visibleCount));
+  start = Math.max(0, Math.min(start, total - visibleCount));
+  return Array.from({ length: Math.min(visibleCount, total) }, (_, i) => start + i);
+};
   return (
     <motion.div className="flex flex-col gap-4 py-7 border-b border-gray-400 md:flex-row">
       {/* Image */}
@@ -146,18 +180,29 @@ export default function CardItem({
           <FaChevronRight size={20} />
         </button>
         {/* Navigation Dots */}
-        <div className="absolute mt-3 left-1/2 transform -translate-x-1/2 flex space-x-2">
-          {images.map((_, index) => (
-            <button
-              key={index}
-              onClick={() => goToSlide(index)}
-              className={`w-2 h-2 rounded-full ${
-                currentSlide === index ? "bg-black" : "bg-gray-400"
-              } hover:bg-[#B6B498] transition-colors duration-300`}
-              aria-label={`Go to slide ${index + 1}`}
-            />
-          ))}
-        </div>
+        <style>{dotsStyle}</style>
+<div 
+  ref={dotsContainerRef}
+  className="dots-container absolute bottom-2 left-0 right-0 flex justify-center items-center h-6"
+>
+  <div className="flex items-center gap-2">
+    {getVisibleDots(currentSlide, images.length).map((index) => (
+      <button
+        key={index}
+        onClick={() => {
+          setCurrentSlide(index);
+          resetTimer();
+        }}
+        className={`flex-shrink-0 rounded-full transition-all duration-300 ${
+          currentSlide === index 
+            ? "w-3 h-3 bg-black" 
+            : "w-2 h-2 bg-gray-400 hover:bg-gray-500"
+        }`}
+        aria-label={`Go to slide ${index + 1}`}
+      />
+    ))}
+  </div>
+</div>
       </div>
 
       {/* Description */}
