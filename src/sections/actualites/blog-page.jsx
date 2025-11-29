@@ -85,7 +85,7 @@ export default function BlogPage({ articles, loading }) {
           </ul>
         </div>
       </div>
-      <div className="flex items-center justify-center my-4">
+      <div className="flex items-center justify-center mb-8 mt-4">
         <button className="font-bricolage bg-[#B6B498] py-2 px-4 rounded-full text-white hover:bg-black duration-300">
           NOUS CONTACTER
         </button>

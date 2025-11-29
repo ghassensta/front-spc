@@ -23,10 +23,10 @@ const Section3 = () => {
             </h2>
           )}
 
-          <p className="mt-2 text-3xl mb-8">{section.description}</p>
+          <p className="mt-2 text-3xl mb-5">{section.description}</p>
 
           {section.extra_data?.longdescription && (
-            <p className="text-lg font-tahoma uppercase hidden md:block">
+            <p className="text-lg font-tahoma uppercase hidden md:block mb-5">
               {section.extra_data.longdescription}
             </p>
           )}

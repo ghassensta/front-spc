@@ -63,7 +63,7 @@ export default function SpaCard({
   const renderDescription = () => {
     if (!description) return null;
     return (
-      <p className="text-black font-tahoma text-base mt-2 text-center">
+      <p className="text-black font-tahoma text-base mt-2 text-center h-12 overflow-y-hidden">
         {description}
       </p>
     );

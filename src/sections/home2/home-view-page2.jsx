@@ -68,7 +68,7 @@ export default function HomePageView() {
         <>
           {/* ================== VERSION DESKTOP / TABLETTE (inchangée) ================== */}
           <div className="hidden md:block bg-[#f6f5e9] rounded-lg left-[calc(-50vw+50%)] relative w-screen">
-            <div className="max-w-6xl mx-auto py-4 px-3">
+            <div className="max-w-6xl mx-auto py-6 px-3">
               <h2 className="text-3xl font-bold text-center">
                 Actualités :{" "}
                 <span className="text-[#B6B499]">Nos derniers articles</span>

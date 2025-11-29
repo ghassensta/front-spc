@@ -54,7 +54,7 @@ export default function WhoPageView() {
           <h1 className="text-4xl font-bold mb-4">
             L'Essence de Spa & Prestige Collection
           </h1>
-          <div className="flex flex-col md:flex-row">
+          <div className="flex flex-col md:flex-row gap-8">
             <p className="font-roboto md:w-1/2 pr-6">
               <p className="mb-3">
                 <span className="font-bold">Spa & Prestige Collection</span>{" "}
@@ -109,14 +109,14 @@ export default function WhoPageView() {
               {/* Navigation Arrows */}
               <button
                 onClick={goToPrev}
-                className="absolute top-1/2 left-4 transform -translate-y-1/2 text-white p-2 rounded-full transition-colors duration-300"
+                className="absolute top-1/2 -left-8 transform -translate-y-1/2 text-black p-2 rounded-full transition-colors duration-300"
                 aria-label="Previous slide"
               >
                 <FaChevronLeft size={20} />
               </button>
               <button
                 onClick={goToNext}
-                className="absolute top-1/2 right-4 transform -translate-y-1/2 text-white p-2 rounded-full transition-colors duration-300"
+                className="absolute top-1/2 -right-8 transform -translate-y-1/2 text-black p-2 rounded-full transition-colors duration-300"
                 aria-label="Next slide"
               >
                 <FaChevronRight size={20} />

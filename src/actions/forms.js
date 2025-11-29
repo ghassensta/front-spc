@@ -48,3 +48,19 @@ export const sendMarques = async (data) => {
     throw error;
   }
 };
+
+export const sendMessage = async (data) => {
+  try {
+    const url = endpoints.forms.contact;
+
+    const params = {...data};
+
+    const res = await poster(url, params);
+
+    return res;
+  } catch (error) {
+    console.error(error);
+
+    throw error;
+  }
+}

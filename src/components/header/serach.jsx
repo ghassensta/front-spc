@@ -227,26 +227,12 @@ const Serach = () => {
                             onClick={() => handleSelectCategory(item.label)}
                             className="w-full text-left flex items-center gap-3 p-3 hover:bg-gray-50"
                           >
-                            {item.image ? (
-                              <img
-                                src={item.image}
-                                alt={item.label}
-                                className="w-10 h-10 object-cover rounded"
-                              />
-                            ) : (
-                              <div className="w-10 h-10 bg-gray-200 rounded flex items-center justify-center">
-                                <Search className="w-4 h-4 text-gray-400" />
-                              </div>
-                            )}
+                            
                             <div className="flex-1">
                               <div className="font-medium text-sm">
                                 {item.label}
                               </div>
-                              {item.type === "category" && (
-                                <span className="text-xs bg-green-100 text-green-700 px-2 py-0.5 rounded-full">
-                                  Catégorie
-                                </span>
-                              )}
+                              
                             </div>
                           </button>
                         )}

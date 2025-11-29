@@ -152,6 +152,7 @@ export const endpoints = {
     partenaire: "/api/send-partenaire",
     entreprise: "/api/send-entreprise",
     marques: "/api/send-marques",
+    contact: "/api/send-contact",
   },
   bonachats: {
     list: "/api/auth/credits",

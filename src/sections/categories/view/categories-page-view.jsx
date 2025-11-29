@@ -73,6 +73,8 @@ export default function CategoriesPageView({
     setCurrentPage(1);
   };
 
+  console.log(cardsByCategory)
+
   const filteredCards = useMemo(() => {
     return cardsByCategory.filter((card) => {
       if (!card) return false;
@@ -257,6 +259,8 @@ export default function CategoriesPageView({
                   title={card.nom}
                   offreValue={card.remise_produit}
                   inWishlist={card.inWishlist}
+                  price={card.prix+ "€"}
+                  duration={card.duree}
                 />
               ))
             ) : (

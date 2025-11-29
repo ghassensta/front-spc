@@ -1,6 +1,8 @@
 // GlossairePageView.jsx
 import React, { useState } from "react";
 import GlossaireItem from "../glossaire-item";
+import ButtonIcon from "src/components/button-icon/button-icon";
+import { paths } from "src/router/paths";
 
 export default function GlossairePageView() {
   const [openIndex, setOpenIndex] = useState(null);
@@ -2038,6 +2040,7 @@ export default function GlossairePageView() {
         },
       ],
     },
+    
   ];
 
   return (
@@ -2047,7 +2050,7 @@ export default function GlossairePageView() {
       {/* H2 juste sous le H1 */}
       <h2 className="text-2xl text-center mb-6">Liste des termes</h2>
 
-      <div className="flex flex-col divide-y font-bricolage">
+      <div className="flex flex-col divide-y font-bricolage mb-8">
         {glossaryData.map((group, index) => (
           <GlossaireItem
             key={index}
@@ -2057,6 +2060,9 @@ export default function GlossairePageView() {
             onToggle={() => setOpenIndex(openIndex === index ? null : index)}
           />
         ))}
+      </div>
+      <div className="w-full flex items-center justify-center mb-2">
+        <ButtonIcon title="Accueil" link={paths.main} />
       </div>
     </div>
   );

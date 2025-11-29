@@ -324,7 +324,7 @@ export default function MarquePartenairePage() {
             <div className="md:col-span-2 flex justify-center">
               <button
                 type="submit"
-                className="bg-[#c0a765] text-white px-8 py-2 rounded hover:bg-[#b09456] transition"
+                className="bg-[#c4c0a1] text-white px-8 rounded-full py-2 hover:bg-[#b09456] transition"
               >
                 Envoyer
               </button>

@@ -1,4 +1,6 @@
 import React from "react";
+import { Link } from "react-router-dom";
+import { paths } from "src/router/paths";
 
 export default function ReferentielViewPage() {
   return (
@@ -113,12 +115,12 @@ export default function ReferentielViewPage() {
               et une qualité cohérente au sein du réseau.
             </p>
             <div className="flex flex-col gap-12 w-full justify-center items-center">
-              <button className="bg-[#B6B499] w-max text-white px-6 rounded-full py-2 text-sm hover:bg-black uppercase tracking-wider transition">
+              <Link to={paths.partenaire} className="bg-[#B6B499] w-max text-white px-6 rounded-full py-2 text-sm hover:bg-black uppercase tracking-wider transition">
                 Devenir partenaire
-              </button>
-              <button className="bg-[#B6B499] w-max text-white px-6 rounded-full py-2 text-sm hover:bg-black uppercase tracking-wider transition">
+              </Link>
+              <Link to={paths.contact} className="bg-[#B6B499] w-max text-white px-6 rounded-full py-2 text-sm hover:bg-black uppercase tracking-wider transition">
                 Nous contacter
-              </button>
+              </Link>
             </div>
           </div>
           <img

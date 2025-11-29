@@ -262,7 +262,7 @@ export default function CarteCadeau() {
                 <div className="flex justify-end">
                   <button
                     onClick={addProductToCheckout}
-                    className="w-max px-4 py-3 bg-black leading-4 text-white uppercase font-normal text-xs tracking-[3px] hover:bg-gray-800 transition font-tahoma flex items-center justify-center gap-2 rounded-2xl"
+                    className="w-max px-4 py-3 bg-black leading-4 text-white uppercase font-normal text-xs tracking-[3px] hover:bg-gray-800 transition font-tahoma flex items-center justify-center gap-2 rounded-full"
                   >
                     <span>Offrir</span>
                   </button>

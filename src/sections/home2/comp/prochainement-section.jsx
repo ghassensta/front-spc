@@ -59,7 +59,7 @@ export default function ProchainementSection({ prochainement }) {
 
   return (
     <div
-      className={`bg-[${backgroundColor}] w-screen relative bg-center left-[calc(-50vw+50%)] min-h-32 overflow-hidden py-4 px-3`}
+      className={`bg-[${backgroundColor}] w-screen relative bg-center left-[calc(-50vw+50%)] min-h-32 overflow-hidden py-6 px-3`}
     >
       <div className="max-w-6xl mx-auto">
         <div className="flex flex-col md:flex-row gap-2 md:gap-6">
