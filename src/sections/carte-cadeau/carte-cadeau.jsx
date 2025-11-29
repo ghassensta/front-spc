@@ -326,7 +326,7 @@ export default function CarteCadeau() {
 
         {/* Bouton Coup de cœur */}
         <div className="flex justify-center mt-10">
-          <Link to={'/liste-des-spas'} className="bg-[#B6B498] text-white rounded-full py-2 px-6 hover:bg-black duration-300 font-roboto">
+          <Link to={paths.spa.list} className="bg-[#B6B498] text-white rounded-full py-2 px-6 hover:bg-black duration-300 font-roboto">
             COUPS DE CŒUR
           </Link>
         </div>

@@ -88,7 +88,8 @@ export default function WhoPageView() {
                 dans un esprit de sérénité et d’élégance.
               </p>
             </p>
-             <div className="md:w-1/2 relative">
+             <div className="w-[90%] mx-auto md:w-1/2 relative">
+             <div className="relative">
               <div className="relative w-full h-[400px] overflow-hidden">
                 {images.map((src, index) => (
                   <img
@@ -133,6 +134,7 @@ export default function WhoPageView() {
                     aria-label={`Go to slide ${index + 1}`}
                   />
                 ))}
+              </div>
               </div>
             </div>
           </div>

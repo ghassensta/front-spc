@@ -6,6 +6,8 @@ import { toast } from "react-toastify";
 import ModalConfirme from "src/components/fidelite-modal/ModalConfirme";
 import Lottie from "lottie-react";
 import confettiAnimation from "src/animations/Confetti.json"; 
+import { GiFClef } from "react-icons/gi";
+import { Gift } from "lucide-react";
 
 export default function FidelitePageView() {
   const { points: pointsData, loading } = useGetPointsFidelite();
@@ -81,7 +83,7 @@ export default function FidelitePageView() {
       <div>
         <h2 className="text-xl font-bold flex items-center gap-2">
           <span role="img" aria-label="gift">
-            🎁
+            <Gift />
           </span>
           Programme de Fidélité
         </h2>
@@ -91,10 +93,10 @@ export default function FidelitePageView() {
       </div>
 
       <div className="bg-white rounded-xl p-4 shadow-sm space-y-2">
-        <p className="flex items-center gap-2 text-green-600">
+        <p className="flex items-center gap-2 ">
           ✔️ 1 point pour chaque euro dépensé
         </p>
-        <p className="flex items-center gap-2 text-green-600">
+        <p className="flex items-center gap-2 ">
           ✔️ Les points sont visibles immédiatement après chaque transaction
         </p>
         <p className="font-medium">

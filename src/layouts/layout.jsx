@@ -34,7 +34,7 @@ export default function LayoutTheme({ children }) {
         <div className="flex-1">
           <div className="
             grid grid-cols-4 
-            gap-x-2 gap-y-6 
+            gap-x-2 gap-y-0 
             px-3 
             sm:grid-cols-5 sm:gap-x-4 
             md:flex md:flex-wrap md:gap-10 
@@ -82,7 +82,7 @@ export default function LayoutTheme({ children }) {
         {/* SCROLL TO TOP */}
         <button
           onClick={handleScrollToTop}
-          className="fixed bottom-6 right-6 z-50 bg-[#787766] hover:bg-[#676556] text-white rounded-full shadow-2xl p-4 transition-all duration-300"
+          className="fixed bottom-6 right-6 z-50 bg-[#787766] hover:bg-[#676556] text-white rounded-full shadow-2xl p-1 md:p-4 transition-all duration-300"
         >
           <FaChevronUp size={24} />
         </button>

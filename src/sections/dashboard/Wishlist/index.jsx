@@ -93,7 +93,7 @@ export default function Wishlist({ wishlists, loading, validating }) {
             </p>
             <Link
               to={paths.spa.list}
-              className="bg-[#c4c0a1] text-white px-6 py-2 uppercase tracking-wider hover:opacity-90 max-w-max"
+              className="bg-[#c4c0a1] rounded-full text-white px-6 py-2 uppercase tracking-wider hover:opacity-90 max-w-max"
             >
               Découvrir nos soins
             </Link>

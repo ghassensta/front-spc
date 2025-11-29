@@ -109,9 +109,9 @@ export default function HomePageView() {
           </div>
 
           {/* ================== VERSION MOBILE UNIQUEMENT : Slider qui démarre à la 2ème ================== */}
-          <div className="md:hidden py-16 bg-[#f6f5e9]">
+          <div className="md:hidden py-6 md:py-16 bg-[#f6f5e9]">
             <div className="max-w-6xl mx-auto px-4">
-              <h2 className="text-4xl font-bold text-center mb-12">
+              <h2 className="text-4xl font-bold text-center mb-6 md:mb-12">
                 Actualités
               </h2>
 
@@ -152,7 +152,7 @@ export default function HomePageView() {
               </Swiper>
 
               {/* Bouton exactement comme sur ton mockup */}
-              <div className="text-center mt-12">
+              <div className="text-center mt-6 md:mt-12">
                 <Link
                   to={paths.actualites}
                   className="inline-block bg-black text-white px-8 py-4 rounded-full text-sm font-normal uppercase tracking-widest font-tahoma hover:bg-gray-800 transition"
@@ -169,13 +169,13 @@ export default function HomePageView() {
       {section6 &&
         section6.extra_data?.logos &&
         section6.extra_data.logos.length > 0 && (
-          <div className="bg-white py-16">
+          <div className="bg-white py-2 md:py-16">
             <div className="max-w-7xl mx-auto px-4 text-center">
               <h2 className="text-4xl md:text-5xl font-bold mb-4">
                 {section6.title}
               </h2>
               {section6.description && (
-                <p className="text-gray-600 text-lg max-w-3xl mx-auto mb-12">
+                <p className="text-gray-600 text-lg max-w-3xl mx-auto md:mb-12">
                   {section6.description}
                 </p>
               )}
@@ -191,6 +191,7 @@ export default function HomePageView() {
                   disableOnInteraction: false,
                 }}
                 breakpoints={{
+                  425: { slidesPerView: 2 },
                   640: { slidesPerView: 3 },
                   768: { slidesPerView: 4 },
                   1024: { slidesPerView: 5 },

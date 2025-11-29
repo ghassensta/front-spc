@@ -20,7 +20,11 @@ export default function DashboardView() {
   return (
     <div className='p-4'>
         <p className='mb-3'>Bonjour <strong>{user?.name}</strong> (vous n’êtes pas <strong>{user?.name}</strong> ? <Link onClick={()=>handleLogout()}>Déconnexion</Link>)</p>
-        <p className='mb-3'>À partir du tableau de bord de votre compte, vous pouvez visualiser vos <Link to={paths.dashboard.commandes.root}><span className="underline">commandes récentes</span></Link>,  ainsi que <Link to={paths.dashboard.details}><span className="underline">changer votre mot de passe et les détails de votre compte</span></Link>.</p>
+        <p className='mb-3'>À partir du tableau de bord de votre compte, vous pouvez :</p>
+        <ul className='mb-3 list-disc list-inside'>
+            <li> <Link to={paths.dashboard.commandes.root}>Visualiser vos commandes récentes</Link></li>
+            <li> <Link to={paths.dashboard.details}>Changer votre mot de passe et les détails de votre compte</Link></li>
+        </ul>
     </div>
   )
 }

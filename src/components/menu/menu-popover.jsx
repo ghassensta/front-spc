@@ -1,13 +1,19 @@
 import React, { useEffect, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useLayout } from "src/actions/layout";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import { Gift, Menu as MenuIcon } from "lucide-react";
 import exclusive from "../../assets/SPC-logo-exclusivite-gris.svg"
+import { IoMdClose } from "react-icons/io";
 
 export default function MenuPopover({ anchorRef, open, onClose }) {
   const menuRef = useRef(null);
+  const location = useLocation();
   const { sidebar } = useLayout();
+
+  const isActive = (path) => {
+    return location.pathname === path;
+  };
 
   useEffect(() => {
     const handler = (e) => {
@@ -44,7 +50,7 @@ export default function MenuPopover({ anchorRef, open, onClose }) {
         >
           {/* Header du menu */}
           <div className="bg-gray-100 px-6 py-3 border-b border-gray-200 flex items-center gap-3">
-            <MenuIcon size={22} className="text-secondary" />
+            <IoMdClose onClick={() => onClose()} size={22} className="text-secondary" />
             <span className="text-lg font-tahoma font-semibold text-secondary">Menu</span>
           </div>
           
@@ -60,7 +66,9 @@ export default function MenuPopover({ anchorRef, open, onClose }) {
                       onClick={() => {
                         onClose();
                       }}
-                      className="block px-6 py-[5px] hover:bg-[#B6B498] hover:text-white transition-colors duration-200 flex items-center justify-between"
+                      className={`px-6 py-3 flex items-center gap-3 hover:bg-gray-50 transition-colors ${
+                    isActive(item.url) ? 'font-bold ' : ''
+                  }`}
                     >
                       <span>{item.title}</span>
                       {item.title === "Offrir une carte cadeau" && (

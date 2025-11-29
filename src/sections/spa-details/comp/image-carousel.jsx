@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { CONFIG } from "src/config-global";
 import Viewer from "react-viewer";
-import { FaImage } from "react-icons/fa";
+import { FaChevronLeft, FaChevronRight, FaImage } from "react-icons/fa";
 import { IoImageOutline } from "react-icons/io5";
 
 const variants = {
@@ -116,15 +116,15 @@ export default function ImageCarousel({ height, images = [] }) {
         {/* Controls */}
         <button
           onClick={goToPrev}
-          className="absolute top-1/2 left-3 -translate-y-1/2 bg-white/80 hover:bg-white p-2 rounded-full shadow z-10"
+          className="absolute top-1/2 left-3 -translate-y-1/2 text-white p-2 rounded-full z-10"
         >
-          ◀
+          <FaChevronLeft size={20} />
         </button>
         <button
           onClick={goToNext}
-          className="absolute top-1/2 right-3 -translate-y-1/2 bg-white/80 hover:bg-white p-2 rounded-full shadow z-10"
+          className="absolute top-1/2 right-3 -translate-y-1/2 text-white p-2 rounded-full z-10"
         >
-          ▶
+          <FaChevronRight size={20} />
         </button>
 
         <button
@@ -135,7 +135,9 @@ export default function ImageCarousel({ height, images = [] }) {
           Voir les photos
         </button>
       </div>
+      <div className="relative">
       <Viewer
+      inline
         drag
         attribute
         rotatable={false}
@@ -146,6 +148,7 @@ export default function ImageCarousel({ height, images = [] }) {
         }}
         images={org}
       />
+      </div>
     </>
   );
 }

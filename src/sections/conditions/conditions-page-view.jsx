@@ -488,7 +488,7 @@ export default function ConditionsPageView() {
           <strong>6.1. Pour les Coffrets Cadeaux et les Activités</strong>
         </p>
         <p>
-          L’Acheteur, ou à défaut, le Bénéficiaire informe WONDERBOX de sa
+          L’Acheteur, ou à défaut, le Bénéficiaire informe Prestige Global Solutions de sa
           décision de rétractation en lui adressant, avant l’expiration du délai
           prévu à l’article L.221-18, le bordereau de rétractation disponible
           sur le Site ou toute autre déclaration, dénuée d’ambiguïté, exprimant

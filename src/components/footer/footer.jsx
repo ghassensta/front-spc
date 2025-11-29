@@ -64,7 +64,7 @@ export default function Footer() {
           <p className="text-sm leading-relaxed font-roboto mb-4 font-[300]">
             {siteDescription}
           </p>
-          <p className="text-sm">Tél. 01 82 35 01 26</p>{" "}
+          <a href="tel:0182350126" className="text-sm">Tél. 01 82 35 01 26</a>{" "}
           {/* Statique pour l'instant, rendez dynamique si besoin */}
         </div>
 
@@ -134,7 +134,7 @@ export default function Footer() {
               <input type="checkbox" className="mt-1" />
               J'accepte l'inscription à la base de données Newsletter SPC.
             </label>
-            <button className="bg-[#c6c1a5] text-white w-full py-2 rounded font-semibold text-sm hover:bg-[#b4ad8f] transition-colors">
+            <button className="bg-black text-white w-full py-2 rounded-full font-semibold text-sm hover:bg-gray-800 transition-colors">
               Valider
             </button>
             <div className="mt-4 text-center">
@@ -143,7 +143,7 @@ export default function Footer() {
               </button>
             </div>
           </div>
-          <div className="flex justify-start gap-2 mt-6 text-white text-lg">
+          <div className="flex justify-center md:justify-start gap-2 mt-6 mb-4 text-white text-lg">
             {socialLinksFiltered.map((item) => {
               const IconComponent = iconMap[item.icon];
               if (!IconComponent) return null;
@@ -168,7 +168,7 @@ export default function Footer() {
       <div className="bg-[#B6B498] text-base  text-black  font-roboto">
         <div className="max-w-6xl mx-auto p-6 flex flex-col md:flex-row items-center justify-between">
           <p className="mb-2 md:mb-0">
-            © 2025 – Réalisation{" "}
+            © 2025 - 2026 – Réalisation{" "}
             <span className="font-semibold">éCOM Design</span>
           </p>
           <div className="flex gap-4">

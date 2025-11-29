@@ -28,14 +28,14 @@ export default function Section({
           )}
         </h2>
 
-        <div className="mt-8 px-1">
+        <div className="md:mt-8 px-1">
           <SwiperContent slidesPerView={max} data={data} />
         </div>
 
         <div className="text-center mt-1">
           <a
             href={link}
-            className="inline-flex font-tahoma rounded-full items-center gap-2 uppercase font-normal tracking-widest transition-all duration-300 px-6 py-3 text-sm bg-black text-white mt-6"
+            className="inline-flex font-tahoma rounded-full items-center gap-2 uppercase font-normal tracking-widest transition-all duration-300 px-6 py-3 text-sm bg-black text-white md:mt-6"
           >
             Nos offres {header}
           </a>

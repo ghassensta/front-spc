@@ -2,9 +2,12 @@ import { useEffect, useRef } from "react";
 import { motion } from "framer-motion";
 import { FaMapMarkerAlt, FaPhone, FaEnvelope, FaAngleRight } from "react-icons/fa";
 import { MdAccessTime } from "react-icons/md";
+import { Link } from "react-router-dom";
 
 export default function LocationSection({ data }) {
   const iframeWrapperRef = useRef(null);
+
+  console.log(data)
 
   if(!!!data) return ;
 
@@ -46,10 +49,10 @@ export default function LocationSection({ data }) {
           )}
         </div>
       </motion.div>
-      <div className="flex items-center gap-2 text-base font-normal text-gray-800">
+      <Link to={data.iframeUrl} className="flex items-center gap-2 text-base font-normal text-gray-800">
         <span>Comment s'y rendre ?</span>
         <FaAngleRight className="text-gray-600" />
-      </div>
+      </Link>
 
       {/* Info */}
       <motion.div

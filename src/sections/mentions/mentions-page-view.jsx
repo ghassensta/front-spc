@@ -1,4 +1,6 @@
 import React from "react";
+import { Link } from "react-router-dom";
+import { paths } from "src/router/paths";
 
 export default function MentionsPageView() {
   return (
@@ -46,9 +48,9 @@ export default function MentionsPageView() {
           </ul>
           <p>
             Pour exercer ces droits, les utilisateurs doivent en faire la demande par mail sur{" "}
-            <a href="mailto:contact@spa-prestige-collection.com" className="text-blue-600 underline">
-              contact@spa-prestige-collection.com
-            </a>
+            <Link to={paths.contact} className="text-blue-600 underline">
+              Nous contacter
+            </Link>
           </p>
           <p>
             Le site utilise des cookies pour améliorer l’expérience de navigation. Les utilisateurs peuvent refuser les cookies via leurs paramètres de navigateur.

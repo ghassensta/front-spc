@@ -100,7 +100,7 @@ const CreditOption = ({
         </div>
       )}
 
-      <div className="grid grid-cols-5 sm:grid-cols-6 lg:grid-cols-8 xl:grid-cols-10 gap-2.5">
+      <div className="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-8 xl:grid-cols-10 gap-2.5">
         {availableCredits.map((credit) => {
           const isSelected = selectedIds.has(credit.id);
           const seraitDepasse = !isSelected && totalSelected + Number(credit.montant) > totalTTC;

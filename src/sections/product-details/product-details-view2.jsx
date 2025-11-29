@@ -221,13 +221,13 @@ export default function ProductDetailsView({
   };
   return (
     <div className="max-w-7xl mx-auto px-4 ">
-      <div className="py-12">
+      <div className="py-6">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
           <div className="flex flex-col col-span-2 h-[300px] md:h-[600px]">
             <ImageCarousel images={gallery} height="300px" />
           </div>
 
-          <div className="bg-[#f9f7ed] px-8 py-4 col-span-2 lg:col-span-1 rounded-2xl">
+          <div className="bg-[beige] px-8 py-4 col-span-2 lg:col-span-1 rounded-2xl">
             <span className="text-4xl font-bold mb-4 text-[#333]">
               {etablissement?.nom}
             </span>
@@ -323,7 +323,7 @@ export default function ProductDetailsView({
             </Link>
           </div>
 
-          <div className="bg-[#f9f7ed] px-8 py-4 col-span-2 lg:col-span-1 rounded-2xl">
+          <div className="bg-[beige] px-8 py-4 col-span-2 lg:col-span-1 rounded-2xl">
             {!!product?.exclusivite_spc && (
               <img
                 loading="lazy"
@@ -414,7 +414,7 @@ export default function ProductDetailsView({
 
         <div
           id="avis"
-          className="mt-10 bg-[#f9f7ed] p-4 font-tahoma rounded-xl shadow-sm"
+          className="mt-10 bg-[beige] p-4 font-tahoma rounded-xl shadow-sm"
         >
           <div className="flex gap-4 border-b border-gray-200">
             <button

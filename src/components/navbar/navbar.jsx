@@ -29,7 +29,7 @@ export default function Navbar() {
     <>
       <LanguageNav />
 
-      <div className="w-full px-4 md:px-8 py-6 flex flex-col md:flex-row items-center justify-between relative gap-4">
+      <div className="w-full px-4 md:px-8 py-2 flex flex-col md:flex-row items-center justify-between relative gap-4">
         {/* Menu Mobile */}
         <div className="w-full md:w-auto flex items-center justify-between">
           <div className="flex items-center gap-2">
@@ -42,41 +42,13 @@ export default function Navbar() {
               <span className="hidden sm:inline">Menu</span>
             </button>
 
-            <Logo className="h-7 md:hidden ml-2" />
+            
           </div>
-
+<div className="flex-1 flex justify-center md:hidden">
+  <Logo className="h-10 md:h-12" />
+</div>
           {/* Icônes mobile */}
-          <div className="flex items-center gap-5 md:hidden">
-            {user && (
-              <Link to="/dashboard/wishlist" className="relative">
-                <FaRegHeart size={24} className="text-gray-700" />
-                {wishlistCount > 0 && (
-                  <span className="absolute -top-2 -right-2 bg-red-500 text-white text-xs font-bold rounded-full w-4 h-4 flex items-center justify-center">
-                    {wishlistCount}
-                  </span>
-                )}
-              </Link>
-            )}
-
-            {user ? (
-              <Link to={paths.dashboard.root}>
-                <FaUser size={24} className="text-gray-700" />
-              </Link>
-            ) : (
-              <Link to={paths.auth.root}>
-                <IoMdLogIn size={24} className="text-gray-700" />
-              </Link>
-            )}
-
-            <Link to={paths.checkout} className="relative">
-              <IoMdCart size={26} className="text-gray-700" />
-              {cartCount > 0 && (
-                <span className="absolute -top-2 -right-2 bg-red-500 text-white text-xs font-bold rounded-full w-5 h-5 flex items-center justify-center">
-                  {cartCount}
-                </span>
-              )}
-            </Link>
-          </div>
+        
         </div>
 
         {/* Logo - Desktop ONLY (hidden on mobile) */}

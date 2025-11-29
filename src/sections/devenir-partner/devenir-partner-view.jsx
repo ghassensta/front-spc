@@ -108,7 +108,7 @@ export default function DevenirPartnerView() {
 
       {/* Pourquoi nous rejoindre */}
       <section className="max-w-7xl mx-auto px-4 py-16">
-        <h2 className="text-4xl font-bold text-center mb-12 font-serif">
+        <h2 className="text-4xl font-bold text-center mb-6 md:mb-12 font-serif">
           Pourquoi nous rejoindre ?
         </h2>
 
