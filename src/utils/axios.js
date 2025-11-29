@@ -96,7 +96,7 @@ export const endpoints = {
     logout: "/api/auth/logout",
     edit: "/api/auth/profile",
     forgetPassword: "/api/auth/forget",
-    resetPassword: "/api/auth/reset"
+    resetPassword: "/api/auth/reset",
   },
   categories: {
     list: "/api/categories",
@@ -174,5 +174,9 @@ export const endpoints = {
     createSession: "/api/payment/create-session",
     success: "/api/payment/success",
     cancel: "/api/payment/cancel",
+  },
+
+  cartes: {
+    get: "/api/cartes-cadeaux",
   },
 };

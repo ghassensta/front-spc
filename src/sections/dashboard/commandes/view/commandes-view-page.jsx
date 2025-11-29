@@ -79,12 +79,6 @@ export default function CommandesViewPage({ order }) {
               <div className="inline-block px-3 py-2 rounded bg-red-100 text-red-700 font-semibold">
                 ✘ Non payée
               </div>
-
-              <button
-                className="px-4 py-2 bg-[#b6b499] hover:bg-[#b6b499] text-white rounded-lg font-semibold transition"
-              >
-                💳 Payer maintenant
-              </button>
             </div>
           )}
         </div>

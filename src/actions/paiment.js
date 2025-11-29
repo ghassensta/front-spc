@@ -55,7 +55,7 @@ export const paymentSuccess = async (sessionId) => {
     const res = await fetcher([
       `${endpoints.paiment.success}?session_id=${sessionId}`,
     ]);
-    console.log("object",res);
+    console.log("object", res);
     return res;
   } catch (error) {
     console.error("Erreur lors du succès du paiement :", error);
@@ -67,17 +67,14 @@ export const paymentCancel = async (sessionId) => {
   if (!sessionId) throw new Error("sessionId requis pour annulation paiement.");
 
   try {
-    const res = await fetcher(endpoints.paiement.cancel, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ session_id: sessionId }),
-    });
-
+    const res = await fetcher([
+      `${endpoints.paiment.cancel}?session_id=${sessionId}`,
+    ]);
+    console.log("object", res);
     return res;
   } catch (error) {
-    console.error("Erreur lors de l'annulation du paiement :", error);
+    console.error("Erreur lors du annuler du paiement :", error);
     throw error;
   }
+  
 };

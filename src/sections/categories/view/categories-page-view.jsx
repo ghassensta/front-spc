@@ -16,7 +16,7 @@ export default function CategoriesPageView({
   loading,
   filterLoading,
   nomcat = "",
-  slug_categorie="",
+  slug_categorie = "",
 }) {
   const [filters, setFilters] = useState({
     etablissement: null,
@@ -70,7 +70,7 @@ export default function CategoriesPageView({
       ...prev,
       [name]: selectedOption ? selectedOption.value : null,
     }));
-    setCurrentPage(1); 
+    setCurrentPage(1);
   };
 
   const filteredCards = useMemo(() => {
@@ -324,6 +324,10 @@ export default function CategoriesPageView({
           )}
         </>
       )}
+
+      <div className="w-full flex items-center justify-center mb-2">
+        <ButtonIcon title="Accueil" link={paths.main} />
+      </div>
     </div>
   );
 }

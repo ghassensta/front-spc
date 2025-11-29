@@ -116,7 +116,7 @@ export default function Header() {
                 {current?.adresse}
               </div>
 
-              <p className="text-sm font-tahoma text-secondary font-bold hover:underline">
+              <p className="text-sm font-tahoma text-secondary font-bold hover:underline mt-3">
                 En savoir plus →
               </p>
             </Link>

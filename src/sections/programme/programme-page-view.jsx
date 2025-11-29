@@ -213,7 +213,7 @@ export default function ProgrammePageView() {
         </div>
       </div>
       <div className="w-full flex items-center justify-center mb-2">
-          <ButtonIcon title="COUP DE CŒUR" link={paths.categories("coup-de-coeur")}/>
+          <ButtonIcon title="COUP DE CŒUR" link={paths.spa.list}/>
       </div>
     </>
   );

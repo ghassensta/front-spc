@@ -1,17 +1,20 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { MapPin, BookOpen, PhoneCall, Sparkles } from "lucide-react";
 import ButtonIcon from "src/components/button-icon/button-icon";
 import { useCheckoutContext } from "../checkout/context";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { paths } from "src/router/paths";
 import { toast } from "react-toastify";
-const amounts = [50, 100, 150, 200];
+import { useGetCarteCadeaux } from "src/actions/cartes-cadeaux";
+
 export default function CarteCadeau() {
   const checkout = useCheckoutContext();
   const navigate = useNavigate();
+  const { cartes, loading } = useGetCarteCadeaux();
 
-  const [amount, setAmount] = useState(null)
-  const [receiver, setReceiver] = useState([{fullName: '', email: ''}])
+  const [amount, setAmount] = useState(null);
+  const [receiver, setReceiver] = useState([{ fullName: "", email: "" }]);
+
   const addProductToCheckout = () => {
     if (!amount) {
       toast.error("Veuillez sélectionner un montant.");
@@ -27,19 +30,34 @@ export default function CarteCadeau() {
       toast.error("Veuillez remplir votre nom et prénom.");
       return;
     }
-    checkout.onAddToCart({
-      id: Date.now(),
-      name: "Carte cadeau de "+ amount + "€",
-      price: amount,
-      image: "https://spa-prestige-collection.com/wp-content/uploads/2025/05/SPC-carte-cadeau-montant-3.jpg",
-      destinataires: receiver,
-      expediteur: checkout.expediteur,
-      quantity: 1
+
+    // Récupérer la carte sélectionnée depuis les données dynamiques
+    const selectedCard = cartes.find(carte => {
+      const price = typeof carte.price === 'string' ? parseFloat(carte.price) : carte.price;
+      return price === amount;
     });
 
-    // Navigate to checkout after adding
+    const cartData = {
+      id: selectedCard?.id || Date.now(),
+      name: "Carte cadeau de " + amount + "€",
+      price: amount,
+      image: selectedCard?.image || "https://spa-prestige-collection.com/wp-content/uploads/2025/05/SPC-carte-cadeau-montant-3.jpg",
+      destinataires: receiver,
+      expediteur: checkout.expediteur,
+      quantity: 1,
+    };
+
+    // Console log des données
+    console.log("Données du panier:", cartData);
+    console.log("Carte sélectionnée depuis l'API:", selectedCard);
+    console.log("Destinataire:", receiver[0]);
+    console.log("Expéditeur:", checkout.expediteur);
+
+    checkout.onAddToCart(cartData);
+
     navigate(paths.checkout);
-  }
+  };
+
   return (
     <>
       {/* Intro Section */}
@@ -52,14 +70,14 @@ export default function CarteCadeau() {
               </h1>
               <p className="font-roboto pr-6 text-[#5E5E5E]">
                 Instantanée. Attentionnée. La carte cadeau Spa & Prestige
-                Collection vous permet d’offrir une expérience bien-être unique
+                Collection vous permet d'offrir une expérience bien-être unique
                 à vos proches, en toute simplicité.
                 <br />
                 Un choix varié de prestations exceptionnelles, à savourer en un
                 clic. Un cadeau facile à offrir, agréable à recevoir, pour des
-                moments de pure détente et d’évasion.
+                moments de pure détente et d'évasion.
                 <br /> La carte cadeau Spa Prestige Collection est valable dans
-                l’ensemble de nos partenaires Spas pour une période de un an à
+                l'ensemble de nos partenaires Spas pour une période de un an à
                 partir de la date de commande.
                 <br />
                 Vous pouvez aussi offrir directement un soin (avec nos remises
@@ -123,22 +141,35 @@ export default function CarteCadeau() {
           />
           <div className="font-roboto space-y-2">
             <h3 className="text-2xl font-bold">Sélectionnez le montant</h3>
-            <div className="grid grid-cols-4 w-full gap-4">
-              {amounts.map((amt) => (
-                <button
-                  key={amt}
-                  onClick={() => setAmount(amt)}
-                  className={`border border-black py-2 px-3 w-full font-bold
-        ${
-          amount === amt
-            ? "bg-black text-white"
-            : "bg-gray-200 hover:bg-black hover:text-white"
-        }
-      `}
-                >
-                  {amt.toFixed(2)} €
-                </button>
-              ))}
+            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 w-full gap-4">
+              {loading ? (
+                <p className="col-span-full text-center text-gray-500">
+                  Chargement des cartes...
+                </p>
+              ) : cartes.length > 0 ? (
+                cartes.map((carte) => {
+                  const price = typeof carte.price === 'string' ? parseFloat(carte.price) : carte.price;
+                  return (
+                    <button
+                      key={carte.id}
+                      onClick={() => setAmount(price)}
+                      className={`border border-black py-2 px-3 w-full font-bold
+                ${
+                  amount === price
+                    ? "bg-black text-white"
+                    : "bg-gray-200 hover:bg-black hover:text-white"
+                }
+              `}
+                    >
+                      {price.toFixed(2)} €
+                    </button>
+                  );
+                })
+              ) : (
+                <p className="col-span-full text-center text-gray-500">
+                  Aucune carte disponible
+                </p>
+              )}
             </div>
             <div className="flex flex-col gap-4">
               {/* Recipient Form */}
@@ -156,7 +187,12 @@ export default function CarteCadeau() {
                       className="w-full border border-gray-300 rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-primary"
                       value={receiver[0].fullName}
                       onChange={(e) =>
-                       setReceiver([{email: receiver[0].email, fullName: e.target.value}])
+                        setReceiver([
+                          {
+                            email: receiver[0].email,
+                            fullName: e.target.value,
+                          },
+                        ])
                       }
                     />
                   </div>
@@ -169,7 +205,12 @@ export default function CarteCadeau() {
                       className="w-full border border-gray-300 rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-primary"
                       value={receiver[0].email}
                       onChange={(e) =>
-                       setReceiver([{fullName: receiver[0].fullName, email: e.target.value}])
+                        setReceiver([
+                          {
+                            fullName: receiver[0].fullName,
+                            email: e.target.value,
+                          },
+                        ])
                       }
                     />
                   </div>
@@ -205,7 +246,7 @@ export default function CarteCadeau() {
                     <textarea
                       rows="3"
                       className="w-full border border-gray-300 rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-primary"
-                      value={checkout.expediteur.message || ''}
+                      value={checkout.expediteur.message || ""}
                       onChange={(e) =>
                         checkout.onCreateExpediteur({
                           ...checkout.expediteur,
@@ -220,11 +261,11 @@ export default function CarteCadeau() {
               <div className="col-span-2">
                 <div className="flex justify-end">
                   <button
-                onClick={addProductToCheckout}
-                className="w-max px-4 py-3 bg-black leading-4 text-white uppercase font-normal text-xs tracking-[3px] hover:bg-gray-800 transition font-tahoma flex items-center justify-center gap-2"
-              >
-                <span>Offrir</span>
-              </button>
+                    onClick={addProductToCheckout}
+                    className="w-max px-4 py-3 bg-black leading-4 text-white uppercase font-normal text-xs tracking-[3px] hover:bg-gray-800 transition font-tahoma flex items-center justify-center gap-2 rounded-2xl"
+                  >
+                    <span>Offrir</span>
+                  </button>
                 </div>
               </div>
             </div>
@@ -245,7 +286,7 @@ export default function CarteCadeau() {
             </h3>
             <p className="text-sm text-gray-700 font-roboto">
               Parcourez notre page <strong>"Tous nos spas"</strong> et
-              choisissez l’établissement qui vous correspond, près de chez vous
+              choisissez l'établissement qui vous correspond, près de chez vous
               ou dans la région de votre choix.
             </p>
           </div>
@@ -253,7 +294,7 @@ export default function CarteCadeau() {
           <div>
             <BookOpen className="mx-auto mb-4 text-[#B6B498]" size={32} />
             <h3 className="font-bold text-lg mb-2">
-              Plongez dans l’univers du Spa
+              Plongez dans l'univers du Spa
             </h3>
             <p className="text-sm text-gray-700 font-roboto">
               Accédez à la fiche de chaque établissement pour découvrir en
@@ -268,14 +309,14 @@ export default function CarteCadeau() {
               Réservez votre moment privilégié
             </h3>
             <p className="text-sm text-gray-700 font-roboto">
-              Contactez directement l’établissement par téléphone ou mail en
+              Contactez directement l'établissement par téléphone ou mail en
               indiquant votre numéro de carte cadeau.
             </p>
           </div>
 
           <div>
             <Sparkles className="mx-auto mb-4 text-[#B6B498]" size={32} />
-            <h3 className="font-bold text-lg mb-2">Vivez l’instant</h3>
+            <h3 className="font-bold text-lg mb-2">Vivez l'instant</h3>
             <p className="text-sm text-gray-700 font-roboto">
               Offrez-vous une parenthèse de bien-être, où chaque détail est
               soigneusement pensé pour votre détente.
@@ -285,9 +326,9 @@ export default function CarteCadeau() {
 
         {/* Bouton Coup de cœur */}
         <div className="flex justify-center mt-10">
-          <button className="bg-[#B6B498] text-white rounded-full py-2 px-6 hover:bg-black duration-300 font-roboto">
+          <Link to={'/liste-des-spas'} className="bg-[#B6B498] text-white rounded-full py-2 px-6 hover:bg-black duration-300 font-roboto">
             COUPS DE CŒUR
-          </button>
+          </Link>
         </div>
       </div>
     </>

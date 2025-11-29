@@ -14,7 +14,6 @@ export default {
       fontFamily: {
         'bricolage': ['Bricolage Grotesque', 'sans-serif'],
         'roboto': ['Roboto', 'sans-serif'],
-        // 'tahoma': ['Tahoma', 'sans-serif'],
       },
     },
   },
