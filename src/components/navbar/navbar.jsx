@@ -27,12 +27,12 @@ export default function Navbar() {
 
   return (
     <>
-      <LanguageNav />
+      <LanguageNav cartCount={cartCount} wishlistCount={wishlistCount}/>
 
-      <div className="w-full px-4 md:px-8 py-2 flex flex-col md:flex-row items-center justify-between relative gap-4">
+      <div className="w-full md:px-8 py-2 flex flex-col md:flex-row items-center justify-between relative gap-4">
         {/* Menu Mobile */}
         <div className="w-full md:w-auto flex items-center justify-between">
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-2 px-4 md:px-0 relative z-20">
             <button
               ref={buttonRef}
               onClick={() => setShowMenu(!showMenu)}
@@ -41,14 +41,10 @@ export default function Navbar() {
               {showMenu ? <IoMdClose size={26} /> : <IoMdMenu size={26} />}
               <span className="hidden sm:inline">Menu</span>
             </button>
-
-            
           </div>
-<div className="flex-1 flex justify-center md:hidden">
-  <Logo className="h-10 md:h-12" />
-</div>
-          {/* Icônes mobile */}
-        
+          <div className="flex-1 flex justify-center md:hidden absolute w-full">
+            <Logo className="h-10 md:h-12" />
+          </div>
         </div>
 
         {/* Logo - Desktop ONLY (hidden on mobile) */}
@@ -57,10 +53,10 @@ export default function Navbar() {
         </div>
 
         {/* Icônes Desktop */}
-        <div className="hidden md:flex items-center gap-6">
-          {user && (
+        <div className="hidden md:flex items-center gap-2">
+          
             <Link
-              to="/dashboard/wishlist"
+              to={user ? paths.dashboard.wishlist : paths.auth.root}
               className="relative hover:text-gray-600 transition"
             >
               <FaRegHeart size={24} />
@@ -71,15 +67,14 @@ export default function Navbar() {
                 </span>
               )}
             </Link>
-          )}
 
           {user ? (
             <Link to={paths.dashboard.root}>
-              <FaUser size={24} className="text-gray-700" />
+              <FaUser size={24} className="text-black" />
             </Link>
           ) : (
             <Link to={paths.auth.root}>
-              <IoMdLogIn size={24} className="text-gray-700" />
+              <IoMdLogIn size={24} className="text-black" />
             </Link>
           )}
 

@@ -20,7 +20,7 @@ export default function LanguageNav({ cartCount = 0, wishlistCount = 0 }) {
 
   return (
     <div className="bg-[#F6F5E9] px-4 py-3 flex justify-between">
-    <div className="flex items-end gap-1   w-full md:justify-end sm:justify-end">
+    <div className="flex items-end gap-1 w-full md:justify-end sm:justify-end">
     
       <button
         className="text-lg font-tahoma text-[#33373D]"
@@ -53,30 +53,28 @@ export default function LanguageNav({ cartCount = 0, wishlistCount = 0 }) {
         <span className="fi fi-es"></span>
       </button>
     </div>
-      <div className="flex items-center gap-5 md:hidden">
-            {user && (
-              <Link to="/dashboard/wishlist" className="relative">
-                <FaRegHeart size={24} className="text-gray-700" />
-                {wishlistCount > 0 && (
-                  <span className="absolute -top-2 -right-2 bg-red-500 text-white text-xs font-bold rounded-full w-4 h-4 flex items-center justify-center">
-                    {wishlistCount}
-                  </span>
-                )}
-              </Link>
-            )}
+      <div className="flex items-center gap-2 md:hidden">
+        <Link to={user ? paths.auth.root : paths.dashboard.wishlist} className="relative">
+          <FaRegHeart size={24} className="text-black" />
+          {wishlistCount > 0 && (
+            <span className="absolute -top-2 -right-2 bg-red-500 text-white text-xs font-bold rounded-full w-4 h-4 flex items-center justify-center">
+              {wishlistCount}
+            </span>
+          )}
+        </Link>
 
             {user ? (
               <Link to={paths.dashboard.root}>
-                <FaUser size={24} className="text-gray-700" />
+                <FaUser size={24} className="text-black" />
               </Link>
             ) : (
               <Link to={paths.auth.root}>
-                <IoMdLogIn size={24} className="text-gray-700" />
+                <IoMdLogIn size={24} className="text-black" />
               </Link>
             )}
 
             <Link to={paths.checkout} className="relative">
-              <IoMdCart size={26} className="text-gray-700" />
+              <IoMdCart size={26} className="text-black" />
               {cartCount > 0 && (
                 <span className="absolute -top-2 -right-2 bg-red-500 text-white text-xs font-bold rounded-full w-5 h-5 flex items-center justify-center">
                   {cartCount}

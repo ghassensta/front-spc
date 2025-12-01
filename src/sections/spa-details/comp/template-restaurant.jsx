@@ -65,9 +65,9 @@ export default function TemplateRestaurant({ data = [] }) {
       </div>
 
       {/* Bloc des cartes en dessous du bloc principal */}
-      <div className="bg-[#f9f7ed] p-6 grid-cols-1 md:grid-cols-3 gap-6 mt-6 rounded-xl">
         {data.type_produit?.length > 0 && (
-          data.type_produit.map((prod) => (
+      <div className="bg-[#f9f7ed] p-6 grid-cols-1 md:grid-cols-3 gap-6 mt-6 rounded-xl">
+          {data.type_produit.map((prod) => (
             <CardItem
               key={prod.id}
               id={prod.id}
@@ -87,9 +87,10 @@ export default function TemplateRestaurant({ data = [] }) {
               prix_au_lieu_de={prod.prix_au_lieu_de}
               ordre={prod.ordre}
             />
-          ))
-        )}
+          ))}
+        
       </div>
+      )}
     </>
   );
 }

@@ -22,9 +22,9 @@ export default function ReferentielViewPage() {
       </div>
 
       {/* Checkmarks & Adhesion Section */}
-      <div className="max-w-6xl mx-auto  gap-10 py-12 px-4 grid grid-cols-1 md:grid-cols-2 mt-5">
+      <div className="max-w-6xl mx-auto  gap-10 py-6 md:py-12 px-4 grid grid-cols-1 md:grid-cols-2 mt-5">
         {/* Left Side: Checkmark List */}
-        <div className="space-y-4 flex flex-col mb-12">
+        <div className="space-y-4 flex flex-col mb-6 md:mb-12">
           {[
             {
               description:
@@ -114,7 +114,7 @@ export default function ReferentielViewPage() {
               standards élevés, assurant ainsi une expérience client d’exception
               et une qualité cohérente au sein du réseau.
             </p>
-            <div className="flex flex-col gap-12 w-full justify-center items-center">
+            <div className="flex flex-col gap-6 md:gap-12 w-full justify-center items-center">
               <Link to={paths.partenaire} className="bg-[#B6B499] w-max text-white px-6 rounded-full py-2 text-sm hover:bg-black uppercase tracking-wider transition">
                 Devenir partenaire
               </Link>

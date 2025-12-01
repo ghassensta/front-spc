@@ -214,7 +214,7 @@ export default function HomePageView() {
                         <img
                           src={`${CONFIG.serverUrl}/storage/${logo.image}`}
                           alt={`Partenaire ${index + 1}`}
-                          className="max-h-24 object-contain filter grayscale hover:grayscale-0 transition-all"
+                          className="md:max-h-24 max-h-36 object-contain filter grayscale hover:grayscale-0 transition-all"
                           loading="lazy"
                         />
                       </a>
@@ -222,7 +222,7 @@ export default function HomePageView() {
                       <img
                         src={`${CONFIG.serverUrl}/storage/${logo.image}`}
                         alt={`Partenaire ${index + 1}`}
-                        className="max-h-24 object-contain opacity-70"
+                        className="md:max-h-24 max-h-36 object-contain opacity-70"
                         loading="lazy"
                       />
                     )}

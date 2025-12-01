@@ -27,7 +27,7 @@ export default function ProductDetailsView({
   etablissement,
   loading,
 }) {
-  console.log(product);
+  console.log(etablissement);
   const gallery = [
     ...(etablissement?.image_avant ? [etablissement.image_avant] : []),
     ...(etablissement?.gallerie?.length > 0
@@ -191,7 +191,10 @@ export default function ProductDetailsView({
     });
 
     try {
-      if (!user) return;
+      if (!user) {
+            router.push(paths.auth.root)
+            return;
+          };
       await promise;
       setIsFav((prev) => !prev);
     } catch (err) {
@@ -233,14 +236,6 @@ export default function ProductDetailsView({
             </span>
 
             <div className="relative">
-              {user && (
-                <button
-                  onClick={toggleFav}
-                  className="absolute z-10 text-red-500 top-3 right-3 text-xl"
-                >
-                  {isFav ? <FaHeart /> : <FaRegHeart />}
-                </button>
-              )}
               <ProductCarousel
                 gallery={product?.galleries_images}
                 image={product?.image}
@@ -324,6 +319,22 @@ export default function ProductDetailsView({
           </div>
 
           <div className="bg-[beige] px-8 py-4 col-span-2 lg:col-span-1 rounded-2xl">
+             {!!product?.prix_barre && (
+              <span className="text-sm text-gray-500 line-through font-tahoma">
+                {product?.prix_barre}
+              </span>
+            )}
+
+            <div className="font-normal text-[#333] text-2xl font-tahoma mb-2">
+              {product?.prix ? `${product.prix} €` : "Prix non disponible"}
+            </div>
+            {!!product?.prix_au_lieu_de && (
+              <TranslatedText
+                text={`Au lieu de ${product?.prix_au_lieu_de}€`}
+                className="text-sm text-gray-500 font-tahoma"
+                as="span"
+              />
+            )}
             {!!product?.exclusivite_spc && (
               <img
                 loading="lazy"
@@ -332,7 +343,7 @@ export default function ProductDetailsView({
                 className="w-auto h-auto my-2"
               />
             )}
-            <div className="mt-6 font-tahoma">
+            <div className="mt-4 font-tahoma">
               <span className="text-xl font-semibold mb-4">
                 Destinataire : {recipients.length}
               </span>
@@ -370,6 +381,12 @@ export default function ProductDetailsView({
                         handleRecipientChange(index, "email", e.target.value)
                       }
                     />
+                    <button
+                  onClick={toggleFav}
+                  className="z-10  top-3 right-3 text-lg"
+                >
+                  {isFav ? <span className="flex items-center justify-center gap-2"><FaHeart className="text-red-500"/><span className="text-sm">Ajouter à votre whishliste</span> </span>: <span className="flex items-center justify-center gap-2"><FaRegHeart className="text-red-500"/><span className="text-sm">Retirer de votre whishliste</span></span>}
+                </button>
                     <div className="flex items-center gap-2 text-xs">
                       <span>Quantité :</span>
                       <input
@@ -384,7 +401,7 @@ export default function ProductDetailsView({
               ))}
               <button
                 onClick={handleAddRecipient}
-                className="px-4 py-2 bg-gray-200 text-black text-sm rounded-md hover:bg-gray-300 transition mb-4"
+                className="px-4 py-2 bg-gray-200 text-black text-sm rounded-full hover:bg-gray-300 transition mb-4"
               >
                 Ajouter un autre destinataire
               </button>
@@ -392,7 +409,7 @@ export default function ProductDetailsView({
               <div className="flex">
                 <button
                   onClick={addProductToCheckout}
-                  className="w-max px-5 py-3 bg-black leading-4 rounded-md text-white uppercase font-normal text-xs tracking-[3px] hover:bg-gray-800 transition font-tahoma flex items-center justify-center gap-2"
+                  className="w-max px-5 py-3 bg-black leading-4 rounded-full text-white uppercase font-normal text-xs tracking-[3px] hover:bg-gray-800 transition font-tahoma flex items-center justify-center gap-2"
                 >
                   <span>Ajouter au panier</span>
                 </button>
@@ -400,8 +417,8 @@ export default function ProductDetailsView({
             </div>
 
             <div className="border-b border-black my-4 font-tahoma">
-              <div className="py-3 flex items-center gap-2">
-                <FaHeart />
+              <div className="py-3 gap-2">
+                <FaHeart className="inline-block mr-1"/>
                 <TranslatedText text="Programme fidélité 1€ = 1 point : " />
                 <Link to={paths.recompense}>
                   <TranslatedText text="en savoir plus" className="underline" />
@@ -551,13 +568,13 @@ export default function ProductDetailsView({
                       </>
                     ) : (
                       <>
-                        <div className="h-60 flex flex-col justify-center items-center">
-                          <p className="text-xl mb-2">
+                        <div className="flex flex-col justify-center items-center">
+                          <p className="text-xl mb-4">
                             Veuillez vous connecter pour mettre un avis
                           </p>
                           <button
                             onClick={() => goToAuth()}
-                            className="w-max px-4 py-3 bg-black leading-4 text-white uppercase font-normal text-xs tracking-[3px] hover:bg-gray-800 transition font-tahoma flex items-center justify-center gap-2"
+                            className="w-max px-4 py-3 bg-black leading-4 text-white uppercase font-normal text-xs tracking-[3px] hover:bg-gray-800 transition font-tahoma flex items-center justify-center gap-2 rounded-full"
                           >
                             Connecter Vous
                           </button>

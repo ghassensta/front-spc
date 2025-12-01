@@ -23,7 +23,7 @@ export default function CollectionPrestigePage() {
 
       {/* Intro Section */}
       <div className="my-8 px-4">
-        <h2 className="text-2xl md:text-3xl text-center mb-6 italic font-bold py-6 md:max-w-[70%] tracking-wider mx-auto" style={{ wordSpacing: "8px"}}>
+        <h2 className="text-2xl md:text-3xl text-center mb-3 md:mb-6 italic font-bold py-6 md:max-w-[70%] tracking-wider mx-auto" style={{ wordSpacing: "8px"}}>
           Bientôt disponible, Collection Prestige revient avec une nouvelle
           édition dédiée aux plus belles adresses bien-être de notre réseau.
         </h2>
@@ -68,7 +68,7 @@ export default function CollectionPrestigePage() {
       </div>
 
       {/* Checkmarks & Adhesion Section */}
-      <div className="max-w-6xl mx-auto gap-10 py-12 px-4 items-center">
+      <div className="max-w-6xl mx-auto gap-10 py-6 md:py-12 px-4 items-center">
         {/* Left Side: Checkmark List */}
         <div className="space-y-4 grid grid-cols-1 md:grid-cols-2 gap-4 mb-12">
           {[
@@ -107,7 +107,7 @@ export default function CollectionPrestigePage() {
               standards élevés, assurant ainsi une expérience client d’exception
               et une qualité cohérente au sein du réseau.
             </p>
-            <div className="flex flex-col gap-12 w-full justify-center items-center">
+            <div className="flex flex-col gap-6 md:gap-12 w-full justify-center items-center">
               <Link to={paths.partenaire} className="bg-[#B6B499] w-max text-white px-6 rounded-full py-2 text-sm hover:bg-black uppercase tracking-wider transition">
                 Devenir partenaire
               </Link>

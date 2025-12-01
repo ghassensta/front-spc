@@ -80,7 +80,7 @@ export default function MenuPopover({ anchorRef, open, onClose }) {
             ) : (
               <li className="text-center text-xs py-4">Aucun élément de menu</li>
             )}
-            <li><img className="mx-auto w-20 py-6" src={exclusive} alt="Collection Prestige"/></li>
+            <li><img className="mx-6 w-20 py-6" src={exclusive} alt="Collection Prestige"/></li>
           </ul>
         </motion.div>
       )}

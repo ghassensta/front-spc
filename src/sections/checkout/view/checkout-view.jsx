@@ -209,8 +209,8 @@ export default function CheckoutView() {
               </button>
             </>
           ) : (
-            <div className="bg-white p-4 rounded-lg shadow-sm">
-              <p>Vous devez vous identifier pour commander</p>
+            <div className="bg-white p-2 md:p-4 rounded-lg shadow-sm">
+              <p className="mb-3">Vous devez vous identifier pour commander</p>
               <button
                 onClick={() =>
                   router.push(

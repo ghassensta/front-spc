@@ -9,6 +9,8 @@ import { FaRegHeart, FaHeart } from "react-icons/fa";
 import { useAuthContext } from "src/auth/hooks/use-auth-context";
 import { useToggleWishlist, getIsWishlisted } from "src/actions/wishlists";
 import { toast } from "react-toastify";
+import { useRouter } from "src/hooks";
+import { paths } from "src/router/paths";
 
 export default function Card({
   to = "/",
@@ -26,7 +28,7 @@ export default function Card({
 }) {
   const { user } = useAuthContext();
   const [isFav, setIsFav] = useState(inWishlist); 
-
+  const router = useRouter()
   useEffect(() => {
     let isMounted = true;
 
@@ -45,7 +47,10 @@ export default function Card({
   }, [id, inWishlist]);
 
   const toggleFav = async () => {
-    if (!user) return;
+    if (!user) {
+      router.push(paths.auth.root)
+      return;
+    };
 
     setIsFav((prev) => !prev);
 
@@ -86,14 +91,13 @@ export default function Card({
           </span>
         )}
 
-        {user && (
+        
           <button
             onClick={toggleFav}
-            className="absolute z-10 text-red-500 top-3 right-3 text-xl"
+            className="absolute z-10 text-red-500 top-12 right-3 text-xl bg-white/70 rounded-full p-1"
           >
             {isFav ? <FaHeart /> : <FaRegHeart />}
           </button>
-        )}
 
         {!!image && (
           <Link to={to} className="block w-full h-64">

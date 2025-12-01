@@ -17,6 +17,7 @@ export default function CategoriesPageView({
   filterLoading,
   nomcat = "",
   slug_categorie = "",
+  description = ""
 }) {
   const [filters, setFilters] = useState({
     etablissement: null,
@@ -222,7 +223,7 @@ export default function CategoriesPageView({
       <div className="mb-10">
         <h1 className="text-center text-4xl font-normal my-4">{nomcat}</h1>
         <h2 className="text-center text-3xl font-normal my-4 text-[#777765]">
-          Sublimez votre peau et révélez votre éclat grâce à nos soins experts.
+          {description}
         </h2>
       </div>
 

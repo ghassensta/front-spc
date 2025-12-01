@@ -36,6 +36,7 @@ export default function Page() {
     category?.slug || slug
   }`;
 
+  console.log(category)
   return (
     <>
       <Helmet>
@@ -64,9 +65,11 @@ export default function Page() {
         <link rel="canonical" href={canonicalUrl} />
       </Helmet>
 
+
       <CategoriesPageView
         nomcat={category.nom}
         slug_categorie={category.slug}
+        description={category.meta_description}
         cardsByCategory={spaList}
         villes={villes}
         types={types}

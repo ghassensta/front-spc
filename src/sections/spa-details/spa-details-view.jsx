@@ -113,7 +113,7 @@ export default function SpaDetailsView({
   }
 
   return (
-    <div className="mx-auto xl:px-4 py-12">
+    <div className="mx-auto xl:px-4 md:py-12 py-6">
       <div className="flex flex-col md:flex-row gap-12 items-center">
         <div className="w-full md:w-3/5 h-[300px] md:h-[600px] rounded-md">
           <ImageCarousel images={spaData?.gallerie} />

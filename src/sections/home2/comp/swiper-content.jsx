@@ -12,6 +12,7 @@ export default function SwiperContent({ slidesPerView = 3, data }) {
   const uniqueId = useId();
   const prevId = `prev-${uniqueId}`;
   const nextId = `next-${uniqueId}`;
+  console.log("DATA", data)
 
   return (
     <div className="relative max-w-[1200px] mx-auto px-12">
@@ -60,6 +61,7 @@ export default function SwiperContent({ slidesPerView = 3, data }) {
               offreValue={item.offreValue}
               price={item.price}
               duration={item.duration}
+              id={item.id}
             />
           </SwiperSlide>
         ))}

@@ -1,5 +1,5 @@
 import React from 'react'
-import logo from '../../assets/logo.png'
+import logo from '../../assets/SPC-logo-accueil.svg'
 import { Link } from 'react-router-dom'
 import { paths } from 'src/router/paths'
 

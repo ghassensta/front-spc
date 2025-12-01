@@ -1,8 +1,4 @@
 import React, { useState } from "react";
-import ButtonIcon from "src/components/button-icon/button-icon";
-import Card from "src/components/card/card";
-import { CONFIG } from "src/config-global";
-import { paths } from "src/router/paths";
 import SwiperContent from "./swiper-content";
 
 export default function Section({

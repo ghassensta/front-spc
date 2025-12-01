@@ -49,7 +49,7 @@ export default function LocationSection({ data }) {
           )}
         </div>
       </motion.div>
-      <Link to={data.iframeUrl} className="flex items-center gap-2 text-base font-normal text-gray-800">
+      <Link to={"https://maps.google.com"} className="flex items-center gap-2 text-base font-normal text-gray-800">
         <span>Comment s'y rendre ?</span>
         <FaAngleRight className="text-gray-600" />
       </Link>

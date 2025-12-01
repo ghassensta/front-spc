@@ -106,7 +106,7 @@ export default function ContactPageView() {
         </div>
 
         {/* Right section - Contact form */}
-        <div className="bg-white px-10 py-16">
+        <div className="bg-white px-10 py-6 md:py-16">
           <h2 className="text-2xl font-serif mb-2 text-center">
             Demande d'informations
           </h2>
