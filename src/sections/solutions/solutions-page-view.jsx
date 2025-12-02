@@ -5,7 +5,7 @@ import { sendEntreprise } from "src/actions/forms";
 import { paths } from "src/router/paths";
 
 export default function SolutionsPageView() {
-  const [formData, setFormData] = useState({
+  const initialFormData = {
     name: "",
     email: "",
     phone: "",
@@ -15,7 +15,9 @@ export default function SolutionsPageView() {
     country: "France",
     adresse: "",
     message: "",
-  });
+  };
+
+  const [formData, setFormData] = useState(initialFormData);
 
   const handleChange = (e) => {
     const { name, value, files } = e.target;
@@ -72,6 +74,8 @@ export default function SolutionsPageView() {
         pending: "En cours d'envoi",
         success: "Envoi avec succès",
         error: "Échec lors de l'envoi",
+      }).then(() => {
+        setFormData(initialFormData);
       });
 
       console.log(formData)
@@ -156,7 +160,7 @@ export default function SolutionsPageView() {
           {/* Image Column */}
           <div>
             <img
-              lazyload="lazy"
+              loading="lazy"
               src="https://spa-prestige-collection.com/wp-content/uploads/2025/05/SPC-equipe-ce-1975x1318-1-768x513.jpg"
               alt="Réunion d'équipe"
               className="w-full h-auto object-cover rounded-lg shadow-lg"

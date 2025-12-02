@@ -30,7 +30,6 @@ export default function Navbar() {
       <LanguageNav cartCount={cartCount} wishlistCount={wishlistCount}/>
 
       <div className="w-full md:px-8 py-2 flex flex-col md:flex-row items-center justify-between relative gap-4">
-        {/* Menu Mobile */}
         <div className="w-full md:w-auto flex items-center justify-between">
           <div className="flex items-center gap-2 px-4 md:px-0 relative z-20">
             <button
@@ -47,12 +46,10 @@ export default function Navbar() {
           </div>
         </div>
 
-        {/* Logo - Desktop ONLY (hidden on mobile) */}
         <div className="hidden md:block absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 md:static md:transform-none">
           <Logo className="h-10 md:h-12" />
         </div>
 
-        {/* Icônes Desktop */}
         <div className="hidden md:flex items-center gap-2">
           
             <Link

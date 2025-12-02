@@ -1,9 +1,9 @@
-import React, { useState } from "react";
+import React, { useState, useRef } from "react";
 import { toast } from "react-toastify";
 import { sendDevenirPartenaire } from "src/actions/forms";
 
 export default function DevenirPartnerView() {
-  const [formData, setFormData] = useState({
+  const initialFormData = {
     etablissement: "",
     nom: "",
     prenom: "",
@@ -17,7 +17,10 @@ export default function DevenirPartnerView() {
     message: "",
     secteur: "Hôtel",
     fichier: null,
-  });
+  };
+
+  const [formData, setFormData] = useState(initialFormData);
+  const fileInputRef = useRef(null);
 
   const handleChange = (e) => {
     const { name, value, files } = e.target;
@@ -28,7 +31,7 @@ export default function DevenirPartnerView() {
     }
   };
 
-    const validateForm = () => {
+  const validateForm = () => {
     const errors = [];
 
     if (!formData.etablissement.trim())
@@ -78,9 +81,12 @@ export default function DevenirPartnerView() {
         pending: "En cours d'envoi",
         success: "Envoi avec succès",
         error: "Échec lors de l'envoi",
+      }).then(() => {
+        setFormData(initialFormData);
+        if (fileInputRef.current) {
+          fileInputRef.current.value = "";
+        }
       });
-
-      console.log(formData)
     } catch (error) {
       console.error("Erreur lors de l'envoi", error);
       toast.error("Une erreur inattendue est survenue.");
@@ -113,7 +119,7 @@ export default function DevenirPartnerView() {
         </h2>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-10">
-            <div className="space-y-4 text-justify font-bricolage text-sm">
+          <div className="space-y-4 text-justify font-bricolage text-sm">
             <p>
               <strong>Boostez votre Chiffre d’Affaires :</strong> Développez vos
               revenus grâce à la vente de cartes cadeaux et à des partenariats
@@ -143,7 +149,8 @@ export default function DevenirPartnerView() {
           </div>
 
           <div>
-            <img lazyload="lazy"
+            <img
+              loading="lazy"
               src="https://spa-prestige-collection.com/wp-content/uploads/2025/05/SPC-equipe-ce-1975x1318-1-768x513.jpg"
               alt="Piscine spa"
               className="w-full h-auto object-cover rounded-lg shadow-lg"
@@ -335,6 +342,7 @@ export default function DevenirPartnerView() {
                 name="fichier"
                 onChange={handleChange}
                 className="w-full"
+                ref={fileInputRef}
               />
             </label>
 

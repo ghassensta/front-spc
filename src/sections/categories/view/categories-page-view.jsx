@@ -24,7 +24,6 @@ export default function CategoriesPageView({
     region: null,
     service: null,
   });
-
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 12;
 
@@ -161,6 +160,7 @@ export default function CategoriesPageView({
   if (filterLoading) {
     return <FiltersSkeleton />;
   }
+  //console.log("card",card);
 
   return (
     <div className="max-w-6xl mx-auto p-1">
@@ -262,6 +262,7 @@ export default function CategoriesPageView({
                   inWishlist={card.inWishlist}
                   price={card.prix+ "€"}
                   duration={card.duree}
+                  exclusivite_spc={card.exclusivite_spc}
                 />
               ))
             ) : (

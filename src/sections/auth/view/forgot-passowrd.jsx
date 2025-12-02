@@ -13,14 +13,28 @@ export default function ForgotPassword() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    
+    // Validation basique
+    if (!email || !email.includes('@')) {
+      toast.error("Veuillez entrer une adresse email valide");
+      return;
+    }
+
     setIsSubmitting(true);
 
     try {
-      await forgetPassword(email);
-      toast.success("Un email de réinitialisation a été envoyé à votre adresse.");
-      router.push(paths.auth.login);
+      const response = await forgetPassword(email);
+      
+      // Afficher le message de succès du backend
+      toast.success(response.message || "Un email de réinitialisation a été envoyé à votre adresse.");
+      
+      // Rediriger après 2 secondes
+      setTimeout(() => {
+        router.push(paths.auth.login);
+      }, 2000);
     } catch (error) {
-      toast.error("Une erreur est survenue. Veuillez réessayer.");
+      // Afficher le message d'erreur
+      toast.error(error.message || "Une erreur est survenue. Veuillez réessayer.");
       console.error(error);
     } finally {
       setIsSubmitting(false);
@@ -34,38 +48,44 @@ export default function ForgotPassword() {
           <Logo />
         </Link>
       </div>
-      <h1 className="text-xl font-semibold text-center mb-6">Réinitialisation du mot de passe</h1>
+      <h1 className="text-xl font-semibold text-center mb-6">
+        Réinitialisation du mot de passe
+      </h1>
       
       <form onSubmit={handleSubmit} className="flex flex-col gap-4">
         <div>
           <p className="text-sm text-gray-600 mb-4">
             Entrez votre adresse email et nous vous enverrons un lien pour réinitialiser votre mot de passe.
           </p>
-          <label htmlFor="email" className="text-sm text-gray-600">
+          <label htmlFor="email" className="text-sm text-gray-600 block mb-1">
             Email
           </label>
           <input
             type="email"
             id="email"
-            className="w-full border rounded p-2 mb-2"
+            className="w-full border rounded p-2 mb-2 focus:outline-none focus:ring-2 focus:ring-[#B6B499]"
             required
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             placeholder="Votre adresse email"
+            disabled={isSubmitting}
           />
         </div>
 
         <button
           type="submit"
           disabled={isSubmitting}
-          className="w-full bg-black text-white p-2 rounded hover:bg-gray-800 disabled:opacity-50"
+          className="w-full bg-black text-white p-2 rounded hover:bg-gray-800 disabled:opacity-50 disabled:cursor-not-allowed transition-all"
         >
           {isSubmitting ? "Envoi en cours..." : "Envoyer le lien de réinitialisation"}
         </button>
       </form>
      
       <p className="mt-4 text-sm text-center text-gray-600">
-        <Link to={paths.auth.root} className="text-[#B6B499] hover:underline">
+        <Link 
+          to={paths.auth.login} 
+          className="text-[#B6B499] hover:underline"
+        >
           Retour à la page de connexion
         </Link>
       </p>

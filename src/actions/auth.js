@@ -79,39 +79,68 @@ export const editUser = async (data) => {
     return res;
   } catch (error) {
     console.error("❌ Erreur lors de la mise à jour du profil:", error);
-    // toast.error("Une erreur est survenue lors de la mise à jour.");
     throw error;
   }
 };
 
-
-export const forgetPassword = async (data) => {
+export const forgetPassword = async (email) => {
   try {
-    const params = { email: data.email };
+    const emailValue = typeof email === "string" ? email : email.email;
 
-    await axios.post(endpoints.auth.forgetPassword, params);
+    const params = { email: emailValue };
+
+    const res = await axios.post(endpoints.auth.forgotPassword, params);
+
+    console.log("✅ Réponse forgotPassword:", res.data);
+
+    return res.data;
   } catch (error) {
-    console.error("Error during forget password:", error);
-    throw error;
+    console.error("❌ Erreur complète:", {
+      message: error.message,
+      response: error.response?.data,
+      status: error.response?.status,
+    });
+
+    // Extraire le message d'erreur détaillé
+    const errorMessage =
+      error.response?.data?.message ||
+      error.response?.data?.error ||
+      error.response?.data?.errors?.email?.[0] ||
+      error.message ||
+      "Une erreur est survenue lors de l'envoi de l'email.";
+
+    throw new Error(errorMessage);
   }
+};
 
-}
-
-
+/** **************************************
+ * Reset Password - Réinitialiser le mot de passe
+ *************************************** */
 export const resetPassword = async (data) => {
   try {
     const params = {
       token: data.token,
       email: data.email,
       password: data.password,
-      password_confirmation: data.confirmPassword,
+      password_confirmation: data.password_confirmation || data.confirmPassword,
     };
 
     const res = await axios.post(endpoints.auth.resetPassword, params);
 
-    return res;
+    return res.data; // Retourner la réponse pour afficher le message de succès
   } catch (error) {
-    console.error("❌ Erreur lors de la réinitialisation du mot de passe:", error);
-    throw error;
+    console.error(
+      "❌ Erreur lors de la réinitialisation du mot de passe:",
+      error
+    );
+
+    // Extraire le message d'erreur du backend
+    const errorMessage =
+      error.response?.data?.message ||
+      error.response?.data?.errors?.password?.[0] ||
+      error.response?.data?.errors?.token?.[0] ||
+      "Une erreur est survenue lors de la réinitialisation du mot de passe.";
+
+    throw new Error(errorMessage);
   }
 };

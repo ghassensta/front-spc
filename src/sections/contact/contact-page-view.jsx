@@ -35,12 +35,10 @@ export default function ContactPageView() {
     setIsSubmitting(true);
 
     try {
-      // Replace with your actual form submission logic
       const response = await sendMessage({ ...formData, recaptcha :recaptchaValue });
 
       if (response.ok) {
         toast.success("Votre message a été envoyé avec succès !");
-        // Reset form
         setFormData({
           name: "",
           lastName: "",
@@ -66,7 +64,6 @@ export default function ContactPageView() {
   return (
     <div className="w-screen relative left-[calc(-50vw+50%)]">
       <div className="grid grid-cols-1 md:grid-cols-2">
-        {/* Left section - Contact info with background image */}
         <div
           className="flex flex-col justify-center px-10 py-16 relative text-white bg-center bg-cover"
           style={{
@@ -74,10 +71,8 @@ export default function ContactPageView() {
               "url('https://spa-prestige-collection.com/wp-content/uploads/2025/02/SPC-Massage-1975x1318-02.jpg')", // <-- change to your actual image path
           }}
         >
-          {/* Overlay for readability */}
           <div className="absolute inset-0 bg-black bg-opacity-40"></div>
 
-          {/* Content */}
           <div className="mx-auto relative z-10">
             <h1 className="text-4xl font-serif mb-4">Contactez nous</h1>
             <p className="mb-2 font-bricolage">
@@ -105,7 +100,6 @@ export default function ContactPageView() {
           </div>
         </div>
 
-        {/* Right section - Contact form */}
         <div className="bg-white px-10 py-6 md:py-16">
           <h2 className="text-2xl font-serif mb-2 text-center">
             Demande d'informations
@@ -173,7 +167,7 @@ export default function ContactPageView() {
             ></textarea>
             <div className="flex justify-center my-4">
               <ReCAPTCHA
-                sitekey="6LeJ6RssAAAAAJCy1zB7fIfNwzPowTrqOoFrWMnN" // Replace with your actual site key
+                sitekey="6LfNLx8sAAAAAH9CD3t7lfmwcPSm4ZV8znRr-mc9" 
                 onChange={(value) => setRecaptchaValue(value)}
                 onExpired={() => setRecaptchaValue(null)}
                 onErrored={() => setRecaptchaValue(null)}

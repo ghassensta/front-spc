@@ -250,7 +250,7 @@ const Serach = () => {
 
           {/* BOUTON RECHERCHER – Maintenant avec le texte "Rechercher" */}
           <div className="flex flex-col items-start md:items-center justify-end w-full md:w-auto">
-            <label className="block text-sm text-gray-700 mb-1 text-left md:text-center w-full">
+            <label className="block text-sm text-gray-700 mb-1 mt-3 text-left md:text-center w-full">
             </label>
 
             {hasSearch && searchUrl ? (

@@ -6,6 +6,7 @@ import { paths } from "src/router/paths";
 
 export default function CommandesListView() {
   const { orders = [], loading, validating } = useGetAuthOrders();
+  console.log("orders", orders);
   const [currentPage, setCurrentPage] = useState(1);
   const [rowsPerPage, setRowsPerPage] = useState(10);
 
@@ -29,8 +30,30 @@ export default function CommandesListView() {
   const calculateTotal = (lignes = []) => {
     if (!Array.isArray(lignes)) return "0.00";
     return lignes
-      .reduce((sum, ligne) => sum + parseFloat(ligne.prix_unitaire || 0) * (ligne.quantite || 0), 0)
+      .reduce(
+        (sum, ligne) =>
+          sum + parseFloat(ligne.prix_unitaire || 0) * (ligne.quantite || 0),
+        0
+      )
       .toFixed(2);
+  };
+  const calculateTotalTTC = (order) => {
+    if (!Array.isArray(order.lignes_commande)) return "0.00";
+
+    const totalLignes = order.lignes_commande.reduce(
+      (sum, ligne) =>
+        sum + parseFloat(ligne.prix_unitaire || 0) * (ligne.quantite || 0),
+      0
+    );
+
+    const totalCredits = Array.isArray(order.credits)
+      ? order.credits.reduce(
+          (sum, credit) => sum + parseFloat(credit.montant || 0),
+          0
+        )
+      : 0;
+
+    return (totalLignes - totalCredits).toFixed(2);
   };
 
   if (loading || validating) {
@@ -49,11 +72,21 @@ export default function CommandesListView() {
           <tbody className="text-center text-sm">
             {[...Array(5)].map((_, i) => (
               <tr key={i} className="border-b-2 py-2">
-                <td><div className="h-4 bg-gray-200 animate-pulse w-24 mx-auto rounded" /></td>
-                <td><div className="h-4 bg-gray-200 animate-pulse w-40 mx-auto rounded" /></td>
-                <td><div className="h-4 bg-gray-200 animate-pulse w-20 mx-auto rounded" /></td>
-                <td><div className="h-4 bg-gray-200 animate-pulse w-32 mx-auto rounded" /></td>
-                <td><div className="h-8 w-12 bg-gray-200 animate-pulse mx-auto rounded" /></td>
+                <td>
+                  <div className="h-4 bg-gray-200 animate-pulse w-24 mx-auto rounded" />
+                </td>
+                <td>
+                  <div className="h-4 bg-gray-200 animate-pulse w-40 mx-auto rounded" />
+                </td>
+                <td>
+                  <div className="h-4 bg-gray-200 animate-pulse w-20 mx-auto rounded" />
+                </td>
+                <td>
+                  <div className="h-4 bg-gray-200 animate-pulse w-32 mx-auto rounded" />
+                </td>
+                <td>
+                  <div className="h-8 w-12 bg-gray-200 animate-pulse mx-auto rounded" />
+                </td>
               </tr>
             ))}
           </tbody>
@@ -94,7 +127,9 @@ export default function CommandesListView() {
           ) : (
             currentOrders.map((order) => {
               const total = calculateTotal(order.lignes_commande);
-              const articleCount = Array.isArray(order.lignes_commande) ? order.lignes_commande.length : 0;
+              const articleCount = Array.isArray(order.lignes_commande)
+                ? order.lignes_commande.length
+                : 0;
 
               return (
                 <tr key={order.id} className="border-b-2 py-3 hover:bg-gray-50">
@@ -107,12 +142,30 @@ export default function CommandesListView() {
                     </Link>
                   </td>
                   <td>{formatDate(order.created_at)}</td>
-                  <td className={order.statut_paiement ? "text-green-600 font-medium" : "text-red-600 font-medium"}>
+                  <td
+                    className={
+                      order.statut_paiement
+                        ? "text-green-600 font-medium"
+                        : "text-red-600 font-medium"
+                    }
+                  >
                     {order.statut_paiement ? "Payée" : "En attente"}
                   </td>
                   <td>
-                    {total} € pour {articleCount} article{articleCount > 1 ? "s" : ""}
+                    {calculateTotalTTC(order)} € pour {articleCount} article
+                    {articleCount > 1 ? "s" : ""}
+                    {Array.isArray(order.credits) &&
+                      order.credits.length > 0 && (
+                        <div className="text-red-600 text-xs mt-1">
+                          Crédit appliqué : -
+                          {order.credits
+                            .reduce((sum, c) => sum + parseFloat(c.montant), 0)
+                            .toFixed(2)}{" "}
+                          €
+                        </div>
+                      )}
                   </td>
+
                   <td>
                     <ButtonIcon
                       link={paths.dashboard.commandes.view(order.id)}
@@ -140,14 +193,16 @@ export default function CommandesListView() {
             className="border rounded px-3 py-1.5 focus:outline-none focus:ring-2 focus:ring-blue-400"
           >
             {[5, 10, 20, 50].map((n) => (
-              <option key={n} value={n}>{n}</option>
+              <option key={n} value={n}>
+                {n}
+              </option>
             ))}
           </select>
         </div>
 
         <div className="flex items-center gap-3">
           <button
-            onClick={() => setCurrentPage(prev => Math.max(prev - 1, 1))}
+            onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
             disabled={currentPage === 1}
             className="px-4 py-2 border rounded disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-50"
           >
@@ -157,7 +212,9 @@ export default function CommandesListView() {
             Page {currentPage} sur {totalPages || 1}
           </span>
           <button
-            onClick={() => setCurrentPage(prev => Math.min(prev + 1, totalPages || 1))}
+            onClick={() =>
+              setCurrentPage((prev) => Math.min(prev + 1, totalPages || 1))
+            }
             disabled={currentPage === totalPages || totalPages === 0}
             className="px-4 py-2 border rounded disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-50"
           >

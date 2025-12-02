@@ -3,7 +3,7 @@ import { endpoints, fetcher, poster } from "src/utils/axios";
 
 export const sendDevenirPartenaire = async (data) => {
   try {
-    const url = endpoints.forms.partenaire;
+    const url = endpoints.emails.devenirpartenair;
 
     const params = {...data};
 
@@ -19,7 +19,7 @@ export const sendDevenirPartenaire = async (data) => {
 
 export const sendEntreprise = async (data) => {
   try {
-    const url = endpoints.forms.entreprise;
+    const url = endpoints.emails.solutionCe;
 
     const params = {...data};
 
@@ -35,7 +35,7 @@ export const sendEntreprise = async (data) => {
 
 export const sendMarques = async (data) => {
   try {
-    const url = endpoints.forms.marques;
+    const url = endpoints.emails.collaboration;
 
     const params = { ...data };
 
@@ -51,7 +51,7 @@ export const sendMarques = async (data) => {
 
 export const sendMessage = async (data) => {
   try {
-    const url = endpoints.forms.contact;
+    const url = endpoints.emails.ContactMail;
 
     const params = {...data};
 

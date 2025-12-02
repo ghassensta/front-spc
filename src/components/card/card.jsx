@@ -24,11 +24,13 @@ export default function Card({
   offreValue,
   price,
   duration,
-  inWishlist, 
+  inWishlist,
+  exclusivite_spc,
 }) {
+  console.log("exclusivite_spc", exclusivite_spc);
   const { user } = useAuthContext();
-  const [isFav, setIsFav] = useState(inWishlist); 
-  const router = useRouter()
+  const [isFav, setIsFav] = useState(inWishlist);
+  const router = useRouter();
   useEffect(() => {
     let isMounted = true;
 
@@ -48,9 +50,9 @@ export default function Card({
 
   const toggleFav = async () => {
     if (!user) {
-      router.push(paths.auth.root)
+      router.push(paths.auth.root);
       return;
-    };
+    }
 
     setIsFav((prev) => !prev);
 
@@ -91,13 +93,12 @@ export default function Card({
           </span>
         )}
 
-        
-          <button
-            onClick={toggleFav}
-            className="absolute z-10 text-red-500 top-12 right-3 text-xl bg-white/70 rounded-full p-1"
-          >
-            {isFav ? <FaHeart /> : <FaRegHeart />}
-          </button>
+        <button
+          onClick={toggleFav}
+          className="absolute z-10 text-red-500 top-12 right-3 text-xl bg-white/70 rounded-full p-1"
+        >
+          {isFav ? <FaHeart /> : <FaRegHeart />}
+        </button>
 
         {!!image && (
           <Link to={to} className="block w-full h-64">
@@ -114,6 +115,16 @@ export default function Card({
           <span className="bg-[#B6B499] w-max text-black font-bold font-roboto px-2 py-1 absolute bottom-0 left-1/2 translate-y-1/2 -translate-x-1/2 rounded-full text-s z-10">
             <TranslatedText text={`${offreValue}% de remise`} />
           </span>
+        )}
+
+        {(exclusivite_spc === true || exclusivite_spc === 1) && (
+          <img
+            src="/spa-prestige-logo.png"
+            alt="Exclusivité"
+            className="absolute z-10 bottom-0 right-0 mr-3 mb-2 w-16 h-16 object-contain translate-y-1/5 ml-2
+               rounded-full p-2"
+            style={{ backgroundColor: "#f6f5e9" }}
+          />
         )}
       </div>
 

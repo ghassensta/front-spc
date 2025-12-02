@@ -1,46 +1,106 @@
-import React from 'react';
-import { useCheckoutContext } from 'src/sections/checkout/context';
+import React from "react";
+import { useCheckoutContext } from "src/sections/checkout/context";
+import { Eye } from "lucide-react";
 
 export default function CommandesViewPage({ order }) {
   const checkout = useCheckoutContext();
 
-  // Format sécurisé
-  const formatPrice = (value) =>
-    value ? Number(value).toFixed(2) : "0.00";
+  const formatPrice = (value) => (value ? Number(value).toFixed(2) : "0.00");
 
-  // Redirection vers paiement
-  
   return (
-    <div className="mt-4 grid grid-cols-1 lg:grid-cols-3 gap-4">
-
-      <div className="border p-4 col-span-3">
+    <div className="mt-4 grid grid-cols-1 gap-4 lg:grid-cols-3">
+      <div className="border p-4 col-span-3 overflow-x-auto">
+        {/* TITRE */}
         <h4 className="mt-4 font-semibold text-xl">Articles commandés :</h4>
 
-        <table className="w-full mt-2 border-collapse">
+        {/* TABLE DES ARTICLES */}
+        <table className="w-full mt-2 min-w-[600px] border-collapse">
           <thead>
             <tr>
-              <th className="border p-2 text-left">Produit</th>
-              <th className="border p-2 text-left">Quantité</th>
-              <th className="border p-2 text-left">Prix (TTC)</th>
+              <th className="border p-2 text-left text-sm">Produit</th>
+              <th className="border p-2 text-left text-sm">Destinataire</th>
+              <th className="border p-2 text-left text-sm">Quantité</th>
+              <th className="border p-2 text-left text-sm">Prix (TTC)</th>
+              <th className="border p-2 text-left text-sm">Carte</th>
             </tr>
           </thead>
 
           <tbody>
             {order?.lignes?.map((item) => (
               <tr key={item.id} className="border-t">
-                <td className="border p-2">
-                  {item.produit?.nom || item.produit || "Carte Cadeau"}
+                {/* Nom produit */}
+                <td className="border p-2 text-sm">
+                  <div className="font-semibold">
+                    {item.produit?.nom || "Carte Cadeau"}
+                  </div>
+
+                  {/* Statut */}
+                  <div className="text-xs mt-1">
+                    Statut:{" "}
+                    {item.statut === "En cours" && (
+                      <span className="inline-block px-2 py-1 rounded-full bg-orange-100 text-orange-800 font-semibold text-xs">
+                        {item.statut}
+                      </span>
+                    )}
+                    {item.statut === "Utilisée" && (
+                      <span className="inline-block px-2 py-1 rounded-full bg-green-100 text-green-800 font-semibold text-xs">
+                        {item.statut}
+                      </span>
+                    )}
+                    {item.statut !== "En cours" &&
+                      item.statut !== "Utilisée" && (
+                        <span className="inline-block px-2 py-1 rounded-full bg-gray-100 text-gray-700 font-semibold text-xs">
+                          {item.statut}
+                        </span>
+                      )}
+                  </div>
+
+                  {/* Numéro de carte et code de validation */}
+                  <div className="text-xs mt-1 text-gray-600 space-y-0.5">
+                    <div>Numéro: {item.numero_carte || "—"}</div>
+                    <div>Code: {item.code_validation || "—"}</div>
+                  </div>
                 </td>
-                <td className="border p-2">{item.quantite}</td>
-                <td className="border p-2">{formatPrice(item.prix_unitaire)} €</td>
+
+                {/* Destinataire */}
+                <td className="border p-2 text-sm">
+                  <div className="font-semibold">
+                    {item.destinataire_name || "—"}
+                  </div>
+                  <div className="text-gray-600 text-xs">
+                    {item.destinataire_email}
+                  </div>
+                </td>
+
+                {/* Quantité */}
+                <td className="border p-2 text-sm">{item.quantite}</td>
+
+                {/* Prix */}
+                <td className="border p-2 text-sm">
+                  {formatPrice(item.prix_unitaire)} €
+                </td>
+
+                {/* Lien PDF */}
+                <td className="border p-2 text-sm">
+                  {item.url_pdf_carte ? (
+                    <button
+                      onClick={() => window.open(item.url_pdf_carte, "_blank")}
+                      className="flex items-center gap-1 text-[#080808] hover:text-[#080808] underline text-sm"
+                    >
+                      <Eye size={16} />
+                      Voir
+                    </button>
+                  ) : (
+                    <span className="text-gray-400 text-sm">—</span>
+                  )}
+                </td>
               </tr>
             ))}
           </tbody>
         </table>
 
-        {/* Totaux */}
-        <div className="mt-4 border-t pt-2 space-y-1">
-
+        {/* TOTAUX */}
+        <div className="mt-4 border-t pt-2 space-y-1 text-sm">
           <div className="flex justify-between">
             <span>Sous-total (HT) :</span>
             <span>{formatPrice(order?.total_ht)} €</span>
@@ -69,20 +129,18 @@ export default function CommandesViewPage({ order }) {
           </div>
         </div>
 
+        {/* STATUT PAIEMENT */}
         <div className="mt-6">
           {order?.statut ? (
             <div className="inline-block px-3 py-1 rounded bg-green-100 text-green-700 font-semibold">
               ✔ Paiement reçu
             </div>
           ) : (
-            <div className=" flex gap-2">
-              <div className="inline-block px-3 py-2 rounded bg-red-100 text-red-700 font-semibold">
-                ✘ Non payée
-              </div>
+            <div className="inline-block px-3 py-1 rounded bg-red-100 text-red-700 font-semibold">
+              ✘ Non payé
             </div>
           )}
         </div>
-
       </div>
     </div>
   );

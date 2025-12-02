@@ -1,6 +1,8 @@
 import React, { useState } from "react";
 import { toast } from "react-toastify";
 import { sendMarques } from "src/actions/forms";
+import validator from "validator"; // Optionnel : pour validation URL avancée
+import ReCAPTCHA from "react-google-recaptcha";
 
 export default function MarquePartenairePage() {
   const [formData, setFormData] = useState({
@@ -21,23 +23,32 @@ export default function MarquePartenairePage() {
 
   const handleChange = (e) => {
     const { name, value, files } = e.target;
+    let processedValue = value;
+
+    // Normalisation automatique pour l'URL du site web
+    if (name === "siteweb" && value) {
+      // Si ça ne commence pas par http/https, ajoute https://
+      if (!value.match(/^https?:\/\//)) {
+        processedValue = `https://${
+          value.startsWith("www.") ? value.slice(4) : value
+        }`;
+      }
+    }
+
     setFormData((prev) => ({
       ...prev,
-      [name]: files ? files[0] : value,
+      [name]: files ? files[0] : processedValue,
     }));
   };
 
-   const validateForm = () => {
+  const validateForm = () => {
     const errors = [];
-
     if (!formData.nom.trim()) {
       errors.push("Le champ Nom est requis.");
     }
-
     if (!formData.marque.trim()) {
       errors.push("Le champ Nom de la marque est requis.");
     }
-
     if (!formData.email.trim()) {
       errors.push("Le champ Email est requis.");
     } else {
@@ -46,31 +57,36 @@ export default function MarquePartenairePage() {
         errors.push("L'adresse e-mail n'est pas valide.");
       }
     }
-
     if (formData.telephone && !/^\+?[0-9\s-]{6,15}$/.test(formData.telephone)) {
       errors.push("Le numéro de téléphone n'est pas valide.");
     }
-
-    if (formData.siteweb && !/^https?:\/\/[^\s]+$/.test(formData.siteweb)) {
-      errors.push("L'URL du site web doit être valide (commencer par http ou https).");
+    // Validation URL améliorée (optionnelle si vide)
+    if (formData.siteweb) {
+      // Option 1 : Avec validator (recommandé)
+      if (!validator.isURL(formData.siteweb)) {
+        errors.push(
+          "L'URL du site web doit être valide (ex: exemple.com ou https://exemple.com)."
+        );
+      }
+      // Option 2 : Sans validator, regex plus tolérante
+      // const urlRegex = /^(https?:\/\/)?([\da-z\.-]+)\.([a-z\.]{2,6})([\/\w \.-]*)*\/?$/;
+      // if (!urlRegex.test(formData.siteweb)) {
+      //   errors.push("L'URL du site web doit être valide (ex: exemple.com).");
+      // }
     }
-
-    if(!formData.message.trim()) {
-      errors.push("Votre email doit contient une message")
+    if (!formData.message.trim()) {
+      errors.push("Votre message doit contenir du texte."); // Correction grammaticale
     }
-
     return errors;
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
     const errors = validateForm();
     if (errors.length > 0) {
       errors.forEach((err) => toast.error(err));
       return;
     }
-
     try {
       const promise = sendMarques(formData);
       toast.promise(promise, {
@@ -78,14 +94,14 @@ export default function MarquePartenairePage() {
         success: "Envoi avec succès",
         error: "Échec lors de l'envoi",
       });
-
-      console.log(formData)
+      console.log(formData);
     } catch (error) {
       console.error("Erreur lors de l'envoi", error);
       toast.error("Une erreur inattendue est survenue.");
     }
   };
 
+  // Le reste du JSX reste inchangé...
   return (
     <>
       {/* Hero Section */}
@@ -104,38 +120,44 @@ export default function MarquePartenairePage() {
           </h1>
         </div>
       </div>
-
       {/* Pourquoi nous rejoindre */}
       <section className="max-w-6xl mx-auto px-4 py-16">
         <h2 className="text-5xl italic text-center mb-12 font-serif">
           Pourquoi nous rejoindre ?
         </h2>
-
         <div className="grid grid-cols-1 md:grid-cols-2 gap-10">
           <ul className="space-y-4 text-justify font-bricolage text-base list-disc">
             <li>
-              <strong>Visibilité Ciblée :</strong> Profitez d’une newsletter exclusive, de publications personnalisées sur nos réseaux sociaux et d’une mise en avant optimale sur notre site.
+              <strong>Visibilité Ciblée :</strong> Profitez d’une newsletter
+              exclusive, de publications personnalisées sur nos réseaux sociaux
+              et d’une mise en avant optimale sur notre site.
             </li>
             <li>
-              <strong>Accompagnement Digital et Direct :</strong> Participez à des visio-conférences régulières et aux réunions régionales pour échanger directement avec le réseau et renforcer vos collaborations.
+              <strong>Accompagnement Digital et Direct :</strong> Participez à
+              des visio-conférences régulières et aux réunions régionales pour
+              échanger directement avec le réseau et renforcer vos
+              collaborations.
             </li>
             <li>
-              <strong>Événements Stratégiques :</strong> Assurez votre présence lors des salons et événements majeurs pour accroître votre visibilité et multiplier les opportunités.
+              <strong>Événements Stratégiques :</strong> Assurez votre présence
+              lors des salons et événements majeurs pour accroître votre
+              visibilité et multiplier les opportunités.
             </li>
             <li>
               <strong>Bénéficiez d’un accompagnement personnalisé :</strong>{" "}
-              Assurez votre présence lors des salons et événements majeurs pour accroître votre visibilité et multiplier les opportunités.
+              Assurez votre présence lors des salons et événements majeurs pour
+              accroître votre visibilité et multiplier les opportunités.
             </li>
             <li>
               <strong>Soutien Marketing et Développement Commercial :</strong>{" "}
-              Bénéficiez d’outils marketing exclusifs et de partenariats stratégiques pour accélérer votre développement.
-              </li>
+              Bénéficiez d’outils marketing exclusifs et de partenariats
+              stratégiques pour accélérer votre développement.
+            </li>
             <li>
               <strong>Collection Prestige :</strong> Faites rayonner votre
               marque...
             </li>
           </ul>
-
           <div>
             <img
               lazyload="lazy"
@@ -146,7 +168,6 @@ export default function MarquePartenairePage() {
           </div>
         </div>
       </section>
-
       {/* Form */}
       <div className="bg-[#FBF6EC] p-8 w-screen relative left-[calc(-50vw+50%)]">
         <section className="max-w-6xl mx-auto px-4">
@@ -154,14 +175,17 @@ export default function MarquePartenairePage() {
             Rejoignez le Cercle des Fournisseurs de Spa & Prestige Collection
           </h2>
           <p className="font-roboto text-center mb-8">
-            Rejoignez un réseau sélectif en pleine expansion et donnez à votre marque l’opportunité de se propulser vers de nouveaux horizons.
+            Rejoignez un réseau sélectif en pleine expansion et donnez à votre
+            marque l’opportunité de se propulser vers de nouveaux horizons.
           </p>
           <p className="text-center italic text-2xl font-bold">
             Vous souhaitez devenir une marque partenaire ?
           </p>
-          <p className="font-tahoma text-base mt-4">Veuillez remplir ce formulaire, et nous vous recontacterons dans les plus brefs délais !</p>
+          <p className="font-tahoma text-base mt-4">
+            Veuillez remplir ce formulaire, et nous vous recontacterons dans les
+            plus brefs délais !
+          </p>
           <p className="font-tahoma text-base mb-4">* Champs obligatoires</p>
-
           <form
             onSubmit={handleSubmit}
             className="grid grid-cols-1 md:grid-cols-2 gap-4 font-roboto"
@@ -177,7 +201,6 @@ export default function MarquePartenairePage() {
                 required
               />
             </label>
-
             <label className="flex flex-col">
               Prénom
               <input
@@ -188,7 +211,6 @@ export default function MarquePartenairePage() {
                 className="border p-2 rounded w-full"
               />
             </label>
-
             <label className="flex flex-col">
               Nom de la marque*
               <input
@@ -200,7 +222,6 @@ export default function MarquePartenairePage() {
                 required
               />
             </label>
-
             <label className="flex flex-col">
               Pays
               <select
@@ -215,7 +236,6 @@ export default function MarquePartenairePage() {
                 <option>Autre</option>
               </select>
             </label>
-
             <label className="flex flex-col">
               Adresse complète
               <input
@@ -226,18 +246,17 @@ export default function MarquePartenairePage() {
                 className="border p-2 rounded w-full"
               />
             </label>
-
             <label className="flex flex-col">
               Site web
               <input
-                type="text"
+                type="url" // Changé en type="url" pour un meilleur clavier mobile
                 name="siteweb"
                 value={formData.siteweb}
                 onChange={handleChange}
                 className="border p-2 rounded w-full"
+                placeholder="ex: exemple.com (https:// sera ajouté automatiquement)"
               />
             </label>
-
             <label className="flex flex-col md:col-span-2">
               E-mail*
               <input
@@ -249,7 +268,6 @@ export default function MarquePartenairePage() {
                 required
               />
             </label>
-
             <label className="flex flex-col">
               Téléphone
               <input
@@ -260,7 +278,6 @@ export default function MarquePartenairePage() {
                 className="border p-2 rounded w-full"
               />
             </label>
-
             <label className="flex flex-col">
               Secteur d’activité
               <select
@@ -276,7 +293,6 @@ export default function MarquePartenairePage() {
                 <option value="Autre">Autre</option>
               </select>
             </label>
-
             <label className="flex flex-col">
               Rôle de la personne
               <input
@@ -287,7 +303,6 @@ export default function MarquePartenairePage() {
                 className="border p-2 rounded w-full"
               />
             </label>
-
             <label className="flex flex-col">
               Comment avez-vous connu Spa & Prestige Collection ?
               <input
@@ -298,11 +313,10 @@ export default function MarquePartenairePage() {
                 className="border p-2 rounded w-full"
               />
             </label>
-
             <label className="flex flex-col md:col-span-2">
               Message*
               <textarea
-              required
+                required
                 name="message"
                 value={formData.message}
                 onChange={handleChange}
@@ -310,7 +324,6 @@ export default function MarquePartenairePage() {
                 rows="4"
               />
             </label>
-
             <label className="flex flex-col md:col-span-2">
               Joindre un fichier
               <input
@@ -320,7 +333,6 @@ export default function MarquePartenairePage() {
                 className="border p-2 rounded w-full"
               />
             </label>
-
             <div className="md:col-span-2 flex justify-center">
               <button
                 type="submit"
@@ -329,6 +341,7 @@ export default function MarquePartenairePage() {
                 Envoyer
               </button>
             </div>
+            
           </form>
         </section>
       </div>

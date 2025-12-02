@@ -30,14 +30,14 @@ const NavLink = ({ link, isActive, toggleMenu, openMenus, isMobile = false, menu
     if (hasChildren) {
       toggleMenu(link.label);
     } else if (link.to && isMobile) {
-      push(link.to); // Navigate using router for mobile
-      toggleMenu(link.label); // Close menu on mobile
+      push(link.to); 
+      toggleMenu(link.label); 
     }
   };
 
   const handleSubmenuClick = () => {
     if (isMobile) {
-      toggleMenu(link.label); // Close submenu on mobile after selection
+      toggleMenu(link.label);
     }
   };
 

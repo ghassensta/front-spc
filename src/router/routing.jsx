@@ -36,6 +36,7 @@ const DashboardBonAchats = lazy(() => import("../pages/dashboard/bon-achats"));
 const Categories = lazy(() => import("../pages/categories"));
 const Actualites = lazy(() => import("../pages/actualites"));
 const ActualitesDetails = lazy(() => import("../pages/actualites/details"));
+const ActualitesByslug = lazy(() => import("../pages/actualites/list-by-slug"));
 const Who = lazy(() => import("../pages/who"));
 const CarteCadeau = lazy(() => import("../pages/carte-cadeau"));
 const Recompense = lazy(() => import("../pages/recompense"));
@@ -87,6 +88,7 @@ export const routes = [
       { element: <Categories />, path: "categories" },
       { element: <Actualites />, path: "actualites" },
       { element: <ActualitesDetails />, path: "actualites/:slug" },
+      { element: <ActualitesByslug />, path: "actualites/categories/:slug" },
       { element: <CollectionPrestige />, path: "collection-prestige" },
       { element: <Partenaire />, path: "devenir-partenaire" },
       { element: <Glossaire />, path: "glossaire" },

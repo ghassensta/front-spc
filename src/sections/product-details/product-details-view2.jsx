@@ -143,6 +143,7 @@ export default function ProductDetailsView({
     checkout.onAddToCart({
       id: product.id,
       name: product.nom,
+      slug:product.slug,
       price: product.prix,
       image: CONFIG.serverUrl + "/storage/" + product.image,
       description: product.description,
@@ -231,9 +232,9 @@ export default function ProductDetailsView({
           </div>
 
           <div className="bg-[beige] px-8 py-4 col-span-2 lg:col-span-1 rounded-2xl">
-            <span className="text-4xl font-bold mb-4 text-[#333]">
+            <Link to={paths.spa.details(etablissement?.slug)} className="text-4xl font-bold mb-4 text-[#333]">
               {etablissement?.nom}
-            </span>
+            </Link>
 
             <div className="relative">
               <ProductCarousel

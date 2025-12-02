@@ -95,8 +95,8 @@ export const endpoints = {
     signUp: "/api/auth/register",
     logout: "/api/auth/logout",
     edit: "/api/auth/profile",
-    forgetPassword: "/api/auth/forget",
-    resetPassword: "/api/auth/reset",
+    forgotPassword: "/api/auth/forgot-password",
+    resetPassword: "/api/auth/reset-password",
   },
   categories: {
     list: "/api/categories",
@@ -113,6 +113,7 @@ export const endpoints = {
     list: "/api/actualites",
     detail: (slug) => `/api/actualites/${slug}`,
     getLast: "/api/last-actualites",
+    getByCategoriesSlug: (slug) => `/api/actualites/categories/${slug}`,
   },
   product: {
     list: "/api/produit",
@@ -180,4 +181,12 @@ export const endpoints = {
   cartes: {
     get: "/api/cartes-cadeaux",
   },
+
+  emails: {
+    ContactMail:"/api/contact-mail",
+    solutionCe:"/api/solution-ce",
+    devenirpartenair:"/api/devenir-partenair",
+    collaboration:"/api/collaboration-marques"
+  },
+  
 };

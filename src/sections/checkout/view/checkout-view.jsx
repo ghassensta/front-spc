@@ -32,7 +32,6 @@ export default function CheckoutView() {
     }
   }, [user]);
 
-  // Update expediteur
   const handleExpediteurChange = (field, value) => {
     checkout.onCreateExpediteur({
       ...checkout.expediteur,
@@ -42,7 +41,6 @@ export default function CheckoutView() {
 
   const handleDelete = (productId) => checkout.onDeleteCart(productId);
 
-  // 🔥 Calculs corrects : item.price = TTC → on calcule le HT
   const subtotalHT = itemsFiltered.reduce(
     (acc, item) =>
       acc + (Number(item.price || 0) / (1 + TAX_RATE)) * item.quantity,
@@ -57,7 +55,7 @@ export default function CheckoutView() {
     0
   );
 
-  const grandTotal = subtotalHT + tax; // Total TTC
+  const grandTotal = subtotalHT + tax;
 
   const isCartEmpty = itemsFiltered.length === 0;
 
@@ -72,7 +70,7 @@ export default function CheckoutView() {
     }
     router.push(paths.payment);
   };
-
+  console.log("itemsFiltered", itemsFiltered);
   return (
     <div className="container mx-auto p-4 font-tahoma">
       <div className="flex flex-col lg:flex-row gap-6">
@@ -103,7 +101,11 @@ export default function CheckoutView() {
                           className="w-16 h-16 object-cover rounded"
                         />
                         <Link
-                          to={paths.spa.details(item.id)}
+                          to={
+                            item.slug
+                              ? paths.product(item.slug)
+                              : "/carte-cadeau"
+                          }
                           className="hover:underline"
                         >
                           {item.name}
@@ -203,7 +205,7 @@ export default function CheckoutView() {
 
               <button
                 onClick={gotCheckout}
-                className="inline-flex font-tahoma justify-center rounded-full items-center gap-2 uppercase font-normal tracking-widest transition-all duration-300 px-6 py-3 text-sm text-center bg-[#B6B499] hover:bg-black text-white"
+                className="inline-flex font-tahoma justify-center items-center rounded-full gap-2 uppercase font-normal tracking-widest transition-all duration-300 px-6 py-3 text-sm text-center bg-[#B6B499] hover:bg-black text-white"
               >
                 Commander
               </button>
