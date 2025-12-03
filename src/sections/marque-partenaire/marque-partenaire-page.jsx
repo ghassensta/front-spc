@@ -1,11 +1,10 @@
-import React, { useState } from "react";
+import React, { useState, useRef } from "react";
 import { toast } from "react-toastify";
 import { sendMarques } from "src/actions/forms";
 import validator from "validator"; // Optionnel : pour validation URL avancée
-import ReCAPTCHA from "react-google-recaptcha";
 
 export default function MarquePartenairePage() {
-  const [formData, setFormData] = useState({
+  const initialFormData = {
     marque: "",
     nom: "",
     prenom: "",
@@ -19,7 +18,10 @@ export default function MarquePartenairePage() {
     message: "",
     secteur: "Hôtel",
     fichier: null,
-  });
+  };
+
+  const [formData, setFormData] = useState(initialFormData);
+  const fileInputRef = useRef(null);
 
   const handleChange = (e) => {
     const { name, value, files } = e.target;
@@ -88,13 +90,15 @@ export default function MarquePartenairePage() {
       return;
     }
     try {
-      const promise = sendMarques(formData);
-      toast.promise(promise, {
+      await toast.promise(sendMarques(formData), {
         pending: "En cours d'envoi",
         success: "Envoi avec succès",
         error: "Échec lors de l'envoi",
       });
-      console.log(formData);
+      setFormData(initialFormData);
+      if (fileInputRef.current) {
+        fileInputRef.current.value = "";
+      }
     } catch (error) {
       console.error("Erreur lors de l'envoi", error);
       toast.error("Une erreur inattendue est survenue.");
@@ -331,6 +335,7 @@ export default function MarquePartenairePage() {
                 name="fichier"
                 onChange={handleChange}
                 className="border p-2 rounded w-full"
+                ref={fileInputRef}
               />
             </label>
             <div className="md:col-span-2 flex justify-center">

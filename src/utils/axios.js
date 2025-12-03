@@ -183,7 +183,7 @@ export const endpoints = {
   },
 
   emails: {
-    ContactMail:"/api/contact-mail",
+    ContactMail:"/api/contact",
     solutionCe:"/api/solution-ce",
     devenirpartenair:"/api/devenir-partenair",
     collaboration:"/api/collaboration-marques"

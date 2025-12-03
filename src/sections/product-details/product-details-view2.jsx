@@ -386,7 +386,7 @@ export default function ProductDetailsView({
                   onClick={toggleFav}
                   className="z-10  top-3 right-3 text-lg"
                 >
-                  {isFav ? <span className="flex items-center justify-center gap-2"><FaHeart className="text-red-500"/><span className="text-sm">Ajouter à votre whishliste</span> </span>: <span className="flex items-center justify-center gap-2"><FaRegHeart className="text-red-500"/><span className="text-sm">Retirer de votre whishliste</span></span>}
+                  {isFav ? <span className="flex items-center justify-center gap-2"><FaHeart className="text-red-500"/><span className="text-sm">Retirer de votre whishliste</span> </span>: <span className="flex items-center justify-center gap-2"><FaRegHeart className="text-red-500"/><span className="text-sm">Ajouter à votre whisliste</span></span>}
                 </button>
                     <div className="flex items-center gap-2 text-xs">
                       <span>Quantité :</span>

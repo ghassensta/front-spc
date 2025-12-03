@@ -32,12 +32,24 @@ export default function ContactPageView() {
       return;
     }
 
+    // Validation des champs obligatoires
+    if (!formData.name.trim() || !formData.email.trim() || !formData.message.trim()) {
+      toast.error("Veuillez remplir les champs obligatoires (Nom, Email, Message)");
+      return;
+    }
+
+    // Validation basique de l'email
+    if (!/\S+@\S+\.\S+/.test(formData.email)) {
+      toast.error("Format d'email invalide");
+      return;
+    }
+
     setIsSubmitting(true);
 
     try {
-      const response = await sendMessage({ ...formData, recaptcha :recaptchaValue });
+      const response = await sendMessage({ ...formData, recaptcha: recaptchaValue });
 
-      if (response.ok) {
+      if (response && response.success) {
         toast.success("Votre message a été envoyé avec succès !");
         setFormData({
           name: "",
@@ -52,15 +64,18 @@ export default function ContactPageView() {
           window.grecaptcha.reset();
         }
       } else {
-        throw new Error("Erreur lors de l'envoi du formulaire");
+        const errorMsg = response?.message || "Erreur lors de l'envoi du formulaire";
+        throw new Error(errorMsg);
       }
     } catch (error) {
       console.error("Error submitting form:", error);
-      toast.error("Une erreur est survenue lors de l'envoi du formulaire");
+      const errorMsg = error.message || (typeof error === 'string' ? error : "Une erreur est survenue lors de l'envoi du formulaire");
+      toast.error(errorMsg);
     } finally {
       setIsSubmitting(false);
     }
   };
+
   return (
     <div className="w-screen relative left-[calc(-50vw+50%)]">
       <div className="grid grid-cols-1 md:grid-cols-2">
@@ -121,6 +136,7 @@ export default function ContactPageView() {
                 onChange={handleChange}
                 placeholder="Nom*"
                 className="border p-2 w-full"
+                required
               />
               <input
                 type="text"
@@ -139,9 +155,10 @@ export default function ContactPageView() {
                 onChange={handleChange}
                 placeholder="Email*"
                 className="border p-2 w-full"
+                required
               />
               <input
-                type="text"
+                type="tel"
                 name="phone"
                 value={formData.phone}
                 onChange={handleChange}
@@ -164,10 +181,11 @@ export default function ContactPageView() {
               name="message"
               value={formData.message}
               onChange={handleChange}
+              required
             ></textarea>
             <div className="flex justify-center my-4">
               <ReCAPTCHA
-                sitekey="6LfNLx8sAAAAAH9CD3t7lfmwcPSm4ZV8znRr-mc9" 
+                sitekey="6LeIxAcTAAAAAJcZVRqyHh71UMIEGNQ_MXjiZKhI" // Placeholder test sitekey; replace with your actual sitekey
                 onChange={(value) => setRecaptchaValue(value)}
                 onExpired={() => setRecaptchaValue(null)}
                 onErrored={() => setRecaptchaValue(null)}
@@ -177,9 +195,9 @@ export default function ContactPageView() {
               <button
                 type="submit"
                 disabled={isSubmitting || !recaptchaValue}
-                className="bg-black text-white px-6 py-2 uppercase tracking-wider hover:bg-gray-800 max-w-max rounded-full"
+                className="bg-black text-white px-6 py-2 uppercase tracking-wider hover:bg-gray-800 max-w-max rounded-full disabled:opacity-50"
               >
-                Envoyer
+                {isSubmitting ? "Envoi en cours..." : "Envoyer"}
               </button>
               <Link
                 to={paths.main}
