@@ -42,7 +42,7 @@ export default function MenuPopover({ anchorRef, open, onClose }) {
       {open && (
         <motion.div
           ref={menuRef}
-          className="absolute z-50 bg-white shadow-xl border border-gray-200 w-80 ml-6 rounded-xl overflow-hidden"
+          className="absolute z-50 bg-white shadow-xl border border-gray-200 md:w-80 ml-6 rounded-xl overflow-hidden"
           initial={{ opacity: 0, y: -8 }}
           animate={{ opacity: 1, y: 4 }}
           exit={{ opacity: 0, y: -8 }}

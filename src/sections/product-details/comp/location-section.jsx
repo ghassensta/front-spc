@@ -3,13 +3,14 @@ import { motion } from "framer-motion";
 import { FaMapMarkerAlt, FaPhone, FaEnvelope, FaAngleRight } from "react-icons/fa";
 import { MdAccessTime } from "react-icons/md";
 import { Link } from "react-router-dom";
+import { getGoogleMapsLink } from "src/utils/getGoogleMapsLink";
 
 export default function LocationSection({ data }) {
   const iframeWrapperRef = useRef(null);
 
   console.log(data)
 
-  if(!!!data) return ;
+  if (!!!data) return;
 
   useEffect(() => {
     const iframe = iframeWrapperRef.current?.querySelector("iframe");
@@ -24,6 +25,8 @@ export default function LocationSection({ data }) {
       iframe.style.height = "100%";
     }
   }, [data?.iframeUrl]); // Re-run if iframe URL changes
+
+  const googleMapsLink = getGoogleMapsLink(data?.iframeUrl);
 
   return (
     <div className="flex flex-col gap-3 items-start py-2 max-w-6xl mx-auto">
@@ -49,7 +52,12 @@ export default function LocationSection({ data }) {
           )}
         </div>
       </motion.div>
-      <Link to={"https://maps.google.com"} className="flex items-center gap-2 text-base font-normal text-gray-800">
+      <Link
+        to={googleMapsLink || 'https://maps.google.com'}
+        target="_blank"
+        rel="noopener noreferrer"
+        className="flex items-center gap-2 text-base font-normal text-gray-800"
+      >
         <span>Comment s'y rendre ?</span>
         <FaAngleRight className="text-gray-600" />
       </Link>

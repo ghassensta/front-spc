@@ -12,6 +12,7 @@ import { Autoplay } from "swiper/modules";
 import Section2 from "./comp/section2";
 import { useGetHomePage } from "src/actions/homepage";
 import "swiper/css";
+import Serach from "src/components/header/serach";
 
 export default function HomePageView() {
   const { sections } = useGetHomePage();
@@ -43,8 +44,8 @@ export default function HomePageView() {
   }));
 
   return (
-    <>
-      <Header />
+    <div>
+      <Serach />
       <Section2 />
 
       {/* Sections dynamiques avec fond correct */}
@@ -232,6 +233,6 @@ export default function HomePageView() {
             </div>
           </div>
         )}
-    </>
+    </div>
   );
 }

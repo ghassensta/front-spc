@@ -9,45 +9,48 @@ export default function Tabs({ data = [] }) {
   const [tabs, setTabs] = useState([]);
   const [active, setActive] = useState(null);
 
-  console.log(data);
+  console.log("TYPES",data);
   useEffect(() => {
-    if (data.length > 0) {
-      // Crée les tabs dynamiquement à partir des type_soin
-      const dynamicTabs = data.map((type) => {
-        let content;
+  if (data.length > 0) {
+    // Sort data by order before creating tabs
+    const sortedData = [...data].sort((a, b) => a.order - b.order);
+    
+    // Crée les tabs dynamiquement à partir des type_soin
+    const dynamicTabs = sortedData.map((type) => {
+      let content;
 
-        switch (type.type_soin.name) {
-          case "Bien-être":
-            content = <ServicesTemplates data={type} />;
-            break;
-          case "Hôtellerie":
-            content = <TemplateRestaurant data={type} />;
-            break;
-          case "Restauration":
-            content = <TemplateRestaurant data={type} />;
-            break;
-          case "Services et équipements":
-            content = <ServicesTemplates data={type} />;
-            break;
-          case "Séjour":
-            content = <TemplateRestaurant data={type} />;
-            break;
-          default:
-            content = <p>Aucun template disponible</p>;
-        }
+      switch (type.type_soin.name) {
+        case "Bien-être":
+          content = <ServicesTemplates data={type} />;
+          break;
+        case "Hôtellerie":
+          content = <TemplateRestaurant data={type} />;
+          break;
+        case "Restauration":
+          content = <TemplateRestaurant data={type} />;
+          break;
+        case "Services et équipements":
+          content = <ServicesTemplates data={type} />;
+          break;
+        case "Séjour":
+          content = <TemplateRestaurant data={type} />;
+          break;
+        default:
+          content = <p>Aucun template disponible</p>;
+      }
 
-        return {
-          id: type.type_soin.id,
-          label: type.type_soin.name,
-          visible: !!type.title && !!type.description,
-          content,
-        };
-      });
+      return {
+        id: type.type_soin.id,
+        label: type.type_soin.name,
+        visible: !!type.title && !!type.description,
+        content,
+      };
+    });
 
-      setTabs(dynamicTabs);
-      setActive(dynamicTabs[0]); // Active par défaut le premier
-    }
-  }, [data]);
+    setTabs(dynamicTabs);
+    setActive(dynamicTabs[0]); // Active par défaut le premier
+  }
+}, [data]);
 
   if (!active) return null;
 

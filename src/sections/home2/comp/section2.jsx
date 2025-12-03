@@ -32,11 +32,11 @@ const Section3 = () => {
           )}
 
           {section.button_text && (
-            <a href={section.button_url}>
-              <button className="inline-flex font-tahoma rounded-lg items-center gap-2 uppercase font-normal tracking-widest transition-all duration-300 px-6 py-3 text-sm bg-black text-white mt-1 mb-2">
-                {section.button_text}
-              </button>
-            </a>
+            <div className="w-full flex md:block">
+              <a className="inline-flex font-tahoma rounded-lg items-center gap-2 uppercase font-normal tracking-widest transition-all duration-300 px-6 py-3 text-sm bg-black text-white mt-1 mb-2 mx-auto" href={section.button_url}>
+                  {section.button_text}
+              </a>
+            </div>
           )}
         </div>
 

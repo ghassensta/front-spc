@@ -48,7 +48,7 @@ export default function Header() {
 
   return (
     <>
-      <div className="relative w-screen left-[calc(-50vw+50%)] h-[600px] overflow-hidden">
+      <div className="relative w-screen left-[calc(-50vw+50%)] h-full overflow-hidden">
         {/* Background etablissements */}
         {etablissements.map((s, index) => (
           <div
@@ -108,8 +108,8 @@ export default function Header() {
     flex items-center gap-2 
     bg-[#020100C9] text-white
     font-tahoma font-light uppercase tracking-[2px]
-    w-max py-2 px-2
-    rounded-full text-[10px]
+    w-content py-2 px-2
+    rounded-full text-[10px] text-wrap overflow-wrap
   "
               >
                 <MapPin className="w-4 h-4 text-white" />
@@ -166,7 +166,7 @@ export default function Header() {
         )}
       </div>
 
-      <Serach />
+      
     </>
   );
 }

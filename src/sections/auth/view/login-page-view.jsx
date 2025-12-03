@@ -40,7 +40,7 @@ export default function LoginPageView() {
           <Logo />
         </Link>
       </div>
-      <h1 className="text-xl font-semibold text-center mb-6">Connexion</h1>
+      <h1 className="text-xl font-semibold text-center ">Connexion à votre compte</h1>
       <form onSubmit={handleSubmit} className="flex flex-col gap-4">
         <div>
           <label htmlFor="email" className="text-sm text-gray-600">

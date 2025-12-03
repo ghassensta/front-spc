@@ -276,7 +276,7 @@ export default function SpaDetailsView({
                     <>
                       <div className="h-60 flex flex-col justify-center items-center">
                         <p className="text-xl mb-2">Veuillez vous connecter pour mettre un avis</p>
-                        <Link to={paths.auth.root} className="w-max px-4 py-3 bg-black leading-4 text-white uppercase font-normal text-xs tracking-[3px] hover:bg-gray-800 transition font-tahoma flex items-center justify-center gap-2">
+                        <Link to={paths.auth.root} className="w-max rounded-full px-4 py-3 bg-black leading-4 text-white uppercase font-normal text-xs tracking-[3px] hover:bg-gray-800 transition font-tahoma flex items-center justify-center gap-2">
                           Connecter Vous
                         </Link>
                       </div>

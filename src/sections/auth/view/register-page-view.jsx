@@ -74,7 +74,7 @@ export default function RegisterPageView({ code }) {
           <Logo />
         </Link>
       </div>
-      <h1 className="text-xl font-semibold text-center mb-6">Inscription</h1>
+      <h1 className="text-xl font-semibold text-center mb-6">Créer un compte pour laisser un avis</h1>
       <form onSubmit={handleSubmit} className="flex flex-col gap-4">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           {/* Name */}
