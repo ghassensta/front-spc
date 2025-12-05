@@ -42,7 +42,7 @@ export default function CheckoutView() {
       ...checkout.expediteur,
       [field]: value,
     });
-  };
+  }; 
 
   const handleDelete = (productId) => checkout.onDeleteCart(productId);
 
