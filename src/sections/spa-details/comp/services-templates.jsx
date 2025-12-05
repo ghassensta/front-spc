@@ -42,9 +42,9 @@ export default function ServicesTemplates({ data = {} }) {
         </div>
 
         {/* Produits */}
-        <div className="bg-[#F6F5E9] px-6 grid-cols-1 md:grid-cols-3 gap-6 mt-6 rounded-xl">
-          {produits.length > 0 ? (
-            produits.map((prod) => (
+        {produits.length > 0 ? (
+          <div className="grid bg-[#F6F5E9] px-6 grid-cols-1 md:grid-cols-3 gap-6 mt-6 rounded-xl">
+            {produits.map((prod) => (
               <CardItem
                 key={prod.id}
                 id={prod.id}
@@ -65,13 +65,15 @@ export default function ServicesTemplates({ data = {} }) {
                 prix_au_lieu_de={prod.prix_au_lieu_de}
                 ordre={prod.ordre}
               />
-            ))
-          ) : (
+            ))}
+          </div>
+        ) : equipements.length === 0 ? (
+          <div className="bg-[#F6F5E9] px-6 mt-6 rounded-xl">
             <p className="text-gray-500 col-span-3 font-tahoma py-12">
               Aucun produit disponible.
             </p>
-          )}
-        </div>
+          </div>
+        ) : null}
       </div>
     </div>
   );

@@ -19,11 +19,11 @@ const MiniCard = ({ title, img }) => (
 const slides = [
   {
     title: "Nos valeurs",
-    img: "https://spa-prestige-collection.com/wp-content/uploads/2025/03/SPC-Essence-1975x1318-02.jpg",
+    img: "src/assets/images/SPC-Essence-1975x1318-02.jpg",
   },
   {
     title: "Notre vision",
-    img: "https://spa-prestige-collection.com/wp-content/uploads/2025/03/SPC-slider-1975x1318-03.jpg",
+    img: "src/assets/images/SPC-slider-1975x1318-03.jpg",
   },
   {
     title: "Nos soins",
@@ -31,11 +31,11 @@ const slides = [
   },
   {
     title: "Nos destinations",
-    img: "https://spa-prestige-collection.com/wp-content/uploads/2025/03/SPC-Essence-1975x1318-02.jpg",
+    img: "src/assets/images/SPC-Essence-1975x1318-02.jpg",
   },
   {
     title: "Bien-être",
-    img: "https://spa-prestige-collection.com/wp-content/uploads/2025/03/SPC-slider-1975x1318-03.jpg",
+    img: "src/assets/images/SPC-slider-1975x1318-03.jpg",
   },
 ];
 

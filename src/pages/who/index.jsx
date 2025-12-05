@@ -5,7 +5,7 @@ export default function Page() {
   const pageTitle = "Qui Sommes-Nous - Spa & Prestige Collection";
   const pageDescription = "Découvrez Spa & Prestige Collection, une sélection d'établissements d'exception offrant des expériences de bien-être authentiques et raffinées.";
   const pageUrl = "https://spa-prestige-collection.com/qui-sommes-nous";
-  const imageUrl = "https://spa-prestige-collection.com/wp-content/uploads/2025/02/SPA-images-1975x1318-Qui-Sommes-Nous-02.jpg";
+  const imageUrl = "src/assets/images/SPA-images-1975x1318-Qui-Sommes-Nous-02.jpg";
 
   const schemaData = {
     "@context": "https://schema.org",

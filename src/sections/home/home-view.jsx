@@ -61,7 +61,7 @@ export default function HomeView() {
       {/* CARTE CADEAUX SECTION  */}
       <div
         style={{
-          backgroundImage: `url("https://spa-prestige-collection.com/wp-content/uploads/2025/01/Piscine2.jpg")`,
+          backgroundImage: `url("src/assets/images/Piscine2.jpg")`,
         }}
         className="bg-primary w-screen relative bg-center left-[calc(-50vw+50%)] mt-16 min-h-32 overflow-hidden"
       >
@@ -308,17 +308,17 @@ export default function HomeView() {
             <Card
               to={paths.who}
               title="Qui sommes-nous ?"
-              image="https://spa-prestige-collection.com/wp-content/uploads/2025/03/SPC-Essence-1975x1318-02.jpg"
+              image="src/assets/images/SPC-Essence-1975x1318-02.jpg"
             />
             <Card
               to={paths.referentiel}
               title="Référentiel de candidature"
-              image="https://spa-prestige-collection.com/wp-content/uploads/2025/03/SPC-Essence-1975x1318-02.jpg"
+              image="src/assets/images/SPC-Essence-1975x1318-02.jpg"
             />
             <Card
               to={paths.collection}
               title="Collection Prestige"
-              image="https://spa-prestige-collection.com/wp-content/uploads/2025/03/SPC-Essence-1975x1318-02.jpg"
+              image="src/assets/images/SPC-Essence-1975x1318-02.jpg"
             />
           </div>
         </div>

@@ -6,7 +6,7 @@ const pageTitle = "Collection Prestige 2025 - Guide des Plus Beaux Spas de Franc
 const pageDescription =
   "Découvrez Collection Prestige, le guide annuel haut de gamme édité par Spa & Prestige Collection. Une sélection exclusive des meilleures adresses bien-être et spas d’exception en France. Édition limitée bientôt disponible.";
 const pageUrl = "https://spa-prestige-collection.com/collection-prestige";
-const imageUrl = "https://spa-prestige-collection.com/wp-content/uploads/2025/05/SPC-Catalogue-1975x1318-1.jpg";
+const imageUrl = "src/assets/images/SPC-Catalogue-1975x1318-1.jpg";
 
 export default function Page() {
   return (

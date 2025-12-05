@@ -38,7 +38,7 @@ export default function ServiceCard({
   ) {
     sections.push({
       key: "general",
-      title: "Informations Générale",
+      title: "Informations Générales",
       content: (
         <ul>
           {notEmpty(details?.avant_adresse) && (

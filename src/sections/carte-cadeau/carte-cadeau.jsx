@@ -41,7 +41,7 @@ export default function CarteCadeau() {
       id: selectedCard?.id || Date.now(),
       name: "Carte cadeau de " + amount + "€",
       price: amount,
-      image: selectedCard?.image || "https://spa-prestige-collection.com/wp-content/uploads/2025/05/SPC-carte-cadeau-montant-3.jpg",
+      image: selectedCard?.image || "src/assets/images/SPC-carte-cadeau-montant-3.jpg",
       destinataires: receiver,
       expediteur: checkout.expediteur,
       quantity: 1,
@@ -87,7 +87,7 @@ export default function CarteCadeau() {
             <div className="md:w-1/2">
               <img
                 loading="lazy"
-                src="https://spa-prestige-collection.com/wp-content/uploads/2025/05/SPC-carte-cadeau-montant-3.jpg"
+                src="src/assets/images/SPC-carte-cadeau-montant-3.jpg"
                 alt="Carte Cadeau Spa & Prestige"
                 className="w-full h-auto object-cover rounded"
               />
@@ -136,7 +136,7 @@ export default function CarteCadeau() {
         <div className="flex flex-col md:flex-row gap-6">
           <img
             loading="lazy"
-            src="https://spa-prestige-collection.com/wp-content/uploads/2025/05/SPC-Femme-cartes-square.jpg"
+            src="src/assets/images/SPC-Femme-cartes-square.jpg"
             alt=""
           />
           <div className="font-roboto space-y-2">
@@ -276,7 +276,10 @@ export default function CarteCadeau() {
       {/* Comment ça marche */}
       <div className="max-w-6xl mx-auto py-12 px-4">
         <h2 className="text-3xl font-bold text-center mb-10">
-          Comment ça marche
+          Comment ça marche ?
+        </h2>
+        <h2 className="text-3xl text-center mb-10">
+          Explorez notre site et sélectionnez l’établissement ou la prestation qui vous convient !
         </h2>
         <div className="grid grid-cols-1 md:grid-cols-4 gap-8 text-center ">
           <div>
@@ -327,7 +330,7 @@ export default function CarteCadeau() {
         {/* Bouton Coup de cœur */}
         <div className="flex justify-center mt-10">
           <Link to={paths.spa.list} className="bg-[#B6B498] text-white rounded-full py-2 px-6 hover:bg-black duration-300 font-roboto">
-            COUPS DE CŒUR
+            Accueil
           </Link>
         </div>
       </div>

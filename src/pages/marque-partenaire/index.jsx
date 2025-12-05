@@ -5,7 +5,7 @@ export default function Page() {
   const pageTitle = "Marques Partenaires - Spa & Prestige Collection";
   const pageDescription = "Rejoignez le cercle des fournisseurs et marques partenaires de Spa & Prestige Collection. Gagnez en visibilité et développez vos collaborations stratégiques.";
   const pageUrl = "https://spa-prestige-collection.com/marques-partenaires";
-  const imageUrl = "https://spa-prestige-collection.com/wp-content/uploads/2025/05/SPC-equipe-ce-1975x1318-1-768x513.jpg";
+  const imageUrl = "src/assets/images/SPC-equipe-ce-1975x1318-1-768x513.jpg";
 
   const schemaData = {
     "@context": "https://schema.org",

@@ -5,9 +5,9 @@ import { paths } from "src/router/paths";
 
 export default function WhoPageView() {
   const images = [
-    "https://spa-prestige-collection.com/wp-content/uploads/2025/02/SPA-images-1975x1318-Qui-Sommes-Nous-02.jpg",
-    "https://spa-prestige-collection.com/wp-content/uploads/2025/02/SPA-images-1975x1318-Qui-Sommes-Nous-01.jpg",
-    "https://spa-prestige-collection.com/wp-content/uploads/2025/02/SPA-images-1975x1318-Qui-Sommes-Nous-03.jpg", // Repeated for demo; replace with actual third image
+    "src/assets/images/SPA-images-1975x1318-Qui-Sommes-Nous-02.jpg",
+    "src/assets/images/SPA-images-1975x1318-Qui-Sommes-Nous-01.jpg",
+    "src/assets/images/SPA-images-1975x1318-Qui-Sommes-Nous-03.jpg", // Repeated for demo; replace with actual third image
   ];
 
   const [currentSlide, setCurrentSlide] = useState(0);
@@ -201,7 +201,7 @@ export default function WhoPageView() {
           <div className="flex items-center justify-center">
             <img
               lazyload="lazy"
-              src="https://spa-prestige-collection.com/wp-content/uploads/2025/05/SPC-carte-cadeau-montant-3.jpg"
+              src="src/assets/images/SPC-carte-cadeau-montant-3.jpg"
               alt="Carte Cadeau Spa & Prestige"
               className="max-w-full h-auto"
             />

@@ -63,8 +63,9 @@ const Serach = () => {
   const serviceSlug = selectedService ? generateSlug(selectedService) : "";
   const villeSlug = villeQuery ? generateSlug(villeQuery) : "";
 
-  const searchUrl =
-    serviceSlug && villeSlug ? `/recherche/${serviceSlug}/${villeSlug}` : null;
+  const searchUrl = hasSearch
+    ? `/recherche?service=${encodeURIComponent(serviceSlug)}&ville=${encodeURIComponent(villeSlug)}`
+    : null;
 
   return (
     <div className="relative w-screen left-[calc(-50vw+50%)] bg-white py-12">

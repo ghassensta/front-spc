@@ -18,7 +18,7 @@ export default function BlogDetails({ actualitie }) {
         className="w-screen relative left-[calc(-50vw+50%)] h-96 bg-black bg-center bg-cover bg-fixed overflow-hidden hidden md:block"
         style={{
           backgroundImage:
-            "url('https://spa-prestige-collection.com/wp-content/uploads/2025/03/SPC-Essence-1975x1318-02.jpg')",
+            "url('src/assets/images/SPC-Essence-1975x1318-02.jpg')",
         }}
       >
         <div className="absolute inset-0 bg-black bg-opacity-40 " />{" "}

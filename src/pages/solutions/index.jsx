@@ -5,7 +5,7 @@ export default function Page() {
   const pageTitle = "Solutions CSE & Collectivités - Spa & Prestige Collection";
   const pageDescription = "Offrez à vos salariés des expériences bien-être d'exception. Commandes groupées, cartes cadeaux personnalisées et tarifs préférentiels pour vos CSE et collectivités.";
   const pageUrl = "https://spa-prestige-collection.com/solutions-cse";
-  const imageUrl = "https://spa-prestige-collection.com/wp-content/uploads/2025/03/SPC-Essence-1975x1318-02.jpg";
+  const imageUrl = "src/assets/images/SPC-Essence-1975x1318-02.jpg";
 
   const schemaData = {
     "@context": "https://schema.org",

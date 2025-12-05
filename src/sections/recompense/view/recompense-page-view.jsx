@@ -10,7 +10,7 @@ export default function RecompensePageView() {
         className="w-screen relative left-[calc(-50vw+50%)] h-96 bg-black bg-center bg-cover bg-fixed overflow-hidden hidden md:block"
         style={{
           backgroundImage:
-            "url('https://spa-prestige-collection.com/wp-content/uploads/2025/03/SPC-Essence-1975x1318-02.jpg')",
+            "url('src/assets/images/SPC-Essence-1975x1318-02.jpg')",
         }}
       >
         <div className="absolute inset-0 bg-black bg-opacity-40" />{" "}
@@ -35,7 +35,7 @@ export default function RecompensePageView() {
       <div className="bg-[#FBF6EC] w-screen relative left-[calc(-50vw+50%)] mb-4">
         <div className="flex flex-col md:flex-row gap-4 max-w-6xl mx-auto px-4 py-6">
           <img lazyload="lazy"
-            src="https://spa-prestige-collection.com/wp-content/uploads/2025/02/SPC-images-1975x1318-Programme-Parrainage-01-1024x683.jpg"
+            src="src/assets/images/SPC-images-1975x1318-Programme-Parrainage-01-1024x683.jpg"
             alt="Récompenses Spa & Prestige Collection"
             className="md:w-1/2"
           />

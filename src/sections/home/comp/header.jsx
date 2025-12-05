@@ -6,10 +6,10 @@ import { CONFIG } from "src/config-global";
 export default function Header() {
   const slides = [
     {
-      image: "https://spa-prestige-collection.com/wp-content/uploads/2025/01/Piscine2.jpg",
+      image: "src/assets/images/Piscine2.jpg",
     },
     {
-      image: "https://spa-prestige-collection.com/wp-content/uploads/2025/03/SPC-Essence-1975x1318-02.jpg",
+      image: "src/assets/images/SPC-Essence-1975x1318-02.jpg",
     },
     {
       image: `${CONFIG.serverUrl}/storage/uploads/products/vsh20tkZbTBA0YuocmFb2TgIEmFaCamZibo0cmSY.jpg`,
