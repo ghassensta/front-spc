@@ -5,7 +5,7 @@ export default function Page() {
   const pageTitle = "Spa & Prestige Collection - Établissements de Bien-être d'Exception";
   const pageDescription = "Découvrez Spa & Prestige Collection, une sélection exclusive d'établissements spa, thermes et centres de bien-être. Cartes cadeaux, réductions CSE et programme de fidélité.";
   const pageUrl = "https://spa-prestige-collection.com";
-  const imageUrl = "https://spa-prestige-collection.com/wp-content/uploads/2025/02/SPA-images-1975x1318-Qui-Sommes-Nous-02.jpg";
+  const imageUrl = "src/assets/images/SPA-images-1975x1318-Qui-Sommes-Nous-02.jpg";
 
   // Schema pour la page d'accueil
   const schemaData = {

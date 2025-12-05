@@ -30,6 +30,7 @@ export default function CategoriesPageView({
   const typeOptions = types.map((t) => ({ value: t.id, label: t.name }));
   const villeOptions = villes.map((v) => ({ value: v.id, label: v.name }));
   const serviceOptions = services.map((s) => ({ value: s.id, label: s.name }));
+  console.log("services options",serviceOptions);
 
   const customStyles = {
     control: (provided) => ({
@@ -186,7 +187,7 @@ export default function CategoriesPageView({
           <Select
             instanceId="select-etablissement"
             styles={customStyles}
-            placeholder="Sélectionnez type d'établissement"
+            placeholder="Type d'établissement"
             options={typeOptions}
             value={
               typeOptions.find((opt) => opt.value === filters.etablissement) ||

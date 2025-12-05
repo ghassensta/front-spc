@@ -83,7 +83,7 @@ export default function ContactPageView() {
           className="flex flex-col justify-center px-10 py-16 relative text-white bg-center bg-cover"
           style={{
             backgroundImage:
-              "url('https://spa-prestige-collection.com/wp-content/uploads/2025/02/SPC-Massage-1975x1318-02.jpg')", // <-- change to your actual image path
+              "url('src/assets/images/SPC-Massage-1975x1318-02.jpg')", // <-- change to your actual image path
           }}
         >
           <div className="absolute inset-0 bg-black bg-opacity-40"></div>

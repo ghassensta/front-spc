@@ -5,7 +5,7 @@ export default function Page() {
   const pageTitle = "Devenir Partenaire - Spa & Prestige Collection";
   const pageDescription = "Rejoignez le réseau Spa & Prestige Collection. Boostez votre chiffre d'affaires, augmentez votre visibilité et bénéficiez d'un accompagnement personnalisé.";
   const pageUrl = "https://spa-prestige-collection.com/devenir-partenaire";
-  const imageUrl = "https://spa-prestige-collection.com/wp-content/uploads/2025/05/SPC-equipe-ce-1975x1318-1-768x513.jpg";
+  const imageUrl = "src/assets/images/SPC-equipe-ce-1975x1318-1-768x513.jpg";
 
   const schemaData = {
     "@context": "https://schema.org",

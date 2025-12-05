@@ -5,7 +5,7 @@ export default function Page() {
   const pageTitle = "Programme de Parrainage - Spa & Prestige Collection";
   const pageDescription = "Gagnez 5€ en bon d'achat en parrainant vos amis ! Programme de parrainage simple et généreux pour partager vos adresses bien-être préférées.";
   const pageUrl = "https://spa-prestige-collection.com/programme-parrainage";
-  const imageUrl = "https://spa-prestige-collection.com/wp-content/uploads/2025/05/SPC-coeur-1975x1318-01.jpg";
+  const imageUrl = "src/assets/images/SPC-coeur-1975x1318-01.jpg";
 
   const schemaData = {
     "@context": "https://schema.org",

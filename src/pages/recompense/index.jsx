@@ -5,7 +5,7 @@ export default function Page() {
   const pageTitle = "Programme de Fidélité - Spa & Prestige Collection";
   const pageDescription = "Rejoignez notre programme de fidélité et gagnez des points à chaque commande. Accumulez 1 point pour 1€ dépensé et échangez contre des bons d'achat.";
   const pageUrl = "https://spa-prestige-collection.com/programme-fidelite";
-  const imageUrl = "https://spa-prestige-collection.com/wp-content/uploads/2025/02/SPC-images-1975x1318-Programme-Parrainage-01-1024x683.jpg";
+  const imageUrl = "src/assets/images/SPC-images-1975x1318-Programme-Parrainage-01-1024x683.jpg";
 
   const schemaData = {
     "@context": "https://schema.org",

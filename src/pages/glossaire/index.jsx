@@ -5,7 +5,7 @@ export default function Page() {
   const pageTitle = "Glossaire - Spa & Prestige Collection";
   const pageDescription = "Découvrez notre glossaire complet des termes spa et bien-être. Aromathérapie, Ayurveda, Balnéothérapie, Cryothérapie et plus. Définitions détaillées.";
   const pageUrl = "https://spa-prestige-collection.com/glossaire";
-  const imageUrl = "https://spa-prestige-collection.com/wp-content/uploads/2025/02/SPA-images-1975x1318-Qui-Sommes-Nous-02.jpg";
+  const imageUrl = "src/assets/images/SPA-images-1975x1318-Qui-Sommes-Nous-02.jpg";
 
   // Glossary Terms pour Schema
   const glossaryTerms = [

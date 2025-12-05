@@ -113,7 +113,7 @@ export default function MarquePartenairePage() {
         className="w-screen relative left-[calc(-50vw+50%)] h-96 bg-black bg-center bg-cover bg-fixed overflow-hidden hidden md:block"
         style={{
           backgroundImage:
-            "url('https://spa-prestige-collection.com/wp-content/uploads/2025/03/SPC-Essence-1975x1318-02.jpg')",
+            "url('src/assets/images/SPC-Essence-1975x1318-02.jpg')",
         }}
       >
         <div className="absolute inset-0 bg-black bg-opacity-40" />
@@ -165,7 +165,7 @@ export default function MarquePartenairePage() {
           <div>
             <img
               lazyload="lazy"
-              src="https://spa-prestige-collection.com/wp-content/uploads/2025/05/SPC-equipe-ce-1975x1318-1-768x513.jpg"
+              src="src/assets/images/SPC-equipe-ce-1975x1318-1-768x513.jpg"
               alt="Piscine spa"
               className="w-full h-auto object-cover rounded-lg shadow-lg"
             />

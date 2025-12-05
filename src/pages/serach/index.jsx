@@ -31,7 +31,7 @@ export default function SearchPage() {
     : `Découvrez nos ${data?.categorie || catSlug} - établissements de prestige pour votre bien-être. ${data?.total || 0} options disponibles.`;
 
   const pageUrl = `https://spa-prestige-collection.com/search/${catSlug}/${villeSlug}`;
-  const imageUrl = "https://spa-prestige-collection.com/wp-content/uploads/2025/02/SPA-images-1975x1318-Qui-Sommes-Nous-02.jpg";
+  const imageUrl = "src/assets/images/SPA-images-1975x1318-Qui-Sommes-Nous-02.jpg";
 
   // Schema pour Search Results Page
   const searchResultsSchema = {

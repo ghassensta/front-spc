@@ -21,7 +21,7 @@ export default function ProgrammePageView() {
         className="w-screen relative left-[calc(-50vw+50%)] h-96 bg-black bg-center bg-cover bg-fixed overflow-hidden hidden md:block"
         style={{
           backgroundImage:
-            "url('https://spa-prestige-collection.com/wp-content/uploads/2025/05/SPC-coeur-1975x1318-01.jpg')",
+            "url('src/assets/images/SPC-coeur-1975x1318-01.jpg')",
         }}
       >
         <div className="absolute inset-0 bg-black bg-opacity-40" />{" "}

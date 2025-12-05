@@ -284,7 +284,7 @@ const getVisibleDots = (current, total, visibleCount = 5) => {
             <div />
             <Link to={paths.product(slug)} className="w-full">
               <button className="w-auto mx-auto mt-4 px-4 py-3 bg-black leading-4 rounded-2xl text-white uppercase font-normal text-xs tracking-[3px] hover:bg-gray-800 transition font-tahoma flex items-center justify-center gap-2">
-                Offrir
+                Commander
               </button>
             </Link>
           </>
@@ -350,7 +350,7 @@ const getVisibleDots = (current, total, visibleCount = 5) => {
         {slug && (
           <Link to={paths.product(slug)}>
             <button className="px-4 py-3 bg-black leading-4 rounded-2xl text-white uppercase font-normal text-xs tracking-[3px] hover:bg-gray-800 transition font-tahoma whitespace-nowrap">
-              Offrir
+              Commander
             </button>
           </Link>
         )}
