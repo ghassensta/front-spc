@@ -2,18 +2,18 @@ import React, { useEffect, useState } from "react";
 import { useCheckoutContext } from "../context/use-checkout-context";
 import { Link } from "react-router-dom";
 import { paths } from "../../../router/paths";
-import ButtonIcon from "../../../components/button-icon/button-icon";
 import { FaRegTrashAlt } from "react-icons/fa";
-import { CONFIG } from "src/config-global";
 import { useAuthContext } from "src/auth/hooks/use-auth-context";
 import { toast } from "react-toastify";
 import { useRouter } from "src/hooks";
+import { useValidateCoupon } from "src/actions/coupon";
 
 export default function CheckoutView() {
   const checkout = useCheckoutContext();
   const { user } = useAuthContext();
-
   const router = useRouter();
+  const validateCoupon = useValidateCoupon();
+
   const itemsFiltered =
     checkout.items?.filter((item) => item.quantity > 0) || [];
   const TAX_RATE = 0.2;
@@ -26,10 +26,15 @@ export default function CheckoutView() {
     checkout.expediteur?.message || ""
   );
 
+  // Coupon
+  const [couponCode, setCouponCode] = useState("");
+  const [couponApplied, setCouponApplied] = useState(false);
+  const [couponLoading, setCouponLoading] = useState(false);
+  const [appliedDiscount, setAppliedDiscount] = useState(0);
+  const [couponData, setCouponData] = useState(null);
+
   useEffect(() => {
-    if (user) {
-      setExpediteurFullName(user.name);
-    }
+    if (user) setExpediteurFullName(user.name);
   }, [user]);
 
   const handleExpediteurChange = (field, value) => {
@@ -56,21 +61,70 @@ export default function CheckoutView() {
   );
 
   const grandTotal = subtotalHT + tax;
-
   const isCartEmpty = itemsFiltered.length === 0;
 
   const gotCheckout = () => {
-    if (isCartEmpty) {
-      toast.error("Panier est vide");
-      return;
-    }
-    if (!expediteurFullName) {
-      toast.error("Remplir nom d'expéditeur");
-      return;
-    }
+    if (isCartEmpty) return toast.error("Panier est vide");
+    if (!expediteurFullName) return toast.error("Remplir nom d'expéditeur");
     router.push(paths.payment);
   };
-  console.log("itemsFiltered", itemsFiltered);
+
+  // Appliquer coupon
+  const handleApplyCoupon = async () => {
+    if (!couponCode) return;
+    setCouponLoading(true);
+    try {
+      const totalTTC = grandTotal;
+      const res = await validateCoupon(couponCode, totalTTC, itemsFiltered);
+      if (res.success) {
+        const { discount, coupon_id, type } = res;
+        const discountNumber = Number(discount) || 0;
+        setAppliedDiscount(discountNumber);
+        setCouponApplied(true);
+        setCouponData({
+          id: coupon_id,
+          code: couponCode,
+          type,
+          amount: discountNumber,
+        });
+        toast.success(res.message);
+      } else {
+        toast.error(res.message);
+      }
+    } catch (error) {
+      toast.error("Erreur lors de la validation du coupon");
+    } finally {
+      setCouponLoading(false);
+    }
+  };
+
+  const handleRemoveCoupon = () => {
+    setCouponCode("");
+    setCouponApplied(false);
+    setAppliedDiscount(0);
+    setCouponData(null);
+  };
+
+  const getDiscountPerItem = (item) => {
+    if (!couponApplied || !couponData) return "0.00";
+
+    const priceTotal = Number(item.price || 0) * Number(item.quantity || 0);
+
+    if (couponData.type === 2) {
+      // Pourcentage
+      return ((couponData.amount / 100) * priceTotal).toFixed(2);
+    } else {
+      // Montant fixe => répartir proportionnellement
+      const totalCart = itemsFiltered.reduce(
+        (acc, i) => acc + Number(i.price || 0) * Number(i.quantity || 0),
+        0
+      );
+      if (totalCart === 0) return "0.00";
+      const ratio = priceTotal / totalCart;
+      return (couponData.amount * ratio).toFixed(2);
+    }
+  };
+
   return (
     <div className="container mx-auto p-4 font-tahoma">
       <div className="flex flex-col lg:flex-row gap-6">
@@ -85,6 +139,7 @@ export default function CheckoutView() {
                 <th className="py-4 px-3">Prix TTC</th>
                 <th className="py-4 px-3">QTE</th>
                 <th className="py-4 px-3">Total TTC</th>
+                <th className="py-4 px-3">Discount</th>
                 <th className="py-4 px-3">Actions</th>
               </tr>
             </thead>
@@ -92,25 +147,21 @@ export default function CheckoutView() {
               {itemsFiltered.length > 0 ? (
                 itemsFiltered.map((item) => (
                   <tr key={item.id} className="border-b">
-                    <td className="py-3">
-                      <div className="flex gap-2 items-start">
-                        <img
-                          lazyload="lazy"
-                          src={item.image}
-                          alt={item.name}
-                          className="w-16 h-16 object-cover rounded"
-                        />
-                        <Link
-                          to={
-                            item.slug
-                              ? paths.product(item.slug)
-                              : "/carte-cadeau"
-                          }
-                          className="hover:underline"
-                        >
-                          {item.name}
-                        </Link>
-                      </div>
+                    <td className="py-3 flex gap-2 items-start">
+                      <img
+                        lazyload="lazy"
+                        src={item.image}
+                        alt={item.name}
+                        className="w-16 h-16 object-cover rounded"
+                      />
+                      <Link
+                        to={
+                          item.slug ? paths.product(item.slug) : "/carte-cadeau"
+                        }
+                        className="hover:underline"
+                      >
+                        {item.name}
+                      </Link>
                     </td>
                     <td className="py-3">
                       {item.destinataires?.length > 0 ? (
@@ -131,21 +182,22 @@ export default function CheckoutView() {
                       {Number(item.price || 0).toFixed(2)} €
                     </td>
                     <td className="py-3">
-                      <div className="flex items-center gap-2">
-                        <input
-                          type="number"
-                          readOnly
-                          value={item.quantity}
-                          className="w-12 text-center border border-gray-300 rounded-md"
-                        />
-                      </div>
+                      <input
+                        type="number"
+                        readOnly
+                        value={item.quantity}
+                        className="w-12 text-center border border-gray-300 rounded-md"
+                      />
                     </td>
                     <td className="py-3">
                       {(Number(item.price || 0) * item.quantity).toFixed(2)} €
                     </td>
+                    <td className="py-3 text-green-600">
+                      -{getDiscountPerItem(item)} €
+                    </td>
                     <td className="py-3">
                       <button
-                        onClick={() => handleDelete(item.id)}
+                        onClick={() => { handleDelete(item.id); handleRemoveCoupon(); }}
                         className="bg-red-500 hover:bg-red-700 text-white p-2 rounded-sm duration-150"
                       >
                         <FaRegTrashAlt />
@@ -155,7 +207,7 @@ export default function CheckoutView() {
                 ))
               ) : (
                 <tr>
-                  <td colSpan={6} className="py-6 text-center text-gray-400">
+                  <td colSpan={7} className="py-6 text-center text-gray-400">
                     Votre panier est vide.
                   </td>
                 </tr>
@@ -170,49 +222,86 @@ export default function CheckoutView() {
             <div className="text-base font-bold">
               Total TTC : {grandTotal.toFixed(2)} €
             </div>
+            {appliedDiscount > 0 && (
+              <div className="text-green-600 font-semibold">
+                Remise totale : -{appliedDiscount.toFixed(2)} €
+              </div>
+            )}
           </div>
         </div>
 
-        {/* Expéditeur */}
-        <div className="w-full lg:w-80 flex flex-col gap-6">
+        {/* Expéditeur & Coupon */}
+        <div className="w-full lg:w-80 flex flex-col gap-4 md:gap-6">
+          {/* Section Coupon */}
+          <div className="bg-white rounded-md p-4 md:p-6 shadow">
+            <h2 className="text-base font-semibold mb-3 md:mb-4">
+              Code Coupon
+            </h2>
+            <div className="flex flex-col sm:flex-row gap-2">
+              <input
+                type="text"
+                className="flex-1 border rounded-md p-2 w-full"
+                placeholder="Entrez votre code coupon"
+                value={couponCode}
+                onChange={(e) => setCouponCode(e.target.value.toUpperCase())}
+                disabled={couponApplied || couponLoading}
+              />
+              {couponApplied ? (
+                <button
+                  onClick={handleRemoveCoupon}
+                  className="w-full sm:w-auto px-4 py-2 bg-gray-600 text-white rounded-md hover:bg-gray-700 transition"
+                >
+                  Supprimer
+                </button>
+              ) : (
+                <button
+                  onClick={handleApplyCoupon}
+                  disabled={couponLoading || !couponCode}
+                  className="w-full sm:w-auto px-4 py-2 bg-black text-white rounded-md hover:bg-gray-900 disabled:opacity-50 disabled:cursor-not-allowed transition"
+                >
+                  {couponLoading ? "Validation..." : "Appliquer"}
+                </button>
+              )}
+            </div>
+          </div>
+
+          {/* Section Expéditeur */}
           {user ? (
-            <>
-              <div className="bg-white p-4 rounded-lg shadow-sm">
-                <h4 className="text-xl font-semibold mb-4">Expéditeur</h4>
-                <div className="space-y-4">
-                  <input
-                    type="text"
-                    className="w-full border border-gray-300 rounded-lg p-2"
-                    placeholder="Nom et prénom"
-                    value={expediteurFullName}
-                    onChange={(e) => {
-                      setExpediteurFullName(e.target.value);
-                      handleExpediteurChange("fullName", e.target.value);
-                    }}
-                  />
-                  <textarea
-                    rows={4}
-                    className="w-full border border-gray-300 rounded-lg p-2"
-                    placeholder="Message (optionnel)"
-                    value={expediteurMessage}
-                    onChange={(e) => {
-                      setExpediteurMessage(e.target.value);
-                      handleExpediteurChange("message", e.target.value);
-                    }}
-                  />
-                </div>
+            <div className="bg-white p-4 md:p-6 rounded-lg shadow-sm">
+              <h4 className="text-xl font-semibold mb-3 md:mb-4">Expéditeur</h4>
+              <div className="flex flex-col gap-3 md:gap-4">
+                <input
+                  type="text"
+                  className="w-full border border-gray-300 rounded-lg p-2"
+                  placeholder="Nom et prénom"
+                  value={expediteurFullName}
+                  onChange={(e) => {
+                    setExpediteurFullName(e.target.value);
+                    handleExpediteurChange("fullName", e.target.value);
+                  }}
+                />
+                <textarea
+                  rows={4}
+                  className="w-full border border-gray-300 rounded-lg p-2"
+                  placeholder="Message (optionnel)"
+                  value={expediteurMessage}
+                  onChange={(e) => {
+                    setExpediteurMessage(e.target.value);
+                    handleExpediteurChange("message", e.target.value);
+                  }}
+                />
               </div>
 
               <button
                 onClick={gotCheckout}
-                className="inline-flex font-tahoma justify-center items-center rounded-full gap-2 uppercase font-normal tracking-widest transition-all duration-300 px-6 py-3 text-sm text-center bg-[#B6B499] hover:bg-black text-white"
+                className="w-full mt-4 inline-flex justify-center items-center rounded-full gap-2 uppercase font-normal tracking-widest transition-all duration-300 px-6 py-3 text-sm bg-[#B6B499] hover:bg-black text-white"
               >
                 Commander
               </button>
-            </>
+            </div>
           ) : (
-            <div className="bg-white p-2 md:p-4 rounded-lg shadow-sm">
-              <p className="mb-3">Vous devez vous identifier pour commander</p>
+            <div className="bg-white p-4 rounded-lg shadow-sm flex flex-col gap-3">
+              <p>Vous devez vous identifier pour commander</p>
               <button
                 onClick={() =>
                   router.push(
@@ -221,7 +310,7 @@ export default function CheckoutView() {
                     )}`
                   )
                 }
-                className="inline-flex font-tahoma justify-center rounded-full items-center gap-2 uppercase font-normal tracking-widest transition-all duration-300 px-6 py-3 text-sm text-center bg-[#B6B499] hover:bg-black text-white"
+                className="w-full inline-flex justify-center items-center gap-2 uppercase font-normal tracking-widest transition-all duration-300 px-6 py-3 text-sm bg-[#B6B499] hover:bg-black text-white rounded-full"
               >
                 Se connecter
               </button>
