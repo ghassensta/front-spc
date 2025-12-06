@@ -10,6 +10,7 @@ import toast from "react-hot-toast";
 const TAX_RATE = 0.2;
 export default function PaymentView() {
   const checkout = useCheckoutContext();
+  console.log("checkout2", checkout);
   const navigate = useNavigate();
   const [isEditingAddress, setIsEditingAddress] = useState(false);
   const [loading, setLoading] = useState(false);

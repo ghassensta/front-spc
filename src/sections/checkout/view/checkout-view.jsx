@@ -18,7 +18,6 @@ export default function CheckoutView() {
     checkout.items?.filter((item) => item.quantity > 0) || [];
   const TAX_RATE = 0.2;
 
-  // Inputs
   const [expediteurFullName, setExpediteurFullName] = useState(
     checkout.expediteur?.fullName || ""
   );
@@ -26,7 +25,6 @@ export default function CheckoutView() {
     checkout.expediteur?.message || ""
   );
 
-  // Coupon
   const [couponCode, setCouponCode] = useState("");
   const [couponApplied, setCouponApplied] = useState(false);
   const [couponLoading, setCouponLoading] = useState(false);
@@ -38,13 +36,13 @@ export default function CheckoutView() {
   }, [user]);
 
   const handleExpediteurChange = (field, value) => {
-    checkout.onCreateExpediteur({
-      ...checkout.expediteur,
-      [field]: value,
-    });
-  }; 
+    checkout.onCreateExpediteur({ ...checkout.expediteur, [field]: value });
+  };
 
-  const handleDelete = (productId) => checkout.onDeleteCart(productId);
+  const handleDelete = (productId) => {
+    checkout.onDeleteCart(productId);
+    handleRemoveCoupon();
+  };
 
   const subtotalHT = itemsFiltered.reduce(
     (acc, item) =>
@@ -63,30 +61,76 @@ export default function CheckoutView() {
   const grandTotal = subtotalHT + tax;
   const isCartEmpty = itemsFiltered.length === 0;
 
-  const gotCheckout = () => {
-    if (isCartEmpty) return toast.error("Panier est vide");
-    if (!expediteurFullName) return toast.error("Remplir nom d'expéditeur");
-    router.push(paths.payment);
+  const getDiscountPerItem = (item) => {
+    if (!couponApplied || !couponData) return 0;
+
+    const priceTotal = Number(item.price || 0) * Number(item.quantity || 0);
+
+    if (couponData.type === 2) {
+      return ((couponData.amount / 100) * priceTotal).toFixed(2);
+    } else {
+      const totalCart = itemsFiltered.reduce(
+        (acc, i) => acc + Number(i.price || 0) * Number(i.quantity || 0),
+        0
+      );
+      if (totalCart === 0) return 0;
+      return (couponData.amount * (priceTotal / totalCart)).toFixed(2);
+    }
   };
 
-  // Appliquer coupon
   const handleApplyCoupon = async () => {
     if (!couponCode) return;
     setCouponLoading(true);
+
     try {
       const totalTTC = grandTotal;
       const res = await validateCoupon(couponCode, totalTTC, itemsFiltered);
+
       if (res.success) {
         const { discount, coupon_id, type } = res;
         const discountNumber = Number(discount) || 0;
+
         setAppliedDiscount(discountNumber);
         setCouponApplied(true);
-        setCouponData({
+
+        const coupon = {
           id: coupon_id,
           code: couponCode,
           type,
           amount: discountNumber,
+        };
+        setCouponData(coupon);
+
+        // ➤ Met à jour chaque item avec son discount
+        const updatedItems = itemsFiltered.map((item) => {
+          const priceTotal =
+            Number(item.price || 0) * Number(item.quantity || 0);
+
+          let itemDiscount = 0;
+          if (type === 2) {
+            // Pourcentage
+            itemDiscount = priceTotal * (discountNumber / 100);
+          } else {
+            // Montant fixe réparti proportionnellement
+            const totalCart = itemsFiltered.reduce(
+              (acc, i) => acc + Number(i.price || 0) * Number(i.quantity || 0),
+              0
+            );
+            if (totalCart > 0) {
+              itemDiscount = discountNumber * (priceTotal / totalCart);
+            }
+          }
+
+          return {
+            ...item,
+            discount: Number(itemDiscount.toFixed(2)),
+          };
         });
+
+        checkout.onUpdateField("items", updatedItems);
+        checkout.onApplyDiscount(discountNumber);
+        checkout.onApplyCouponId(coupon_id);
+
         toast.success(res.message);
       } else {
         toast.error(res.message);
@@ -103,26 +147,24 @@ export default function CheckoutView() {
     setCouponApplied(false);
     setAppliedDiscount(0);
     setCouponData(null);
+    checkout.onApplyDiscount(0);
+    checkout.onApplyCouponId(null);
   };
 
-  const getDiscountPerItem = (item) => {
-    if (!couponApplied || !couponData) return "0.00";
+  const gotCheckout = () => {
+    if (isCartEmpty) return toast.error("Panier est vide");
+    if (!expediteurFullName) return toast.error("Remplir nom d'expéditeur");
 
-    const priceTotal = Number(item.price || 0) * Number(item.quantity || 0);
+    const updatedItems = itemsFiltered.map((item) => ({
+      ...item,
+      discount: Number(getDiscountPerItem(item)),
+    }));
 
-    if (couponData.type === 2) {
-      // Pourcentage
-      return ((couponData.amount / 100) * priceTotal).toFixed(2);
-    } else {
-      // Montant fixe => répartir proportionnellement
-      const totalCart = itemsFiltered.reduce(
-        (acc, i) => acc + Number(i.price || 0) * Number(i.quantity || 0),
-        0
-      );
-      if (totalCart === 0) return "0.00";
-      const ratio = priceTotal / totalCart;
-      return (couponData.amount * ratio).toFixed(2);
-    }
+    checkout.onUpdateField("items", updatedItems);
+    checkout.onApplyCouponId(couponData?.id || null);
+    checkout.onApplyDiscount(appliedDiscount);
+
+    router.push(paths.payment);
   };
 
   return (
@@ -197,7 +239,7 @@ export default function CheckoutView() {
                     </td>
                     <td className="py-3">
                       <button
-                        onClick={() => { handleDelete(item.id); handleRemoveCoupon(); }}
+                        onClick={() => handleDelete(item.id)}
                         className="bg-red-500 hover:bg-red-700 text-white p-2 rounded-sm duration-150"
                       >
                         <FaRegTrashAlt />
@@ -230,9 +272,8 @@ export default function CheckoutView() {
           </div>
         </div>
 
-        {/* Expéditeur & Coupon */}
         <div className="w-full lg:w-80 flex flex-col gap-4 md:gap-6">
-          {/* Section Coupon */}
+          {/* Coupon */}
           <div className="bg-white rounded-md p-4 md:p-6 shadow">
             <h2 className="text-base font-semibold mb-3 md:mb-4">
               Code Coupon
@@ -265,7 +306,7 @@ export default function CheckoutView() {
             </div>
           </div>
 
-          {/* Section Expéditeur */}
+          {/* Expéditeur */}
           {user ? (
             <div className="bg-white p-4 md:p-6 rounded-lg shadow-sm">
               <h4 className="text-xl font-semibold mb-3 md:mb-4">Expéditeur</h4>
