@@ -13,7 +13,6 @@ export default function CheckoutView() {
   const { user } = useAuthContext();
   const router = useRouter();
   const validateCoupon = useValidateCoupon();
-
   const itemsFiltered =
     checkout.items?.filter((item) => item.quantity > 0) || [];
   const TAX_RATE = 0.2;
@@ -24,11 +23,9 @@ export default function CheckoutView() {
   const [expediteurMessage, setExpediteurMessage] = useState(
     checkout.expediteur?.message || ""
   );
-
   const [couponCode, setCouponCode] = useState("");
   const [couponApplied, setCouponApplied] = useState(false);
   const [couponLoading, setCouponLoading] = useState(false);
-  const [appliedDiscount, setAppliedDiscount] = useState(0);
   const [couponData, setCouponData] = useState(null);
 
   useEffect(() => {
@@ -41,94 +38,80 @@ export default function CheckoutView() {
 
   const handleDelete = (productId) => {
     checkout.onDeleteCart(productId);
-    handleRemoveCoupon();
-  };
-
-  const subtotalHT = itemsFiltered.reduce(
-    (acc, item) =>
-      acc + (Number(item.price || 0) / (1 + TAX_RATE)) * item.quantity,
-    0
-  );
-
-  const tax = itemsFiltered.reduce(
-    (acc, item) =>
-      acc +
-      (Number(item.price || 0) - Number(item.price || 0) / (1 + TAX_RATE)) *
-        item.quantity,
-    0
-  );
-
-  const grandTotal = subtotalHT + tax;
-  const isCartEmpty = itemsFiltered.length === 0;
-
-  const getDiscountPerItem = (item) => {
-    if (!couponApplied || !couponData) return 0;
-
-    const priceTotal = Number(item.price || 0) * Number(item.quantity || 0);
-
-    if (couponData.type === 2) {
-      return ((couponData.amount / 100) * priceTotal).toFixed(2);
-    } else {
-      const totalCart = itemsFiltered.reduce(
-        (acc, i) => acc + Number(i.price || 0) * Number(i.quantity || 0),
-        0
+    if (couponApplied && couponData) {
+      const remainingItems = itemsFiltered.filter(
+        (item) => item.id !== productId
       );
-      if (totalCart === 0) return 0;
-      return (couponData.amount * (priceTotal / totalCart)).toFixed(2);
+      if (remainingItems.length > 0) {
+        applyDiscountToItems(remainingItems, couponData.amount);
+      } else {
+        handleRemoveCoupon();
+      }
     }
   };
 
+  // Sous-total TTC AVANT réduction
+  const subtotalTTC = itemsFiltered.reduce(
+    (acc, item) => acc + Number(item.price || 0) * item.quantity,
+    0
+  );
+
+  // Total des réductions (coupon uniquement)
+  const totalDiscount =
+    couponApplied && couponData ? Number(couponData.amount || 0) : 0;
+
+  // Sous-total HT et taxe restent basés sur le TTC original
+  const subtotalHT = subtotalTTC / (1 + TAX_RATE);
+  const tax = subtotalTTC - subtotalHT;
+
+  // Grand total TTC APRÈS réduction
+  const grandTotal = subtotalTTC - totalDiscount;
+
+  const isCartEmpty = itemsFiltered.length === 0;
+
+  const applyDiscountToItems = (items, totalDiscountAmount) => {
+    const totalCart = items.reduce(
+      (acc, i) => acc + Number(i.price || 0) * Number(i.quantity || 0),
+      0
+    );
+
+    if (totalCart === 0) return items;
+
+    const updatedItems = items.map((item) => {
+      const itemTotal = Number(item.price || 0) * Number(item.quantity || 0);
+      const itemDiscount = totalDiscountAmount * (itemTotal / totalCart);
+      return {
+        ...item,
+        discount: itemDiscount,
+      };
+    });
+
+    checkout.onUpdateField("items", updatedItems);
+    return updatedItems;
+  };
+
+  // Gestion du coupon
   const handleApplyCoupon = async () => {
     if (!couponCode) return;
     setCouponLoading(true);
 
     try {
-      const totalTTC = grandTotal;
-      const res = await validateCoupon(couponCode, totalTTC, itemsFiltered);
+      const res = await validateCoupon(couponCode, subtotalTTC, itemsFiltered);
 
       if (res.success) {
         const { discount, coupon_id, type } = res;
         const discountNumber = Number(discount) || 0;
 
-        setAppliedDiscount(discountNumber);
-        setCouponApplied(true);
+        // Appliquer la réduction proportionnellement sur chaque item
+        applyDiscountToItems(itemsFiltered, discountNumber);
 
-        const coupon = {
+        setCouponApplied(true);
+        setCouponData({
           id: coupon_id,
           code: couponCode,
           type,
           amount: discountNumber,
-        };
-        setCouponData(coupon);
-
-        // ➤ Met à jour chaque item avec son discount
-        const updatedItems = itemsFiltered.map((item) => {
-          const priceTotal =
-            Number(item.price || 0) * Number(item.quantity || 0);
-
-          let itemDiscount = 0;
-          if (type === 2) {
-            // Pourcentage
-            itemDiscount = priceTotal * (discountNumber / 100);
-          } else {
-            // Montant fixe réparti proportionnellement
-            const totalCart = itemsFiltered.reduce(
-              (acc, i) => acc + Number(i.price || 0) * Number(i.quantity || 0),
-              0
-            );
-            if (totalCart > 0) {
-              itemDiscount = discountNumber * (priceTotal / totalCart);
-            }
-          }
-
-          return {
-            ...item,
-            discount: Number(itemDiscount.toFixed(2)),
-          };
         });
-
-        checkout.onUpdateField("items", updatedItems);
-        checkout.onApplyDiscount(discountNumber);
         checkout.onApplyCouponId(coupon_id);
 
         toast.success(res.message);
@@ -136,6 +119,7 @@ export default function CheckoutView() {
         toast.error(res.message);
       }
     } catch (error) {
+      console.error("Erreur coupon:", error);
       toast.error("Erreur lors de la validation du coupon");
     } finally {
       setCouponLoading(false);
@@ -145,9 +129,14 @@ export default function CheckoutView() {
   const handleRemoveCoupon = () => {
     setCouponCode("");
     setCouponApplied(false);
-    setAppliedDiscount(0);
     setCouponData(null);
-    checkout.onApplyDiscount(0);
+
+    // Réinitialiser les discounts de tous les items
+    const updatedItems = itemsFiltered.map((item) => ({
+      ...item,
+      discount: 0,
+    }));
+    checkout.onUpdateField("items", updatedItems);
     checkout.onApplyCouponId(null);
   };
 
@@ -155,14 +144,17 @@ export default function CheckoutView() {
     if (isCartEmpty) return toast.error("Panier est vide");
     if (!expediteurFullName) return toast.error("Remplir nom d'expéditeur");
 
-    const updatedItems = itemsFiltered.map((item) => ({
-      ...item,
-      discount: Number(getDiscountPerItem(item)),
-    }));
+    checkout.onCreateExpediteur({
+      ...checkout.expediteur,
+      fullName: expediteurFullName,
+      message: expediteurMessage,
+    });
 
-    checkout.onUpdateField("items", updatedItems);
-    checkout.onApplyCouponId(couponData?.id || null);
-    checkout.onApplyDiscount(appliedDiscount);
+    if (couponApplied && couponData) {
+      checkout.onApplyCouponId(couponData.id);
+    } else {
+      checkout.onApplyCouponId(null);
+    }
 
     router.push(paths.payment);
   };
@@ -181,72 +173,97 @@ export default function CheckoutView() {
                 <th className="py-4 px-3">Prix TTC</th>
                 <th className="py-4 px-3">QTE</th>
                 <th className="py-4 px-3">Total TTC</th>
-                <th className="py-4 px-3">Discount</th>
+                <th className="py-4 px-3">Réduction</th>
                 <th className="py-4 px-3">Actions</th>
               </tr>
             </thead>
             <tbody>
               {itemsFiltered.length > 0 ? (
-                itemsFiltered.map((item) => (
-                  <tr key={item.id} className="border-b">
-                    <td className="py-3 flex gap-2 items-start">
-                      <img
-                        lazyload="lazy"
-                        src={item.image}
-                        alt={item.name}
-                        className="w-16 h-16 object-cover rounded"
-                      />
-                      <Link
-                        to={
-                          item.slug ? paths.product(item.slug) : "/carte-cadeau"
-                        }
-                        className="hover:underline"
-                      >
-                        {item.name}
-                      </Link>
-                    </td>
-                    <td className="py-3">
-                      {item.destinataires?.length > 0 ? (
-                        <ul className="list-disc pl-4">
-                          {item.destinataires.map((dest, index) => (
-                            <li key={index}>
-                              {dest.fullName && dest.email
-                                ? `${dest.fullName} — ${dest.email}`
-                                : "Destinataire non défini"}
-                            </li>
-                          ))}
-                        </ul>
-                      ) : (
-                        "Aucun destinataire défini"
-                      )}
-                    </td>
-                    <td className="py-3">
-                      {Number(item.price || 0).toFixed(2)} €
-                    </td>
-                    <td className="py-3">
-                      <input
-                        type="number"
-                        readOnly
-                        value={item.quantity}
-                        className="w-12 text-center border border-gray-300 rounded-md"
-                      />
-                    </td>
-                    <td className="py-3">
-                      {(Number(item.price || 0) * item.quantity).toFixed(2)} €
-                    </td>
-                    <td className="py-3 text-green-600">
-                      -{getDiscountPerItem(item)} €
-                    </td>
-                    <td className="py-3">
-                      <button
-                        onClick={() => handleDelete(item.id)}
-                        className="bg-red-500 hover:bg-red-700 text-white p-2 rounded-sm duration-150"
-                      >
-                        <FaRegTrashAlt />
-                      </button>
-                    </td>
-                  </tr>
-                ))
+                itemsFiltered.map((item) => {
+                  const itemTotal = Number(item.price || 0) * item.quantity;
+                  const itemDiscount = Number(item.discount) || 0;
+                  const itemAfterDiscount = itemTotal - itemDiscount;
+
+                  return (
+                    <tr key={item.id} className="border-b">
+                      <td className="py-3 flex gap-2 items-start">
+                        <img
+                          loading="lazy"
+                          src={item.image}
+                          alt={item.name}
+                          className="w-16 h-16 object-cover rounded"
+                        />
+                        <Link
+                          to={
+                            item.slug
+                              ? paths.product(item.slug)
+                              : "/carte-cadeau"
+                          }
+                          className="hover:underline"
+                        >
+                          {item.name}
+                        </Link>
+                      </td>
+                      <td className="py-3">
+                        {item.destinataires?.length > 0 ? (
+                          <ul className="list-disc pl-4">
+                            {item.destinataires.map((dest, index) => (
+                              <li key={index}>
+                                {dest.fullName && dest.email
+                                  ? `${dest.fullName} — ${dest.email}`
+                                  : "Destinataire non défini"}
+                              </li>
+                            ))}
+                          </ul>
+                        ) : (
+                          "Aucun destinataire défini"
+                        )}
+                      </td>
+                      <td className="py-3">
+                        {Number(item.price || 0).toFixed(2)} €
+                      </td>
+                      <td className="py-3">
+                        <input
+                          type="number"
+                          readOnly
+                          value={item.quantity}
+                          className="w-12 text-center border border-gray-300 rounded-md"
+                        />
+                      </td>
+                      <td className="py-3">
+                        <div className="flex flex-col">
+                          <span
+                            className={
+                              itemDiscount > 0
+                                ? "line-through text-gray-400 text-xs"
+                                : ""
+                            }
+                          >
+                            {itemTotal.toFixed(2)} €
+                          </span>
+                          {itemDiscount > 0 && (
+                            <span className="text-green-600 font-semibold">
+                              {itemAfterDiscount.toFixed(2)} €
+                            </span>
+                          )}
+                        </div>
+                      </td>
+                      <td className="py-3 text-green-600 font-medium">
+                        {itemDiscount > 0
+                          ? `-${itemDiscount.toFixed(2)} €`
+                          : "-"}
+                      </td>
+                      <td className="py-3">
+                        <button
+                          onClick={() => handleDelete(item.id)}
+                          className="bg-red-500 hover:bg-red-700 text-white p-2 rounded-sm duration-150"
+                        >
+                          <FaRegTrashAlt />
+                        </button>
+                      </td>
+                    </tr>
+                  );
+                })
               ) : (
                 <tr>
                   <td colSpan={7} className="py-6 text-center text-gray-400">
@@ -261,14 +278,16 @@ export default function CheckoutView() {
           <div className="flex flex-col items-end mt-6 space-y-1 text-sm font-medium">
             <div>Sous-total HT : {subtotalHT.toFixed(2)} €</div>
             <div>Taxe 20 % : {tax.toFixed(2)} €</div>
-            <div className="text-base font-bold">
-              Total TTC : {grandTotal.toFixed(2)} €
-            </div>
-            {appliedDiscount > 0 && (
+
+            {totalDiscount > 0 && (
               <div className="text-green-600 font-semibold">
-                Remise totale : -{appliedDiscount.toFixed(2)} €
+                Réduction : -{totalDiscount.toFixed(2)} €
               </div>
             )}
+
+            <div className="text-base font-bold border-t pt-2 mt-2 w-48">
+              Total TTC : {grandTotal.toFixed(2)} €
+            </div>
           </div>
         </div>
 
@@ -304,9 +323,13 @@ export default function CheckoutView() {
                 </button>
               )}
             </div>
+            {couponApplied && couponData && (
+              <div className="mt-3 p-2 bg-green-50 border border-green-200 rounded text-sm text-green-700">
+                ✓ Code <strong>{couponData.code}</strong> appliqué
+              </div>
+            )}
           </div>
 
-          {/* Expéditeur */}
           {user ? (
             <div className="bg-white p-4 md:p-6 rounded-lg shadow-sm">
               <h4 className="text-xl font-semibold mb-3 md:mb-4">Expéditeur</h4>
@@ -332,7 +355,6 @@ export default function CheckoutView() {
                   }}
                 />
               </div>
-
               <button
                 onClick={gotCheckout}
                 className="w-full mt-4 inline-flex justify-center items-center rounded-full gap-2 uppercase font-normal tracking-widest transition-all duration-300 px-6 py-3 text-sm bg-[#B6B499] hover:bg-black text-white"
