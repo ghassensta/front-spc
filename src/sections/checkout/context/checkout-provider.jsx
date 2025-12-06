@@ -1,18 +1,17 @@
 import {
   useMemo,
-  Suspense,
   useEffect,
   useCallback,
   createContext,
-} from 'react';
-import { useRouter } from '../../../hooks';
-import { getStorage, useLocalStorage } from '../../../hooks/use-local-storage';
+  Suspense,
+} from "react";
+import { useRouter } from "../../../hooks";
+import { useLocalStorage } from "../../../hooks/use-local-storage";
 
 export const CheckoutContext = createContext(undefined);
 export const CheckoutConsumer = CheckoutContext.Consumer;
 
-const STORAGE_KEY = 'app-checkout';
-
+const STORAGE_KEY = "app-checkout";
 const initialState = {
   items: [],
   subtotal: 0,
@@ -22,10 +21,9 @@ const initialState = {
   billing: {},
   expediteur: {},
   totalItems: 0,
-  selectedCreditIds: [], // ←←← AJOUTÉ ICI
+  selectedCreditIds: [],
+  couponId: null,
 };
-
-// ----------------------------------------------------------------------
 
 export function CheckoutProvider({ children }) {
   return (
@@ -35,74 +33,66 @@ export function CheckoutProvider({ children }) {
   );
 }
 
-// ----------------------------------------------------------------------
-
 function Container({ children }) {
   const router = useRouter();
-
   const { state, setState, setField, canReset, resetState } = useLocalStorage(
     STORAGE_KEY,
     initialState
   );
-
-  // Mise à jour automatique des totaux quand les items/discount/shipping changent
+  // Recalcul des totaux
   const updateTotalField = useCallback(() => {
     const totalItems = state.items.reduce((acc, item) => acc + item.quantity, 0);
     const subtotal = state.items.reduce((acc, item) => acc + item.quantity * item.price, 0);
     const total = subtotal - state.discount + state.shipping;
-
-    setField('subtotal', subtotal);
-    setField('totalItems', totalItems);
-    setField('total', total);
+    setField("subtotal", subtotal);
+    setField("totalItems", totalItems);
+    setField("total", total);
   }, [state.items, state.discount, state.shipping, setField]);
 
-  // Au chargement initial, recalculer si données restaurées
   useEffect(() => {
     if (state.items.length > 0 || state.discount > 0 || state.shipping > 0) {
       updateTotalField();
     }
-  }, []); // Une seule fois au montage
+  }, []); // Au montage initial
 
-  // Recalculer à chaque changement critique
   useEffect(() => {
     updateTotalField();
   }, [state.items, state.discount, state.shipping, updateTotalField]);
 
-  // Ajouter au panier
+  // Cart actions
   const onAddToCart = useCallback(
     (newItem) => {
       const updatedItems = [...state.items];
       const existingIndex = updatedItems.findIndex((i) => i.id === newItem.id);
-
       if (existingIndex > -1) {
         const existing = updatedItems[existingIndex];
         const newDest = newItem.destinataires.filter(
-          (d) =>
-            !existing.destinataires.some(
-              (e) => e.email.toLowerCase() === d.email.toLowerCase()
-            )
+          (d) => !existing.destinataires.some((e) => e.email.toLowerCase() === d.email.toLowerCase())
         );
         updatedItems[existingIndex] = {
           ...existing,
           destinataires: [...existing.destinataires, ...newDest],
           quantity: existing.destinataires.length + newDest.length,
+          discount: 0, // Reset discount on update
         };
       } else {
         updatedItems.push({
           ...newItem,
           quantity: newItem.destinataires.length,
+          discount: 0, // Initialize discount
         });
       }
-
-      setField('items', updatedItems);
+      setField("items", updatedItems);
     },
     [state.items, setField]
   );
 
+  
+
   const onDeleteCart = useCallback(
     (itemId) => {
       setField(
-        'items',
+        "items",
         state.items.filter((item) => item.id !== itemId)
       );
     },
@@ -110,39 +100,40 @@ function Container({ children }) {
   );
 
   const onCreateExpediteur = useCallback(
-    (expediteur) => setField('expediteur', expediteur),
+    (expediteur) => setField("expediteur", expediteur),
     [setField]
   );
 
   const onCreateBilling = useCallback(
-    (billing) => setField('billing', billing),
+    (billing) => setField("billing", billing),
     [setField]
   );
 
   const onApplyDiscount = useCallback(
-    (discount) => setField('discount', discount),
+    (discount) => setField("discount", discount),
     [setField]
   );
 
   const onApplyShipping = useCallback(
-    (shipping) => setField('shipping', shipping),
+    (shipping) => setField("shipping", shipping),
     [setField]
   );
 
-  // ←←← NOUVELLE FONCTION POUR LES CRÉDITS
+  const onApplyCouponId = useCallback(
+    (couponId) => setField("couponId", couponId),
+    [setField]
+  );
+
   const onSelectCredit = useCallback(
     (creditId) => {
-      setField('selectedCreditIds', (prev = []) => {
-        if (prev.includes(creditId)) {
-          return prev.filter((id) => id !== creditId);
-        }
+      setField("selectedCreditIds", (prev = []) => {
+        if (prev.includes(creditId)) return prev.filter((id) => id !== creditId);
         return [...prev, creditId];
       });
     },
     [setField]
   );
 
-  // Reset complet
   const onReset = useCallback(() => {
     resetState();
     localStorage.removeItem(STORAGE_KEY);
@@ -151,7 +142,7 @@ function Container({ children }) {
   const memoizedValue = useMemo(
     () => ({
       ...state,
-      selectedCreditIds: state.selectedCreditIds || [], // ←←← Toujours un tableau
+      selectedCreditIds: state.selectedCreditIds || [],
       canReset,
       onReset,
       onUpdate: setState,
@@ -162,8 +153,9 @@ function Container({ children }) {
       onCreateExpediteur,
       onApplyDiscount,
       onApplyShipping,
-      onSelectCredit,        // ←←← Exposée !
-      setSelectedCreditIds: (ids) => setField('selectedCreditIds', ids), // ←←← Setter direct aussi
+      onSelectCredit,
+      setSelectedCreditIds: (ids) => setField("selectedCreditIds", ids),
+      onApplyCouponId,
     }),
     [
       state,
@@ -177,12 +169,9 @@ function Container({ children }) {
       onApplyDiscount,
       onApplyShipping,
       onReset,
+      onApplyCouponId,
     ]
   );
 
-  return (
-    <CheckoutContext.Provider value={memoizedValue}>
-      {children}
-    </CheckoutContext.Provider>
-  );
+  return <CheckoutContext.Provider value={memoizedValue}>{children}</CheckoutContext.Provider>;
 }

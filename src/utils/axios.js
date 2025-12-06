@@ -188,5 +188,9 @@ export const endpoints = {
     devenirpartenair:"/api/devenir-partenair",
     collaboration:"/api/collaboration-marques"
   },
+
+  coupons:{
+    validate:"/api/code-coupon/validate"
+  }
   
 };
