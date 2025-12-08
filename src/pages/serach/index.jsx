@@ -5,6 +5,7 @@ import { useSearchProduits } from "src/actions/serach";
 import SearchPageView from "src/sections/serach/view/view-serach";
 import { paths } from "src/router/paths";
 import { useRouter } from "src/hooks";
+import theImage from "src/assets/images/SPA-images-1975x1318-Qui-Sommes-Nous-02.jpg";
 
 export default function SearchPage() {
   const { catSlug, villeSlug } = useParams();
@@ -31,7 +32,7 @@ export default function SearchPage() {
     : `Découvrez nos ${data?.categorie || catSlug} - établissements de prestige pour votre bien-être. ${data?.total || 0} options disponibles.`;
 
   const pageUrl = `https://spa-prestige-collection.com/search/${catSlug}/${villeSlug}`;
-  const imageUrl = "src/assets/images/SPA-images-1975x1318-Qui-Sommes-Nous-02.jpg";
+  const imageUrl = theImage;
 
   // Schema pour Search Results Page
   const searchResultsSchema = {

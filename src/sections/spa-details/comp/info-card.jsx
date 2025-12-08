@@ -1,4 +1,5 @@
 import React from 'react'
+import theImage from 'src/assets/images/SPC-Eva-Maison-Blanche-portrait.jpg';
 
 export default function InfoCard() {
   return (
@@ -21,7 +22,7 @@ export default function InfoCard() {
         <div className="bg-primary text-secondary relative rounded-xl">
             <span className='absolute bg-secondary px-3 rounded text-primary left-2 -top-3'>Marque(s) Partenaire(s)</span>
             <div className="p-8 flex justify-center items-center gap-4">
-                <img lazyload="lazy" src="src/assets/images/SPC-Eva-Maison-Blanche-portrait.jpg" alt="" className="rounded-full w-20 h-20" />
+                <img lazyload="lazy" src={theImage} alt="" className="rounded-full w-20 h-20" />
                 <div>
                     <h6 className='text-2xl font-bold'>David Grand</h6>
                     <span>Spa Manager et fondateur du Spa.</span>

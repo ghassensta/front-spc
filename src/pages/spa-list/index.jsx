@@ -5,6 +5,7 @@ import {
 } from "src/actions/etablissements";
 import CategoriesPageView from "src/sections/spa-liste/views";
 import { Helmet } from "react-helmet";
+import theImage from "src/assets/images/SPA-images-1975x1318-Qui-Sommes-Nous-02.jpg";
 
 export default function Page() {
   const { etablissements, etablissementLoading } = useGetAllEtablissements();
@@ -14,7 +15,7 @@ export default function Page() {
     const pageTitle = "Nos Établissements - Spa & Prestige Collection";
   const pageDescription = "Découvrez notre sélection exclusive d'établissements spa de prestige. Spas urbains, thermes, hôtels de charme et refuges insolites à travers la France et l'Europe.";
   const pageUrl = "https://spa-prestige-collection.com/etablissements";
-  const imageUrl = "src/assets/images/SPA-images-1975x1318-Qui-Sommes-Nous-02.jpg";
+  const imageUrl = theImage;
 
   // Données structurées pour CollectionPage
   const schemaData = {

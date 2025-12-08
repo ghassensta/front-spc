@@ -14,6 +14,8 @@ import SpaCard from "src/components/spa-card/spa-card";
 import { Link } from "react-router-dom";
 import { paths } from "src/router/paths";
 import { TranslatedText } from "src/components/translated-text/translated-text";
+import theImage from "src/assets/images/Piscine2.jpg";
+import theImageHeader from "src/assets/images/SPC-Essence-1975x1318-02.jpg";
 
 export default function HomeView() {
   const { etablissements } = useGetEtablissements();
@@ -61,7 +63,7 @@ export default function HomeView() {
       {/* CARTE CADEAUX SECTION  */}
       <div
         style={{
-          backgroundImage: `url("src/assets/images/Piscine2.jpg")`,
+          backgroundImage: `url(${theImage})`,
         }}
         className="bg-primary w-screen relative bg-center left-[calc(-50vw+50%)] mt-16 min-h-32 overflow-hidden"
       >
@@ -308,17 +310,17 @@ export default function HomeView() {
             <Card
               to={paths.who}
               title="Qui sommes-nous ?"
-              image="src/assets/images/SPC-Essence-1975x1318-02.jpg"
+              image={theImageHeader}
             />
             <Card
               to={paths.referentiel}
               title="Référentiel de candidature"
-              image="src/assets/images/SPC-Essence-1975x1318-02.jpg"
+              image={theImageHeader}
             />
             <Card
               to={paths.collection}
               title="Collection Prestige"
-              image="src/assets/images/SPC-Essence-1975x1318-02.jpg"
+              image={theImageHeader}
             />
           </div>
         </div>

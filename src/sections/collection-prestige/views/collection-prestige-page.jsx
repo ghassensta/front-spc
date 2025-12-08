@@ -1,6 +1,8 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import { paths } from "src/router/paths";
+import theImage from "src/assets/images/SPC-Essence-1975x1318-02.jpg";
+import theImage2 from "src/assets/images/SPC-Catalogue-1975x1318-1-1024x683.jpg";
 
 export default function CollectionPrestigePage() {
   return (
@@ -9,8 +11,7 @@ export default function CollectionPrestigePage() {
       <div
         className="w-screen relative left-[calc(-50vw+50%)] h-96 bg-black bg-center bg-cover bg-fixed overflow-hidden hidden md:block"
         style={{
-          backgroundImage:
-            "url('src/assets/images/SPC-Essence-1975x1318-02.jpg')",
+          backgroundImage: `url(${theImage})`,
         }}
       >
         <div className="absolute inset-0 bg-black bg-opacity-40" />
@@ -117,7 +118,7 @@ export default function CollectionPrestigePage() {
             </div>
           </div>
           <img lazyload="lazy"
-            src="src/assets/images/SPC-Catalogue-1975x1318-1-1024x683.jpg"
+            src={theImage2}
             alt="Spa & Prestige Collection"
             className="w-full mb-6 rounded shadow"
           />

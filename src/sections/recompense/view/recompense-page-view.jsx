@@ -2,6 +2,7 @@ import React from "react";
 import { FaExchangeAlt, FaShoppingCart, FaTrophy } from "react-icons/fa";
 import { MdOutlineShoppingCart } from "react-icons/md";
 import { paths } from "src/router/paths";
+import theImage from "src/assets/images/SPC-images-1975x1318-Programme-Parrainage-01-1024x683.jpg";
 
 export default function RecompensePageView() {
   return (
@@ -10,7 +11,7 @@ export default function RecompensePageView() {
         className="w-screen relative left-[calc(-50vw+50%)] h-96 bg-black bg-center bg-cover bg-fixed overflow-hidden hidden md:block"
         style={{
           backgroundImage:
-            "url('src/assets/images/SPC-Essence-1975x1318-02.jpg')",
+            `url(${theImage})`,
         }}
       >
         <div className="absolute inset-0 bg-black bg-opacity-40" />{" "}
@@ -35,7 +36,7 @@ export default function RecompensePageView() {
       <div className="bg-[#FBF6EC] w-screen relative left-[calc(-50vw+50%)] mb-4">
         <div className="flex flex-col md:flex-row gap-4 max-w-6xl mx-auto px-4 py-6">
           <img lazyload="lazy"
-            src="src/assets/images/SPC-images-1975x1318-Programme-Parrainage-01-1024x683.jpg"
+            src={theImage}
             alt="Récompenses Spa & Prestige Collection"
             className="md:w-1/2"
           />

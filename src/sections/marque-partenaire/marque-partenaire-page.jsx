@@ -2,6 +2,8 @@ import React, { useState, useRef } from "react";
 import { toast } from "react-toastify";
 import { sendMarques } from "src/actions/forms";
 import validator from "validator"; // Optionnel : pour validation URL avancée
+import theImage from "src/assets/images/SPC-Essence-1975x1318-02.jpg";
+import theImage2 from "src/assets/images/SPC-equipe-ce-1975x1318-1-768x513.jpg";
 
 export default function MarquePartenairePage() {
   const initialFormData = {
@@ -113,7 +115,7 @@ export default function MarquePartenairePage() {
         className="w-screen relative left-[calc(-50vw+50%)] h-96 bg-black bg-center bg-cover bg-fixed overflow-hidden hidden md:block"
         style={{
           backgroundImage:
-            "url('src/assets/images/SPC-Essence-1975x1318-02.jpg')",
+            `url(${theImage})`,
         }}
       >
         <div className="absolute inset-0 bg-black bg-opacity-40" />
@@ -165,7 +167,9 @@ export default function MarquePartenairePage() {
           <div>
             <img
               lazyload="lazy"
-              src="src/assets/images/SPC-equipe-ce-1975x1318-1-768x513.jpg"
+              src={theImage2}
+
+              
               alt="Piscine spa"
               className="w-full h-auto object-cover rounded-lg shadow-lg"
             />

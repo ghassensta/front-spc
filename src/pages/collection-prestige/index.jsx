@@ -1,12 +1,13 @@
 import React from "react";
 import { Helmet } from "react-helmet"; 
 import CollectionPrestigePage from "src/sections/collection-prestige/views/collection-prestige-page";
+import theImage from "src/assets/images/SPC-Catalogue-1975x1318-1.jpg";
 
 const pageTitle = "Collection Prestige 2025 - Guide des Plus Beaux Spas de France";
 const pageDescription =
   "Découvrez Collection Prestige, le guide annuel haut de gamme édité par Spa & Prestige Collection. Une sélection exclusive des meilleures adresses bien-être et spas d’exception en France. Édition limitée bientôt disponible.";
 const pageUrl = "https://spa-prestige-collection.com/collection-prestige";
-const imageUrl = "src/assets/images/SPC-Catalogue-1975x1318-1.jpg";
+const imageUrl = theImage;
 
 export default function Page() {
   return (

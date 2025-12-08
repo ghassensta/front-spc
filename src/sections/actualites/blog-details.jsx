@@ -9,6 +9,7 @@ import { FaXTwitter } from "react-icons/fa6";
 import { Link } from "react-router-dom";
 import { CONFIG } from "src/config-global";
 import { paths } from "src/router/paths";
+import theImage from "src/assets/images/SPC-Essence-1975x1318-02.jpg";
 
 export default function BlogDetails({ actualitie }) {
   console.log(actualitie);
@@ -18,7 +19,7 @@ export default function BlogDetails({ actualitie }) {
         className="w-screen relative left-[calc(-50vw+50%)] h-96 bg-black bg-center bg-cover bg-fixed overflow-hidden hidden md:block"
         style={{
           backgroundImage:
-            "url('src/assets/images/SPC-Essence-1975x1318-02.jpg')",
+            `url(${theImage})`,
         }}
       >
         <div className="absolute inset-0 bg-black bg-opacity-40 " />{" "}

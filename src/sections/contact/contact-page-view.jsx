@@ -6,6 +6,7 @@ import { toast } from "react-toastify";
 import { Link } from "react-router-dom";
 import { paths } from "src/router/paths";
 import { sendMessage } from "src/actions/forms";
+import theImage from "src/assets/images/SPC-Massage-1975x1318-02.jpg";
 
 export default function ContactPageView() {
   const [formData, setFormData] = useState({
@@ -82,8 +83,7 @@ export default function ContactPageView() {
         <div
           className="flex flex-col justify-center px-10 py-16 relative text-white bg-center bg-cover"
           style={{
-            backgroundImage:
-              "url('src/assets/images/SPC-Massage-1975x1318-02.jpg')", // <-- change to your actual image path
+            backgroundImage: `url(${theImage})`,
           }}
         >
           <div className="absolute inset-0 bg-black bg-opacity-40"></div>
