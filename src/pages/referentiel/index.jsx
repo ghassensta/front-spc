@@ -1,6 +1,6 @@
 import ReferentielViewPage from "src/sections/referentiel/referentiel-view-page";
-import { Helmet } from 'react-helmet'
-import theImage from "src/assets/images/SPC-Catalogue-1975x1318-1-1024x683.jpg";
+import { Helmet } from 'react-helmet' 
+import theImage from "src/assets/images/SPC-Catalogue-1975x1318-1.jpg";
 
 export default function Page() {
   const pageTitle = "Référentiel de Candidature - Spa & Prestige Collection";
