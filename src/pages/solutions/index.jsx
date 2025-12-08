@@ -1,11 +1,12 @@
 import SolutionsPageView from "src/sections/solutions/solutions-page-view";
 import { Helmet } from 'react-helmet'
+import theImage from "src/assets/images/SPC-Essence-1975x1318-02.jpg";
 
 export default function Page() {
   const pageTitle = "Solutions CSE & Collectivités - Spa & Prestige Collection";
   const pageDescription = "Offrez à vos salariés des expériences bien-être d'exception. Commandes groupées, cartes cadeaux personnalisées et tarifs préférentiels pour vos CSE et collectivités.";
   const pageUrl = "https://spa-prestige-collection.com/solutions-cse";
-  const imageUrl = "src/assets/images/SPC-Essence-1975x1318-02.jpg";
+  const imageUrl = theImage;
 
   const schemaData = {
     "@context": "https://schema.org",

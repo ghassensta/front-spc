@@ -2,14 +2,16 @@ import React, { useState, useEffect } from "react";
 import ButtonIcon from "../../../components/button-icon/button-icon";
 import { paths } from "src/router/paths";
 import { CONFIG } from "src/config-global";
+import theImage from "src/assets/images/Piscine2.jpg";
+import theImage2 from "src/assets/images/SPC-Essence-1975x1318-02.jpg";
 
 export default function Header() {
   const slides = [
     {
-      image: "src/assets/images/Piscine2.jpg",
+      image: theImage,
     },
     {
-      image: "src/assets/images/SPC-Essence-1975x1318-02.jpg",
+      image: theImage2,
     },
     {
       image: `${CONFIG.serverUrl}/storage/uploads/products/vsh20tkZbTBA0YuocmFb2TgIEmFaCamZibo0cmSY.jpg`,

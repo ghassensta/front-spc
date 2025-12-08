@@ -1,11 +1,12 @@
 import ReferentielViewPage from "src/sections/referentiel/referentiel-view-page";
 import { Helmet } from 'react-helmet'
+import theImage from "src/assets/images/SPC-Catalogue-1975x1318-1-1024x683.jpg";
 
 export default function Page() {
   const pageTitle = "Référentiel de Candidature - Spa & Prestige Collection";
   const pageDescription = "Découvrez nos critères d'adhésion pour rejoindre le réseau Spa & Prestige Collection. Qualité, bien-être, authenticité et excellence requise.";
   const pageUrl = "https://spa-prestige-collection.com/referentiel";
-  const imageUrl = "src/assets/images/SPC-Catalogue-1975x1318-1-1024x683.jpg";
+  const imageUrl = theImage;
 
   const schemaData = {
     "@context": "https://schema.org",

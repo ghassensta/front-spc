@@ -6,6 +6,8 @@ import { Link, useNavigate } from "react-router-dom";
 import { paths } from "src/router/paths";
 import { toast } from "react-toastify";
 import { useGetCarteCadeaux } from "src/actions/cartes-cadeaux";
+import theImage from "src/assets/images/SPC-carte-cadeau-montant-3.jpg";
+import theImage2 from "src/assets/images/SPC-Femme-cartes-square.jpg";
 
 export default function CarteCadeau() {
   const checkout = useCheckoutContext();
@@ -41,7 +43,7 @@ export default function CarteCadeau() {
       id: selectedCard?.id || Date.now(),
       name: "Carte cadeau de " + amount + "€",
       price: amount,
-      image: selectedCard?.image || "src/assets/images/SPC-carte-cadeau-montant-3.jpg",
+      image: selectedCard?.image || theImage,
       destinataires: receiver,
       expediteur: checkout.expediteur,
       quantity: 1,
@@ -87,7 +89,7 @@ export default function CarteCadeau() {
             <div className="md:w-1/2">
               <img
                 loading="lazy"
-                src="src/assets/images/SPC-carte-cadeau-montant-3.jpg"
+                src={theImage}
                 alt="Carte Cadeau Spa & Prestige"
                 className="w-full h-auto object-cover rounded"
               />
@@ -136,7 +138,7 @@ export default function CarteCadeau() {
         <div className="flex flex-col md:flex-row gap-6">
           <img
             loading="lazy"
-            src="src/assets/images/SPC-Femme-cartes-square.jpg"
+            src={theImage2}
             alt=""
           />
           <div className="font-roboto space-y-2">

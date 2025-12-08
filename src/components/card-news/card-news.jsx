@@ -3,6 +3,7 @@ import React from "react";
 import { motion } from "framer-motion";
 import { FiMapPin } from "react-icons/fi";
 import { Link } from "react-router-dom";
+import theImage from "src/assets/images/SPC-Essence-1975x1318-02_(1).jpg";
 
 export default function CardNews() {
   // Example: hardcoded date - you can make this dynamic if needed
@@ -23,8 +24,8 @@ export default function CardNews() {
       >
        
         {/* Image */}
-        <img lazyload="lazy"
-          src="src/assets/images/SPC-Essence-1975x1318-02_(1).jpg"
+        <img loading="lazy"
+          src={theImage}
           alt="spa"
           className="w-full h-72 rounded-t-xl object-cover overflow-hidden"
         />

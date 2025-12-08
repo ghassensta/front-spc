@@ -2,6 +2,7 @@ import React from 'react'
 import CardLarge from '../../../components/card-large/card-large'
 import ButtonIcon from '../../../components/button-icon/button-icon'
 import { FaRegArrowAltCircleRight } from 'react-icons/fa'
+import theImage from "src/assets/images/SPC-Essence-1975x1318-02.jpg";
 
 export default function Offres() {
   return (
@@ -14,7 +15,7 @@ export default function Offres() {
   to="/spa/paris"
   title="Le Spa by Sothys Paris République 5*"
   description="Le Spa Sothys, niché au sein du Renaissance Paris République Hotel, incarne l’exclusivité et le raffinement des rituels de bien-être."
-  image="src/assets/images/SPC-Essence-1975x1318-02.jpg"
+  image={theImage}
   location="75011 PARIS - ÎLE-DE-FRANCE - FRANCE"
 />
                 <Card
@@ -22,7 +23,7 @@ export default function Offres() {
   to="/spa/paris"
   title="Le Spa by Sothys Paris République 5*"
   description="Le Spa Sothys, niché au sein du Renaissance Paris République Hotel, incarne l’exclusivité et le raffinement des rituels de bien-être."
-  image="src/assets/images/SPC-Essence-1975x1318-02.jpg"
+  image={theImage}
   location="75011 PARIS - ÎLE-DE-FRANCE - FRANCE"
 />
                 <Card
@@ -30,7 +31,7 @@ export default function Offres() {
   to="/spa/paris"
   title="Le Spa by Sothys Paris République 5*"
   description="Le Spa Sothys, niché au sein du Renaissance Paris République Hotel, incarne l’exclusivité et le raffinement des rituels de bien-être."
-  image="src/assets/images/SPC-Essence-1975x1318-02.jpg"
+  image={theImage}
   location="75011 PARIS - ÎLE-DE-FRANCE - FRANCE"
 />
                 <Card
@@ -38,7 +39,7 @@ export default function Offres() {
   to="/spa/paris"
   title="Le Spa by Sothys Paris République 5*"
   description="Le Spa Sothys, niché au sein du Renaissance Paris République Hotel, incarne l’exclusivité et le raffinement des rituels de bien-être."
-  image="src/assets/images/SPC-Essence-1975x1318-02.jpg"
+  image={theImage}
   location="75011 PARIS - ÎLE-DE-FRANCE - FRANCE"
 />
             </div>

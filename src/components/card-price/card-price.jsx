@@ -5,6 +5,7 @@ import { FiMapPin } from "react-icons/fi";
 import { Link } from "react-router-dom";
 import ButtonIcon from "../button-icon/button-icon";
 import { FaBagShopping } from "react-icons/fa6";
+import theImage from "src/assets/images/SPC-Essence-1975x1318-02.jpg";
 
 export default function CardPrice() {
   return (
@@ -23,8 +24,8 @@ export default function CardPrice() {
         </span>
 
         {/* Image */}
-        <img lazyload="lazy"
-          src="src/assets/images/SPC-Essence-1975x1318-02.jpg"
+        <img loading="lazy"
+          src={theImage}
           alt="spa"
           className="w-full h-72 rounded-t-xl object-cover overflow-hidden"
         />

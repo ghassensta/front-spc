@@ -1,6 +1,8 @@
 import React, { useRef, useState } from "react";
 import { motion } from "framer-motion";
 import { MdOutlineNavigateBefore, MdOutlineNavigateNext } from "react-icons/md";
+import theImage from "src/assets/images/SPC-Essence-1975x1318-02.jpg";
+import theImage2 from "src/assets/images/SPC-slider-1975x1318-03.jpg";
 
 // Reuse this miniCard component
 const MiniCard = ({ title, img }) => (
@@ -19,11 +21,11 @@ const MiniCard = ({ title, img }) => (
 const slides = [
   {
     title: "Nos valeurs",
-    img: "src/assets/images/SPC-Essence-1975x1318-02.jpg",
+    img: theImage,
   },
   {
     title: "Notre vision",
-    img: "src/assets/images/SPC-slider-1975x1318-03.jpg",
+    img: theImage2,
   },
   {
     title: "Nos soins",
@@ -31,11 +33,11 @@ const slides = [
   },
   {
     title: "Nos destinations",
-    img: "src/assets/images/SPC-Essence-1975x1318-02.jpg",
+    img: theImage,
   },
   {
     title: "Bien-être",
-    img: "src/assets/images/SPC-slider-1975x1318-03.jpg",
+    img: theImage2,
   },
 ];
 

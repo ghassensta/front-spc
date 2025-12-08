@@ -1,11 +1,12 @@
 import RecompensePageView from "src/sections/recompense/view/recompense-page-view";
 import { Helmet } from 'react-helmet'
+import theImage from "src/assets/images/SPC-images-1975x1318-Programme-Parrainage-01-1024x683.jpg";
 
 export default function Page() {
   const pageTitle = "Programme de Fidélité - Spa & Prestige Collection";
   const pageDescription = "Rejoignez notre programme de fidélité et gagnez des points à chaque commande. Accumulez 1 point pour 1€ dépensé et échangez contre des bons d'achat.";
   const pageUrl = "https://spa-prestige-collection.com/programme-fidelite";
-  const imageUrl = "src/assets/images/SPC-images-1975x1318-Programme-Parrainage-01-1024x683.jpg";
+  const imageUrl = theImage;
 
   const schemaData = {
     "@context": "https://schema.org",

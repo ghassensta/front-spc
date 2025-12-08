@@ -1,11 +1,12 @@
 import GlossairePageView from "src/sections/glossaire/view/glossaire-page-view";
 import { Helmet } from 'react-helmet'
+import theImage from "src/assets/images/SPA-images-1975x1318-Qui-Sommes-Nous-02.jpg";
 
 export default function Page() {
   const pageTitle = "Glossaire - Spa & Prestige Collection";
   const pageDescription = "Découvrez notre glossaire complet des termes spa et bien-être. Aromathérapie, Ayurveda, Balnéothérapie, Cryothérapie et plus. Définitions détaillées.";
   const pageUrl = "https://spa-prestige-collection.com/glossaire";
-  const imageUrl = "src/assets/images/SPA-images-1975x1318-Qui-Sommes-Nous-02.jpg";
+  const imageUrl = theImage;
 
   // Glossary Terms pour Schema
   const glossaryTerms = [

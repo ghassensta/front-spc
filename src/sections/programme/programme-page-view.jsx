@@ -13,6 +13,7 @@ import { GiTakeMyMoney } from "react-icons/gi";
 import { MdOutlineEmail } from "react-icons/md";
 import ButtonIcon from "src/components/button-icon/button-icon";
 import { paths } from "src/router/paths";
+import theImage from "src/assets/images/SPC-coeur-1975x1318-01.jpg";
 
 export default function ProgrammePageView() {
   return (
@@ -21,7 +22,7 @@ export default function ProgrammePageView() {
         className="w-screen relative left-[calc(-50vw+50%)] h-96 bg-black bg-center bg-cover bg-fixed overflow-hidden hidden md:block"
         style={{
           backgroundImage:
-            "url('src/assets/images/SPC-coeur-1975x1318-01.jpg')",
+            `url(${theImage})`,
         }}
       >
         <div className="absolute inset-0 bg-black bg-opacity-40" />{" "}

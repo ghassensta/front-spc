@@ -2,12 +2,16 @@ import React, { useEffect, useRef, useState } from "react";
 import { FaChevronLeft, FaChevronRight } from "react-icons/fa";
 import ButtonIcon from "src/components/button-icon/button-icon";
 import { paths } from "src/router/paths";
+import theImage from "src/assets/images/SPA-images-1975x1318-Qui-Sommes-Nous-02.jpg";
+import theImage2 from "src/assets/images/SPA-images-1975x1318-Qui-Sommes-Nous-01.jpg";
+import theImage3 from "src/assets/images/SPA-images-1975x1318-Qui-Sommes-Nous-03.jpg";
+import theImage4 from "src/assets/images/SPC-carte-cadeau-montant-3.jpg";
 
 export default function WhoPageView() {
   const images = [
-    "src/assets/images/SPA-images-1975x1318-Qui-Sommes-Nous-02.jpg",
-    "src/assets/images/SPA-images-1975x1318-Qui-Sommes-Nous-01.jpg",
-    "src/assets/images/SPA-images-1975x1318-Qui-Sommes-Nous-03.jpg", // Repeated for demo; replace with actual third image
+    theImage,
+    theImage2,
+    theImage3,
   ];
 
   const [currentSlide, setCurrentSlide] = useState(0);
@@ -201,7 +205,7 @@ export default function WhoPageView() {
           <div className="flex items-center justify-center">
             <img
               lazyload="lazy"
-              src="src/assets/images/SPC-carte-cadeau-montant-3.jpg"
+              src={theImage4}
               alt="Carte Cadeau Spa & Prestige"
               className="max-w-full h-auto"
             />

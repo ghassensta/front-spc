@@ -1,11 +1,12 @@
 import DevenirPartnerView from "src/sections/devenir-partner/devenir-partner-view";
 import { Helmet } from 'react-helmet'
+import theImage from "src/assets/images/SPC-equipe-ce-1975x1318-1-768x513.jpg";
 
 export default function Page() {
   const pageTitle = "Devenir Partenaire - Spa & Prestige Collection";
   const pageDescription = "Rejoignez le réseau Spa & Prestige Collection. Boostez votre chiffre d'affaires, augmentez votre visibilité et bénéficiez d'un accompagnement personnalisé.";
   const pageUrl = "https://spa-prestige-collection.com/devenir-partenaire";
-  const imageUrl = "../assets/images/SPC-equipe-ce-1975x1318-1-768x513.jpg";
+  const imageUrl = theImage;
 
   const schemaData = {
     "@context": "https://schema.org",
