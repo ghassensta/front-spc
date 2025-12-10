@@ -64,7 +64,7 @@ const Serach = () => {
   const villeSlug = villeQuery ? generateSlug(villeQuery) : "";
 
   const searchUrl = hasSearch
-    ? `/recherche?service=${encodeURIComponent(serviceSlug)}&ville=${encodeURIComponent(villeSlug)}`
+    ? `/recherche/service=${encodeURIComponent(serviceSlug)}&ville=${encodeURIComponent(villeSlug)}`
     : null;
 
   return (

@@ -14,6 +14,8 @@ export default function PaymentView() {
   const [isEditingAddress, setIsEditingAddress] = useState(false);
   const [loading, setLoading] = useState(false);
   const [expediteurEmail, setExpediteurEmail] = useState("");
+  const [hasValidationError, setHasValidationError] = useState(false);
+  const [errors, setErrors] = useState({});
   const { user } = useAuthContext();
 
   const { credits = [], loading: creditsLoading } = useGetCreditsPanier();
@@ -58,23 +60,64 @@ export default function PaymentView() {
   const totalAPayer = Math.max(0, totalTTC - totalCreditsApplied);
   const creditsDepassent = totalCreditsApplied > totalTTC;
 
+  console.log("Button disabled:", loading || creditsLoading || creditsDepassent, { loading, creditsLoading, creditsDepassent });
+
   const handleSubmit = async () => {
+    console.log("handleSubmit called");
+    
+    // Always validate and show errors - even if form is closed
+    const { fullName, address, city, postalCode, country } = checkout.expediteur || {};
+    console.log("Expediteur fields:", { fullName, address, city, postalCode, country });
+
+    const newErrors = {};
+    if (!fullName || fullName.trim() === "") newErrors.fullName = "Le nom complet est requis.";
+    if (!address || address.trim() === "") newErrors.address = "L'adresse est requise.";
+    if (!city || city.trim() === "") newErrors.city = "La ville est requise.";
+    if (!postalCode || postalCode.trim() === "") newErrors.postalCode = "Le code postal est requis.";
+    if (!country || country.trim() === "") newErrors.country = "Le pays est requis.";
+
+    if (Object.keys(newErrors).length > 0) {
+      setErrors(newErrors);
+      setHasValidationError(true);
+      setIsEditingAddress(true); // Open the address section to show errors
+      console.log("Validation failed", newErrors);
+      toast.error("Veuillez remplir tous les champs requis de l'adresse.");
+      
+      // Scroll to first error and focus
+      setTimeout(() => {
+        const firstKey = Object.keys(newErrors)[0];
+        const el = document.querySelector(`[name=expediteur_${firstKey}]`);
+        if (el) {
+          el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+          if (el.focus) el.focus();
+        }
+      }, 100);
+      return;
+    }
+    
     if (
       !checkout.expediteur ||
       !checkout.items ||
       checkout.items.length === 0
     ) {
+      console.log("Missing expediteur or items");
       toast.error(
         "Veuillez remplir toutes les informations et ajouter des articles."
       );
       return;
     }
+
+    setErrors({});
+    setHasValidationError(false);
+    console.log("Validation passed");
+
     if (creditsDepassent) {
       toast.error("Les crédits sélectionnés dépassent le montant total.");
       return;
     }
 
     setLoading(true);
+    console.log("Starting fetch to create order");
 
     try {
       const res = await fetch(`${CONFIG.serverUrl}/api/commandes`, {
@@ -93,6 +136,7 @@ export default function PaymentView() {
       });
 
       const data = await res.json();
+      console.log("Order creation response:", data);
 
       if (!data.success) throw new Error(data.message);
 
@@ -131,6 +175,20 @@ export default function PaymentView() {
   };
 
   const handleExpediteurChange = (field, value) => {
+    // Clear specific field error when user types
+    if (errors[field]) {
+      setErrors((prev) => {
+        const newErrors = { ...prev };
+        delete newErrors[field];
+        return newErrors;
+      });
+      
+      // If no more errors, clear validation error state
+      if (Object.keys(errors).length === 1) {
+        setHasValidationError(false);
+      }
+    }
+    
     checkout.onCreateExpediteur({
       ...checkout.expediteur,
       [field]: value,
@@ -220,38 +278,61 @@ export default function PaymentView() {
             </div>
           ) : (
             <div className="space-y-4 mt-4">
-              {/* Tous les inputs d'adresse (identiques à avant) */}
               <div>
-                <label className="block text-sm font-medium">Nom complet</label>
+                <label className="block text-sm font-medium mb-1">
+                  Nom complet <span className="text-red-500">*</span>
+                </label>
                 <input
                   type="text"
-                  className="w-full border rounded-md p-2"
+                  name="expediteur_fullName"
+                  className={`w-full border rounded-md p-2 focus:outline-none focus:ring-2 ${
+                    errors.fullName 
+                      ? 'border-red-500 focus:ring-red-500' 
+                      : 'border-gray-300 focus:ring-blue-400'
+                  }`}
                   value={checkout.expediteur?.fullName || ""}
                   onChange={(e) =>
                     handleExpediteurChange("fullName", e.target.value)
                   }
                   placeholder="Jean Dupont"
+                  required
                 />
+                {errors.fullName && (
+                  <p className="text-red-600 text-sm mt-1">{errors.fullName}</p>
+                )}
               </div>
+              
               <div>
-                <label className="block text-sm font-medium">Adresse</label>
+                <label className="block text-sm font-medium mb-1">
+                  Adresse <span className="text-red-500">*</span>
+                </label>
                 <input
                   type="text"
-                  className="w-full border rounded-md p-2"
+                  name="expediteur_address"
+                  className={`w-full border rounded-md p-2 focus:outline-none focus:ring-2 ${
+                    errors.address 
+                      ? 'border-red-500 focus:ring-red-500' 
+                      : 'border-gray-300 focus:ring-blue-400'
+                  }`}
                   value={checkout.expediteur?.address || ""}
                   onChange={(e) =>
                     handleExpediteurChange("address", e.target.value)
                   }
                   placeholder="15 rue Jean Maridor"
+                  required
                 />
+                {errors.address && (
+                  <p className="text-red-600 text-sm mt-1">{errors.address}</p>
+                )}
               </div>
+              
               <div>
-                <label className="block text-sm font-medium">
-                  Complément d’adresse
+                <label className="block text-sm font-medium mb-1">
+                  Complément d'adresse
                 </label>
                 <input
                   type="text"
-                  className="w-full border rounded-md p-2"
+                  className="w-full border border-gray-300 rounded-md p-2 focus:outline-none focus:ring-2 focus:ring-blue-400"
                   value={checkout.expediteur?.address2 || ""}
                   onChange={(e) =>
                     handleExpediteurChange("address2", e.target.value)
@@ -259,26 +340,38 @@ export default function PaymentView() {
                   placeholder="Appartement, étage..."
                 />
               </div>
+              
               <div className="grid grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-sm font-medium">Ville</label>
+                  <label className="block text-sm font-medium mb-1">
+                    Ville <span className="text-red-500">*</span>
+                  </label>
                   <input
                     type="text"
-                    className="w-full border rounded-md p-2"
+                    name="expediteur_city"
+                    className={`w-full border rounded-md p-2 focus:outline-none focus:ring-2 ${
+                      errors.city 
+                        ? 'border-red-500 focus:ring-red-500' 
+                        : 'border-gray-300 focus:ring-blue-400'
+                    }`}
                     value={checkout.expediteur?.city || ""}
                     onChange={(e) =>
                       handleExpediteurChange("city", e.target.value)
                     }
                     placeholder="Paris"
+                    required
                   />
+                  {errors.city && (
+                    <p className="text-red-600 text-sm mt-1">{errors.city}</p>
+                  )}
                 </div>
                 <div>
-                  <label className="block text-sm font-medium">
+                  <label className="block text-sm font-medium mb-1">
                     État / Région
                   </label>
                   <input
                     type="text"
-                    className="w-full border rounded-md p-2"
+                    className="w-full border border-gray-300 rounded-md p-2 focus:outline-none focus:ring-2 focus:ring-blue-400"
                     value={checkout.expediteur?.state || ""}
                     onChange={(e) =>
                       handleExpediteurChange("state", e.target.value)
@@ -286,39 +379,61 @@ export default function PaymentView() {
                   />
                 </div>
               </div>
+              
               <div className="grid grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-sm font-medium">
-                    Code postal
+                  <label className="block text-sm font-medium mb-1">
+                    Code postal <span className="text-red-500">*</span>
                   </label>
                   <input
                     type="text"
-                    className="w-full border rounded-md p-2"
+                    name="expediteur_postalCode"
+                    className={`w-full border rounded-md p-2 focus:outline-none focus:ring-2 ${
+                      errors.postalCode 
+                        ? 'border-red-500 focus:ring-red-500' 
+                        : 'border-gray-300 focus:ring-blue-400'
+                    }`}
                     value={checkout.expediteur?.postalCode || ""}
                     onChange={(e) =>
                       handleExpediteurChange("postalCode", e.target.value)
                     }
                     placeholder="75015"
+                    required
                   />
+                  {errors.postalCode && (
+                    <p className="text-red-600 text-sm mt-1">{errors.postalCode}</p>
+                  )}
                 </div>
                 <div>
-                  <label className="block text-sm font-medium">Pays</label>
+                  <label className="block text-sm font-medium mb-1">
+                    Pays <span className="text-red-500">*</span>
+                  </label>
                   <input
                     type="text"
-                    className="w-full border rounded-md p-2"
+                    name="expediteur_country"
+                    className={`w-full border rounded-md p-2 focus:outline-none focus:ring-2 ${
+                      errors.country 
+                        ? 'border-red-500 focus:ring-red-500' 
+                        : 'border-gray-300 focus:ring-blue-400'
+                    }`}
                     value={checkout.expediteur?.country || "France"}
                     onChange={(e) =>
                       handleExpediteurChange("country", e.target.value)
                     }
                     placeholder="France"
+                    required
                   />
+                  {errors.country && (
+                    <p className="text-red-600 text-sm mt-1">{errors.country}</p>
+                  )}
                 </div>
               </div>
+              
               <div>
-                <label className="block text-sm font-medium">Téléphone</label>
+                <label className="block text-sm font-medium mb-1">Téléphone</label>
                 <input
                   type="tel"
-                  className="w-full border rounded-md p-2"
+                  className="w-full border border-gray-300 rounded-md p-2 focus:outline-none focus:ring-2 focus:ring-blue-400"
                   value={checkout.expediteur?.phone || ""}
                   onChange={(e) =>
                     handleExpediteurChange("phone", e.target.value)
