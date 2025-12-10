@@ -3,9 +3,9 @@ import { endpoints, fetcher, poster } from "src/utils/axios";
 import useSWR from "swr";
 
 const swrOptions = {
-  revalidateIfStale: false,
-  revalidateOnFocus: false,
-  revalidateOnReconnect: false,
+  revalidateIfStale: true,
+  revalidateOnFocus: true,
+  revalidateOnReconnect: true,
 };
 
 export function useGetEtablissements() {
@@ -39,7 +39,7 @@ export function useGetAllEtablissements() {
 export function useGetEtablissement(slug) {
   const url = endpoints.etablissements.detail(slug);
 
-  const { data, isLoading } = useSWR(url, fetcher, swrOptions);
+  const { data, isLoading, error } = useSWR(url, fetcher, swrOptions);
 
   const memoizedValue = useMemo(
     () => ({
@@ -49,8 +49,9 @@ export function useGetEtablissement(slug) {
       avis: data?.avis || [],
       marquesPartenaires: data?.marquesPartenaires || [],
       loading: isLoading,
+      error,
     }),
-    [data]
+    [data, isLoading, error]
   );
   return memoizedValue;
 }

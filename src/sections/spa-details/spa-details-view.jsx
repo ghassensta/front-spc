@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, memo } from "react";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import ImageCarousel from "./comp/image-carousel";
@@ -29,7 +29,12 @@ const criteria = [
   "Boutique",
 ];
 
-export default function SpaDetailsView({
+const initialRatings = {};
+criteria.forEach((key) => {
+  initialRatings[key] = 0;
+});
+
+function SpaDetailsView({
   spaData,
   types,
   simlairesEtablissment,
@@ -37,11 +42,6 @@ export default function SpaDetailsView({
   marquesPartenaires,
   loading,
 }) {
-  const initialRatings = {};
-  criteria.forEach((key) => {
-    initialRatings[key] = 0;
-  });
-
   const { user } = useAuthContext();
   const [ratings, setRatings] = useState(initialRatings);
   const [name, setName] = useState("");
@@ -326,3 +326,5 @@ export default function SpaDetailsView({
     </div>
   );
 }
+
+export default memo(SpaDetailsView);

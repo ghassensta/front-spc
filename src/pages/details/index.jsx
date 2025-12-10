@@ -15,7 +15,16 @@ export default function Page() {
     avis,
     marquesPartenaires,
     loading,
+    error,
   } = useGetEtablissement(id);
+
+  if (error) {
+    return <div>Établissement non trouvé ou erreur de chargement.</div>;
+  }
+
+  if (!etablissement && !loading) {
+    return <div>Établissement non trouvé.</div>;
+  }
 
   // Fallbacks SEO si les champs sont null
   const pageTitle =
