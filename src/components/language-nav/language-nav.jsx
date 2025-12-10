@@ -6,13 +6,16 @@ import { useAuthContext } from "src/auth/hooks/use-auth-context";
 import { useTranslation } from "src/context/translation-context";
 import { paths } from "src/router/paths";
 
+/*
 const languages = [
-  { code: 'en', flag: '🇬🇧', label: 'English' },
   { code: 'fr', flag: '🇫🇷', label: 'Français' },
+   
+  { code: 'en', flag: '🇬🇧', label: 'English' },
   { code: 'es', flag: '🇪🇸', label: 'Español' },
   { code: 'it', flag: '🇮🇹', label: 'Italiano' },
   { code: 'de', flag: '🇩🇪', label: 'Deutsch' },
 ];
+*/
 
 export default function LanguageNav({ cartCount = 0, wishlistCount = 0 }) {
   const { currentLanguage, setLanguage } = useTranslation();
@@ -22,6 +25,7 @@ export default function LanguageNav({ cartCount = 0, wishlistCount = 0 }) {
     <div className="bg-[#F6F5E9] px-4 py-3 flex justify-between">
     <div className="flex items-end gap-1 w-full md:justify-end sm:justify-end">
     
+      {/* Language flags commented out on user request
       <button
         className="text-lg font-tahoma text-[#33373D]"
         onClick={() => setLanguage("en")}
@@ -52,6 +56,7 @@ export default function LanguageNav({ cartCount = 0, wishlistCount = 0 }) {
       >
         <span className="fi fi-es"></span>
       </button>
+      */}
     </div>
       <div className="flex items-center gap-2 md:hidden">
         <Link to={user ? paths.auth.root : paths.dashboard.wishlist} className="relative">
