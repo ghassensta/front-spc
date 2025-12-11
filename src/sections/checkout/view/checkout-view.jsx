@@ -5,7 +5,6 @@ import { paths } from "../../../router/paths";
 import ButtonIcon from "../../../components/button-icon/button-icon";
 import { FaRegTrashAlt, FaChevronDown, FaChevronUp } from "react-icons/fa";
 import { CONFIG } from "src/config-global";
-import { FaRegTrashAlt } from "react-icons/fa";
 import { useAuthContext } from "src/auth/hooks/use-auth-context";
 import { toast } from "react-toastify";
 import { useRouter } from "src/hooks";
@@ -310,119 +309,120 @@ export default function CheckoutView() {
             </div>
 
             <div className="flex-1 flex justify-end">
-              <div className="flex flex-col items-end space-y-1 text-sm font-medium">
+               
+              {/* Totaux */}
+              <div className="flex flex-col items-end mt-6 space-y-1 text-sm font-medium">
                 <div>Sous-total HT : {subtotalHT.toFixed(2)} €</div>
                 <div>Taxe 20 % : {tax.toFixed(2)} €</div>
-                <div className="text-base font-bold">
+
+                {totalDiscount > 0 && (
+                  <div className="text-green-600 font-semibold">
+                    Réduction : -{totalDiscount.toFixed(2)} €
+                  </div>
+                )}
+
+                <div className="text-base font-bold border-t pt-2 mt-2 w-48">
                   Total TTC : {grandTotal.toFixed(2)} €
                 </div>
               </div>
-          {/* Totaux */}
-          <div className="flex flex-col items-end mt-6 space-y-1 text-sm font-medium">
-            <div>Sous-total HT : {subtotalHT.toFixed(2)} €</div>
-            <div>Taxe 20 % : {tax.toFixed(2)} €</div>
-
-            {totalDiscount > 0 && (
-              <div className="text-green-600 font-semibold">
-                Réduction : -{totalDiscount.toFixed(2)} €
-              </div>
-            )}
-
-            <div className="text-base font-bold border-t pt-2 mt-2 w-48">
-              Total TTC : {grandTotal.toFixed(2)} €
             </div>
+
           </div>
         </div>
+        
+            <div className="w-full lg:w-80 flex flex-col gap-4 md:gap-6">
+              {/* Coupon */}
+              <div className="bg-white rounded-md p-4 md:p-6 shadow">
+                <h2 className="text-base font-semibold mb-3 md:mb-4">
+                  Code Coupon
+                </h2>
+                <div className="flex flex-col sm:flex-row gap-2">
+                  <input
+                    type="text"
+                    className="flex-1 border rounded-md p-2 w-full"
+                    placeholder="Entrez votre code coupon"
+                    value={couponCode}
+                    onChange={(e) =>
+                      setCouponCode(e.target.value.toUpperCase())
+                    }
+                    disabled={couponApplied || couponLoading}
+                  />
+                  {couponApplied ? (
+                    <button
+                      onClick={handleRemoveCoupon}
+                      className="w-full sm:w-auto px-4 py-2 bg-gray-600 text-white rounded-md hover:bg-gray-700 transition"
+                    >
+                      Supprimer
+                    </button>
+                  ) : (
+                    <button
+                      onClick={handleApplyCoupon}
+                      disabled={couponLoading || !couponCode}
+                      className="w-full sm:w-auto px-4 py-2 bg-black text-white rounded-md hover:bg-gray-900 disabled:opacity-50 disabled:cursor-not-allowed transition"
+                    >
+                      {couponLoading ? "Validation..." : "Appliquer"}
+                    </button>
+                  )}
+                </div>
+                {couponApplied && couponData && (
+                  <div className="mt-3 p-2 bg-green-50 border border-green-200 rounded text-sm text-green-700">
+                    ✓ Code <strong>{couponData.code}</strong> appliqué
+                  </div>
+                )}
+              </div>
 
-        <div className="w-full lg:w-80 flex flex-col gap-4 md:gap-6">
-          {/* Coupon */}
-          <div className="bg-white rounded-md p-4 md:p-6 shadow">
-            <h2 className="text-base font-semibold mb-3 md:mb-4">
-              Code Coupon
-            </h2>
-            <div className="flex flex-col sm:flex-row gap-2">
-              <input
-                type="text"
-                className="flex-1 border rounded-md p-2 w-full"
-                placeholder="Entrez votre code coupon"
-                value={couponCode}
-                onChange={(e) => setCouponCode(e.target.value.toUpperCase())}
-                disabled={couponApplied || couponLoading}
-              />
-              {couponApplied ? (
-                <button
-                  onClick={handleRemoveCoupon}
-                  className="w-full sm:w-auto px-4 py-2 bg-gray-600 text-white rounded-md hover:bg-gray-700 transition"
-                >
-                  Supprimer
-                </button>
+              {user ? (
+                <div className="bg-white p-4 md:p-6 rounded-lg shadow-sm">
+                  <h4 className="text-xl font-semibold mb-3 md:mb-4">
+                    Expéditeur
+                  </h4>
+                  <div className="flex flex-col gap-3 md:gap-4">
+                    <input
+                      type="text"
+                      className="w-full border border-gray-300 rounded-lg p-2"
+                      placeholder="Nom et prénom"
+                      value={expediteurFullName}
+                      onChange={(e) => {
+                        setExpediteurFullName(e.target.value);
+                        handleExpediteurChange("fullName", e.target.value);
+                      }}
+                    />
+                    <textarea
+                      rows={4}
+                      className="w-full border border-gray-300 rounded-lg p-2"
+                      placeholder="Message (optionnel)"
+                      value={expediteurMessage}
+                      onChange={(e) => {
+                        setExpediteurMessage(e.target.value);
+                        handleExpediteurChange("message", e.target.value);
+                      }}
+                    />
+                  </div>
+                  <button
+                    onClick={gotCheckout}
+                    className="w-full mt-4 inline-flex justify-center items-center rounded-full gap-2 uppercase font-normal tracking-widest transition-all duration-300 px-6 py-3 text-sm bg-[#B6B499] hover:bg-black text-white"
+                  >
+                    Commander
+                  </button>
+                </div>
               ) : (
-                <button
-                  onClick={handleApplyCoupon}
-                  disabled={couponLoading || !couponCode}
-                  className="w-full sm:w-auto px-4 py-2 bg-black text-white rounded-md hover:bg-gray-900 disabled:opacity-50 disabled:cursor-not-allowed transition"
-                >
-                  {couponLoading ? "Validation..." : "Appliquer"}
-                </button>
+                <div className="bg-white p-4 rounded-lg shadow-sm flex flex-col gap-3">
+                  <p>Vous devez vous identifier pour commander</p>
+                  <button
+                    onClick={() =>
+                      router.push(
+                        `${paths.auth.root}?returnTo=${encodeURIComponent(
+                          "/payment"
+                        )}`
+                      )
+                    }
+                    className="w-full inline-flex justify-center items-center gap-2 uppercase font-normal tracking-widest transition-all duration-300 px-6 py-3 text-sm bg-[#B6B499] hover:bg-black text-white rounded-full"
+                  >
+                    Se connecter
+                  </button>
+                </div>
               )}
             </div>
-            {couponApplied && couponData && (
-              <div className="mt-3 p-2 bg-green-50 border border-green-200 rounded text-sm text-green-700">
-                ✓ Code <strong>{couponData.code}</strong> appliqué
-              </div>
-            )}
-          </div>
-
-          {user ? (
-            <div className="bg-white p-4 md:p-6 rounded-lg shadow-sm">
-              <h4 className="text-xl font-semibold mb-3 md:mb-4">Expéditeur</h4>
-              <div className="flex flex-col gap-3 md:gap-4">
-                <input
-                  type="text"
-                  className="w-full border border-gray-300 rounded-lg p-2"
-                  placeholder="Nom et prénom"
-                  value={expediteurFullName}
-                  onChange={(e) => {
-                    setExpediteurFullName(e.target.value);
-                    handleExpediteurChange("fullName", e.target.value);
-                  }}
-                />
-                <textarea
-                  rows={4}
-                  className="w-full border border-gray-300 rounded-lg p-2"
-                  placeholder="Message (optionnel)"
-                  value={expediteurMessage}
-                  onChange={(e) => {
-                    setExpediteurMessage(e.target.value);
-                    handleExpediteurChange("message", e.target.value);
-                  }}
-                />
-              </div>
-              <button
-                onClick={gotCheckout}
-                className="w-full mt-4 inline-flex justify-center items-center rounded-full gap-2 uppercase font-normal tracking-widest transition-all duration-300 px-6 py-3 text-sm bg-[#B6B499] hover:bg-black text-white"
-              >
-                Commander
-              </button>
-            </div>
-          ) : (
-            <div className="bg-white p-4 rounded-lg shadow-sm flex flex-col gap-3">
-              <p>Vous devez vous identifier pour commander</p>
-              <button
-                onClick={() =>
-                  router.push(
-                    `${paths.auth.root}?returnTo=${encodeURIComponent(
-                      "/payment"
-                    )}`
-                  )
-                }
-                className="w-full inline-flex justify-center items-center gap-2 uppercase font-normal tracking-widest transition-all duration-300 px-6 py-3 text-sm bg-[#B6B499] hover:bg-black text-white rounded-full"
-              >
-                Se connecter
-              </button>
-            </div>
-          )}
-        </div>
       </div>
     </div>
   );
