@@ -10,6 +10,7 @@ import toast from "react-hot-toast";
 const TAX_RATE = 0.2;
 export default function PaymentView() {
   const checkout = useCheckoutContext();
+  console.log("checkout2", checkout);
   const navigate = useNavigate();
   const [isEditingAddress, setIsEditingAddress] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -20,7 +21,7 @@ export default function PaymentView() {
 
   const { credits = [], loading: creditsLoading } = useGetCreditsPanier();
 
-  const totalTTC = useMemo(() => {
+  const totalBeforeDiscount = useMemo(() => {
     return (
       checkout.items?.reduce(
         (acc, item) => acc + Number(item.price || 0) * item.quantity,
@@ -29,8 +30,22 @@ export default function PaymentView() {
     );
   }, [checkout.items]);
 
+  const totalDiscount = useMemo(() => {
+    return (
+      checkout.items?.reduce(
+        (acc, item) => acc + (Number(item.discount) || 0),
+        0
+      ) || 0
+    );
+  }, [checkout.items]);
+
+  const totalTTC = totalBeforeDiscount - totalDiscount;
+
   const totalHT = Number((totalTTC / (1 + TAX_RATE)).toFixed(2));
   const tvaAmount = Number((totalTTC - totalHT).toFixed(2));
+
+  const totalBeforeHT = Number((totalBeforeDiscount / (1 + TAX_RATE)).toFixed(2));
+  const tvaBefore = Number((totalBeforeDiscount - totalBeforeHT).toFixed(2));
 
   const { creditsParrainage, creditsNormaux } = useMemo(() => {
     const parrainage = [];
@@ -130,6 +145,7 @@ export default function PaymentView() {
           tax: tvaAmount,
           total: totalTTC,
           montant_apres_credits: totalAPayer,
+          coupon_id: checkout.couponId || null,
           credit_ids: [...parrainageIds, ...normauxIds],
           payment_method: totalAPayer > 0 ? "stripe" : "credits_only",
         }),
@@ -490,9 +506,10 @@ export default function PaymentView() {
               <div className="flex-1">
                 <p className="font-medium">{item.name}</p>
                 <p className="text-sm text-gray-500">Qté : {item.quantity}</p>
+                {item.discount > 0 && <p className="text-sm text-green-600">- {Number(item.discount).toFixed(2)} €</p>}
               </div>
               <div className="font-bold">
-                {(Number(item.price || 0) * item.quantity).toFixed(2)} €
+                {(Number(item.price || 0) * item.quantity - (Number(item.discount) || 0)).toFixed(2)} €
               </div>
             </div>
           ))}
@@ -500,16 +517,22 @@ export default function PaymentView() {
           <div className="border-t pt-4 space-y-2">
             <div className="flex justify-between text-sm">
               <span>Sous-total HT</span>
-              <span>{totalHT.toFixed(2)} €</span>
+              <span>{totalBeforeHT.toFixed(2)} €</span>
             </div>
             <div className="flex justify-between text-sm">
               <span>TVA 20%</span>
-              <span>{tvaAmount.toFixed(2)} €</span>
+              <span>{tvaBefore.toFixed(2)} €</span>
             </div>
             <div className="flex justify-between font-bold">
               <span>Total TTC</span>
-              <span>{totalTTC.toFixed(2)} €</span>
+              <span>{totalBeforeDiscount.toFixed(2)} €</span>
             </div>
+            {totalDiscount > 0 && (
+              <div className="flex justify-between text-green-600 font-semibold">
+                <span>Remise totale</span>
+                <span>- {totalDiscount.toFixed(2)} €</span>
+              </div>
+            )}
 
             {appliedParrainage > 0 && (
               <div className="flex justify-between text-green-600 font-medium">

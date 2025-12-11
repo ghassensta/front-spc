@@ -43,7 +43,7 @@ export default function ServicesTemplates({ data = {} }) {
 
         {/* Produits */}
         {produits.length > 0 ? (
-          <div className="grid bg-[#F6F5E9] px-6 grid-cols-1 md:grid-cols-3 gap-6 mt-6 rounded-xl">
+          <div className="grid bg-[#F6F5E9] px-6 grid-cols-1 md:grid-cols-1 gap-6 mt-6 rounded-xl">
             {produits.map((prod) => (
               <CardItem
                 key={prod.id}

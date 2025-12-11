@@ -5,73 +5,164 @@ import { paths } from "../../../router/paths";
 import ButtonIcon from "../../../components/button-icon/button-icon";
 import { FaRegTrashAlt, FaChevronDown, FaChevronUp } from "react-icons/fa";
 import { CONFIG } from "src/config-global";
+import { FaRegTrashAlt } from "react-icons/fa";
 import { useAuthContext } from "src/auth/hooks/use-auth-context";
 import { toast } from "react-toastify";
 import { useRouter } from "src/hooks";
+import { useValidateCoupon } from "src/actions/coupon";
 
 export default function CheckoutView() {
   const [loyaltyOpen, setLoyaltyOpen] = useState(false);
   const checkout = useCheckoutContext();
   const { user } = useAuthContext();
-
   const router = useRouter();
+  const validateCoupon = useValidateCoupon();
   const itemsFiltered =
     checkout.items?.filter((item) => item.quantity > 0) || [];
   const TAX_RATE = 0.2;
 
-  // Inputs
   const [expediteurFullName, setExpediteurFullName] = useState(
     checkout.expediteur?.fullName || ""
   );
   const [expediteurMessage, setExpediteurMessage] = useState(
     checkout.expediteur?.message || ""
   );
+  const [couponCode, setCouponCode] = useState("");
+  const [couponApplied, setCouponApplied] = useState(false);
+  const [couponLoading, setCouponLoading] = useState(false);
+  const [couponData, setCouponData] = useState(null);
 
   useEffect(() => {
-    if (user) {
-      setExpediteurFullName(user.name);
-    }
+    if (user) setExpediteurFullName(user.name);
   }, [user]);
 
   const handleExpediteurChange = (field, value) => {
-    checkout.onCreateExpediteur({
-      ...checkout.expediteur,
-      [field]: value,
-    });
+    checkout.onCreateExpediteur({ ...checkout.expediteur, [field]: value });
   };
 
-  const handleDelete = (productId) => checkout.onDeleteCart(productId);
+  const handleDelete = (productId) => {
+    checkout.onDeleteCart(productId);
+    if (couponApplied && couponData) {
+      const remainingItems = itemsFiltered.filter(
+        (item) => item.id !== productId
+      );
+      if (remainingItems.length > 0) {
+        applyDiscountToItems(remainingItems, couponData.amount);
+      } else {
+        handleRemoveCoupon();
+      }
+    }
+  };
 
-  const subtotalHT = itemsFiltered.reduce(
-    (acc, item) =>
-      acc + (Number(item.price || 0) / (1 + TAX_RATE)) * item.quantity,
+  // Sous-total TTC AVANT réduction
+  const subtotalTTC = itemsFiltered.reduce(
+    (acc, item) => acc + Number(item.price || 0) * item.quantity,
     0
   );
 
-  const tax = itemsFiltered.reduce(
-    (acc, item) =>
-      acc +
-      (Number(item.price || 0) - Number(item.price || 0) / (1 + TAX_RATE)) *
-        item.quantity,
-    0
-  );
+  // Total des réductions (coupon uniquement)
+  const totalDiscount =
+    couponApplied && couponData ? Number(couponData.amount || 0) : 0;
 
-  const grandTotal = subtotalHT + tax;
+  // Sous-total HT et taxe restent basés sur le TTC original
+  const subtotalHT = subtotalTTC / (1 + TAX_RATE);
+  const tax = subtotalTTC - subtotalHT;
+
+  // Grand total TTC APRÈS réduction
+  const grandTotal = subtotalTTC - totalDiscount;
 
   const isCartEmpty = itemsFiltered.length === 0;
 
+  const applyDiscountToItems = (items, totalDiscountAmount) => {
+    const totalCart = items.reduce(
+      (acc, i) => acc + Number(i.price || 0) * Number(i.quantity || 0),
+      0
+    );
+
+    if (totalCart === 0) return items;
+
+    const updatedItems = items.map((item) => {
+      const itemTotal = Number(item.price || 0) * Number(item.quantity || 0);
+      const itemDiscount = totalDiscountAmount * (itemTotal / totalCart);
+      return {
+        ...item,
+        discount: itemDiscount,
+      };
+    });
+
+    checkout.onUpdateField("items", updatedItems);
+    return updatedItems;
+  };
+
+  // Gestion du coupon
+  const handleApplyCoupon = async () => {
+    if (!couponCode) return;
+    setCouponLoading(true);
+
+    try {
+      const res = await validateCoupon(couponCode, subtotalTTC, itemsFiltered);
+
+      if (res.success) {
+        const { discount, coupon_id, type } = res;
+        const discountNumber = Number(discount) || 0;
+
+        // Appliquer la réduction proportionnellement sur chaque item
+        applyDiscountToItems(itemsFiltered, discountNumber);
+
+        setCouponApplied(true);
+        setCouponData({
+          id: coupon_id,
+          code: couponCode,
+          type,
+          amount: discountNumber,
+        });
+        checkout.onApplyCouponId(coupon_id);
+
+        toast.success(res.message);
+      } else {
+        toast.error(res.message);
+      }
+    } catch (error) {
+      console.error("Erreur coupon:", error);
+      toast.error("Erreur lors de la validation du coupon");
+    } finally {
+      setCouponLoading(false);
+    }
+  };
+
+  const handleRemoveCoupon = () => {
+    setCouponCode("");
+    setCouponApplied(false);
+    setCouponData(null);
+
+    // Réinitialiser les discounts de tous les items
+    const updatedItems = itemsFiltered.map((item) => ({
+      ...item,
+      discount: 0,
+    }));
+    checkout.onUpdateField("items", updatedItems);
+    checkout.onApplyCouponId(null);
+  };
+
   const gotCheckout = () => {
-    if (isCartEmpty) {
-      toast.error("Panier est vide");
-      return;
+    if (isCartEmpty) return toast.error("Panier est vide");
+    if (!expediteurFullName) return toast.error("Remplir nom d'expéditeur");
+
+    checkout.onCreateExpediteur({
+      ...checkout.expediteur,
+      fullName: expediteurFullName,
+      message: expediteurMessage,
+    });
+
+    if (couponApplied && couponData) {
+      checkout.onApplyCouponId(couponData.id);
+    } else {
+      checkout.onApplyCouponId(null);
     }
-    if (!expediteurFullName) {
-      toast.error("Remplir nom d'expéditeur");
-      return;
-    }
+
     router.push(paths.payment);
   };
-  console.log("itemsFiltered", itemsFiltered);
+
   return (
     <div className="container mx-auto p-4 font-tahoma">
       <div className="flex flex-col lg:flex-row gap-6">
@@ -86,17 +177,22 @@ export default function CheckoutView() {
                 <th className="py-4 px-3">Prix TTC</th>
                 <th className="py-4 px-3">QTE</th>
                 <th className="py-4 px-3">Total TTC</th>
+                <th className="py-4 px-3">Réduction</th>
                 <th className="py-4 px-3">Actions</th>
               </tr>
             </thead>
             <tbody>
               {itemsFiltered.length > 0 ? (
-                itemsFiltered.map((item) => (
-                  <tr key={item.id} className="border-b">
-                    <td className="py-3">
-                      <div className="flex gap-2 items-start">
+                itemsFiltered.map((item) => {
+                  const itemTotal = Number(item.price || 0) * item.quantity;
+                  const itemDiscount = Number(item.discount) || 0;
+                  const itemAfterDiscount = itemTotal - itemDiscount;
+
+                  return (
+                    <tr key={item.id} className="border-b">
+                      <td className="py-3 flex gap-2 items-start">
                         <img
-                          lazyload="lazy"
+                          loading="lazy"
                           src={item.image}
                           alt={item.name}
                           className="w-16 h-16 object-cover rounded"
@@ -111,52 +207,70 @@ export default function CheckoutView() {
                         >
                           {item.name}
                         </Link>
-                      </div>
-                    </td>
-                    <td className="py-3">
-                      {item.destinataires?.length > 0 ? (
-                        <ul className="list-disc pl-4">
-                          {item.destinataires.map((dest, index) => (
-                            <li key={index}>
-                              {dest.fullName && dest.email
-                                ? `${dest.fullName} — ${dest.email}`
-                                : "Destinataire non défini"}
-                            </li>
-                          ))}
-                        </ul>
-                      ) : (
-                        "Aucun destinataire défini"
-                      )}
-                    </td>
-                    <td className="py-3">
-                      {Number(item.price || 0).toFixed(2)} €
-                    </td>
-                    <td className="py-3">
-                      <div className="flex items-center gap-2">
+                      </td>
+                      <td className="py-3">
+                        {item.destinataires?.length > 0 ? (
+                          <ul className="list-disc pl-4">
+                            {item.destinataires.map((dest, index) => (
+                              <li key={index}>
+                                {dest.fullName && dest.email
+                                  ? `${dest.fullName} — ${dest.email}`
+                                  : "Destinataire non défini"}
+                              </li>
+                            ))}
+                          </ul>
+                        ) : (
+                          "Aucun destinataire défini"
+                        )}
+                      </td>
+                      <td className="py-3">
+                        {Number(item.price || 0).toFixed(2)} €
+                      </td>
+                      <td className="py-3">
                         <input
                           type="number"
                           readOnly
                           value={item.quantity}
                           className="w-12 text-center border border-gray-300 rounded-md"
                         />
-                      </div>
-                    </td>
-                    <td className="py-3">
-                      {(Number(item.price || 0) * item.quantity).toFixed(2)} €
-                    </td>
-                    <td className="py-3">
-                      <button
-                        onClick={() => handleDelete(item.id)}
-                        className="bg-red-500 hover:bg-red-700 text-white p-2 rounded-sm duration-150"
-                      >
-                        <FaRegTrashAlt />
-                      </button>
-                    </td>
-                  </tr>
-                ))
+                      </td>
+                      <td className="py-3">
+                        <div className="flex flex-col">
+                          <span
+                            className={
+                              itemDiscount > 0
+                                ? "line-through text-gray-400 text-xs"
+                                : ""
+                            }
+                          >
+                            {itemTotal.toFixed(2)} €
+                          </span>
+                          {itemDiscount > 0 && (
+                            <span className="text-green-600 font-semibold">
+                              {itemAfterDiscount.toFixed(2)} €
+                            </span>
+                          )}
+                        </div>
+                      </td>
+                      <td className="py-3 text-green-600 font-medium">
+                        {itemDiscount > 0
+                          ? `-${itemDiscount.toFixed(2)} €`
+                          : "-"}
+                      </td>
+                      <td className="py-3">
+                        <button
+                          onClick={() => handleDelete(item.id)}
+                          className="bg-red-500 hover:bg-red-700 text-white p-2 rounded-sm duration-150"
+                        >
+                          <FaRegTrashAlt />
+                        </button>
+                      </td>
+                    </tr>
+                  );
+                })
               ) : (
                 <tr>
-                  <td colSpan={6} className="py-6 text-center text-gray-400">
+                  <td colSpan={7} className="py-6 text-center text-gray-400">
                     Votre panier est vide.
                   </td>
                 </tr>
@@ -203,50 +317,97 @@ export default function CheckoutView() {
                   Total TTC : {grandTotal.toFixed(2)} €
                 </div>
               </div>
+          {/* Totaux */}
+          <div className="flex flex-col items-end mt-6 space-y-1 text-sm font-medium">
+            <div>Sous-total HT : {subtotalHT.toFixed(2)} €</div>
+            <div>Taxe 20 % : {tax.toFixed(2)} €</div>
+
+            {totalDiscount > 0 && (
+              <div className="text-green-600 font-semibold">
+                Réduction : -{totalDiscount.toFixed(2)} €
+              </div>
+            )}
+
+            <div className="text-base font-bold border-t pt-2 mt-2 w-48">
+              Total TTC : {grandTotal.toFixed(2)} €
             </div>
           </div>
         </div>
 
-        {/* Expéditeur */}
-        <div className="w-full lg:w-80 flex flex-col gap-6">
-          {user ? (
-            <>
-              <div className="bg-white p-4 rounded-lg shadow-sm">
-                <h4 className="text-xl font-semibold mb-4">Expéditeur</h4>
-                <div className="space-y-4">
-                  <input
-                    type="text"
-                    className="w-full border border-gray-300 rounded-lg p-2"
-                    placeholder="Nom et prénom"
-                    value={expediteurFullName}
-                    onChange={(e) => {
-                      setExpediteurFullName(e.target.value);
-                      handleExpediteurChange("fullName", e.target.value);
-                    }}
-                  />
-                  <textarea
-                    rows={4}
-                    className="w-full border border-gray-300 rounded-lg p-2"
-                    placeholder="Message (optionnel)"
-                    value={expediteurMessage}
-                    onChange={(e) => {
-                      setExpediteurMessage(e.target.value);
-                      handleExpediteurChange("message", e.target.value);
-                    }}
-                  />
-                </div>
+        <div className="w-full lg:w-80 flex flex-col gap-4 md:gap-6">
+          {/* Coupon */}
+          <div className="bg-white rounded-md p-4 md:p-6 shadow">
+            <h2 className="text-base font-semibold mb-3 md:mb-4">
+              Code Coupon
+            </h2>
+            <div className="flex flex-col sm:flex-row gap-2">
+              <input
+                type="text"
+                className="flex-1 border rounded-md p-2 w-full"
+                placeholder="Entrez votre code coupon"
+                value={couponCode}
+                onChange={(e) => setCouponCode(e.target.value.toUpperCase())}
+                disabled={couponApplied || couponLoading}
+              />
+              {couponApplied ? (
+                <button
+                  onClick={handleRemoveCoupon}
+                  className="w-full sm:w-auto px-4 py-2 bg-gray-600 text-white rounded-md hover:bg-gray-700 transition"
+                >
+                  Supprimer
+                </button>
+              ) : (
+                <button
+                  onClick={handleApplyCoupon}
+                  disabled={couponLoading || !couponCode}
+                  className="w-full sm:w-auto px-4 py-2 bg-black text-white rounded-md hover:bg-gray-900 disabled:opacity-50 disabled:cursor-not-allowed transition"
+                >
+                  {couponLoading ? "Validation..." : "Appliquer"}
+                </button>
+              )}
+            </div>
+            {couponApplied && couponData && (
+              <div className="mt-3 p-2 bg-green-50 border border-green-200 rounded text-sm text-green-700">
+                ✓ Code <strong>{couponData.code}</strong> appliqué
               </div>
+            )}
+          </div>
 
+          {user ? (
+            <div className="bg-white p-4 md:p-6 rounded-lg shadow-sm">
+              <h4 className="text-xl font-semibold mb-3 md:mb-4">Expéditeur</h4>
+              <div className="flex flex-col gap-3 md:gap-4">
+                <input
+                  type="text"
+                  className="w-full border border-gray-300 rounded-lg p-2"
+                  placeholder="Nom et prénom"
+                  value={expediteurFullName}
+                  onChange={(e) => {
+                    setExpediteurFullName(e.target.value);
+                    handleExpediteurChange("fullName", e.target.value);
+                  }}
+                />
+                <textarea
+                  rows={4}
+                  className="w-full border border-gray-300 rounded-lg p-2"
+                  placeholder="Message (optionnel)"
+                  value={expediteurMessage}
+                  onChange={(e) => {
+                    setExpediteurMessage(e.target.value);
+                    handleExpediteurChange("message", e.target.value);
+                  }}
+                />
+              </div>
               <button
                 onClick={gotCheckout}
-                className="inline-flex font-tahoma justify-center items-center rounded-full gap-2 uppercase font-normal tracking-widest transition-all duration-300 px-6 py-3 text-sm text-center bg-[#B6B499] hover:bg-black text-white"
+                className="w-full mt-4 inline-flex justify-center items-center rounded-full gap-2 uppercase font-normal tracking-widest transition-all duration-300 px-6 py-3 text-sm bg-[#B6B499] hover:bg-black text-white"
               >
                 Commander
               </button>
-            </>
+            </div>
           ) : (
-            <div className="bg-white p-2 md:p-4 rounded-lg shadow-sm">
-              <p className="mb-3">Vous devez vous identifier pour commander</p>
+            <div className="bg-white p-4 rounded-lg shadow-sm flex flex-col gap-3">
+              <p>Vous devez vous identifier pour commander</p>
               <button
                 onClick={() =>
                   router.push(
@@ -255,7 +416,7 @@ export default function CheckoutView() {
                     )}`
                   )
                 }
-                className="inline-flex font-tahoma justify-center rounded-full items-center gap-2 uppercase font-normal tracking-widest transition-all duration-300 px-6 py-3 text-sm text-center bg-[#B6B499] hover:bg-black text-white"
+                className="w-full inline-flex justify-center items-center gap-2 uppercase font-normal tracking-widest transition-all duration-300 px-6 py-3 text-sm bg-[#B6B499] hover:bg-black text-white rounded-full"
               >
                 Se connecter
               </button>

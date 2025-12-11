@@ -2,7 +2,7 @@ import React from "react";
 import { Link } from "react-router-dom";
 import { paths } from "src/router/paths";
 import theImage from "src/assets/images/SPC-Essence-1975x1318-02.jpg";
-import theImage2 from "src/assets/images/SPC-Catalogue-1975x1318-1-1024x683.jpg";
+import theImage2 from "src/assets/images/SPC-Catalogue-1975x1318-1.jpg";
 
 export default function ReferentielViewPage() {
   return (
