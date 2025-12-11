@@ -95,17 +95,36 @@ export default function ProductCarousel({ gallery = [], image = "" }) {
             >
                 <FaChevronRight size={20} />
             </button>
-            {/* Navigation Dots */}
+            {/* Navigation Dots (limited to max 20) */}
             <div className="absolute mt-3 left-1/2 transform -translate-x-1/2 flex space-x-2">
-                {images.map((_, index) => (
-                    <button
-                        key={index}
-                        onClick={() => goToSlide(index)}
-                        className={`w-2 h-2 rounded-full ${currentSlide === index ? "bg-black" : "bg-gray-400"
-                            } hover:bg-[#B6B498] transition-colors duration-300`}
-                        aria-label={`Go to slide ${index + 1}`}
-                    />
-                ))}
+                {(() => {
+                    const MAX_DOTS = 20;
+                    const dotCount = Math.min(images.length, MAX_DOTS);
+                    if (dotCount <= 1) return null;
+
+                    // create mapping from dot index -> image index (spread evenly)
+                    const mapDotToIndex = (dotIdx) => {
+                        if (dotCount === 1) return 0;
+                        // spread across 0..images.length-1
+                        return Math.round((dotIdx * (images.length - 1)) / (dotCount - 1));
+                    };
+
+                    // compute which dot should be active for currentSlide
+                    const activeDot = Math.round((currentSlide * (dotCount - 1)) / Math.max(1, images.length - 1));
+
+                    return Array.from({ length: dotCount }).map((_, dotIdx) => {
+                        const targetIndex = mapDotToIndex(dotIdx);
+                        return (
+                            <button
+                                key={dotIdx}
+                                onClick={() => goToSlide(targetIndex)}
+                                className={`w-2 h-2 rounded-full ${activeDot === dotIdx ? "bg-black" : "bg-gray-400"} hover:bg-[#B6B498] transition-colors duration-300`}
+                                aria-label={`Go to slide ${targetIndex + 1}`}
+                                title={images.length > dotCount ? `${targetIndex + 1} / ${images.length}` : undefined}
+                            />
+                        );
+                    });
+                })()}
             </div>
         </div>
     )

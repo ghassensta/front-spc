@@ -3,13 +3,14 @@ import { useCheckoutContext } from "../context/use-checkout-context";
 import { Link } from "react-router-dom";
 import { paths } from "../../../router/paths";
 import ButtonIcon from "../../../components/button-icon/button-icon";
-import { FaRegTrashAlt } from "react-icons/fa";
+import { FaRegTrashAlt, FaChevronDown, FaChevronUp } from "react-icons/fa";
 import { CONFIG } from "src/config-global";
 import { useAuthContext } from "src/auth/hooks/use-auth-context";
 import { toast } from "react-toastify";
 import { useRouter } from "src/hooks";
 
 export default function CheckoutView() {
+  const [loyaltyOpen, setLoyaltyOpen] = useState(false);
   const checkout = useCheckoutContext();
   const { user } = useAuthContext();
 
@@ -162,13 +163,46 @@ export default function CheckoutView() {
               )}
             </tbody>
           </table>
+          {/* Loyalty card + Totals in one row (stack on small screens) */}
+          <div className="mt-4 flex flex-col lg:flex-row items-start justify-between gap-4">
+            <div className="bg-white rounded-lg shadow-sm border w-full lg:w-72">
+              <button
+                type="button"
+                onClick={() => setLoyaltyOpen((s) => !s)}
+                className="w-full flex items-center justify-between p-3"
+              >
+                <div className="flex-1 text-left">
+                  <h5 className="text-base font-semibold">
+                    Validez cette commande pour gagner jusqu'à 695 points
+                  </h5>
+                </div>
+                <div className="ml-3 text-gray-600">
+                  {loyaltyOpen ? (
+                    <FaChevronUp size={16} />
+                  ) : (
+                    <FaChevronDown size={16} />
+                  )}
+                </div>
+              </button>
 
-          {/* Totaux */}
-          <div className="flex flex-col items-end mt-6 space-y-1 text-sm font-medium">
-            <div>Sous-total HT : {subtotalHT.toFixed(2)} €</div>
-            <div>Taxe 20 % : {tax.toFixed(2)} €</div>
-            <div className="text-base font-bold">
-              Total TTC : {grandTotal.toFixed(2)} €
+              <div className={`px-3 pb-3 ${loyaltyOpen ? "block" : "hidden"}`}>
+                <p className="text-sm text-gray-600">
+                  Les points de fidélité vous permettent d'obtenir des
+                  récompenses pour vos futurs achats. Le nombre final de points
+                  accordés peut différer si des remises supplémentaires sont
+                  appliquées.
+                </p>
+              </div>
+            </div>
+
+            <div className="flex-1 flex justify-end">
+              <div className="flex flex-col items-end space-y-1 text-sm font-medium">
+                <div>Sous-total HT : {subtotalHT.toFixed(2)} €</div>
+                <div>Taxe 20 % : {tax.toFixed(2)} €</div>
+                <div className="text-base font-bold">
+                  Total TTC : {grandTotal.toFixed(2)} €
+                </div>
+              </div>
             </div>
           </div>
         </div>

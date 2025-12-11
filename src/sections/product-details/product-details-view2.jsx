@@ -117,25 +117,28 @@ export default function ProductDetailsView({
       toast.error("Produit non disponible.");
       return;
     }
-
-    // Check for required fields
-    if (recipients.some((r) => !r.fullName || !r.email)) {
-      toast.error("Veuillez remplir tous les champs pour chaque destinataire.");
-      return;
-    }
-
-    // Check for duplicate emails
-    const emailSet = new Set(recipients.map((r) => r.email.toLowerCase()));
-    if (emailSet.size !== recipients.length) {
+    // Check for duplicate emails (ignore empty emails)
+    const emails = recipients
+      .map((r) => (r.email || "").toLowerCase())
+      .filter((e) => e.trim() !== "");
+    const emailSet = new Set(emails);
+    if (emailSet.size !== emails.length) {
       toast.error(
         "Emails en double détectés. Chaque destinataire doit avoir un email unique."
       );
       return;
     }
 
-    // Get unique recipients
+    // Get unique recipients.
+    // If email is empty, use an index-based key so multiple recipients
+    // without emails are kept distinct.
     const uniqueRecipients = Array.from(
-      new Map(recipients.map((r) => [r.email.toLowerCase(), r])).values()
+      new Map(
+        recipients.map((r, i) => {
+          const key = (r.email || "").trim() !== "" ? r.email.toLowerCase() : `__idx_${i}`;
+          return [key, r];
+        })
+      ).values()
     );
 
     // Add all recipients to checkout in a single call
@@ -143,7 +146,7 @@ export default function ProductDetailsView({
     checkout.onAddToCart({
       id: product.id,
       name: product.nom,
-      slug:product.slug,
+      slug: product.slug,
       price: product.prix,
       image: CONFIG.serverUrl + "/storage/" + product.image,
       description: product.description,
@@ -154,20 +157,35 @@ export default function ProductDetailsView({
         : uniqueRecipients.length,
     });
 
-    // Clear repeater state after adding
-    setRecipients([{ fullName: "", email: "" }]);
+    // Clear repeater state after adding (preserve today as default date)
+    setRecipients([
+      { fullName: "", email: "", message: "", date: new Date().toISOString().slice(0, 10) },
+    ]);
     navigate(paths.checkout);
   };
-
-  const [recipients, setRecipients] = useState([{ fullName: "", email: "" }]);
+  const [recipients, setRecipients] = useState([
+    { fullName: "", email: "", message: "", date: new Date().toISOString().slice(0, 10) },
+  ]);
   const handleAddRecipient = () => {
-    setRecipients([...recipients, { fullName: "", email: "" }]);
+    setRecipients([
+      ...recipients,
+      { fullName: "", email: "", message: "", date: new Date().toISOString().slice(0, 10) },
+    ]);
   };
 
   const handleRemoveRecipient = (index) => {
     const newRecipients = recipients.filter((_, i) => i !== index);
     setRecipients(
-      newRecipients.length > 0 ? newRecipients : [{ fullName: "", email: "" }]
+      newRecipients.length > 0
+        ? newRecipients
+        : [
+            {
+              fullName: "",
+              email: "",
+              message: "",
+              date: new Date().toISOString().slice(0, 10),
+            },
+          ]
     );
   };
 
@@ -193,9 +211,9 @@ export default function ProductDetailsView({
 
     try {
       if (!user) {
-            router.push(paths.auth.root)
-            return;
-          };
+        router.push(paths.auth.root);
+        return;
+      }
       await promise;
       setIsFav((prev) => !prev);
     } catch (err) {
@@ -232,7 +250,10 @@ export default function ProductDetailsView({
           </div>
 
           <div className="bg-[beige] px-8 py-4 col-span-2 lg:col-span-1 rounded-2xl">
-            <Link to={paths.spa.details(etablissement?.slug)} className="text-4xl font-bold mb-4 text-[#333]">
+            <Link
+              to={paths.spa.details(etablissement?.slug)}
+              className="text-4xl font-bold mb-4 text-[#333]"
+            >
               {etablissement?.nom}
             </Link>
 
@@ -320,7 +341,7 @@ export default function ProductDetailsView({
           </div>
 
           <div className="bg-[beige] px-8 py-4 col-span-2 lg:col-span-1 rounded-2xl">
-             {!!product?.prix_barre && (
+            {!!product?.prix_barre && (
               <span className="text-sm text-gray-500 line-through font-tahoma">
                 {product?.prix_barre}
               </span>
@@ -376,18 +397,53 @@ export default function ProductDetailsView({
                     <input
                       type="email"
                       className="w-full border border-gray-300 p-2"
-                      placeholder="Email du destinataire"
+                      placeholder="Email du destinataire (optionnel)"
                       value={recipient.email}
                       onChange={(e) =>
                         handleRecipientChange(index, "email", e.target.value)
                       }
                     />
+                    <textarea
+                      className="w-full border border-gray-300 p-2 mt-2"
+                      placeholder="Votre message (optionnel)"
+                      value={recipient.message || ""}
+                      onChange={(e) =>
+                        handleRecipientChange(index, "message", e.target.value)
+                      }
+                      rows={3}
+                    />
+                    <p className="text-sm text-gray-600 mt-2">
+                      Choisissez la date d'envoi (la carte cadeau sera envoyée
+                      à 7h du matin le jour J)
+                    </p>
+                    <input
+                      type="date"
+                      className="w-full border border-gray-300 p-2 mt-1"
+                      value={recipient.date || new Date().toISOString().slice(0, 10)}
+                      onChange={(e) =>
+                        handleRecipientChange(index, "date", e.target.value)
+                      }
+                    />
                     <button
-                  onClick={toggleFav}
-                  className="z-10  top-3 right-3 text-lg"
-                >
-                  {isFav ? <span className="flex items-center justify-center gap-2"><FaHeart className="text-red-500"/><span className="text-sm">Retirer de votre whishliste</span> </span>: <span className="flex items-center justify-center gap-2"><FaRegHeart className="text-red-500"/><span className="text-sm">Ajouter à votre whisliste</span></span>}
-                </button>
+                      onClick={toggleFav}
+                      className="z-10  top-3 right-3 text-lg"
+                    >
+                      {isFav ? (
+                        <span className="flex items-center justify-center gap-2">
+                          <FaHeart className="text-red-500" />
+                          <span className="text-sm">
+                            Retirer de votre whishliste
+                          </span>{" "}
+                        </span>
+                      ) : (
+                        <span className="flex items-center justify-center gap-2">
+                          <FaRegHeart className="text-red-500" />
+                          <span className="text-sm">
+                            Ajouter à votre whisliste
+                          </span>
+                        </span>
+                      )}
+                    </button>
                     <div className="flex items-center gap-2 text-xs">
                       <span>Quantité :</span>
                       <input
@@ -419,7 +475,7 @@ export default function ProductDetailsView({
 
             <div className="border-b border-black my-4 font-tahoma">
               <div className="py-3 gap-2">
-                <FaHeart className="inline-block mr-1"/>
+                <FaHeart className="inline-block mr-1" />
                 <TranslatedText text="Programme fidélité 1€ = 1 point : " />
                 <Link to={paths.recompense}>
                   <TranslatedText text="en savoir plus" className="underline" />
