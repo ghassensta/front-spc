@@ -5,7 +5,6 @@ import { paths } from "../../../router/paths";
 import ButtonIcon from "../../../components/button-icon/button-icon";
 import { FaRegTrashAlt, FaChevronDown, FaChevronUp } from "react-icons/fa";
 import { CONFIG } from "src/config-global";
-import { FaRegTrashAlt } from "react-icons/fa";
 import { useAuthContext } from "src/auth/hooks/use-auth-context";
 import { toast } from "react-toastify";
 import { useRouter } from "src/hooks";
@@ -313,23 +312,15 @@ export default function CheckoutView() {
               <div className="flex flex-col items-end space-y-1 text-sm font-medium">
                 <div>Sous-total HT : {subtotalHT.toFixed(2)} €</div>
                 <div>Taxe 20 % : {tax.toFixed(2)} €</div>
+                {totalDiscount > 0 && (
+                  <div className="text-green-600 font-semibold">
+                    Réduction : -{totalDiscount.toFixed(2)} €
+                  </div>
+                )}
                 <div className="text-base font-bold">
                   Total TTC : {grandTotal.toFixed(2)} €
                 </div>
               </div>
-          {/* Totaux */}
-          <div className="flex flex-col items-end mt-6 space-y-1 text-sm font-medium">
-            <div>Sous-total HT : {subtotalHT.toFixed(2)} €</div>
-            <div>Taxe 20 % : {tax.toFixed(2)} €</div>
-
-            {totalDiscount > 0 && (
-              <div className="text-green-600 font-semibold">
-                Réduction : -{totalDiscount.toFixed(2)} €
-              </div>
-            )}
-
-            <div className="text-base font-bold border-t pt-2 mt-2 w-48">
-              Total TTC : {grandTotal.toFixed(2)} €
             </div>
           </div>
         </div>
@@ -427,3 +418,4 @@ export default function CheckoutView() {
     </div>
   );
 }
+
