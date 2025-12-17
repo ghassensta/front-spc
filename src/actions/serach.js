@@ -108,7 +108,6 @@ export const useSearchProduits = (catSlug, villeSlug) => {
 
   useEffect(() => {
     const load = async () => {
-      // Si aucun filtre → pas de requête
       if (!catSlug && !villeSlug) {
         setData({ results: [], total: 0 });
         setLoading(false);
@@ -117,8 +116,10 @@ export const useSearchProduits = (catSlug, villeSlug) => {
 
       setLoading(true);
       try {
-        // Construire l'URL proprement
-        const url = `${endpoints.search.produits}/${catSlug || ''}/${villeSlug || ''}`.replace(/\/+$/, '');
+        // Construire l'URL sans doubles slashes
+        let url = endpoints.search.produits;
+        if (catSlug) url += `/${catSlug}`;
+        if (villeSlug) url += `/${villeSlug}`;
         const res = await fetcher(url);
         setData(res);
       } catch (err) {

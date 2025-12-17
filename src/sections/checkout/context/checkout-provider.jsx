@@ -12,6 +12,7 @@ export const CheckoutContext = createContext(undefined);
 export const CheckoutConsumer = CheckoutContext.Consumer;
 
 const STORAGE_KEY = "app-checkout";
+
 const initialState = {
   items: [],
   subtotal: 0,
@@ -23,6 +24,8 @@ const initialState = {
   totalItems: 0,
   selectedCreditIds: [],
   couponId: null,
+  couponTimestamp: null, // For coupon expiration
+  cartTimestamp: null, // New: for cart inactivity expiration (1 hour)
 };
 
 export function CheckoutProvider({ children }) {
@@ -39,6 +42,53 @@ function Container({ children }) {
     STORAGE_KEY,
     initialState
   );
+
+  // Check cart expiration (1 hour of inactivity)
+  const checkCartExpiration = useCallback(() => {
+    if (state.cartTimestamp) {
+      const now = Date.now();
+      const oneHour = 60 * 60 * 1000; // 1 hour in ms
+      if (now - state.cartTimestamp > oneHour) {
+        // Clear entire cart if inactive for 1 hour
+        setField("items", []);
+        setField("cartTimestamp", null);
+        setField("couponId", null);
+        setField("couponTimestamp", null);
+        console.log("Cart expired due to inactivity and cleared");
+      }
+    }
+  }, [state.cartTimestamp, setField]);
+
+  // Update cart timestamp on any cart change (add, delete, etc.)
+  const updateCartTimestamp = useCallback(() => {
+    setField("cartTimestamp", Date.now());
+  }, [setField]);
+
+  // Check coupon expiration (1 hour)
+  const checkCouponExpiration = useCallback(() => {
+    if (state.couponId && state.couponTimestamp) {
+      const now = Date.now();
+      const oneHour = 60 * 60 * 1000; // 1 hour in ms
+      if (now - state.couponTimestamp > oneHour) {
+        // Clear coupon and discounts
+        setField("couponId", null);
+        setField("couponTimestamp", null);
+        const updatedItems = state.items.map((item) => ({
+          ...item,
+          discount: 0,
+        }));
+        setField("items", updatedItems);
+        console.log("Coupon expired and cleared");
+      }
+    }
+  }, [state.couponId, state.couponTimestamp, state.items, setField]);
+
+  // Run expiration checks on mount and when relevant state changes
+  useEffect(() => {
+    checkCartExpiration();
+    checkCouponExpiration();
+  }, [checkCartExpiration, checkCouponExpiration]);
+
   // Recalcul des totaux
   const updateTotalField = useCallback(() => {
     const totalItems = state.items.reduce((acc, item) => acc + item.quantity, 0);
@@ -83,20 +133,28 @@ function Container({ children }) {
         });
       }
       setField("items", updatedItems);
+      updateCartTimestamp();
+      // Clear coupon on add
+      setField("couponId", null);
+      setField("couponTimestamp", null);
+      const clearedItems = updatedItems.map((item) => ({ ...item, discount: 0 }));
+      setField("items", clearedItems);
     },
-    [state.items, setField]
+    [state.items, setField, updateCartTimestamp]
   );
-
   
-
   const onDeleteCart = useCallback(
     (itemId) => {
-      setField(
-        "items",
-        state.items.filter((item) => item.id !== itemId)
-      );
+      const updatedItems = state.items.filter((item) => item.id !== itemId);
+      setField("items", updatedItems);
+      updateCartTimestamp();
+      // Clear coupon on delete
+      setField("couponId", null);
+      setField("couponTimestamp", null);
+      const clearedItems = updatedItems.map((item) => ({ ...item, discount: 0 }));
+      setField("items", clearedItems);
     },
-    [state.items, setField]
+    [state.items, setField, updateCartTimestamp]
   );
 
   const onCreateExpediteur = useCallback(
@@ -110,18 +168,32 @@ function Container({ children }) {
   );
 
   const onApplyDiscount = useCallback(
-    (discount) => setField("discount", discount),
-    [setField]
+    (discount) => {
+      setField("discount", discount);
+      updateCartTimestamp();
+    },
+    [setField, updateCartTimestamp]
   );
 
   const onApplyShipping = useCallback(
-    (shipping) => setField("shipping", shipping),
-    [setField]
+    (shipping) => {
+      setField("shipping", shipping);
+      updateCartTimestamp();
+    },
+    [setField, updateCartTimestamp]
   );
 
   const onApplyCouponId = useCallback(
-    (couponId) => setField("couponId", couponId),
-    [setField]
+    (couponId) => {
+      setField("couponId", couponId);
+      if (couponId) {
+        setField("couponTimestamp", Date.now());
+      } else {
+        setField("couponTimestamp", null);
+      }
+      updateCartTimestamp();
+    },
+    [setField, updateCartTimestamp]
   );
 
   const onSelectCredit = useCallback(
@@ -130,8 +202,9 @@ function Container({ children }) {
         if (prev.includes(creditId)) return prev.filter((id) => id !== creditId);
         return [...prev, creditId];
       });
+      updateCartTimestamp();
     },
-    [setField]
+    [setField, updateCartTimestamp]
   );
 
   const onReset = useCallback(() => {

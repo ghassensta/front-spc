@@ -1,10 +1,7 @@
 import React from "react";
-import { useCheckoutContext } from "src/sections/checkout/context";
 import { Eye } from "lucide-react";
 
 export default function CommandesViewPage({ order }) {
-  const checkout = useCheckoutContext();
-
   const formatPrice = (value) => (value ? Number(value).toFixed(2) : "0.00");
 
   return (
@@ -20,82 +17,118 @@ export default function CommandesViewPage({ order }) {
               <th className="border p-2 text-left text-sm">Produit</th>
               <th className="border p-2 text-left text-sm">Destinataire</th>
               <th className="border p-2 text-left text-sm">Quantité</th>
-              <th className="border p-2 text-left text-sm">Prix (TTC)</th>
-              <th className="border p-2 text-left text-sm">Carte</th>
+              <th className="border p-2 text-left text-sm">Prix Unitaire TTC</th>
+              <th className="border p-2 text-left text-sm">Total TTC </th>
+              <th className="border p-2 text-left text-sm">Carte Cadeau</th>
             </tr>
           </thead>
 
           <tbody>
-            {order?.lignes?.map((item) => (
-              <tr key={item.id} className="border-t">
-                {/* Nom produit */}
-                <td className="border p-2 text-sm">
-                  <div className="font-semibold">
-                    {item.produit?.nom || "Carte Cadeau"}
-                  </div>
+            {order?.lignes?.map((item) => {
+              const hasDiscount = Number(item.coupon_discount) > 0;
+              const originalPrice = Number(item.prix_unitaire) || 0;
+              const unitPriceAfterDiscount = originalPrice - (hasDiscount ? Number(item.coupon_discount) : 0);
+              const totalAfterDiscount = unitPriceAfterDiscount * item.quantite;
 
-                  {/* Statut */}
-                  <div className="text-xs mt-1">
-                    Statut:{" "}
-                    {item.statut === "En cours" && (
-                      <span className="inline-block px-2 py-1 rounded-full bg-orange-100 text-orange-800 font-semibold text-xs">
-                        {item.statut}
-                      </span>
-                    )}
-                    {item.statut === "Utilisée" && (
-                      <span className="inline-block px-2 py-1 rounded-full bg-green-100 text-green-800 font-semibold text-xs">
-                        {item.statut}
-                      </span>
-                    )}
-                    {item.statut !== "En cours" &&
-                      item.statut !== "Utilisée" && (
+              return (
+                <tr key={item.id} className="border-t">
+                  {/* Nom produit */}
+                  <td className="border p-2 text-sm">
+                    <div className="font-semibold">{item.produit?.nom || "Carte Cadeau"}</div>
+
+                    {/* Statut */}
+                    <div className="text-xs mt-1">
+                      Statut:{" "}
+                      {item.statut === "En cours" ? (
+                        <span className="inline-block px-2 py-1 rounded-full bg-orange-100 text-orange-800 font-semibold text-xs">
+                          {item.statut}
+                        </span>
+                      ) : item.statut === "Utilisée" ? (
+                        <span className="inline-block px-2 py-1 rounded-full bg-green-100 text-green-800 font-semibold text-xs">
+                          {item.statut}
+                        </span>
+                      ) : (
                         <span className="inline-block px-2 py-1 rounded-full bg-gray-100 text-gray-700 font-semibold text-xs">
                           {item.statut}
                         </span>
                       )}
-                  </div>
+                    </div>
 
-                  {/* Numéro de carte et code de validation */}
-                  <div className="text-xs mt-1 text-gray-600 space-y-0.5">
-                    <div>Numéro: {item.numero_carte || "—"}</div>
-                    <div>Code: {item.code_validation || "—"}</div>
-                  </div>
-                </td>
+                    {/* Coupon et remise */}
+                    {hasDiscount && (
+                      <div className="text-xs mt-1 text-red-600">
+                        Coupon: {formatPrice(item.coupon_discount)} € appliqué
+                      </div>
+                    )}
 
-                {/* Destinataire */}
-                <td className="border p-2 text-sm">
-                  <div className="font-semibold">
-                    {item.destinataire_name || "—"}
-                  </div>
-                  <div className="text-gray-600 text-xs">
-                    {item.destinataire_email}
-                  </div>
-                </td>
+                    {/* Numéro de carte et code validation */}
+                    <div className="text-xs mt-1 text-gray-600 space-y-0.5">
+                      <div>Numéro: {item.numero_carte || "—"}</div>
+                      <div>Code: {item.code_validation || "—"}</div>
+                    </div>
+                  </td>
 
-                {/* Quantité */}
-                <td className="border p-2 text-sm">{item.quantite}</td>
+                  {/* Destinataire */}
+                  <td className="border p-2 text-sm">
+                    <div className="font-semibold">{item.destinataire_name || "—"}</div>
+                    <div className="text-gray-600 text-xs">{item.destinataire_email || "—"}</div>
+                  </td>
 
-                {/* Prix */}
-                <td className="border p-2 text-sm">
-                  {formatPrice(item.prix_unitaire)} €
-                </td>
+                  {/* Quantité */}
+                  <td className="border p-2 text-sm">{item.quantite}</td>
 
-                {/* Lien PDF */}
-                <td className="border p-2 text-sm">
-                  {item.url_pdf_carte ? (
-                    <button
-                      onClick={() => window.open(item.url_pdf_carte, "_blank")}
-                      className="flex items-center gap-1 text-[#080808] hover:text-[#080808] underline text-sm"
-                    >
-                      <Eye size={16} />
-                      Voir
-                    </button>
-                  ) : (
-                    <span className="text-gray-400 text-sm">—</span>
-                  )}
-                </td>
-              </tr>
-            ))}
+                  {/* Prix unitaire */}
+                  <td className="border p-2 text-sm">
+                    {hasDiscount ? (
+                      <>
+                        <span className="line-through text-gray-400 text-xs">
+                          {formatPrice(originalPrice)} €
+                        </span>
+                        <br />
+                        <span className="font-semibold text-green-700">
+                          {formatPrice(unitPriceAfterDiscount)} €
+                        </span>
+                      </>
+                    ) : (
+                      <span>{formatPrice(originalPrice)} €</span>
+                    )}
+                  </td>
+
+                  {/* Total */}
+                  <td className="border p-2 text-sm">
+                    {hasDiscount ? (
+                      <>
+                        <span className="line-through text-gray-400 text-xs">
+                          {formatPrice(originalPrice * item.quantite)} €
+                        </span>
+                        <br />
+                        <span className="font-semibold text-green-700">
+                          {formatPrice(totalAfterDiscount)} €
+                        </span>
+                      </>
+                    ) : (
+                      <span>{formatPrice(originalPrice * item.quantite)} €</span>
+                    )}
+                  </td>
+
+                  {/* Lien PDF */}
+                  <td className="border p-2 text-sm">
+                    {item.url_pdf_carte ? (
+                      <a
+                        href={item.url_pdf_carte}
+                        download
+                        className="flex items-center gap-1 text-[#080808] hover:text-[#080808] underline text-sm"
+                      >
+                        <Eye size={16} />
+                        Télécharger
+                      </a>
+                    ) : (
+                      <span className="text-gray-400 text-sm">—</span>
+                    )}
+                  </td>
+                </tr>
+              );
+            })}
           </tbody>
         </table>
 
@@ -110,6 +143,15 @@ export default function CommandesViewPage({ order }) {
             <span>TVA (20%) :</span>
             <span>{formatPrice(order?.taxe)} €</span>
           </div>
+
+          {order?.coupon_code && (
+            <div className="flex justify-between text-red-600">
+              <span>Coupon appliqué :</span>
+              <span>
+                -{formatPrice(order?.lignes.reduce((acc, i) => acc + Number(i.coupon_discount || 0), 0))} €
+              </span>
+            </div>
+          )}
 
           {order?.credits > 0 && (
             <div className="flex justify-between text-red-600">

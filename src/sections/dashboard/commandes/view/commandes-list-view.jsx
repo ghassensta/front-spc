@@ -40,11 +40,12 @@ export default function CommandesListView() {
   const calculateTotalTTC = (order) => {
     if (!Array.isArray(order.lignes_commande)) return "0.00";
 
-    const totalLignes = order.lignes_commande.reduce(
-      (sum, ligne) =>
-        sum + parseFloat(ligne.prix_unitaire || 0) * (ligne.quantite || 0),
-      0
-    );
+    const totalLignes = order.lignes_commande.reduce((sum, ligne) => {
+      const prix = parseFloat(ligne.prix_unitaire || 0);
+      const quantite = parseInt(ligne.quantite || 0, 10);
+      const discount = parseFloat(ligne.remise_coupon || 0); // Remise sur la ligne
+      return sum + (prix * quantite - discount);
+    }, 0);
 
     const totalCredits = Array.isArray(order.credits)
       ? order.credits.reduce(

@@ -7,7 +7,9 @@ import { useAuthContext } from "src/auth/hooks/use-auth-context";
 import CreditOption from "src/components/checkout/CreditOption";
 import { useGetCreditsPanier } from "src/actions/credis-panier";
 import toast from "react-hot-toast";
+
 const TAX_RATE = 0.2;
+
 export default function PaymentView() {
   const checkout = useCheckoutContext();
   console.log("checkout2", checkout);
@@ -18,8 +20,17 @@ export default function PaymentView() {
   const [hasValidationError, setHasValidationError] = useState(false);
   const [errors, setErrors] = useState({});
   const { user } = useAuthContext();
-
   const { credits = [], loading: creditsLoading } = useGetCreditsPanier();
+
+  useEffect(() => {
+    if (checkout.couponId && checkout.couponTimestamp) {
+      const now = Date.now();
+      const oneHour = 60 * 60 * 1000;
+      if (now - checkout.couponTimestamp > oneHour) {
+        toast.info("Le coupon a expiré et le panier a été vidé.");
+      }
+    }
+  }, [checkout.couponId, checkout.couponTimestamp]);
 
   const totalBeforeDiscount = useMemo(() => {
     return (
@@ -40,17 +51,16 @@ export default function PaymentView() {
   }, [checkout.items]);
 
   const totalTTC = totalBeforeDiscount - totalDiscount;
-
   const totalHT = Number((totalTTC / (1 + TAX_RATE)).toFixed(2));
   const tvaAmount = Number((totalTTC - totalHT).toFixed(2));
-
-  const totalBeforeHT = Number((totalBeforeDiscount / (1 + TAX_RATE)).toFixed(2));
+  const totalBeforeHT = Number(
+    (totalBeforeDiscount / (1 + TAX_RATE)).toFixed(2)
+  );
   const tvaBefore = Number((totalBeforeDiscount - totalBeforeHT).toFixed(2));
 
   const { creditsParrainage, creditsNormaux } = useMemo(() => {
     const parrainage = [];
     const normaux = [];
-
     credits.forEach((credit) => {
       const desc = (credit.description || "").toLowerCase();
       const isParrainage =
@@ -58,11 +68,9 @@ export default function PaymentView() {
         desc.includes("parrainage") ||
         desc.includes("filleul") ||
         credit.source_id === 1;
-
       if (isParrainage) parrainage.push(credit);
       else normaux.push(credit);
     });
-
     return { creditsParrainage: parrainage, creditsNormaux: normaux };
   }, [credits]);
 
@@ -75,41 +83,51 @@ export default function PaymentView() {
   const totalAPayer = Math.max(0, totalTTC - totalCreditsApplied);
   const creditsDepassent = totalCreditsApplied > totalTTC;
 
-  console.log("Button disabled:", loading || creditsLoading || creditsDepassent, { loading, creditsLoading, creditsDepassent });
+  console.log(
+    "Button disabled:",
+    loading || creditsLoading || creditsDepassent,
+    { loading, creditsLoading, creditsDepassent }
+  );
 
   const handleSubmit = async () => {
     console.log("handleSubmit called");
-    
     // Always validate and show errors - even if form is closed
-    const { fullName, address, city, postalCode, country } = checkout.expediteur || {};
-    console.log("Expediteur fields:", { fullName, address, city, postalCode, country });
-
+    const { fullName, address, city, postalCode, country } =
+      checkout.expediteur || {};
+    console.log("Expediteur fields:", {
+      fullName,
+      address,
+      city,
+      postalCode,
+      country,
+    });
     const newErrors = {};
-    if (!fullName || fullName.trim() === "") newErrors.fullName = "Le nom complet est requis.";
-    if (!address || address.trim() === "") newErrors.address = "L'adresse est requise.";
+    if (!fullName || fullName.trim() === "")
+      newErrors.fullName = "Le nom complet est requis.";
+    if (!address || address.trim() === "")
+      newErrors.address = "L'adresse est requise.";
     if (!city || city.trim() === "") newErrors.city = "La ville est requise.";
-    if (!postalCode || postalCode.trim() === "") newErrors.postalCode = "Le code postal est requis.";
-    if (!country || country.trim() === "") newErrors.country = "Le pays est requis.";
-
+    if (!postalCode || postalCode.trim() === "")
+      newErrors.postalCode = "Le code postal est requis.";
+    if (!country || country.trim() === "")
+      newErrors.country = "Le pays est requis.";
     if (Object.keys(newErrors).length > 0) {
       setErrors(newErrors);
       setHasValidationError(true);
       setIsEditingAddress(true); // Open the address section to show errors
       console.log("Validation failed", newErrors);
       toast.error("Veuillez remplir tous les champs requis de l'adresse.");
-      
       // Scroll to first error and focus
       setTimeout(() => {
         const firstKey = Object.keys(newErrors)[0];
         const el = document.querySelector(`[name=expediteur_${firstKey}]`);
         if (el) {
-          el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+          el.scrollIntoView({ behavior: "smooth", block: "center" });
           if (el.focus) el.focus();
         }
       }, 100);
       return;
     }
-    
     if (
       !checkout.expediteur ||
       !checkout.items ||
@@ -121,19 +139,15 @@ export default function PaymentView() {
       );
       return;
     }
-
     setErrors({});
     setHasValidationError(false);
     console.log("Validation passed");
-
     if (creditsDepassent) {
       toast.error("Les crédits sélectionnés dépassent le montant total.");
       return;
     }
-
     setLoading(true);
     console.log("Starting fetch to create order");
-
     try {
       const res = await fetch(`${CONFIG.serverUrl}/api/commandes`, {
         method: "POST",
@@ -150,12 +164,9 @@ export default function PaymentView() {
           payment_method: totalAPayer > 0 ? "stripe" : "credits_only",
         }),
       });
-
       const data = await res.json();
       console.log("Order creation response:", data);
-
       if (!data.success) throw new Error(data.message);
-
       const commandesIds = data.commandes_ids;
       if (totalAPayer > 0) {
         const sessionRes = await fetch(
@@ -166,9 +177,8 @@ export default function PaymentView() {
             body: JSON.stringify({ commandes_ids: commandesIds }),
           }
         );
-
         const sessionData = await sessionRes.json();
-        console.log("sessionData",sessionData);
+        console.log("sessionData", sessionData);
         if (sessionData?.url) {
           window.location.href = sessionData.url;
         } else {
@@ -198,13 +208,11 @@ export default function PaymentView() {
         delete newErrors[field];
         return newErrors;
       });
-      
       // If no more errors, clear validation error state
       if (Object.keys(errors).length === 1) {
         setHasValidationError(false);
       }
     }
-    
     checkout.onCreateExpediteur({
       ...checkout.expediteur,
       [field]: value,
@@ -233,7 +241,6 @@ export default function PaymentView() {
             {user.email}
           </div>
         </div>
-
         {creditsParrainage.length > 0 && (
           <CreditOption
             key="parrainage"
@@ -248,7 +255,6 @@ export default function PaymentView() {
             }}
           />
         )}
-
         {creditsNormaux.length > 0 && (
           <CreditOption
             key="normaux"
@@ -262,7 +268,6 @@ export default function PaymentView() {
             }}
           />
         )}
-
         <div className="bg-white rounded-md p-6 shadow">
           <div className="flex justify-between items-center mb-4">
             <h2 className="text-base font-semibold">Adresse de facturation</h2>
@@ -273,7 +278,6 @@ export default function PaymentView() {
               />
             </button>
           </div>
-
           {!isEditingAddress ? (
             <div className="space-y-1 text-sm">
               <p className="font-medium">
@@ -302,9 +306,9 @@ export default function PaymentView() {
                   type="text"
                   name="expediteur_fullName"
                   className={`w-full border rounded-md p-2 focus:outline-none focus:ring-2 ${
-                    errors.fullName 
-                      ? 'border-red-500 focus:ring-red-500' 
-                      : 'border-gray-300 focus:ring-blue-400'
+                    errors.fullName
+                      ? "border-red-500 focus:ring-red-500"
+                      : "border-gray-300 focus:ring-blue-400"
                   }`}
                   value={checkout.expediteur?.fullName || ""}
                   onChange={(e) =>
@@ -317,7 +321,6 @@ export default function PaymentView() {
                   <p className="text-red-600 text-sm mt-1">{errors.fullName}</p>
                 )}
               </div>
-              
               <div>
                 <label className="block text-sm font-medium mb-1">
                   Adresse <span className="text-red-500">*</span>
@@ -326,9 +329,9 @@ export default function PaymentView() {
                   type="text"
                   name="expediteur_address"
                   className={`w-full border rounded-md p-2 focus:outline-none focus:ring-2 ${
-                    errors.address 
-                      ? 'border-red-500 focus:ring-red-500' 
-                      : 'border-gray-300 focus:ring-blue-400'
+                    errors.address
+                      ? "border-red-500 focus:ring-red-500"
+                      : "border-gray-300 focus:ring-blue-400"
                   }`}
                   value={checkout.expediteur?.address || ""}
                   onChange={(e) =>
@@ -341,7 +344,6 @@ export default function PaymentView() {
                   <p className="text-red-600 text-sm mt-1">{errors.address}</p>
                 )}
               </div>
-              
               <div>
                 <label className="block text-sm font-medium mb-1">
                   Complément d'adresse
@@ -356,7 +358,6 @@ export default function PaymentView() {
                   placeholder="Appartement, étage..."
                 />
               </div>
-              
               <div className="grid grid-cols-2 gap-4">
                 <div>
                   <label className="block text-sm font-medium mb-1">
@@ -366,9 +367,9 @@ export default function PaymentView() {
                     type="text"
                     name="expediteur_city"
                     className={`w-full border rounded-md p-2 focus:outline-none focus:ring-2 ${
-                      errors.city 
-                        ? 'border-red-500 focus:ring-red-500' 
-                        : 'border-gray-300 focus:ring-blue-400'
+                      errors.city
+                        ? "border-red-500 focus:ring-red-500"
+                        : "border-gray-300 focus:ring-blue-400"
                     }`}
                     value={checkout.expediteur?.city || ""}
                     onChange={(e) =>
@@ -395,7 +396,6 @@ export default function PaymentView() {
                   />
                 </div>
               </div>
-              
               <div className="grid grid-cols-2 gap-4">
                 <div>
                   <label className="block text-sm font-medium mb-1">
@@ -405,9 +405,9 @@ export default function PaymentView() {
                     type="text"
                     name="expediteur_postalCode"
                     className={`w-full border rounded-md p-2 focus:outline-none focus:ring-2 ${
-                      errors.postalCode 
-                        ? 'border-red-500 focus:ring-red-500' 
-                        : 'border-gray-300 focus:ring-blue-400'
+                      errors.postalCode
+                        ? "border-red-500 focus:ring-red-500"
+                        : "border-gray-300 focus:ring-blue-400"
                     }`}
                     value={checkout.expediteur?.postalCode || ""}
                     onChange={(e) =>
@@ -417,7 +417,9 @@ export default function PaymentView() {
                     required
                   />
                   {errors.postalCode && (
-                    <p className="text-red-600 text-sm mt-1">{errors.postalCode}</p>
+                    <p className="text-red-600 text-sm mt-1">
+                      {errors.postalCode}
+                    </p>
                   )}
                 </div>
                 <div>
@@ -428,9 +430,9 @@ export default function PaymentView() {
                     type="text"
                     name="expediteur_country"
                     className={`w-full border rounded-md p-2 focus:outline-none focus:ring-2 ${
-                      errors.country 
-                        ? 'border-red-500 focus:ring-red-500' 
-                        : 'border-gray-300 focus:ring-blue-400'
+                      errors.country
+                        ? "border-red-500 focus:ring-red-500"
+                        : "border-gray-300 focus:ring-blue-400"
                     }`}
                     value={checkout.expediteur?.country || "France"}
                     onChange={(e) =>
@@ -440,13 +442,16 @@ export default function PaymentView() {
                     required
                   />
                   {errors.country && (
-                    <p className="text-red-600 text-sm mt-1">{errors.country}</p>
+                    <p className="text-red-600 text-sm mt-1">
+                      {errors.country}
+                    </p>
                   )}
                 </div>
               </div>
-              
               <div>
-                <label className="block text-sm font-medium mb-1">Téléphone</label>
+                <label className="block text-sm font-medium mb-1">
+                  Téléphone
+                </label>
                 <input
                   type="tel"
                   className="w-full border border-gray-300 rounded-md p-2 focus:outline-none focus:ring-2 focus:ring-blue-400"
@@ -460,19 +465,34 @@ export default function PaymentView() {
             </div>
           )}
         </div>
-
-        {/* Paiement */}
         <div className="bg-white rounded-md p-6 shadow">
-          <h2 className="text-base font-semibold mb-4">Paiement</h2>
-          <p className="text-sm">
-            {totalAPayer > 0
-              ? `Le montant restant de ${totalAPayer.toFixed(
-                  2
-                )} € sera payé par carte via Stripe.`
-              : "Votre commande est intégralement réglée avec vos crédits !"}
+          {/* Points */}
+          <h2 className="text-base font-semibold mb-2">Points</h2>
+          <p className="text-sm text-gray-700 mb-6">
+            Vous allez gagner{" "}
+            <span className="font-semibold text-yellow-600">
+              {totalAPayer.toFixed(0)}
+            </span>{" "}
+            points avec cette commande.
+          </p>
+          <div className="border-t my-4"></div>
+          <h2 className="text-base font-semibold mb-2">Paiement</h2>
+          <p className="text-sm text-gray-700">
+            {totalAPayer > 0 ? (
+              <>
+                Le montant restant de{" "}
+                <span className="font-semibold">
+                  {totalAPayer.toFixed(2)} €
+                </span>{" "}
+                sera payé par carte via Stripe.
+              </>
+            ) : (
+              <span className="font-semibold text-green-600">
+                Votre commande est intégralement réglée avec vos crédits !
+              </span>
+            )}
           </p>
         </div>
-
         {/* Bouton Commander */}
         <div className="mt-8">
           <button
@@ -484,14 +504,12 @@ export default function PaymentView() {
           </button>
         </div>
       </div>
-
       {/* === RÉSUMÉ DROITE === */}
       <div>
         <div className="bg-white rounded-md p-6 shadow space-y-4">
           <h2 className="text-base font-semibold mb-4">
             Résumé de la commande
           </h2>
-
           {checkout.items?.map((item) => (
             <div
               key={item.id}
@@ -506,14 +524,21 @@ export default function PaymentView() {
               <div className="flex-1">
                 <p className="font-medium">{item.name}</p>
                 <p className="text-sm text-gray-500">Qté : {item.quantity}</p>
-                {item.discount > 0 && <p className="text-sm text-green-600">- {Number(item.discount).toFixed(2)} €</p>}
+                {item.discount > 0 && (
+                  <p className="text-sm text-green-600">
+                    - {Number(item.discount).toFixed(2)} €
+                  </p>
+                )}
               </div>
               <div className="font-bold">
-                {(Number(item.price || 0) * item.quantity - (Number(item.discount) || 0)).toFixed(2)} €
+                {(
+                  Number(item.price || 0) * item.quantity -
+                  (Number(item.discount) || 0)
+                ).toFixed(2)}{" "}
+                €
               </div>
             </div>
           ))}
-
           <div className="border-t pt-4 space-y-2">
             <div className="flex justify-between text-sm">
               <span>Sous-total HT</span>
@@ -533,21 +558,18 @@ export default function PaymentView() {
                 <span>- {totalDiscount.toFixed(2)} €</span>
               </div>
             )}
-
             {appliedParrainage > 0 && (
               <div className="flex justify-between text-green-600 font-medium">
                 <span>Crédit parrainage</span>
                 <span>- {appliedParrainage.toFixed(2)} €</span>
               </div>
             )}
-
             {appliedNormaux > 0 && (
               <div className="flex justify-between text-green-600 font-medium">
                 <span>Crédits fidélité & cadeaux</span>
                 <span>- {appliedNormaux.toFixed(2)} €</span>
               </div>
             )}
-
             <div className="flex justify-between font-bold text-xl border-t pt-4 mt-4">
               <span>Montant à payer</span>
               <span className={totalAPayer === 0 ? "text-green-600" : ""}>
@@ -556,7 +578,6 @@ export default function PaymentView() {
             </div>
           </div>
         </div>
-
         <div className="bg-white rounded-md p-6 shadow mt-4">
           <h2 className="text-base font-semibold mb-3">
             Note de commande (facultatif)

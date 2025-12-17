@@ -47,7 +47,7 @@ export default function ServicesTemplates({ data = {} }) {
             {produits.map((prod) => (
               <CardItem
                 key={prod.id}
-                id={prod.id}
+                id={prod.produit_id}
                 image={prod.image}
                 gallery={prod.galleries_images}
                 slug={prod.slug}

@@ -70,7 +70,7 @@ export default function TemplateRestaurant({ data = [] }) {
           {data.type_produit.map((prod) => (
             <CardItem
               key={prod.id}
-              id={prod.id}
+              id={prod.produit_id}
               image={prod.image}
               nom={prod.nom}
               slug={prod.slug}

@@ -25,31 +25,31 @@ export default function CardItem({
   gallery,
   ordre,
 }) {
+
   const [remaining, setRemaining] = useState("");
   const [showFullDescription, setShowFullDescription] = useState(false);
   const [images, setImages] = useState([]);
   const [currentSlide, setCurrentSlide] = useState(0);
 
   const dotsContainerRef = useRef(null);
-const dotRefs = useRef([]);
+  const dotRefs = useRef([]);
 
-useEffect(() => {
-  const activeDot = dotRefs.current[currentSlide];
-  if (activeDot && dotsContainerRef.current) {
-    const container = dotsContainerRef.current;
-    const containerWidth = container.offsetWidth;
-    const dotLeft = activeDot.offsetLeft;
-    const dotWidth = activeDot.offsetWidth;
-    const scrollTo = dotLeft - (containerWidth / 2) + (dotWidth / 2);
-    
-    container.scrollTo({
-      left: scrollTo,
-      behavior: 'smooth'
-    });
-  }
-}, [currentSlide]);
+  useEffect(() => {
+    const activeDot = dotRefs.current[currentSlide];
+    if (activeDot && dotsContainerRef.current) {
+      const container = dotsContainerRef.current;
+      const containerWidth = container.offsetWidth;
+      const dotLeft = activeDot.offsetLeft;
+      const dotWidth = activeDot.offsetWidth;
+      const scrollTo = dotLeft - containerWidth / 2 + dotWidth / 2;
 
-  // Combine image and gallery into images state
+      container.scrollTo({
+        left: scrollTo,
+        behavior: "smooth",
+      });
+    }
+  }, [currentSlide]);
+
   useEffect(() => {
     const newImages = [];
     if (image) {
@@ -93,7 +93,7 @@ useEffect(() => {
   };
 
   const timerRef = useRef(null);
-  
+
   // Auto-slide functionality
   useEffect(() => {
     const startTimer = () => {
@@ -138,12 +138,18 @@ useEffect(() => {
     scrollbar-width: none;
   }
 `;
-// Add this function to calculate visible dots range
-const getVisibleDots = (current, total, visibleCount = 5) => {
-  let start = Math.max(0, Math.min(current - Math.floor(visibleCount / 2), total - visibleCount));
-  start = Math.max(0, Math.min(start, total - visibleCount));
-  return Array.from({ length: Math.min(visibleCount, total) }, (_, i) => start + i);
-};
+  // Add this function to calculate visible dots range
+  const getVisibleDots = (current, total, visibleCount = 5) => {
+    let start = Math.max(
+      0,
+      Math.min(current - Math.floor(visibleCount / 2), total - visibleCount)
+    );
+    start = Math.max(0, Math.min(start, total - visibleCount));
+    return Array.from(
+      { length: Math.min(visibleCount, total) },
+      (_, i) => start + i
+    );
+  };
   return (
     <motion.div className="flex flex-col gap-4 py-7 border-b border-gray-400 md:flex-row">
       {/* Image */}
@@ -181,39 +187,45 @@ const getVisibleDots = (current, total, visibleCount = 5) => {
         </button>
         {/* Navigation Dots */}
         <style>{dotsStyle}</style>
-<div 
-  ref={dotsContainerRef}
-  className="dots-container absolute bottom-2 left-0 right-0 flex justify-center items-center h-6"
->
-  <div className="flex items-center gap-2">
-    {getVisibleDots(currentSlide, images.length).map((index) => (
-      <button
-        key={index}
-        onClick={() => {
-          setCurrentSlide(index);
-          resetTimer();
-        }}
-        className={`flex-shrink-0 rounded-full transition-all duration-300 ${
-          currentSlide === index 
-            ? "w-3 h-3 bg-black" 
-            : "w-2 h-2 bg-gray-400 hover:bg-gray-500"
-        }`}
-        aria-label={`Go to slide ${index + 1}`}
-      />
-    ))}
-  </div>
-</div>
+        <div
+          ref={dotsContainerRef}
+          className="dots-container absolute bottom-2 left-0 right-0 flex justify-center items-center h-6"
+        >
+          <div className="flex items-center gap-2">
+            {getVisibleDots(currentSlide, images.length).map((index) => (
+              <button
+                key={index}
+                onClick={() => {
+                  setCurrentSlide(index);
+                  resetTimer();
+                }}
+                className={`flex-shrink-0 rounded-full transition-all duration-300 ${
+                  currentSlide === index
+                    ? "w-3 h-3 bg-black"
+                    : "w-2 h-2 bg-gray-400 hover:bg-gray-500"
+                }`}
+                aria-label={`Go to slide ${index + 1}`}
+              />
+            ))}
+          </div>
+        </div>
       </div>
 
       {/* Description */}
       <div className="w-full md:w-[40%]">
         <h3 className="text-2xl text-left font-normal text-gray-900">{nom}</h3>
-        <p className="text-left font-normal font-tahoma text-black mt-1">
-          {showFullDescription
-            ? description
-            : description?.length > 150
-            ? description.slice(0, 175) + "..."
-            : description}
+
+        <div className="text-left font-normal font-tahoma text-black mt-1">
+          <div
+            dangerouslySetInnerHTML={{
+              __html: showFullDescription
+                ? description
+                : description?.length > 150
+                ? description.slice(0, 175) + "..."
+                : description || "",
+            }}
+          />
+
           {description && description.length > 150 && (
             <span
               className="font-semibold font-tahoma text-black cursor-pointer"
@@ -222,7 +234,8 @@ const getVisibleDots = (current, total, visibleCount = 5) => {
               {showFullDescription ? " (Voir moins)" : " (Lire la suite)"}
             </span>
           )}
-        </p>
+        </div>
+
         <p className="text-left font-roboto text-base text-[#333] mt-2">
           {access_spa}
         </p>
@@ -293,8 +306,6 @@ const getVisibleDots = (current, total, visibleCount = 5) => {
 
       {/* Mobile: Badges + Prix + Bouton en ligne */}
       <div className="flex md:hidden w-full items-center justify-between gap-3">
-        
-
         {/* Prix au centre */}
         <div className="flex flex-col items-center font-tahoma">
           {prix &&
@@ -325,7 +336,7 @@ const getVisibleDots = (current, total, visibleCount = 5) => {
               </span>
             )}
         </div>
-{/* Badges à gauche */}
+        {/* Badges à gauche */}
         <div className="flex flex-col gap-2">
           {exclusivite_spc === 1 && (
             <img
@@ -340,9 +351,7 @@ const getVisibleDots = (current, total, visibleCount = 5) => {
               <span className="text-xs font-medium text-red-600">
                 Offre flash
               </span>
-              <div className="text-xs font-bold text-gray-800">
-                {remaining}
-              </div>
+              <div className="text-xs font-bold text-gray-800">{remaining}</div>
             </div>
           )}
         </div>

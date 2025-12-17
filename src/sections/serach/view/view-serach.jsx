@@ -6,7 +6,16 @@ import { useSearchProduits } from "src/actions/serach";
 import { useParams } from "react-router-dom";
 
 export default function SearchPageView() {
-  const { catSlug = "", villeSlug = "" } = useParams();
+  const params = useParams();
+  let { catSlug, villeSlug } = params;
+
+  // Optimisation: Détecter si le premier paramètre est en réalité un villeSlug (contient - suivi de 5 chiffres)
+  // Cela permet de gérer les recherches uniquement par ville (ex: /recherche/paris-75001)
+  if (!villeSlug && catSlug && /\-\d{5}$/.test(catSlug)) {
+    villeSlug = catSlug;
+    catSlug = null;
+  }
+
   const { data, loading } = useSearchProduits(catSlug, villeSlug);
 
   const produits = data?.results || [];
@@ -14,10 +23,14 @@ export default function SearchPageView() {
   const categorie = data?.categorie;
   const ville = data?.ville;
   const codePostal = data?.code_postal;
-
+  console.log("produits", produits);
   const title = categorie
-    ? `${categorie.name} à ${ville || ''} ${codePostal ? `(${codePostal})` : ''}`.trim()
-    : `Résultats à ${ville || ''} ${codePostal ? `(${codePostal})` : ''}`.trim();
+    ? `${categorie.name} à ${ville || ""} ${
+        codePostal ? `(${codePostal})` : ""
+      }`.trim()
+    : `Résultats à ${ville || ""} ${
+        codePostal ? `(${codePostal})` : ""
+      }`.trim();
 
   return (
     <div className="max-w-6xl mx-auto p-4">
@@ -45,6 +58,9 @@ export default function SearchPageView() {
               description={p.adresse_complete}
               location={p.adresse_complete}
               offreValue={p.remise_produit}
+              price={p.prix}
+              remise_desc_produit={p.remise_desc_produit}
+              exclusivite_spc={p.exclusivite_spc}
             />
           ))}
         </div>

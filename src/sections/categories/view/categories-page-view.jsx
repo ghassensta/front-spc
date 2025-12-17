@@ -252,7 +252,7 @@ export default function CategoriesPageView({
               currentData.map((card) => (
                 <Card
                   key={card.id}
-                  id={card.id}
+                  id={card.produit_id}
                   to={paths.product(card.slug)}
                   headTitle={card.etablissement.nom}
                   image={`${CONFIG.serverUrl}/storage/${card.image}`}
@@ -264,6 +264,7 @@ export default function CategoriesPageView({
                   price={card.prix+ "€"}
                   duration={card.duree}
                   exclusivite_spc={card.exclusivite_spc}
+                  remise_desc_produit={card.remise_desc_produit}
                 />
               ))
             ) : (

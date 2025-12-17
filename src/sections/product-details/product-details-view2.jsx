@@ -135,7 +135,10 @@ export default function ProductDetailsView({
     const uniqueRecipients = Array.from(
       new Map(
         recipients.map((r, i) => {
-          const key = (r.email || "").trim() !== "" ? r.email.toLowerCase() : `__idx_${i}`;
+          const key =
+            (r.email || "").trim() !== ""
+              ? r.email.toLowerCase()
+              : `__idx_${i}`;
           return [key, r];
         })
       ).values()
@@ -159,17 +162,32 @@ export default function ProductDetailsView({
 
     // Clear repeater state after adding (preserve today as default date)
     setRecipients([
-      { fullName: "", email: "", message: "", date: new Date().toISOString().slice(0, 10) },
+      {
+        fullName: "",
+        email: "",
+        message: "",
+        date: new Date().toISOString().slice(0, 10),
+      },
     ]);
     navigate(paths.checkout);
   };
   const [recipients, setRecipients] = useState([
-    { fullName: "", email: "", message: "", date: new Date().toISOString().slice(0, 10) },
+    {
+      fullName: "",
+      email: "",
+      message: "",
+      date: new Date().toISOString().slice(0, 10),
+    },
   ]);
   const handleAddRecipient = () => {
     setRecipients([
       ...recipients,
-      { fullName: "", email: "", message: "", date: new Date().toISOString().slice(0, 10) },
+      {
+        fullName: "",
+        email: "",
+        message: "",
+        date: new Date().toISOString().slice(0, 10),
+      },
     ]);
   };
 
@@ -322,14 +340,21 @@ export default function ProductDetailsView({
               />
             )}
 
-            <div className="leading-base text-base font-light font-tahoma text-[#333] my-3">
-              {product?.description || "Aucune description disponible."}
-            </div>
+            <div
+              className="leading-base text-base font-light font-tahoma text-[#333] my-3"
+              dangerouslySetInnerHTML={{
+                __html:
+                  product?.description || "Aucune description disponible.",
+              }}
+            />
 
             {product?.conditions_utilisation && (
-              <div className="leading-base text-base font-tahoma">
-                {product.conditions_utilisation}
-              </div>
+              <div
+                className="leading-base text-base font-tahoma"
+                dangerouslySetInnerHTML={{
+                  __html: product.conditions_utilisation,
+                }}
+              />
             )}
 
             <Link
@@ -413,17 +438,21 @@ export default function ProductDetailsView({
                       rows={3}
                     />
                     <p className="text-sm text-gray-600 mt-2">
-                      Choisissez la date d'envoi (la carte cadeau sera envoyée
-                      à 7h du matin le jour J)
+                      Choisissez la date d'envoi (la carte cadeau sera envoyée à
+                      7h du matin le jour J)
                     </p>
                     <input
                       type="date"
                       className="w-full border border-gray-300 p-2 mt-1"
-                      value={recipient.date || new Date().toISOString().slice(0, 10)}
+                      value={
+                        recipient.date || new Date().toISOString().slice(0, 10)
+                      }
+                      min={new Date().toISOString().slice(0, 10)}
                       onChange={(e) =>
                         handleRecipientChange(index, "date", e.target.value)
                       }
                     />
+
                     <button
                       onClick={toggleFav}
                       className="z-10  top-3 right-3 text-lg"
@@ -432,14 +461,14 @@ export default function ProductDetailsView({
                         <span className="flex items-center justify-center gap-2">
                           <FaHeart className="text-red-500" />
                           <span className="text-sm">
-                            Retirer de votre whishliste
+                            Retirer de votre wishlist
                           </span>{" "}
                         </span>
                       ) : (
                         <span className="flex items-center justify-center gap-2">
                           <FaRegHeart className="text-red-500" />
                           <span className="text-sm">
-                            Ajouter à votre whisliste
+                            Ajouter à votre wishlist
                           </span>
                         </span>
                       )}

@@ -26,8 +26,12 @@ export default function Card({
   duration,
   inWishlist,
   exclusivite_spc,
+  remise_desc_produit,
+  
 }) {
+  console.log("price", price);
   console.log("exclusivite_spc", exclusivite_spc);
+  console.log('produit_id',id);
   const { user } = useAuthContext();
   const [isFav, setIsFav] = useState(inWishlist);
   const router = useRouter();
@@ -111,9 +115,13 @@ export default function Card({
           </Link>
         )}
 
-        {!!offreValue && (
+        {(offreValue || remise_desc_produit) && (
           <span className="bg-[#B6B499] w-max text-black font-bold font-roboto px-2 py-1 absolute bottom-0 left-1/2 translate-y-1/2 -translate-x-1/2 rounded-full text-s z-10">
-            <TranslatedText text={`${offreValue}% de remise`} />
+            <TranslatedText
+              text={
+                offreValue ? `${offreValue}% de remise` : remise_desc_produit
+              }
+            />
           </span>
         )}
 
@@ -135,17 +143,15 @@ export default function Card({
 
         <h3 className="font-normal text-center text-lg">{title}</h3>
 
-        {!!offreValue && (
-          <div className="flex gap-1 items-center justify-center">
-            {!!duration && (
-              <>
-                <TranslatedText text="Durée" as="p" className="text-center" />
-                <strong className="mr-3">{duration}</strong>
-              </>
-            )}
-            <strong className="text-xl">{price}</strong>
-          </div>
-        )}
+        <div className="flex gap-1 items-center justify-center">
+          {!!duration && (
+            <>
+              <TranslatedText text="Durée" as="p" className="text-center" />
+              <strong className="mr-3">{duration}</strong>
+            </>
+          )}
+          <strong className="text-xl">{price ?? 0} €</strong>
+        </div>
 
         {buttonTitle && (
           <div className="mt-4 w-full flex items-center justify-center">

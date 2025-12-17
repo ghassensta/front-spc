@@ -1,6 +1,6 @@
-// src/components/header/Serach.jsx
+// src/components/header/search.jsx
 import React, { useState } from "react";
-import { MapPin, X, Loader2, Search } from "lucide-react";
+import { MapPin, X, Loader2, Search as SearchIcon } from "lucide-react";
 import { FaSearch as FaSearchIcon } from "react-icons/fa";
 
 import {
@@ -10,7 +10,7 @@ import {
 import { Link } from "react-router-dom";
 import { useGetHomePage } from "src/actions/homepage";
 
-const Serach = () => {
+const Search = () => {
   const { sections } = useGetHomePage();
 
   const {
@@ -63,9 +63,16 @@ const Serach = () => {
   const serviceSlug = selectedService ? generateSlug(selectedService) : "";
   const villeSlug = villeQuery ? generateSlug(villeQuery) : "";
 
-  const searchUrl = hasSearch
-    ? `/recherche/service=${encodeURIComponent(serviceSlug)}&ville=${encodeURIComponent(villeSlug)}`
-    : null;
+  // Optimisation: Construction de l'URL avec paramètres de chemin pour respecter la logique existante
+  // - Si catégorie et ville : /recherche/{serviceSlug}/{villeSlug}
+  // - Si seulement catégorie : /recherche/{serviceSlug}
+  // - Si seulement ville : /recherche/{villeSlug} (géré dans SearchPageView pour détecter)
+  let searchUrl = null;
+  if (hasSearch) {
+    searchUrl = "/recherche";
+    if (serviceSlug) searchUrl += `/${serviceSlug}`;
+    if (villeSlug) searchUrl += `/${villeSlug}`;
+  }
 
   return (
     <div className="relative w-screen left-[calc(-50vw+50%)] bg-white py-12">
@@ -170,7 +177,7 @@ const Serach = () => {
               <div className="absolute top-full left-0 right-0 mt-1 bg-white border border-gray-200 rounded-md shadow-lg z-50 max-h-60 overflow-y-auto">
                 <div className="p-2 border-b border-gray-100">
                   <div className="relative">
-                    <Search className="absolute left-2 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-400" />
+                    <SearchIcon className="absolute left-2 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-400" />
                     <input
                       type="text"
                       value={serviceQuery}
@@ -208,7 +215,7 @@ const Serach = () => {
                               />
                             ) : (
                               <div className="w-10 h-10 bg-gray-200 rounded flex items-center justify-center">
-                                <Search className="w-4 h-4 text-gray-400" />
+                                <SearchIcon className="w-4 h-4 text-gray-400" />
                               </div>
                             )}
                             <div className="flex-1">
@@ -228,12 +235,10 @@ const Serach = () => {
                             onClick={() => handleSelectCategory(item.label)}
                             className="w-full text-left flex items-center gap-3 p-3 hover:bg-gray-50"
                           >
-                            
                             <div className="flex-1">
                               <div className="font-medium text-sm">
                                 {item.label}
                               </div>
-                              
                             </div>
                           </button>
                         )}
@@ -249,7 +254,7 @@ const Serach = () => {
             )}
           </div>
 
-          {/* BOUTON RECHERCHER – Maintenant avec le texte "Rechercher" */}
+          {/* BOUTON RECHERCHER */}
           <div className="flex flex-col items-start md:items-center justify-end w-full md:w-auto">
             <label className="block text-sm text-gray-700 mb-1 mt-3 text-left md:text-center w-full">
             </label>
@@ -270,8 +275,7 @@ const Serach = () => {
                 className="bg-gray-300 text-gray-500 p-3 rounded-md cursor-not-allowed w-full md:w-auto flex items-center justify-center min-w-0 font-medium text-sm uppercase tracking-wider mt-1"
               >
                 <span className="mx-auto">
-                  Rechercher              
-
+                  Rechercher
                 </span>
               </button>
             )}
@@ -282,4 +286,4 @@ const Serach = () => {
   );
 };
 
-export default Serach;
+export default Search;
