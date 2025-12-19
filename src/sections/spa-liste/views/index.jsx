@@ -86,12 +86,12 @@ export default function CategoriesPageView({
 
   return (
     <div className="max-w-6xl mx-auto p-1">
-      {/* Titre des filtres */}
+      {}
       <p className="text-center text-4xl font-semibold my-4">Filtrer par</p>
 
-      {/* Filtres avec react-select */}
+      {}
       <div className="grid grid-cols-1 md:grid-cols-3 px-2 gap-4 font-roboto mb-16">
-        {/* Région / Ville */}
+        {}
         <div className="border rounded-lg">
           <Select
             instanceId="select-region"
@@ -108,7 +108,7 @@ export default function CategoriesPageView({
             menuPosition="fixed"
           />
         </div>
-        {/* Type d'établissement */}
+        {}
         <div className="border rounded-lg">
           <Select
             instanceId="select-etablissement"
@@ -127,7 +127,7 @@ export default function CategoriesPageView({
           />
         </div>
 
-        {/* Services & équipements */}
+        {}
         <div className="border rounded-lg">
           <Select
             instanceId="select-service"
@@ -147,7 +147,7 @@ export default function CategoriesPageView({
         </div>
       </div>
 
-      {/* Titre de la section */}
+      {}
       <div className="mb-10">
         <h1 className="text-center text-4xl font-normal my-4">
           Nos établissements
@@ -158,7 +158,7 @@ export default function CategoriesPageView({
         </h2>
       </div>
 
-      {/* Cartes */}
+      {}
       {loading ? (
         <CategoriesSkeleton />
       ) : (

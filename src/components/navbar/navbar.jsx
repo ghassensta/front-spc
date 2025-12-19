@@ -12,6 +12,7 @@ import { CheckoutContext } from "../../sections/checkout/context/checkout-provid
 import { useAuthContext } from "src/auth/hooks/use-auth-context";
 
 import { useGetWishlist } from "src/actions/wishlists";
+import GiftCardIcon from "../../assets/spa-icons/SPC-picto-menu-carte-cadeau.svg";
 
 export default function Navbar() {
   const [showMenu, setShowMenu] = useState(false);
@@ -27,7 +28,7 @@ export default function Navbar() {
 
   return (
     <>
-      <LanguageNav cartCount={cartCount} wishlistCount={wishlistCount}/>
+      <LanguageNav cartCount={cartCount} wishlistCount={wishlistCount} />
 
       <div className="w-full md:px-8 py-2 flex flex-col md:flex-row items-center justify-between relative gap-4">
         <div className="w-full md:w-auto flex items-center justify-between">
@@ -51,20 +52,24 @@ export default function Navbar() {
         </div>
 
         <div className="hidden md:flex items-center gap-2">
-          
-            <Link
-              to={user ? paths.dashboard.wishlist : paths.auth.root}
-              className="relative hover:text-gray-600 transition"
-            >
-              <FaRegHeart size={24} />
+          {}
+          <Link to={paths.cadeau} className="hover:opacity-70 transition">
+            <img src={GiftCardIcon} alt="Carte cadeau" className="w-6 h-6" />
+          </Link>
+          {}
+          <Link
+            to={user ? paths.dashboard.wishlist : paths.auth.root}
+            className="relative hover:text-gray-600 transition"
+          >
+            <FaRegHeart size={24} />
+            {wishlistCount > 0 && (
+              <span className="absolute -top-2 -right-2 bg-red-500 text-white text-xs font-bold rounded-full w-4 h-4 flex items-center justify-center">
+                {wishlistCount}
+              </span>
+            )}
+          </Link>
 
-              {wishlistCount > 0 && (
-                <span className="absolute -top-2 -right-2 bg-red-500 text-white text-xs font-bold rounded-full w-4 h-4 flex items-center justify-center">
-                  {wishlistCount}
-                </span>
-              )}
-            </Link>
-
+          {}
           {user ? (
             <Link to={paths.dashboard.root}>
               <FaUser size={24} className="text-black" />
@@ -75,6 +80,7 @@ export default function Navbar() {
             </Link>
           )}
 
+          {}
           <Link
             to={paths.checkout}
             className="relative hover:text-gray-600 transition"

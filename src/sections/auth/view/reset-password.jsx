@@ -43,7 +43,6 @@ export default function ResetPassword() {
       setConfirmPassword("");
       router.push(paths.auth.login);
     }).catch((error) => {
-      console.error(error);
     }).finally(() => {
       setIsSubmitting(false);
     });

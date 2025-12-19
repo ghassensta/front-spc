@@ -90,14 +90,13 @@ export default function DevenirPartnerView() {
         }
       });
     } catch (error) {
-      console.error("Erreur lors de l'envoi", error);
       toast.error("Une erreur inattendue est survenue.");
     }
   };
 
   return (
     <>
-      {/* Hero Section */}
+      {}
       <div
         className="w-screen relative left-[calc(-50vw+50%)] h-96 bg-black bg-center bg-cover bg-fixed overflow-hidden hidden md:block"
         style={{
@@ -113,7 +112,7 @@ export default function DevenirPartnerView() {
         </div>
       </div>
 
-      {/* Pourquoi nous rejoindre */}
+      {}
       <section className="max-w-7xl mx-auto px-4 py-16">
         <h2 className="text-4xl font-bold text-center mb-6 md:mb-12 font-serif">
           Pourquoi nous rejoindre ?
@@ -160,7 +159,7 @@ export default function DevenirPartnerView() {
         </div>
       </section>
 
-      {/* Form */}
+      {}
       <div className="bg-[#FBF6EC] p-8 w-screen relative left-[calc(-50vw+50%)]">
         <section className="max-w-6xl mx-auto px-4 py-16 font-roboto">
           <h2 className="text-2xl md:text-3xl font-bold text-center mb-6 font-serif">
@@ -177,7 +176,7 @@ export default function DevenirPartnerView() {
             method="POST"
             className="grid grid-cols-1 md:grid-cols-2 gap-4"
           >
-            {/* Nom établissement */}
+            {}
             <label className="flex flex-col md:col-span-2">
               Nom de l'établissement*
               <input
@@ -190,7 +189,7 @@ export default function DevenirPartnerView() {
               />
             </label>
 
-            {/* Nom */}
+            {}
             <label className="flex flex-col">
               Nom*
               <input
@@ -203,7 +202,7 @@ export default function DevenirPartnerView() {
               />
             </label>
 
-            {/* Prénom */}
+            {}
             <label className="flex flex-col">
               Prénom
               <input
@@ -215,7 +214,7 @@ export default function DevenirPartnerView() {
               />
             </label>
 
-            {/* Téléphone */}
+            {}
             <label className="flex flex-col">
               Téléphone
               <input
@@ -227,7 +226,7 @@ export default function DevenirPartnerView() {
               />
             </label>
 
-            {/* Email */}
+            {}
             <label className="flex flex-col">
               E-mail*
               <input
@@ -240,7 +239,7 @@ export default function DevenirPartnerView() {
               />
             </label>
 
-            {/* Pays */}
+            {}
             <label className="flex flex-col">
               Pays
               <select
@@ -256,7 +255,7 @@ export default function DevenirPartnerView() {
               </select>
             </label>
 
-            {/* Adresse */}
+            {}
             <label className="flex flex-col">
               Adresse complète
               <input
@@ -268,7 +267,7 @@ export default function DevenirPartnerView() {
               />
             </label>
 
-            {/* Site web */}
+            {}
             <label className="flex flex-col">
               Site web
               <input
@@ -280,7 +279,7 @@ export default function DevenirPartnerView() {
               />
             </label>
 
-            {/* Rôle */}
+            {}
             <label className="flex flex-col">
               Rôle de la personne qui nous contacte
               <input
@@ -292,7 +291,7 @@ export default function DevenirPartnerView() {
               />
             </label>
 
-            {/* Secteur */}
+            {}
             <label className="flex flex-col">
               Secteur d'activité*
               <select
@@ -310,7 +309,7 @@ export default function DevenirPartnerView() {
               </select>
             </label>
 
-            {/* Comment connu */}
+            {}
             <label className="flex flex-col">
               Comment avez-vous connu Spa & Prestige Collection ?
               <input
@@ -322,7 +321,7 @@ export default function DevenirPartnerView() {
               />
             </label>
 
-            {/* Message */}
+            {}
             <label className="flex flex-col md:col-span-2">
               Message*
               <textarea
@@ -335,7 +334,7 @@ export default function DevenirPartnerView() {
               ></textarea>
             </label>
 
-            {/* Fichier */}
+            {}
             <label className="flex flex-col md:col-span-2">
               Ajouter photos (JPEG, PNG, PDF et 5 Mo maximum)
               <input
@@ -347,7 +346,7 @@ export default function DevenirPartnerView() {
               />
             </label>
 
-            {/* Submit */}
+            {}
             <div className="md:col-span-2 flex justify-center">
               <button
                 type="submit"

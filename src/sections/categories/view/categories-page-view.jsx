@@ -30,7 +30,6 @@ export default function CategoriesPageView({
   const typeOptions = types.map((t) => ({ value: t.id, label: t.name }));
   const villeOptions = villes.map((v) => ({ value: v.id, label: v.name }));
   const serviceOptions = services.map((s) => ({ value: s.id, label: s.name }));
-  console.log("services options",serviceOptions);
 
   const customStyles = {
     control: (provided) => ({
@@ -73,8 +72,6 @@ export default function CategoriesPageView({
     }));
     setCurrentPage(1);
   };
-
-  console.log(cardsByCategory)
 
   const filteredCards = useMemo(() => {
     return cardsByCategory.filter((card) => {
@@ -161,7 +158,7 @@ export default function CategoriesPageView({
   if (filterLoading) {
     return <FiltersSkeleton />;
   }
-  //console.log("card",card);
+  //
 
   return (
     <div className="max-w-6xl mx-auto p-1">
@@ -201,7 +198,7 @@ export default function CategoriesPageView({
           />
         </div>
 
-        {/* Services & équipements */}
+        {}
         <div className="border rounded-lg">
           <Select
             instanceId="select-service"
@@ -232,7 +229,7 @@ export default function CategoriesPageView({
         <CategoriesSkeleton />
       ) : (
         <>
-          {/* Affichage du nombre de résultats et de la page */}
+          {}
           {filteredCards.length > 0 && (
             <div className="px-3 mb-4 flex justify-between items-center text-sm text-gray-600">
               <p>
@@ -252,7 +249,7 @@ export default function CategoriesPageView({
               currentData.map((card) => (
                 <Card
                   key={card.id}
-                  id={card.produit_id}
+                  id={card.id}
                   to={paths.product(card.slug)}
                   headTitle={card.etablissement.nom}
                   image={`${CONFIG.serverUrl}/storage/${card.image}`}

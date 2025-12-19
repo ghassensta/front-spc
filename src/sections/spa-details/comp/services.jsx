@@ -54,7 +54,7 @@ export default function Tabs({ data = [] }) {
 
   return (
     <div className="w-full max-w-7xl mx-auto mt-10" id="etab-services">
-      {/* TAB BUTTONS */}
+      {}
       <div className="relative flex flex-wrap justify-center items-center gap-1 text-sm md:text-base overflow-x-auto pb-2">
         {tabs.map((tab, index) => (
           <React.Fragment key={tab.id}>
@@ -72,7 +72,7 @@ export default function Tabs({ data = [] }) {
         ))}
       </div>
 
-      {/* CONTENT */}
+      {}
       <AnimatePresence mode="wait">
         <motion.div
           key={active.id}

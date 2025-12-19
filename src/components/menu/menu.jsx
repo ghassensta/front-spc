@@ -32,7 +32,7 @@ export default function Menu({ show, onClose }) {
 
   return (
     <>
-      {/* Overlay */}
+      {}
       <AnimatePresence>
         {show && (
           <motion.div
@@ -45,7 +45,7 @@ export default function Menu({ show, onClose }) {
         )}
       </AnimatePresence>
 
-      {/* Side Menu */}
+      {}
       <AnimatePresence>
         {show && (
           <motion.div

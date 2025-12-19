@@ -6,7 +6,6 @@ import { CONFIG } from "src/config-global";
 export default function ServicesTemplates({ data = {} }) {
   // Sécurité pour éviter les erreurs si data est vide
   const produits = data.type_produit || [];
-  console.log(produits)
   const equipements = data.type_equipement.map(
     (pivot) => pivot.service_equipement || []
   );
@@ -14,7 +13,7 @@ export default function ServicesTemplates({ data = {} }) {
 
   return (
     <div className="max-w-7xl mx-auto flex flex-col md:flex-row gap-6 items-start ">
-      {/* Content Section */}
+      {}
       <div className="w-full text-center">
         <div className="p-2 bg-[#F6F5E9] rounded-xl">
           <h2 className="text-2xl md:text-3xl font-bold text-gray-900 mb-2">
@@ -41,7 +40,7 @@ export default function ServicesTemplates({ data = {} }) {
           )}
         </div>
 
-        {/* Produits */}
+        {}
         {produits.length > 0 ? (
           <div className="grid bg-[#F6F5E9] px-6 grid-cols-1 md:grid-cols-1 gap-6 mt-6 rounded-xl">
             {produits.map((prod) => (

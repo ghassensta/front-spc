@@ -223,7 +223,6 @@ const LogoutButton = ({ isMobile }) => {
         await signOut();
         await checkUserSession?.();
       } catch (error) {
-        console.error(error);
       }
     }, [checkUserSession]);
 
@@ -336,7 +335,7 @@ export default function DashboardLayout({ children }) {
   return (
     <div className="max-w-6xl mx-auto font-tahoma py-8 px-4 sm:px-6 lg:px-8">
       <div className="grid grid-cols-1 md:grid-cols-5 gap-6">
-        {/* Desktop Sidebar */}
+        {}
         <motion.aside
           className="hidden md:block md:col-span-1 bg-white border rounded-md p-4 sticky top-8 shadow-sm"
           initial={{ opacity: 0, x: -20 }}
@@ -381,9 +380,9 @@ export default function DashboardLayout({ children }) {
           </ul>
         </motion.aside>
 
-        {/* Main Content */}
+        {}
         <main className="col-span-1 md:col-span-4 bg-white rounded-md p-1 shadow-sm">
-          {/* Mobile Top Nav */}
+          {}
           <motion.nav
             className="md:hidden sticky top-0 z-30 bg-white border-b shadow-sm py-3 px-1 mb-6"
             initial={{ y: 100, opacity: 0 }}
@@ -413,7 +412,7 @@ export default function DashboardLayout({ children }) {
             </ul>
           </motion.nav>
 
-          {/* Page Content */}
+          {}
           {children}
         </main>
       </div>

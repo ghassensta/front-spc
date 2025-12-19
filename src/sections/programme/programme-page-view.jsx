@@ -26,7 +26,7 @@ export default function ProgrammePageView() {
         }}
       >
         <div className="absolute inset-0 bg-black bg-opacity-40" />{" "}
-        {/* overlay */}
+        {}
         <div className="absolute inset-0 flex items-center justify-center">
           <h1 className="text-white text-4xl font-bold">
             PROGRAMME DE PARRAINAGE
@@ -36,9 +36,7 @@ export default function ProgrammePageView() {
 
       <div className="bg-[#FBF6EC] w-screen relative left-[calc(-50vw+50%)] mt-12 mb-4">
         <div className="flex flex-col justify-center gap-4 max-w-6xl mx-auto px-4 py-6 text-center w-full md:w-2/5">
-          <p className="font-tahoma">
-            <strong>Bientôt disponible :</strong> notre programme de parrainage.
-          </p>
+          
           <h2 className="text-4xl font-bold">
             Offrez 5€, et recevez 5€ en retour.
           </h2>
@@ -47,9 +45,6 @@ export default function ProgrammePageView() {
             bientôt, vous pourrez inviter vos proches à rejoindre Spa & Prestige
             Collection, et recevoir un bon d’achat à chaque première commande
             validée.
-          </p>
-          <p className="text-xs font-tahoma mb-8">
-            Choisissez votre mode de partage
           </p>
           <div className="flex items-center justify-center gap-6 text-2xl text-gray-600">
             <a href="https://facebook.com" target="_blank">

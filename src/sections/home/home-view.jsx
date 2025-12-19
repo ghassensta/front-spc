@@ -26,7 +26,7 @@ export default function HomeView() {
     <>
       <Header />
 
-      {/* ETABLISSEMENT SECTION  */}
+      {}
       <div className="max-w-6xl mx-auto">
         <h2 className="text-4xl font-bold text-center">
           <TranslatedText text="Des Moments Sélectionnés pour Vous." />{" "}
@@ -60,7 +60,7 @@ export default function HomeView() {
         </div>
       </div>
 
-      {/* CARTE CADEAUX SECTION  */}
+      {}
       <div
         style={{
           backgroundImage: `url(${theImage})`,
@@ -69,7 +69,7 @@ export default function HomeView() {
       >
         <div className="w-full flex flex-col z-10 relative items-center p-4 lg:p-16">
           <div className="bg-white/80 text-center flex flex-col items-center py-8 px-6 rounded-xl shadow-lg">
-            {/* Vérifier que sectionCarte existe avant de lire ses propriétés */}
+            {}
             {carte && carte.image && (
               <img
                 lazyload="lazy"
@@ -79,14 +79,14 @@ export default function HomeView() {
               />
             )}
 
-            {/* Description (si carte existe) */}
+            {}
             {carte && carte.description && (
               <p className="text-black font-tahoma text-base font-medium lg:w-1/2 uppercase mb-4">
                 {carte.description}
               </p>
             )}
 
-            {/* Bouton (si carte existe) */}
+            {}
             {carte && carte.button_url && (
               <ButtonIcon
                 title={carte.button_text || "OFFRIR"}
@@ -264,7 +264,7 @@ export default function HomeView() {
         </div>
       </div>
 
-      {/* PROCHAINEMENT & CARDS SECTION  */}
+      {}
       <div
         className=" relative w-screen left-[calc(-50vw+50%)]"
         style={{
@@ -297,7 +297,7 @@ export default function HomeView() {
         </div>
       </div>
 
-      {/* L'UNIVERS SECTION  */}
+      {}
       <div className=" relative w-screen left-[calc(-50vw+50%)] bg-[#f6f5e9]">
         <div className="max-w-6xl mx-auto py-4">
           <h2 className="text-4xl font-bold text-center">
@@ -326,7 +326,7 @@ export default function HomeView() {
         </div>
       </div>
 
-      {/* ACTUALITES SECTION  */}
+      {}
       {actualites.length > 0 && (
         <div className="bg-white rounded-lg  left-[calc(-50vw+50%)] relative w-screen">
           <div className="max-w-6xl mx-auto py-4">
@@ -363,7 +363,7 @@ export default function HomeView() {
         </div>
       )}
 
-      {/* MARQUES PARTENAIRES SECTION  */}
+      {}
       {marques?.extra_data?.logos && (
         <div className="bg-white rounded-lg">
           <div className="max-w-6xl mx-auto py-12">
@@ -374,7 +374,7 @@ export default function HomeView() {
               {marques.description}
             </p>
 
-            {/* Gestion du loading et erreur */}
+            {}
 
             {Object.keys(marques?.extra_data?.logos || {}).length > 0 ? (
               <Swiper

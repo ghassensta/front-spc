@@ -7,10 +7,10 @@ export default function CommandesViewPage({ order }) {
   return (
     <div className="mt-4 grid grid-cols-1 gap-4 lg:grid-cols-3">
       <div className="border p-4 col-span-3 overflow-x-auto">
-        {/* TITRE */}
+        {}
         <h4 className="mt-4 font-semibold text-xl">Articles commandés :</h4>
 
-        {/* TABLE DES ARTICLES */}
+        {}
         <table className="w-full mt-2 min-w-[600px] border-collapse">
           <thead>
             <tr>
@@ -32,11 +32,11 @@ export default function CommandesViewPage({ order }) {
 
               return (
                 <tr key={item.id} className="border-t">
-                  {/* Nom produit */}
+                  {}
                   <td className="border p-2 text-sm">
                     <div className="font-semibold">{item.produit?.nom || "Carte Cadeau"}</div>
 
-                    {/* Statut */}
+                    {}
                     <div className="text-xs mt-1">
                       Statut:{" "}
                       {item.statut === "En cours" ? (
@@ -54,30 +54,30 @@ export default function CommandesViewPage({ order }) {
                       )}
                     </div>
 
-                    {/* Coupon et remise */}
+                    {}
                     {hasDiscount && (
                       <div className="text-xs mt-1 text-red-600">
                         Coupon: {formatPrice(item.coupon_discount)} € appliqué
                       </div>
                     )}
 
-                    {/* Numéro de carte et code validation */}
+                    {}
                     <div className="text-xs mt-1 text-gray-600 space-y-0.5">
                       <div>Numéro: {item.numero_carte || "—"}</div>
                       <div>Code: {item.code_validation || "—"}</div>
                     </div>
                   </td>
 
-                  {/* Destinataire */}
+                  {}
                   <td className="border p-2 text-sm">
                     <div className="font-semibold">{item.destinataire_name || "—"}</div>
                     <div className="text-gray-600 text-xs">{item.destinataire_email || "—"}</div>
                   </td>
 
-                  {/* Quantité */}
+                  {}
                   <td className="border p-2 text-sm">{item.quantite}</td>
 
-                  {/* Prix unitaire */}
+                  {}
                   <td className="border p-2 text-sm">
                     {hasDiscount ? (
                       <>
@@ -94,7 +94,7 @@ export default function CommandesViewPage({ order }) {
                     )}
                   </td>
 
-                  {/* Total */}
+                  {}
                   <td className="border p-2 text-sm">
                     {hasDiscount ? (
                       <>
@@ -111,7 +111,7 @@ export default function CommandesViewPage({ order }) {
                     )}
                   </td>
 
-                  {/* Lien PDF */}
+                  {}
                   <td className="border p-2 text-sm">
                     {item.url_pdf_carte ? (
                       <a
@@ -132,7 +132,7 @@ export default function CommandesViewPage({ order }) {
           </tbody>
         </table>
 
-        {/* TOTAUX */}
+        {}
         <div className="mt-4 border-t pt-2 space-y-1 text-sm">
           <div className="flex justify-between">
             <span>Sous-total (HT) :</span>
@@ -171,7 +171,7 @@ export default function CommandesViewPage({ order }) {
           </div>
         </div>
 
-        {/* STATUT PAIEMENT */}
+        {}
         <div className="mt-6">
           {order?.statut ? (
             <div className="inline-block px-3 py-1 rounded bg-green-100 text-green-700 font-semibold">

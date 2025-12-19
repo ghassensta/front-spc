@@ -92,7 +92,7 @@ const Search = () => {
           className="flex flex-col md:flex-row justify-center items-center gap-4 font-tahoma"
           onSubmit={(e) => e.preventDefault()}
         >
-          {/* OÙ ? */}
+          {}
           <div className="relative w-full md:w-64">
             <label className="block text-sm text-gray-700 mb-1 text-left">
               Où ?
@@ -132,7 +132,7 @@ const Search = () => {
             )}
           </div>
 
-          {/* QUOI ? */}
+          {}
           <div className="relative w-full md:w-64">
             <label className="block text-sm text-gray-700 mb-1 text-left">
               Quoi ?
@@ -254,7 +254,7 @@ const Search = () => {
             )}
           </div>
 
-          {/* BOUTON RECHERCHER */}
+          {}
           <div className="flex flex-col items-start md:items-center justify-end w-full md:w-auto">
             <label className="block text-sm text-gray-700 mb-1 mt-3 text-left md:text-center w-full">
             </label>

@@ -67,7 +67,7 @@ export default function HomePageView() {
 
       {actualites.length > 0 && (
         <>
-          {/* VERSION DESKTOP / TABLETTE */}
+          {}
           <div className="hidden md:block bg-[#f6f5e9] rounded-lg left-[calc(-50vw+50%)] relative w-screen">
             <div className="max-w-6xl mx-auto py-6 px-3">
               <h2 className="text-3xl font-bold text-center">
@@ -107,7 +107,7 @@ export default function HomePageView() {
             </div>
           </div>
 
-          {/* VERSION MOBILE */}
+          {}
           <div className="md:hidden py-6 md:py-16 bg-[#f6f5e9]">
             <div className="max-w-6xl mx-auto px-4">
               <h2 className="text-4xl font-bold text-center mb-6 md:mb-12">
@@ -158,7 +158,7 @@ export default function HomePageView() {
         </>
       )}
 
-      {/* SECTION 6 : Marques partenaires */}
+      {}
       {section6 &&
         section6.extra_data?.logos?.length > 0 && (
           <div className="bg-white py-2 md:py-16">

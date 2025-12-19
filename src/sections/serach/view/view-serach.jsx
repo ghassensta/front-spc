@@ -23,7 +23,6 @@ export default function SearchPageView() {
   const categorie = data?.categorie;
   const ville = data?.ville;
   const codePostal = data?.code_postal;
-  console.log("produits", produits);
   const title = categorie
     ? `${categorie.name} à ${ville || ""} ${
         codePostal ? `(${codePostal})` : ""
@@ -51,6 +50,7 @@ export default function SearchPageView() {
           {produits.map((p) => (
             <Card
               key={p.id}
+              id={p.id ?? p.produit_id}
               to={p.url}
               headTitle={p.etablissement}
               image={p.image}

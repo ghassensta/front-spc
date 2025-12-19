@@ -152,7 +152,7 @@ export default function CardItem({
   };
   return (
     <motion.div className="flex flex-col gap-4 py-7 border-b border-gray-400 md:flex-row">
-      {/* Image */}
+      {}
       <div className="relative w-full md:w-[30%]">
         <div className="w-full h-[190px] rounded-md relative overflow-hidden">
           {images.map((src, index) => (
@@ -185,7 +185,7 @@ export default function CardItem({
         >
           <FaChevronRight size={20} />
         </button>
-        {/* Navigation Dots */}
+        {}
         <style>{dotsStyle}</style>
         <div
           ref={dotsContainerRef}
@@ -211,7 +211,7 @@ export default function CardItem({
         </div>
       </div>
 
-      {/* Description */}
+      {}
       <div className="w-full md:w-[40%]">
         <h3 className="text-2xl text-left font-normal text-gray-900">{nom}</h3>
 
@@ -241,7 +241,7 @@ export default function CardItem({
         </p>
       </div>
 
-      {/* Prix - Desktop only */}
+      {}
       <div className="hidden md:flex md:w-[10%] gap-2 md:gap-0 items-center justify-center md:flex-col font-tahoma">
         {prix &&
           !prix_au_lieu_de &&
@@ -272,7 +272,7 @@ export default function CardItem({
           )}
       </div>
 
-      {/* Badges et Bouton - Desktop only */}
+      {}
       <div className="hidden md:flex md:w-[20%] flex-col items-center justify-center">
         {exclusivite_spc === 1 && (
           <img
@@ -304,9 +304,9 @@ export default function CardItem({
         )}
       </div>
 
-      {/* Mobile: Badges + Prix + Bouton en ligne */}
+      {}
       <div className="flex md:hidden w-full items-center justify-between gap-3">
-        {/* Prix au centre */}
+        {}
         <div className="flex flex-col items-center font-tahoma">
           {prix &&
             !prix_au_lieu_de &&
@@ -336,7 +336,7 @@ export default function CardItem({
               </span>
             )}
         </div>
-        {/* Badges à gauche */}
+        {}
         <div className="flex flex-col gap-2">
           {exclusivite_spc === 1 && (
             <img
@@ -355,7 +355,7 @@ export default function CardItem({
             </div>
           )}
         </div>
-        {/* Bouton à droite */}
+        {}
         {slug && (
           <Link to={paths.product(slug)}>
             <button className="px-4 py-3 bg-black leading-4 rounded-2xl text-white uppercase font-normal text-xs tracking-[3px] hover:bg-gray-800 transition font-tahoma whitespace-nowrap">

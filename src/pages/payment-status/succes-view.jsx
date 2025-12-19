@@ -7,7 +7,5 @@ export default function Page() {
   const params = new URLSearchParams(location.search);
   const sessionId = params.get("session_id");
 
-  console.log("session_id", sessionId);
-
   return <PageSuccess sessionId={sessionId} />;
 }

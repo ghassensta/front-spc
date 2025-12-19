@@ -8,14 +8,13 @@ import "swiper/css";
 import { FaArrowLeft, FaArrowRight } from "react-icons/fa";
 
 export default function TestimonialsSection({ testimonials = [] }) {
-  console.log("AUTRE:", testimonials);
   if (testimonials.length === 0) return null;
 
   return (
     <section className="py-4 lg:py-16 px-2 max-w-7xl mx-auto">
       <h2 className="text-3xl font-bold mb-6">– Autres établissements –</h2>
       
-      {/* Navigation buttons below the title */}
+      {}
       <div className="flex justify-start mb-6 space-x-4">
         <button className="swiper-button-prev-custom p-2 bg-gray-900 rounded-full hover:bg-gray-300 transition-colors">
           <FaArrowLeft className="w-5 h-5 text-gray-100" />

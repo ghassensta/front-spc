@@ -2047,7 +2047,7 @@ export default function GlossairePageView() {
     <div className="max-w-6xl mx-auto py-10">
       <h1 className="text-5xl text-center mb-10">GLOSSAIRE</h1>
 
-      {/* H2 juste sous le H1 */}
+      {}
       <h2 className="text-2xl text-center mb-6">Liste des termes</h2>
 
       <div className="flex flex-col divide-y font-bricolage mb-8">

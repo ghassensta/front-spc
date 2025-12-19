@@ -69,7 +69,6 @@ export default function ContactPageView() {
         throw new Error(errorMsg);
       }
     } catch (error) {
-      console.error("Error submitting form:", error);
       const errorMsg = error.message || (typeof error === 'string' ? error : "Une erreur est survenue lors de l'envoi du formulaire");
       toast.error(errorMsg);
     } finally {

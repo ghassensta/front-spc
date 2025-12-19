@@ -40,10 +40,6 @@ export const createPaymentSession = async (items, expediteur) => {
     const res = await poster(endpoints.paiement.createSession, payload);
     return res; // { sessionId, publicKey, ... }
   } catch (error) {
-    console.error(
-      "Erreur lors de la création de la session de paiement :",
-      error
-    );
     throw error;
   }
 };
@@ -55,10 +51,8 @@ export const paymentSuccess = async (sessionId) => {
     const res = await fetcher([
       `${endpoints.paiment.success}?session_id=${sessionId}`,
     ]);
-    console.log("object", res);
     return res;
   } catch (error) {
-    console.error("Erreur lors du succès du paiement :", error);
     throw error;
   }
 };
@@ -70,10 +64,8 @@ export const paymentCancel = async (sessionId) => {
     const res = await fetcher([
       `${endpoints.paiment.cancel}?session_id=${sessionId}`,
     ]);
-    console.log("object", res);
     return res;
   } catch (error) {
-    console.error("Erreur lors du annuler du paiement :", error);
     throw error;
   }
   

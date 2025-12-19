@@ -12,8 +12,6 @@ export default function BonAchatsListView() {
     const start = (currentPage - 1) * itemsPerPage;
     return bonachats?.slice(start, start + itemsPerPage);
   }, [bonachats, currentPage, itemsPerPage]);
-
-  console.log("Lignes par page :", currentData);
   const handlePrev = () => setCurrentPage((prev) => Math.max(prev - 1, 1));
   const handleNext = () =>
     setCurrentPage((prev) => Math.min(prev + 1, totalPages));

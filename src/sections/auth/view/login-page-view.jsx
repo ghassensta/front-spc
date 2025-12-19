@@ -29,7 +29,6 @@ export default function LoginPageView() {
       await promise;
       router.refresh(); // Or redirect if needed
     } catch (error) {
-      console.error(error);
     }
   };
 

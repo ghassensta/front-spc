@@ -48,7 +48,7 @@ export default function MenuPopover({ anchorRef, open, onClose }) {
           exit={{ opacity: 0, y: -8 }}
           style={popoverPosition}
         >
-          {/* Header du menu */}
+          {}
           <div className="bg-gray-100 px-6 py-3 border-b border-gray-200 flex items-center gap-3">
             <IoMdClose onClick={() => onClose()} size={22} className="text-secondary" />
             <span className="text-lg font-tahoma font-semibold text-secondary">Menu</span>

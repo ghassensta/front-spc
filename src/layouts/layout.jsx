@@ -26,8 +26,6 @@ export default function LayoutTheme({ children }) {
   useScrollToTop();
 
   const { categories } = useGetCategories();
-
-  console.log("objeceeet", categories);
   const handleScrollToTop = () => {
     window.scrollTo({ top: 0, behavior: "smooth" });
   };
@@ -71,7 +69,7 @@ export default function LayoutTheme({ children }) {
                   </Link>
                 </motion.div>
               </div>
-              {/* Autres catégories */}
+              {}
               {sortedCategories.map((category) => (
                 <div key={category.id} className="flex justify-center">
                   <CategoryPuce
@@ -82,7 +80,7 @@ export default function LayoutTheme({ children }) {
                 </div>
               ))}
             </div>
-            {/* MAIN CONTENT */}
+            {}
           </div>
           {header && <div className="flex-1">
             <Header />
@@ -92,7 +90,7 @@ export default function LayoutTheme({ children }) {
 
         <Footer />
 
-        {/* SCROLL TO TOP */}
+        {}
         <button
           onClick={handleScrollToTop}
           className="fixed bottom-6 right-6 z-50 bg-[#787766] hover:bg-[#676556] text-white rounded-full shadow-2xl p-1 md:p-4 transition-all duration-300"

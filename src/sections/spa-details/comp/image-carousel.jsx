@@ -113,7 +113,7 @@ export default function ImageCarousel({ height, images = [] }) {
             />
           ))}
         </div>
-        {/* Controls */}
+        {}
         <button
           onClick={goToPrev}
           className="absolute top-1/2 left-3 -translate-y-1/2 text-white p-2 rounded-full z-10"

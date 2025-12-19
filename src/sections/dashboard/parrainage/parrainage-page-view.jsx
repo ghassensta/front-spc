@@ -84,9 +84,7 @@ export default function ParrainagePageView({
       const response = await useSendInvites({
         emails: emailsToSend,
         referralLink,
-      });
-
-      console.log("API Response (Succès) :", response);
+      }); :", response);
 
       // TOUT VIENT DE L'API
       const data = response; // ou response.data si ton hook retourne { data }
@@ -113,9 +111,6 @@ export default function ParrainagePageView({
         toast.error(data.message)
       }
     } catch (error) {
-      console.error("API Error Response :", error);
-      console.error("Error data :", error?.response?.data);
-      console.error("Status :", error?.response?.status);
 
       const data = error?.response?.data || {};
 
@@ -135,7 +130,7 @@ export default function ParrainagePageView({
   
   return (
     <div className="p-6 space-y-6">
-      {/* Card Parrainage */}
+      {}
       <div className="bg-white border rounded-xl shadow-sm p-6">
         <div className="flex justify-between items-start mb-4">
           <div className="flex items-center gap-2">
@@ -185,9 +180,9 @@ export default function ParrainagePageView({
         </div>
       </div>
 
-      {/* Filleuls + Inviter */}
+      {}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        {/* Filleuls */}
+        {}
         <div className="bg-white border rounded-xl shadow-sm p-6">
           <div className="flex items-center gap-2 mb-4">
             <Users className="w-5 h-5 text-gray-700" />
@@ -220,7 +215,7 @@ export default function ParrainagePageView({
           </div>
         </div>
 
-        {/* Inviter */}
+        {}
         <div className="bg-white border rounded-xl shadow-sm p-6">
           <h3 className="text-md font-semibold text-gray-800 mb-3">
             Inviter via un lien

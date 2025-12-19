@@ -52,7 +52,6 @@ export default function AidePageView({
       await promise;
       setForm({ service: "", title: "", description: "" });
     } catch (error) {
-      console.error(error);
     }
   };
 
@@ -63,7 +62,6 @@ export default function AidePageView({
     setReply("");
     setOpenModal(true);
   };
-  console.log(localConversation)
 
 
   const handleSend = async () => {
@@ -89,7 +87,6 @@ export default function AidePageView({
         sender: "Client",
       });
     } catch (error) {
-      console.error(error);
       setLocalConversation((prev) => prev.slice(0, -1));
     }
   };
@@ -101,7 +98,7 @@ export default function AidePageView({
 
   return (
     <div className="p-6 grid grid-cols-1 md:grid-cols-2 gap-6">
-      {/* Contact Form */}
+      {}
       <div className="bg-white shadow rounded-2xl p-6">
         <h2 className="text-lg font-semibold text-gray-800">
           Contactez Spa Prestige Collection
@@ -137,7 +134,7 @@ export default function AidePageView({
                 <option value="">Selectionnez le service</option>
                 {services.map((service) => (
                   <option key={service.id} value={service.id}>
-                    {service.name} {/* Adjust if needed */}
+                    {service.name} {}
                   </option>
                 ))}
                 <option value="others">Autres</option>
@@ -184,7 +181,7 @@ export default function AidePageView({
         )}
       </div>
 
-      {/* Historique des demandes */}
+      {}
       <div className="bg-white shadow rounded-2xl p-6">
         <h2 className="text-lg font-semibold text-gray-800">
           Historique des demandes
@@ -234,7 +231,7 @@ export default function AidePageView({
         )}
       </div>
 
-      {/* Modal */}
+      {}
       {openModal && selectedConversation && (
         <div className="fixed inset-0 bg-black bg-opacity-40 flex justify-center items-center z-50">
           <div className="bg-white rounded-2xl shadow-lg w-full max-w-lg">

@@ -12,7 +12,6 @@ const TAX_RATE = 0.2;
 
 export default function PaymentView() {
   const checkout = useCheckoutContext();
-  console.log("checkout2", checkout);
   const navigate = useNavigate();
   const [isEditingAddress, setIsEditingAddress] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -83,24 +82,10 @@ export default function PaymentView() {
   const totalAPayer = Math.max(0, totalTTC - totalCreditsApplied);
   const creditsDepassent = totalCreditsApplied > totalTTC;
 
-  console.log(
-    "Button disabled:",
-    loading || creditsLoading || creditsDepassent,
-    { loading, creditsLoading, creditsDepassent }
-  );
-
   const handleSubmit = async () => {
-    console.log("handleSubmit called");
     // Always validate and show errors - even if form is closed
     const { fullName, address, city, postalCode, country } =
       checkout.expediteur || {};
-    console.log("Expediteur fields:", {
-      fullName,
-      address,
-      city,
-      postalCode,
-      country,
-    });
     const newErrors = {};
     if (!fullName || fullName.trim() === "")
       newErrors.fullName = "Le nom complet est requis.";
@@ -115,7 +100,6 @@ export default function PaymentView() {
       setErrors(newErrors);
       setHasValidationError(true);
       setIsEditingAddress(true); // Open the address section to show errors
-      console.log("Validation failed", newErrors);
       toast.error("Veuillez remplir tous les champs requis de l'adresse.");
       // Scroll to first error and focus
       setTimeout(() => {
@@ -133,7 +117,6 @@ export default function PaymentView() {
       !checkout.items ||
       checkout.items.length === 0
     ) {
-      console.log("Missing expediteur or items");
       toast.error(
         "Veuillez remplir toutes les informations et ajouter des articles."
       );
@@ -141,13 +124,11 @@ export default function PaymentView() {
     }
     setErrors({});
     setHasValidationError(false);
-    console.log("Validation passed");
     if (creditsDepassent) {
       toast.error("Les crédits sélectionnés dépassent le montant total.");
       return;
     }
     setLoading(true);
-    console.log("Starting fetch to create order");
     try {
       const res = await fetch(`${CONFIG.serverUrl}/api/commandes`, {
         method: "POST",
@@ -165,7 +146,6 @@ export default function PaymentView() {
         }),
       });
       const data = await res.json();
-      console.log("Order creation response:", data);
       if (!data.success) throw new Error(data.message);
       const commandesIds = data.commandes_ids;
       if (totalAPayer > 0) {
@@ -178,7 +158,6 @@ export default function PaymentView() {
           }
         );
         const sessionData = await sessionRes.json();
-        console.log("sessionData", sessionData);
         if (sessionData?.url) {
           window.location.href = sessionData.url;
         } else {
@@ -191,7 +170,6 @@ export default function PaymentView() {
         checkout.resetCheckout?.();
       }
     } catch (error) {
-      console.error("Erreur paiement :", error);
       toast.error(
         error?.message || "Une erreur est survenue lors du paiement."
       );
@@ -466,7 +444,7 @@ export default function PaymentView() {
           )}
         </div>
         <div className="bg-white rounded-md p-6 shadow">
-          {/* Points */}
+          {}
           <h2 className="text-base font-semibold mb-2">Points</h2>
           <p className="text-sm text-gray-700 mb-6">
             Vous allez gagner{" "}
@@ -493,7 +471,7 @@ export default function PaymentView() {
             )}
           </p>
         </div>
-        {/* Bouton Commander */}
+        {}
         <div className="mt-8">
           <button
             onClick={handleSubmit}
@@ -504,7 +482,7 @@ export default function PaymentView() {
           </button>
         </div>
       </div>
-      {/* === RÉSUMÉ DROITE === */}
+      {}
       <div>
         <div className="bg-white rounded-md p-6 shadow space-y-4">
           <h2 className="text-base font-semibold mb-4">

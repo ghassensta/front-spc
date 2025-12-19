@@ -75,7 +75,6 @@ export const sendSupport = async (data) => {
 
     return res;
   } catch (error) {
-    console.error("Error lors de création une ticket support", error);
     throw error;
   }
 };
@@ -93,7 +92,6 @@ export const sendMessage = async (data) => {
 
     return res;
   } catch (error) {
-    console.error("Error lors d'envoi du message dans ce ticket",error);
     throw error;
   }
 };

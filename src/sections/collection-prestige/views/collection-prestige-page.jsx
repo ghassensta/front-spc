@@ -7,7 +7,7 @@ import theImage2 from "src/assets/images/SPC-Catalogue-1975x1318-1.jpg";
 export default function CollectionPrestigePage() {
   return (
     <>
-      {/* Hero Section */}
+      {}
       <div
         className="w-screen relative left-[calc(-50vw+50%)] h-96 bg-black bg-center bg-cover bg-fixed overflow-hidden hidden md:block"
         style={{
@@ -22,7 +22,7 @@ export default function CollectionPrestigePage() {
         </div>
       </div>
 
-      {/* Intro Section */}
+      {}
       <div className="my-8 px-4">
         <h2 className="text-2xl md:text-3xl text-center mb-3 md:mb-6 italic font-bold py-6 md:max-w-[70%] tracking-wider mx-auto" style={{ wordSpacing: "8px"}}>
           Bientôt disponible, Collection Prestige revient avec une nouvelle
@@ -68,9 +68,9 @@ export default function CollectionPrestigePage() {
         </div>
       </div>
 
-      {/* Checkmarks & Adhesion Section */}
+      {}
       <div className="max-w-6xl mx-auto gap-10 py-6 md:py-12 px-4 items-center">
-        {/* Left Side: Checkmark List */}
+        {}
         <div className="space-y-4 grid grid-cols-1 md:grid-cols-2 gap-4 mb-12">
           {[
             "Une visibilité sélective et qualitative",
@@ -91,7 +91,7 @@ export default function CollectionPrestigePage() {
           Et si votre établissement en faisait partie ?
         </p>
 
-        {/* Right Side: Adhesion Info */}
+        {}
       </div>
 
       <div className="bg-[#FBF6EC] p-8 w-screen relative left-[calc(-50vw+50%)] rounded-lg shadow-lg flex flex-col items-center ">

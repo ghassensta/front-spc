@@ -1,11 +1,15 @@
-import React, { useState, useEffect } from "react";
+// src/components/carte-cadeau/CarteCadeau.jsx (ou .tsx) - Code complet, propre et corrigé
+
+import React, { useState } from "react";
 import { MapPin, BookOpen, PhoneCall, Sparkles } from "lucide-react";
-import ButtonIcon from "src/components/button-icon/button-icon";
 import { useCheckoutContext } from "../checkout/context";
 import { Link, useNavigate } from "react-router-dom";
 import { paths } from "src/router/paths";
 import { toast } from "react-toastify";
-import { useGetCarteCadeaux } from "src/actions/cartes-cadeaux";
+import {
+  useGetCarteCadeaux,
+  createPersonalizedCarteCadeaux,
+} from "src/actions/cartes-cadeaux";
 import theImage from "src/assets/images/SPC-carte-cadeau-montant-3.jpg";
 import theImage2 from "src/assets/images/SPC-Femme-cartes-square.jpg";
 
@@ -14,55 +18,80 @@ export default function CarteCadeau() {
   const navigate = useNavigate();
   const { cartes, loading } = useGetCarteCadeaux();
 
-  const [amount, setAmount] = useState(null);
+  const [amount, setAmount] = useState(null); // null | number
+  const [isCustom, setIsCustom] = useState(false);
   const [receiver, setReceiver] = useState([{ fullName: "", email: "" }]);
+  const [submitting, setSubmitting] = useState(false);
 
-  const addProductToCheckout = () => {
-    if (!amount) {
-      toast.error("Veuillez sélectionner un montant.");
+  const addProductToCheckout = async () => {
+    // Validation du montant
+    if (!amount || isNaN(amount) || amount < 1 || amount > 1000) {
+      toast.error(
+        "Veuillez sélectionner ou entrer un montant valide entre 1 € et 1000 €."
+      );
       return;
     }
 
+    // Validation des champs
     if (!receiver[0].fullName || !receiver[0].email) {
       toast.error("Veuillez remplir les champs pour le destinataire.");
       return;
     }
-
     if (!checkout.expediteur.fullName) {
       toast.error("Veuillez remplir votre nom et prénom.");
       return;
     }
 
-    // Récupérer la carte sélectionnée depuis les données dynamiques
-    const selectedCard = cartes.find(carte => {
-      const price = typeof carte.price === 'string' ? parseFloat(carte.price) : carte.price;
-      return price === amount;
-    });
+    setSubmitting(true);
 
-    const cartData = {
-      id: selectedCard?.id || Date.now(),
-      name: "Carte cadeau de " + amount + "€",
-      price: amount,
-      image: selectedCard?.image || theImage,
-      destinataires: receiver,
-      expediteur: checkout.expediteur,
-      quantity: 1,
-    };
+    try {
+      // Recherche d'une carte prédéfinie correspondant au montant
+      let cardToUse = cartes.find((carte) => {
+        const price =
+          typeof carte.price === "string"
+            ? parseFloat(carte.price)
+            : carte.price;
+        return Math.abs(price - amount) < 0.001; // Tolérance pour les décimales flottantes
+      });
 
-    // Console log des données
-    console.log("Données du panier:", cartData);
-    console.log("Carte sélectionnée depuis l'API:", selectedCard);
-    console.log("Destinataire:", receiver[0]);
-    console.log("Expéditeur:", checkout.expediteur);
+      // Si aucune carte prédéfinie → création via API
+      if (!cardToUse) {
+        const createdCard = await createPersonalizedCarteCadeaux(amount);
 
-    checkout.onAddToCart(cartData);
+        cardToUse = {
+          id: createdCard.id,
+          name: createdCard.nom || `Carte cadeau de ${amount.toFixed(2)} €`,
+          price: createdCard.prix,
+          image: theImage,
+        };
+      }
 
-    navigate(paths.checkout);
+      // Ajout au panier
+      const cartData = {
+        id: cardToUse.id,
+        name: cardToUse.name,
+        price: cardToUse.price,
+        image: cardToUse.image,
+        destinataires: receiver,
+        expediteur: checkout.expediteur,
+        quantity: 1,
+      };
+
+      checkout.onAddToCart(cartData);
+      toast.success("Carte cadeau ajoutée au panier !");
+      navigate(paths.checkout);
+    } catch (error) {
+      toast.error(
+        error.message || "Une erreur est survenue lors de l'ajout au panier."
+      );
+    } finally {
+      setSubmitting(false);
+    }
   };
 
   return (
     <>
-      {/* Intro Section */}
+      {}
       <div className="flex bg-[#FBF6EC] w-screen relative left-[calc(-50vw+50%)] px-5">
         <div className="max-w-6xl mx-auto py-6">
           <div className="flex flex-col md:flex-row gap-6">
@@ -98,6 +127,7 @@ export default function CarteCadeau() {
         </div>
       </div>
 
+      {}
       <div className="max-w-6xl mx-auto gap-6 py-8">
         <div className="grid grid-cols-1 md:grid-cols-3 items-start">
           <div className="flex flex-col items-center justify-center">
@@ -115,7 +145,7 @@ export default function CarteCadeau() {
             </h2>
             <p className="font-roboto text-center">
               Des prestations variées pour toutes les occasions et tous les
-              budgets, à savourer en toute liberté.
+              budgets.
             </p>
           </div>
           <div className="flex flex-col items-center justify-center">
@@ -123,167 +153,229 @@ export default function CarteCadeau() {
               Un bien-être sur mesure
             </h2>
             <p className="font-roboto text-center">
-              Une invitation à se détendre, à la manière de chacune. Un cadeau
-              valable pendant 1 an pour un moment de pure évasion.
+              Une invitation à se détendre, valable 1 an.
             </p>
           </div>
         </div>
       </div>
 
+      {}
       <div className="max-w-6xl mx-auto py-12 px-4">
         <h2 className="text-3xl font-bold text-center mb-10">
           OFFRIR UNE CARTE CADEAU :<br /> UNE ATTENTION QUI A DU SENS.
         </h2>
 
-        <div className="flex flex-col md:flex-row gap-6">
-          <img
-            loading="lazy"
-            src={theImage2}
-            alt=""
-          />
-          <div className="font-roboto space-y-2">
-            <h3 className="text-2xl font-bold">Sélectionnez le montant</h3>
-            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 w-full gap-4">
-              {loading ? (
-                <p className="col-span-full text-center text-gray-500">
-                  Chargement des cartes...
-                </p>
-              ) : cartes.length > 0 ? (
-                cartes.map((carte) => {
-                  const price = typeof carte.price === 'string' ? parseFloat(carte.price) : carte.price;
-                  return (
+        <div className="flex flex-col md:flex-row gap-8 lg:gap-12 items-start">
+          {}
+          <div className="w-full md:w-1/2 order-1 md:order-1">
+            <img
+              loading="lazy"
+              src={theImage2}
+              alt="Femme recevant une carte cadeau Spa & Prestige Collection"
+              className="w-full h-auto object-cover rounded-xl shadow-lg"
+            />
+          </div>
+
+          {}
+          <div className="w-full md:w-1/2 order-2 md:order-2 font-roboto space-y-8">
+            <div>
+              <h3 className="text-2xl font-bold mb-6">
+                Sélectionnez le montant
+              </h3>
+              <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
+                {loading ? (
+                  <p className="col-span-full text-center text-gray-500">
+                    Chargement des cartes...
+                  </p>
+                ) : (
+                  <>
+                    {cartes.map((carte) => {
+                      const price =
+                        typeof carte.price === "string"
+                          ? parseFloat(carte.price)
+                          : carte.price;
+                      return (
+                        <button
+                          key={carte.id}
+                          onClick={() => {
+                            setAmount(price);
+                            setIsCustom(false);
+                          }}
+                          className={`border border-black py-3 px-4 font-bold rounded-lg transition-all duration-200
+                      ${
+                        amount === price && !isCustom
+                          ? "bg-black text-white"
+                          : "bg-gray-100 hover:bg-black hover:text-white"
+                      }
+                    `}
+                        >
+                          {price.toFixed(2)} €
+                        </button>
+                      );
+                    })}
                     <button
-                      key={carte.id}
-                      onClick={() => setAmount(price)}
-                      className={`border border-black py-2 px-3 w-full font-bold
-                ${
-                  amount === price
-                    ? "bg-black text-white"
-                    : "bg-gray-200 hover:bg-black hover:text-white"
-                }
-              `}
+                      onClick={() => {
+                        setIsCustom(true);
+                        setAmount(null);
+                      }}
+                      className={`border border-black py-3 px-4 font-bold rounded-lg transition-all duration-200 col-span-2 sm:col-span-3 md:col-span-1
+                  ${
+                    isCustom
+                      ? "bg-black text-white"
+                      : "bg-gray-100 hover:bg-black hover:text-white"
+                  }
+                `}
                     >
-                      {price.toFixed(2)} €
+                      Montant personnalisé
                     </button>
-                  );
-                })
-              ) : (
-                <p className="col-span-full text-center text-gray-500">
-                  Aucune carte disponible
-                </p>
-              )}
-            </div>
-            <div className="flex flex-col gap-4">
-              {/* Recipient Form */}
-              <div className="">
-                <h3 className="text-xl font-tahoma font-normal mb-4">
-                  Nom et prénom de la personne qui recevra la carte Cadeau
-                </h3>
-                <div className="space-y-4">
-                  <div className="flex gap-6">
-                    <label className="block w-40 text-sm font-tahoma font-medium mb-1">
-                      Nom et prénom
-                    </label>
-                    <input
-                      type="text"
-                      className="w-full border border-gray-300 rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-primary"
-                      value={receiver[0].fullName}
-                      onChange={(e) =>
-                        setReceiver([
-                          {
-                            email: receiver[0].email,
-                            fullName: e.target.value,
-                          },
-                        ])
-                      }
-                    />
-                  </div>
-                  <div className="flex gap-6">
-                    <label className="block w-40 text-sm font-tahoma font-medium mb-1">
-                      Email
-                    </label>
-                    <input
-                      type="email"
-                      className="w-full border border-gray-300 rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-primary"
-                      value={receiver[0].email}
-                      onChange={(e) =>
-                        setReceiver([
-                          {
-                            fullName: receiver[0].fullName,
-                            email: e.target.value,
-                          },
-                        ])
-                      }
-                    />
-                  </div>
-                </div>
+                  </>
+                )}
               </div>
 
-              {/* Sender Form */}
-              <div className="">
-                <h3 className="text-xl font-tahoma font-normal mb-4">
-                  Nom et prénom de la personne qui commande
-                </h3>
-                <div className="space-y-4">
-                  <div className="flex gap-6">
-                    <label className="block w-40 text-sm font-tahoma font-medium mb-1">
-                      Nom et prénom
-                    </label>
+              {}
+              {isCustom && (
+                <div className="mt-8 bg-gray-50 p-6 rounded-xl border">
+                  <h4 className="text-xl font-bold mb-4">
+                    Entrez votre montant personnalisé
+                  </h4>
+                  <div className="flex items-center gap-4 max-w-md">
                     <input
-                      type="text"
-                      className="w-full border border-gray-300 rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-primary"
-                      value={checkout.expediteur.fullName}
-                      onChange={(e) =>
-                        checkout.onCreateExpediteur({
-                          ...checkout.expediteur,
-                          fullName: e.target.value,
-                        })
-                      }
+                      type="number"
+                      min="1"
+                      max="1000"
+                      step="0.01"
+                      placeholder="ex. 150.00"
+                      className="w-full border border-gray-400 rounded-lg py-3 px-4 text-lg focus:outline-none focus:ring-2 focus:ring-black"
+                      value={amount ?? ""}
+                      onChange={(e) => {
+                        const val =
+                          e.target.value === ""
+                            ? null
+                            : parseFloat(e.target.value);
+                        setAmount(val);
+                      }}
                     />
+                    <span className="text-2xl font-bold">€</span>
                   </div>
-                  <div className="flex gap-6">
-                    <label className="block w-40 text-sm font-tahoma font-medium mb-1">
-                      Message
-                    </label>
-                    <textarea
-                      rows="3"
-                      className="w-full border border-gray-300 rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-primary"
-                      value={checkout.expediteur.message || ""}
-                      onChange={(e) =>
-                        checkout.onCreateExpediteur({
-                          ...checkout.expediteur,
-                          message: e.target.value,
-                        })
-                      }
-                    />
-                  </div>
-                </div>
-              </div>
-
-              <div className="col-span-2">
-                <div className="flex justify-end">
+                  <p className="text-sm text-gray-600 mt-3">
+                    Montant compris entre 1 € et 1 000 € (deux décimales
+                    autorisées).
+                  </p>
                   <button
-                    onClick={addProductToCheckout}
-                    className="w-max px-4 py-3 bg-black leading-4 text-white uppercase font-normal text-xs tracking-[3px] hover:bg-gray-800 transition font-tahoma flex items-center justify-center gap-2 rounded-full"
+                    onClick={() => {
+                      setIsCustom(false);
+                      setAmount(null);
+                    }}
+                    className="mt-4 text-sm underline hover:text-black transition"
                   >
-                    <span>Offrir</span>
+                    Annuler
                   </button>
                 </div>
+              )}
+            </div>
+
+            {}
+            <div>
+              <h3 className="text-xl font-tahoma font-normal mb-4">
+                Nom et prénom de la personne qui recevra la carte cadeau
+              </h3>
+              <div className="space-y-4">
+                <div className="flex flex-col sm:flex-row gap-4 sm:gap-6 sm:items-center">
+                  <label className="sm:w-40 text-sm font-tahoma font-medium">
+                    Nom et prénom
+                  </label>
+                  <input
+                    type="text"
+                    className="flex-1 border border-gray-300 rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-black"
+                    value={receiver[0].fullName}
+                    onChange={(e) =>
+                      setReceiver([
+                        { ...receiver[0], fullName: e.target.value },
+                      ])
+                    }
+                  />
+                </div>
+                <div className="flex flex-col sm:flex-row gap-4 sm:gap-6 sm:items-center">
+                  <label className="sm:w-40 text-sm font-tahoma font-medium">
+                    Email
+                  </label>
+                  <input
+                    type="email"
+                    className="flex-1 border border-gray-300 rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-black"
+                    value={receiver[0].email}
+                    onChange={(e) =>
+                      setReceiver([{ ...receiver[0], email: e.target.value }])
+                    }
+                  />
+                </div>
               </div>
+            </div>
+
+            {}
+            <div>
+              <h3 className="text-xl font-tahoma font-normal mb-4">
+                Nom et prénom de la personne qui commande
+              </h3>
+              <div className="space-y-4">
+                <div className="flex flex-col sm:flex-row gap-4 sm:gap-6 sm:items-center">
+                  <label className="sm:w-40 text-sm font-tahoma font-medium">
+                    Nom et prénom
+                  </label>
+                  <input
+                    type="text"
+                    className="flex-1 border border-gray-300 rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-black"
+                    value={checkout.expediteur.fullName || ""}
+                    onChange={(e) =>
+                      checkout.onCreateExpediteur({
+                        ...checkout.expediteur,
+                        fullName: e.target.value,
+                      })
+                    }
+                  />
+                </div>
+                <div className="flex flex-col sm:flex-row gap-4 sm:gap-6 sm:items-start">
+                  <label className="sm:w-40 text-sm font-tahoma font-medium">
+                    Message
+                  </label>
+                  <textarea
+                    rows={4}
+                    className="flex-1 border border-gray-300 rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-black resize-none"
+                    value={checkout.expediteur.message || ""}
+                    onChange={(e) =>
+                      checkout.onCreateExpediteur({
+                        ...checkout.expediteur,
+                        message: e.target.value,
+                      })
+                    }
+                  />
+                </div>
+              </div>
+            </div>
+
+            {}
+            <div className="flex justify-start sm:justify-end">
+              <button
+                onClick={addProductToCheckout}
+                disabled={submitting || !amount}
+                className="px-10 py-4 bg-black text-white uppercase font-tahoma text-sm tracking-[3px] rounded-full hover:bg-gray-800 transition disabled:opacity-50 disabled:cursor-not-allowed shadow-md"
+              >
+                {submitting ? "Traitement en cours..." : "Offrir"}
+              </button>
             </div>
           </div>
         </div>
       </div>
 
-      {/* Comment ça marche */}
+      {}
       <div className="max-w-6xl mx-auto py-12 px-4">
         <h2 className="text-3xl font-bold text-center mb-10">
           Comment ça marche ?
         </h2>
         <h2 className="text-3xl text-center mb-10">
-          Explorez notre site et sélectionnez l’établissement ou la prestation qui vous convient !
+          Explorez notre site et sélectionnez l’établissement ou la prestation
+          qui vous convient !
         </h2>
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-8 text-center ">
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-8 text-center">
           <div>
             <MapPin className="mx-auto mb-4 text-[#B6B498]" size={32} />
             <h3 className="font-bold text-lg mb-2">
@@ -291,47 +383,42 @@ export default function CarteCadeau() {
             </h3>
             <p className="text-sm text-gray-700 font-roboto">
               Parcourez notre page <strong>"Tous nos spas"</strong> et
-              choisissez l'établissement qui vous correspond, près de chez vous
-              ou dans la région de votre choix.
+              choisissez l'établissement qui vous correspond.
             </p>
           </div>
-
           <div>
             <BookOpen className="mx-auto mb-4 text-[#B6B498]" size={32} />
             <h3 className="font-bold text-lg mb-2">
               Plongez dans l'univers du Spa
             </h3>
             <p className="text-sm text-gray-700 font-roboto">
-              Accédez à la fiche de chaque établissement pour découvrir en
-              détail les soins, les installations et toutes les informations
-              essentielles à votre expérience.
+              Découvrez en détail les soins et installations de chaque
+              établissement.
             </p>
           </div>
-
           <div>
             <PhoneCall className="mx-auto mb-4 text-[#B6B498]" size={32} />
             <h3 className="font-bold text-lg mb-2">
               Réservez votre moment privilégié
             </h3>
             <p className="text-sm text-gray-700 font-roboto">
-              Contactez directement l'établissement par téléphone ou mail en
-              indiquant votre numéro de carte cadeau.
+              Contactez directement l'établissement en indiquant votre numéro de
+              carte cadeau.
             </p>
           </div>
-
           <div>
             <Sparkles className="mx-auto mb-4 text-[#B6B498]" size={32} />
             <h3 className="font-bold text-lg mb-2">Vivez l'instant</h3>
             <p className="text-sm text-gray-700 font-roboto">
-              Offrez-vous une parenthèse de bien-être, où chaque détail est
-              soigneusement pensé pour votre détente.
+              Profitez d’une parenthèse de bien-être unique.
             </p>
           </div>
         </div>
-
-        {/* Bouton Coup de cœur */}
         <div className="flex justify-center mt-10">
-          <Link to={paths.spa.list} className="bg-[#B6B498] text-white rounded-full py-2 px-6 hover:bg-black duration-300 font-roboto">
+          <Link
+            to={paths.spa.list}
+            className="bg-[#B6B498] text-white rounded-full py-3 px-8 hover:bg-black transition font-roboto"
+          >
             Accueil
           </Link>
         </div>

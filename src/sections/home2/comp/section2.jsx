@@ -13,7 +13,7 @@ const Section3 = () => {
       style={{ background: section.extra_data?.background || "white" }}
     >
       <div className="max-w-6xl mx-auto px-8 flex flex-col md:flex-row gap-2 py-8">
-        {/* Texte */}
+        {}
         <div className="md:w-1/2">
           <h2 className="text-4xl font-semibold">{section.title}</h2>
 
@@ -40,7 +40,7 @@ const Section3 = () => {
           )}
         </div>
 
-        {/* Image */}
+        {}
         <div className="md:w-1/2">
           {section.image && (
             <img

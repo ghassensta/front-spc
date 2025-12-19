@@ -111,7 +111,7 @@ export default function WhoPageView() {
                   />
                 ))}
               </div>
-              {/* Navigation Arrows */}
+              {}
               <button
                 onClick={goToPrev}
                 className="absolute top-1/2 -left-8 transform -translate-y-1/2 text-black p-2 rounded-full transition-colors duration-300"
@@ -126,7 +126,7 @@ export default function WhoPageView() {
               >
                 <FaChevronRight size={20} />
               </button>
-              {/* Navigation Dots */}
+              {}
               <div className="absolute mt-3 left-1/2 transform -translate-x-1/2 flex space-x-2">
                 {images.map((_, index) => (
                   <button
@@ -154,7 +154,7 @@ export default function WhoPageView() {
           bien-être, raffinement et humanité.
         </div>
 
-        {/* Valeurs grid */}
+        {}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
           <div className="bg-[#FBF6EC] px-4 rounded py-8 hover:text-white hover:bg-[#B6B498] cursor-pointer duration-300 ease-in">
             <h3 className="mb-4 font-bold text-2xl">Sincérité</h3>
@@ -225,9 +225,9 @@ export default function WhoPageView() {
             Plongez dans un univers d'exception et laissez-vous séduire par des
             privilèges rares et uniques :
           </div>
-          {/* Section Avantages */}
+          {}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-            {/* Colonne gauche */}
+            {}
             <div className="space-y-8">
               <div className="text-center md:text-left">
                 <h3 className="text-2xl font-bold mb-2">
@@ -266,7 +266,7 @@ export default function WhoPageView() {
               </div>
             </div>
 
-            {/* Colonne droite */}
+            {}
             <div className="space-y-8">
               <div className="text-center md:text-left">
                 <h3 className="text-2xl font-bold mb-2">
@@ -306,7 +306,7 @@ export default function WhoPageView() {
             </div>
           </div>
 
-          {/* Bouton Coup de cœur */}
+          {}
           <div className="flex justify-center mt-10">
             <ButtonIcon link={paths.spa.list} title="COUP DE CŒUR" />
           </div>

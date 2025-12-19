@@ -6,7 +6,6 @@ import { paths } from "src/router/paths";
 
 export default function CommandesListView() {
   const { orders = [], loading, validating } = useGetAuthOrders();
-  console.log("orders", orders);
   const [currentPage, setCurrentPage] = useState(1);
   const [rowsPerPage, setRowsPerPage] = useState(10);
 
@@ -181,7 +180,7 @@ export default function CommandesListView() {
         </tbody>
       </table>
 
-      {/* ← Pagination TOUJOURS visible (comme tu le veux) */}
+      {}
       <div className="flex justify-between items-center mt-6 text-sm">
         <div>
           <label className="mr-2">Lignes par page :</label>

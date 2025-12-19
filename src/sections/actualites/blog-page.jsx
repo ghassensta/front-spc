@@ -6,7 +6,6 @@ import PageSkeleton from "./page-skeleton";
 import theImage from "src/assets/images/SPC-Essence-1975x1318-02.jpg";
 
 export default function BlogPage({ categories, articles, loading }) {
-  console.log("categories", categories);
 
   const [searchTerm, setSearchTerm] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
@@ -139,7 +138,7 @@ export default function BlogPage({ categories, articles, loading }) {
               ))}
             </div>
           )}
-          {/* Pagination Controls */}
+          {}
           {totalPages > 1 && (
             <div className="flex justify-center mt-6 space-x-2">
               <button
@@ -179,7 +178,7 @@ export default function BlogPage({ categories, articles, loading }) {
           )}
         </div>
 
-        {/* Sidebar */}
+        {}
         <div>
           <div className="mb-6">
             <input

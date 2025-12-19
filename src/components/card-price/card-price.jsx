@@ -17,20 +17,20 @@ export default function CardPrice() {
         viewport={{ once: true }}
         className="relative rounded-xl shadow-lg mb-6 bg-white cursor-pointer hover:shadow-xl transition-all duration-300"
       >
-        {/* Location badge */}
+        {}
         <span className="bg-gray-200 flex items-center justify-start w-max py-2 px-4 gap-2 absolute left-4 -top-5 font-bold text-xs md:text-sm rounded-lg shadow">
           <FiMapPin className="text-secondary" />
           75011 PARIS - ÎLE-DE-FRANCE - FRANCE
         </span>
 
-        {/* Image */}
+        {}
         <img loading="lazy"
           src={theImage}
           alt="spa"
           className="w-full h-72 rounded-t-xl object-cover overflow-hidden"
         />
 
-        {/* Content */}
+        {}
         <div className="p-6 space-y-2">
           <h5 className="text-xl md:text-2xl font-bold text-secondary">
             Le Spa by Sothys Paris République 5*
@@ -41,7 +41,7 @@ export default function CardPrice() {
             incarne l’exclusivité et le raffinement des rituels de bien-être.
           </p>
 
-          {/* Price and Button */}
+          {}
           <div className="mt-4 flex items-center justify-between">
             <span className="text-secondary text-3xl font-extrabold">€120</span>
             <ButtonIcon title="Réserver" icon={<FaBagShopping className="text-lg" />} size="sm" />

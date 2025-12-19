@@ -7,7 +7,7 @@ import theImage2 from "src/assets/images/SPC-Catalogue-1975x1318-1.jpg";
 export default function ReferentielViewPage() {
   return (
     <>
-      {/* Hero Section */}
+      {}
       <div
         className="w-screen relative left-[calc(-50vw+50%)] h-96 bg-black bg-center bg-cover bg-fixed overflow-hidden hidden md:block"
         style={{
@@ -23,9 +23,9 @@ export default function ReferentielViewPage() {
         </div>
       </div>
 
-      {/* Checkmarks & Adhesion Section */}
+      {}
       <div className="max-w-6xl mx-auto  gap-10 py-6 md:py-12 px-4 grid grid-cols-1 md:grid-cols-2 mt-5">
-        {/* Left Side: Checkmark List */}
+        {}
         <div className="space-y-4 flex flex-col mb-6 md:mb-12">
           {[
             {
@@ -100,7 +100,7 @@ export default function ReferentielViewPage() {
             </div>
           ))}
         </div>
-        {/* Right Side: Adhesion Info */}
+        {}
       </div>
       <div className="bg-[#FBF6EC] p-8 w-screen relative left-[calc(-50vw+50%)] rounded-lg shadow-lg flex flex-col items-center ">
         <div className="max-w-6xl flex flex-col-reverse md:grid grid-cols-2 gap-4">

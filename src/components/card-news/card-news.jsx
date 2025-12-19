@@ -23,14 +23,14 @@ export default function CardNews() {
         className="relative rounded-xl shadow-lg mb-6 bg-white cursor-pointer hover:shadow-xl transition-all duration-300"
       >
        
-        {/* Image */}
+        {}
         <img loading="lazy"
           src={theImage}
           alt="spa"
           className="w-full h-72 rounded-t-xl object-cover overflow-hidden"
         />
 
-        {/* Content */}
+        {}
         <div className="p-3 space-y-2">
           <h5 className="text-xl md:text-2xl font-bold text-secondary">
             Le Spa by Sothys Paris République 5*
@@ -40,7 +40,7 @@ export default function CardNews() {
             incarne l’exclusivité et le raffinement des rituels de bien-être.
           </p>
 
-          {/* Posting Date */}
+          {}
           <div className="mt-4 text-sm text-gray-500 font-bold">
             Publié le : <span className="font-semibold">{postingDate}</span>
           </div>

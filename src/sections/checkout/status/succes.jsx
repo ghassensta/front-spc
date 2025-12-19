@@ -95,7 +95,6 @@ export default function PageSuccess({ sessionId: propSessionId }) {
       expediteur,
     });
   } catch (err) {
-    console.error(err);
     setError("Impossible de récupérer les détails de la commande.");
   } finally {
     setLoading(false);
@@ -104,8 +103,6 @@ export default function PageSuccess({ sessionId: propSessionId }) {
 
     fetchData();
   }, [sessionId]);
-
-  console.log(checkoutData)
 
   if (loading) return <div className="text-center mt-10">Chargement...</div>;
   if (error)

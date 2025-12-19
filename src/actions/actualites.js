@@ -13,8 +13,6 @@ export function useGetNews() {
 
   const { data, isLoading } = useSWR(url, fetcher, swrOptions);
 
-  console.log(data);
-
   const memoizedValue = useMemo(
     () => ({
       actualites: data?.actualites || [],

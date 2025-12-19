@@ -27,11 +27,7 @@ export default function Card({
   inWishlist,
   exclusivite_spc,
   remise_desc_produit,
-  
 }) {
-  console.log("price", price);
-  console.log("exclusivite_spc", exclusivite_spc);
-  console.log('produit_id',id);
   const { user } = useAuthContext();
   const [isFav, setIsFav] = useState(inWishlist);
   const router = useRouter();
@@ -53,6 +49,10 @@ export default function Card({
   }, [id, inWishlist]);
 
   const toggleFav = async () => {
+    if (id === undefined || id === null) {
+      toast.error("Produit introuvable");
+      return;
+    }
     if (!user) {
       router.push(paths.auth.root);
       return;
@@ -76,7 +76,6 @@ export default function Card({
     try {
       await promise;
     } catch (err) {
-      console.error(err);
       setIsFav((prev) => !prev);
     }
   };
@@ -97,12 +96,14 @@ export default function Card({
           </span>
         )}
 
-        <button
-          onClick={toggleFav}
-          className="absolute z-10 text-red-500 top-12 right-3 text-xl bg-white/70 rounded-full p-1"
-        >
-          {isFav ? <FaHeart /> : <FaRegHeart />}
-        </button>
+        {id !== undefined && id !== null && (
+          <button
+            onClick={toggleFav}
+            className="absolute z-10 text-red-500 top-12 right-3 text-xl bg-white/70 rounded-full p-1"
+          >
+            {isFav ? <FaHeart /> : <FaRegHeart />}
+          </button>
+        )}
 
         {!!image && (
           <Link to={to} className="block w-full h-64">

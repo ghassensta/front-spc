@@ -54,7 +54,6 @@ function Container({ children }) {
         setField("cartTimestamp", null);
         setField("couponId", null);
         setField("couponTimestamp", null);
-        console.log("Cart expired due to inactivity and cleared");
       }
     }
   }, [state.cartTimestamp, setField]);
@@ -78,7 +77,6 @@ function Container({ children }) {
           discount: 0,
         }));
         setField("items", updatedItems);
-        console.log("Coupon expired and cleared");
       }
     }
   }, [state.couponId, state.couponTimestamp, state.items, setField]);

@@ -9,7 +9,6 @@ export const useExchangePoints = async (montant) => {
     const res = await poster(url, { montant });
     return res;
   } catch (error) {
-    console.error("Erreur échange points:", error);
     throw error;
   }
 };

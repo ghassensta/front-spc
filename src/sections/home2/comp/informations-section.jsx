@@ -89,9 +89,7 @@ export default function InformationsSection() {
                   />
                 </Link>
               </AnimatePresence>
-              {/* <div className="absolute w-full bg-[#B6B499] left-0 bottom-0 text-center px-4 py-2 text-lg font-bold">
-                {data[currentIndex].title}
-              </div> */}
+              {}
             </div>
           </div>
           <div className="w-full md:w-1/3">

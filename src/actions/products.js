@@ -60,7 +60,6 @@ export const usePostProductAvis = async ({
 
     return res;
   } catch (error) {
-    console.error("❌ Erreur lors de la soumission de l'avis:", error);
     throw error;
   }
 };

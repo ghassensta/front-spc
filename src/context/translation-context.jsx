@@ -38,7 +38,6 @@ export const TranslationProvider = ({ children }) => {
 
     try {
       const url = `https://translate.googleapis.com/translate_a/single?client=gtx&sl=fr&tl=${currentLanguage}&dt=t&q=${encodeURIComponent(text)}`;
-      console.log(url)
       const response = await fetch(url);
       const data = await response.json();
 
@@ -51,7 +50,6 @@ export const TranslationProvider = ({ children }) => {
 
       return translatedText;
     } catch (error) {
-      console.error('Translation error:', error);
       return text;
     }
   };

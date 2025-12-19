@@ -5,7 +5,7 @@ import { CONFIG } from "src/config-global";
 // ----------------------------------------------------------------------
 
 const axiosInstance = axios.create({
-  baseURL: CONFIG.serverUrl || "https://admin.spa-prestige-collection.com",
+  baseURL: CONFIG.serverUrl || "https://spc.emc1001.online",
 });
 
 axiosInstance.interceptors.response.use(
@@ -37,7 +37,6 @@ export const fetcher = async (args) => {
 
     return res.data;
   } catch (error) {
-    console.error("Failed to fetch:", error);
     throw error;
   }
 };
@@ -48,7 +47,6 @@ export const poster = async (url, data = {}, config = {}) => {
     const res = await axiosInstance.post(url, data, config);
     return res.data;
   } catch (error) {
-    console.error("❌ Failed to post:", error);
     throw error;
   }
 };
@@ -59,7 +57,6 @@ export const putter = async (url, data = {}, config = {}) => {
     const res = await axiosInstance.put(url, data, config);
     return res.data;
   } catch (error) {
-    console.error("❌ Failed to put:", error);
     throw error;
   }
 };
@@ -70,7 +67,6 @@ export const deleter = async (url, config = {}) => {
     const res = await axiosInstance.delete(url, config);
     return res.data;
   } catch (error) {
-    console.error("❌ Failed to delete:", error);
     throw error;
   }
 };
@@ -81,7 +77,6 @@ export const patcher = async (url, data = {}, config = {}) => {
     const res = await axiosInstance.patch(url, data, config);
     return res.data;
   } catch (error) {
-    console.error("Failed to patch:", error);
     throw error;
   }
 };
@@ -180,6 +175,7 @@ export const endpoints = {
 
   cartes: {
     get: "/api/cartes-cadeaux",
+    personalize: "/api/cartes-cadeaux/personalize",
   },
 
   emails: {

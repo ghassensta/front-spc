@@ -27,7 +27,6 @@ export default function ProductDetailsView({
   etablissement,
   loading,
 }) {
-  console.log(etablissement);
   const gallery = [
     ...(etablissement?.image_avant ? [etablissement.image_avant] : []),
     ...(etablissement?.gallerie?.length > 0
@@ -104,7 +103,6 @@ export default function ProductDetailsView({
         setComment("");
       })
       .catch((error) => {
-        console.error("Erreur lors de l'envoi de l'avis:", error);
       });
   };
 
@@ -235,7 +233,6 @@ export default function ProductDetailsView({
       await promise;
       setIsFav((prev) => !prev);
     } catch (err) {
-      console.error(err);
 
       throw err;
     }
@@ -538,7 +535,7 @@ export default function ProductDetailsView({
               }`}
               onClick={() => setActiveTab("createReview")}
             >
-              Créer votre avis
+              Créez votre avis
             </button>
           </div>
 
@@ -611,7 +608,7 @@ export default function ProductDetailsView({
 
               {activeTab === "createReview" && (
                 <>
-                  {/* Formulaire ajouter avis */}
+                  {}
                   <div className="bg-white p-4 rounded-lg border border-black">
                     {user ? (
                       <>
@@ -662,7 +659,7 @@ export default function ProductDetailsView({
                             onClick={() => goToAuth()}
                             className="w-max px-4 py-3 bg-black leading-4 text-white uppercase font-normal text-xs tracking-[3px] hover:bg-gray-800 transition font-tahoma flex items-center justify-center gap-2 rounded-full"
                           >
-                            Connecter Vous
+                            Connectez vous
                           </button>
                         </div>
                       </>

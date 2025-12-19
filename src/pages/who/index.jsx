@@ -38,15 +38,15 @@ export default function Page() {
   return (
     <>
       <Helmet>
-        {/* Titres et descriptions */}
+        {}
         <title>{pageTitle}</title>
         <meta name="description" content={pageDescription} />
         <meta name="keywords" content="spa prestige, bien-être, spa collection, relaxation, thermes, expérience spa, établissement spa" />
 
-        {/* Canonical URL */}
+        {}
         <link rel="canonical" href={pageUrl} />
 
-        {/* Open Graph - Réseaux Sociaux */}
+        {}
         <meta property="og:type" content="website" />
         <meta property="og:title" content={pageTitle} />
         <meta property="og:description" content={pageDescription} />
@@ -54,18 +54,18 @@ export default function Page() {
         <meta property="og:url" content={pageUrl} />
         <meta property="og:site_name" content="Spa & Prestige Collection" />
 
-        {/* Twitter Card */}
+        {}
         <meta name="twitter:card" content="summary_large_image" />
         <meta name="twitter:title" content={pageTitle} />
         <meta name="twitter:description" content={pageDescription} />
         <meta name="twitter:image" content={imageUrl} />
 
-        {/* Données structurées JSON-LD - Organization Schema */}
+        {}
         <script type="application/ld+json">
           {JSON.stringify(schemaData)}
         </script>
 
-        {/* Breadcrumbs Schema */}
+        {}
         <script type="application/ld+json">
           {JSON.stringify({
             "@context": "https://schema.org",
@@ -87,7 +87,7 @@ export default function Page() {
           })}
         </script>
 
-        {/* Autres meta tags utiles */}
+        {}
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <meta name="language" content="fr-FR" />
         <meta name="author" content="Spa & Prestige Collection" />

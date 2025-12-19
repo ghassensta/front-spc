@@ -10,7 +10,6 @@ export default function ServiceCard({
   avisTotals = 0,
   marquesPartenaires,
 }) {
-  console.log("here",details);
   const [isExpanded, setIsExpanded] = useState(false);
   const [openSection, setOpenSection] = useState(null);
 
@@ -136,7 +135,7 @@ export default function ServiceCard({
 
   return (
     <div className="p-4 bg-white">
-      {/* Header */}
+      {}
       <div className="flex flex-col mb-4">
         { !!details?.remise_offres && (
           <Link
@@ -190,7 +189,7 @@ export default function ServiceCard({
         </div>
       </div>
 
-      {/* Description */}
+      {}
       {notEmpty(fullText) && (
         <>
           <motion.div layout transition={{ duration: 0.3, ease: "easeInOut" }}>
@@ -212,7 +211,7 @@ export default function ServiceCard({
         </>
       )}
 
-      {/* Accordion Sections */}
+      {}
       {sections.length > 0 && (
         <div className="mt-6 flex flex-col gap-0 font-roboto">
           {sections.map((section) => (

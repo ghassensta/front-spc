@@ -79,10 +79,7 @@ export default function SolutionsPageView() {
       }).then(() => {
         setFormData(initialFormData);
       });
-
-      console.log(formData)
     } catch (error) {
-      console.error("Erreur lors de l'envoi", error);
       toast.error("Une erreur inattendue est survenue.");
     }
   };
@@ -103,14 +100,14 @@ export default function SolutionsPageView() {
         </div>
       </div>
 
-      {/* First Section */}
+      {}
       <section className="max-w-7xl mx-auto px-4 py-16">
         <h2 className="text-2xl italic font-bold text-center mb-12">
           NOTRE ENGAGEMENT : Offrir à vos salariés des expériences bien-être
           d’exception !
         </h2>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-10 items-center">
-          {/* Text Column */}
+          {}
           <div className="space-y-4 text-sm font-bricolage leading-relaxed">
             <p>
               <strong>Un engagement local et national,</strong> soutenant
@@ -159,7 +156,7 @@ export default function SolutionsPageView() {
             </p>
           </div>
 
-          {/* Image Column */}
+          {}
           <div>
             <img
               loading="lazy"
@@ -171,7 +168,7 @@ export default function SolutionsPageView() {
         </div>
       </section>
 
-      {/* New Section from Screenshot */}
+      {}
       <section className="bg-white py-16">
         <div className="max-w-7xl mx-auto px-4 text-center">
           <h2 className="text-3xl mb-2">
@@ -182,7 +179,7 @@ export default function SolutionsPageView() {
           </p>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            {/* Card 1 */}
+            {}
             <div className="py-12 bg-[#faf4ec] p-6 rounded shadow-sm text-left hover:bg-[#B6B499] duration-300 ease-out">
               <h3 className="font-bold text-2xl mb-4">Commandes Groupées</h3>
               <ul className="list-disc list-inside space-y-2 font-bricolage text-[#565656]">
@@ -205,7 +202,7 @@ export default function SolutionsPageView() {
               </ul>
             </div>
 
-            {/* Card 2 */}
+            {}
             <div className="py-12 bg-[#faf4ec] p-6 rounded shadow-sm text-left hover:bg-[#B6B499] duration-300 ease-out">
               <h3 className="font-bold text-2xl mb-4">Vente en Ligne</h3>
               <ul className="list-disc list-inside space-y-2 font-bricolage text-[#565656]">
@@ -224,7 +221,7 @@ export default function SolutionsPageView() {
               </ul>
             </div>
 
-            {/* Card 3 */}
+            {}
             <div className="py-12 bg-[#faf4ec] p-6 rounded shadow-sm text-left hover:bg-[#B6B499] duration-300 ease-out">
               <h3 className="font-bold mb-4 text-2xl">
                 Avantages pour vos équipes
@@ -242,7 +239,7 @@ export default function SolutionsPageView() {
             </div>
           </div>
 
-          {/* Contact Button */}
+          {}
           <div className="mt-10">
             <Link to={paths.contact} className="inline-flex mx-auto font-tahoma rounded-full items-center gap-2 uppercase font-normal tracking-widest transition-all duration-300 bg-[#B6B499] hover:bg-black text-white px-6 py-3 text-sm">
               Nous contacter
@@ -261,7 +258,7 @@ export default function SolutionsPageView() {
             onSubmit={handleSubmit}
             className="grid grid-cols-1 md:grid-cols-2 gap-2 font-roboto"
           >
-            {/* Nom et prénom */}
+            {}
             <label className="flex flex-col">
               Nom et prénom*
               <input
@@ -273,7 +270,7 @@ export default function SolutionsPageView() {
               />
             </label>
 
-            {/* Email */}
+            {}
             <label className="flex flex-col">
               E-mail*
               <input
@@ -285,7 +282,7 @@ export default function SolutionsPageView() {
               />
             </label>
 
-            {/* Téléphone */}
+            {}
             <label className="flex flex-col">
               Téléphone
               <input
@@ -297,7 +294,7 @@ export default function SolutionsPageView() {
               />
             </label>
 
-            {/* Entreprise */}
+            {}
             <label className="flex flex-col">
               Nom de l'entreprise*
               <input
@@ -309,7 +306,7 @@ export default function SolutionsPageView() {
               />
             </label>
 
-            {/* Nombre de salariés */}
+            {}
             <label className="flex flex-col">
               Nombre de salariés
               <input
@@ -321,7 +318,7 @@ export default function SolutionsPageView() {
               />
             </label>
 
-            {/* Fonction */}
+            {}
             <label className="flex flex-col">
               Fonction
               <input
@@ -333,7 +330,7 @@ export default function SolutionsPageView() {
               />
             </label>
 
-            {/* Adresse */}
+            {}
             <label className="flex flex-col">
               Adresse complète
               <input
@@ -345,7 +342,7 @@ export default function SolutionsPageView() {
               />
             </label>
 
-            {/* Pays */}
+            {}
             <label className="flex flex-col">
               Pays
               <select
@@ -361,7 +358,7 @@ export default function SolutionsPageView() {
               </select>
             </label>
 
-            {/* Message */}
+            {}
             <label className="flex flex-col md:col-span-2">
               Message
               <textarea
@@ -373,7 +370,7 @@ export default function SolutionsPageView() {
               ></textarea>
             </label>
 
-            {/* Submit */}
+            {}
             <div className="md:col-span-2 flex justify-center">
               <button
                 type="submit"

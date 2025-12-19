@@ -49,7 +49,7 @@ export default function Header() {
   return (
     <>
       <div className="relative w-screen left-[calc(-50vw+50%)] h-full overflow-hidden">
-        {/* Background etablissements */}
+        {}
         {etablissements.map((s, index) => (
           <div
             key={index}
@@ -66,7 +66,7 @@ export default function Header() {
           </div>
         ))}
 
-        {/* Content Card */}
+        {}
         {!!current && (
           <div className="absolute bottom-24 md:bottom-8  left-4 md:left-12 z-20 text-gray-900 rounded-md shadow-lg w-[90%] max-w-md backdrop-blur-sm">
             <Link
@@ -130,7 +130,7 @@ export default function Header() {
           </div>
         )}
 
-        {/* Navigation */}
+        {}
         {etablissements.length > 0 && (
           <div className="absolute font-tahoma bottom-6 right-8 z-30 flex items-center gap-3 bg-white shadow px-4 py-2">
             <button

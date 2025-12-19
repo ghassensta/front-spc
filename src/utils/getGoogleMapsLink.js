@@ -24,11 +24,9 @@ export const getGoogleMapsLink = (iframeHtml) => {
       const [_, lat, lng] = coordsMatch;
       return `https://www.google.com/maps?q=${lat},${lng}`;
     }
-    console.log("GOT")
     // If we can't extract anything useful, return the src or default
     return src.startsWith('http') ? src : 'https://maps.google.com';
   } catch (error) {
-    console.error('Error parsing iframe URL:', error);
     return 'https://maps.google.com';
   }
 };

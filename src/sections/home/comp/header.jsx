@@ -49,7 +49,7 @@ export default function Header() {
   return (
     <div className="relative w-screen left-[calc(-50vw+50%)] overflow-hidden h-96 md:h-[500px]">
       <div className="relative w-full h-full">
-        {/* Slides */}
+        {}
         {slides.map((s, index) => (
           <div
             key={index}
@@ -62,7 +62,7 @@ export default function Header() {
           </div>
         ))}
 
-        {/* Fixed Content Overlay */}
+        {}
         <div className="absolute inset-0 flex flex-col justify-center items-center text-center text-white px-4 z-10">
           <p className="text-2xl md:text-3xl font-medium lg:w-3/4 mb-4 leading-relaxed">
             Rejoignez la Communauté Privée Spa & Prestige Collection ! Plongez dans
@@ -72,11 +72,11 @@ export default function Header() {
             </span>
           </p>
 
-          {/* Bouton vers la page carte cadeau */}
+          {}
           <ButtonIcon title="CARTE CADEAU" link={paths.cadeau} variant="filled" size="md" />
         </div>
 
-        {/* Dots Indicators */}
+        {}
         <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2 flex space-x-2 z-10">
           {slides.map((_, index) => (
             <button
@@ -89,7 +89,7 @@ export default function Header() {
           ))}
         </div>
 
-        {/* Navigation Arrows */}
+        {}
         <button
           onClick={prevSlide}
           className="absolute left-4 top-1/2 -translate-y-1/2 z-20 bg-white/20 hover:bg-white/40 text-white p-2 rounded-full transition-colors"

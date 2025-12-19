@@ -84,13 +84,12 @@ export default function ProfileDetails() {
         new_password_confirmation: "",
       }));
     } catch (err) {
-      console.error(err);
     }
   };
 
   return (
     <div className="grid grid-cols-2 gap-2 p-3">
-      {/* Nom */}
+      {}
       <div className="flex flex-col">
         <label htmlFor="name" className="text-sm text-secondary">
           Nom
@@ -105,7 +104,7 @@ export default function ProfileDetails() {
         />
       </div>
 
-      {/* Prénom */}
+      {}
       <div className="flex flex-col">
         <label htmlFor="lastName" className="text-sm text-secondary">
           Prénom
@@ -120,7 +119,7 @@ export default function ProfileDetails() {
         />
       </div>
 
-      {/* Nom affiché */}
+      {}
       <div className="flex flex-col">
         <label htmlFor="displayedName" className="text-sm text-secondary">
           Nom affiché
@@ -135,7 +134,7 @@ export default function ProfileDetails() {
         />
       </div>
 
-      {/* Email */}
+      {}
       <div className="flex flex-col">
         <label htmlFor="email" className="text-sm text-secondary">
           Adresse e-mail
@@ -174,7 +173,7 @@ export default function ProfileDetails() {
         )}
       </div>
 
-      {/* Bloc mot de passe */}
+      {}
       <div className="col-span-2 mt-4 grid grid-cols-2 gap-2 border p-4">
         <div className="flex flex-col col-span-2 md:col-span-1">
           <label htmlFor="currentPassword" className="text-sm text-secondary">
@@ -219,7 +218,7 @@ export default function ProfileDetails() {
         </div>
       </div>
 
-      {/* Bouton d’enregistrement */}
+      {}
       <div className="col-span-2 flex justify-end">
         <button
           type="button"

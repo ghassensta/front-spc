@@ -35,7 +35,6 @@ export default function ForgotPassword() {
     } catch (error) {
       // Afficher le message d'erreur
       toast.error(error.message || "Une erreur est survenue. Veuillez réessayer.");
-      console.error(error);
     } finally {
       setIsSubmitting(false);
     }

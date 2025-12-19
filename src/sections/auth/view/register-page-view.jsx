@@ -52,7 +52,6 @@ export default function RegisterPageView({ code }) {
       await promise;
     router.refresh()
     } catch (error) {
-      console.error("Error during registration:", error);
         if (error?.message){
             toast.error(error.message)
         }
@@ -77,7 +76,7 @@ export default function RegisterPageView({ code }) {
       <h1 className="text-xl font-semibold text-center mb-6">Créer un compte pour laisser un avis</h1>
       <form onSubmit={handleSubmit} className="flex flex-col gap-4">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          {/* Name */}
+          {}
           <div className="relative">
             <label htmlFor="name" className="text-sm text-gray-600">
               Prénom *
@@ -94,7 +93,7 @@ export default function RegisterPageView({ code }) {
             {renderError("name")}
           </div>
 
-          {/* Last name */}
+          {}
           <div className="relative">
             <label htmlFor="lastName" className="text-sm text-gray-600">
               Nom
@@ -110,7 +109,7 @@ export default function RegisterPageView({ code }) {
             {renderError("lastName")}
           </div>
 
-          {/* Displayed name */}
+          {}
           <div className="relative">
             <label htmlFor="displayedName" className="text-sm text-gray-600">
               Nom affiché
@@ -126,7 +125,7 @@ export default function RegisterPageView({ code }) {
             {renderError("displayedName")}
           </div>
 
-          {/* Email */}
+          {}
           <div className="relative">
             <label htmlFor="email" className="text-sm text-gray-600">
               Email *
@@ -143,7 +142,7 @@ export default function RegisterPageView({ code }) {
             {renderError("email")}
           </div>
 
-          {/* Referral code */}
+          {}
           <div className="col-span-1 md:col-span-2 relative">
             <label htmlFor="referral_code" className="text-sm text-gray-600">
               Code
@@ -160,7 +159,7 @@ export default function RegisterPageView({ code }) {
             {renderError("referral_code")}
           </div>
 
-          {/* Password */}
+          {}
           <div className="relative">
             <label htmlFor="password" className="text-sm text-gray-600">
               Mot de passe *
@@ -177,7 +176,7 @@ export default function RegisterPageView({ code }) {
             {renderError("password")}
           </div>
 
-          {/* Confirm Password */}
+          {}
           <div className="relative">
             <label
               htmlFor="password_confirmation"

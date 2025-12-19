@@ -21,7 +21,7 @@ export default function Page() {
         />
         <link rel="canonical" href={pageUrl} />
 
-        {/* Open Graph */}
+        {}
         <meta property="og:type" content="website" />
         <meta property="og:title" content={pageTitle} />
         <meta property="og:description" content={pageDescription} />
@@ -30,18 +30,18 @@ export default function Page() {
         <meta property="og:site_name" content="Spa & Prestige Collection" />
         <meta property="og:locale" content="fr_FR" />
 
-        {/* Twitter */}
+        {}
         <meta name="twitter:card" content="summary_large_image" />
         <meta name="twitter:title" content={pageTitle} />
         <meta name="twitter:description" content={pageDescription} />
         <meta name="twitter:image" content={imageUrl} />
 
-        {/* Métadonnées générales */}
+        {}
         <meta name="language" content="fr-FR" />
         <meta name="author" content="Spa & Prestige Collection - Isabelle Charrier" />
         <meta name="robots" content="index, follow" />
 
-        {/* Breadcrumb Schema */}
+        {}
         <script type="application/ld+json">
           {JSON.stringify({
             "@context": "https://schema.org",
@@ -63,7 +63,7 @@ export default function Page() {
           })}
         </script>
 
-        {/* WebPage Schema */}
+        {}
         <script type="application/ld+json">
           {JSON.stringify({
             "@context": "https://schema.org",
@@ -88,7 +88,7 @@ export default function Page() {
           })}
         </script>
 
-        {/* CreativeWork Schema (parfait pour un guide/magazine) */}
+        {}
         <script type="application/ld+json">
           {JSON.stringify({
             "@context": "https://schema.org",

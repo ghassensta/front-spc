@@ -12,7 +12,6 @@ export default function DashboardView() {
           await signOut();
           await checkUserSession?.();
         } catch (error) {
-          console.error(error);
 
           throw error
         }

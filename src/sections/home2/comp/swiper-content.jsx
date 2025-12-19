@@ -1,83 +1,140 @@
-import React, { useId } from "react";
-import { Swiper, SwiperSlide } from "swiper/react";
-import { Navigation } from "swiper/modules";
-import "swiper/css";
-import "swiper/css/navigation";
-import { FaChevronLeft, FaChevronRight } from "react-icons/fa";
-import Card from "src/components/card/card";
-import { paths } from "src/router/paths";
-import { CONFIG } from "src/config-global";
+import React, { useId, useMemo } from 'react';
+import { Swiper, SwiperSlide } from 'swiper/react';
+import { Navigation } from 'swiper/modules';
+import 'swiper/css';
+import 'swiper/css/navigation';
+import { FaChevronLeft, FaChevronRight } from 'react-icons/fa';
+import PropTypes from 'prop-types';
+import Card from 'src/components/card/card';
+import { paths } from 'src/router/paths';
+import { CONFIG } from 'src/config-global';
 
-export default function SwiperContent({ slidesPerView = 3, data = [] }) {
+const SwiperContent = ({ slidesPerView = 3, data = [] }) => {
   const uniqueId = useId();
   const prevId = `prev-${uniqueId}`;
   const nextId = `next-${uniqueId}`;
-  console.log('products data in SwiperContent:', data);
+
+  const shouldLoop = data.length > slidesPerView;
+
+  // Mémorisation des points de rupture pour éviter les recalculs inutiles
+  const breakpoints = useMemo(() => ({
+    320: { slidesPerView: 1, spaceBetween: 10, centeredSlides: true },
+    768: { slidesPerView: 2, spaceBetween: 15, centeredSlides: true },
+    1024: { slidesPerView, spaceBetween: 20, centeredSlides: false },
+  }), [slidesPerView]);
+
+  // Vérification des données
+  if (!Array.isArray(data) || data.length === 0) {
+    return null; // ou un composant de chargement/erreur approprié
+  }
 
   return (
     <div className="relative max-w-[1200px] mx-auto px-4 md:px-12">
       <Swiper
-        rewind
+        loop={shouldLoop} // Désactive le loop s'il n'y a pas assez d'éléments
         spaceBetween={20}
-        slidesPerView={slidesPerView}
-        initialSlide={2}
-        centeredSlides={true}
-        breakpoints={{
-          320: { slidesPerView: 1, spaceBetween: 10, centeredSlides: true },
-          768: { slidesPerView: 2, spaceBetween: 15, centeredSlides: true },
-          1024: { slidesPerView, spaceBetween: 20, centeredSlides: false },
-        }}
+        slidesPerView={Math.min(slidesPerView, data.length)}
+        initialSlide={Math.min(2, Math.max(0, data.length - 1))}
+        centeredSlides={data.length <= 2}
+        breakpoints={breakpoints}
         modules={[Navigation]}
         navigation={{
           prevEl: `#${prevId}`,
           nextEl: `#${nextId}`,
         }}
-        className=""
+        preventClicksPropagation={false}
+        preventInteractionOnTransition={true}
       >
-        {data.map((item) => (
-          <SwiperSlide className="pt-8" key={item.id || item.slug}>
-            <Card
-              to={paths.product(item.slug)}
-              title={item.name || "Produit"}
-              image={
-                item.image
-                  ? `${CONFIG.serverUrl}/storage/${item.image}`
-                  : "/placeholder.png"
-              }
-              headTitle={item.spaName || ""}
-              location={item.spaLocation || ""}
-              bottomText={item.offre || ""}
-              offreValue={item.offreValue || 0}
-              price={item.price || ""}
-              duration={item.duration || ""}
-              id={item.produit_id || null}
-              exclusivite_spc={item.exclusivite_spc || false}
-              remiseDescProduit={item.remiseDescProduit || ""}
-            />
-          </SwiperSlide>
-        ))}
+        {data.map((item) => {
+          if (!item) return null;
+          
+          return (
+            <SwiperSlide 
+              className="pt-8" 
+              key={`${item.id || ''}-${item.slug || ''}`}
+            >
+              <Card
+                to={item.slug ? paths.product(item.slug) : '#'}
+                title={item.name || 'Produit'}
+                image={
+                  item.image
+                    ? `${CONFIG.serverUrl}/storage/${item.image}`
+                    : '/placeholder.png'
+                }
+                headTitle={item.spaName || ''}
+                location={item.spaLocation || ''}
+                bottomText={item.offre || ''}
+                offreValue={item.offreValue || 0}
+                price={item.price || ''}
+                duration={item.duration || ''}
+                id={item.produit_id || null}
+                exclusivite_spc={Boolean(item.exclusivite_spc)}
+                remiseDescProduit={item.remiseDescProduit || ''}
+              />
+            </SwiperSlide>
+          );
+        })}
       </Swiper>
 
-      {/* Navigation */}
-      <div
-        id={prevId}
-        className="absolute left-0 top-1/2 transform -translate-y-1/2 bg-[#B6B499] rounded-full w-8 h-8 z-10 cursor-pointer flex items-center justify-center"
-      >
-        <FaChevronLeft className="text-black w-3 h-3" />
-      </div>
-      <div
-        id={nextId}
-        className="absolute right-0 top-1/2 transform -translate-y-1/2 bg-[#B6B499] rounded-full w-8 h-8 z-10 cursor-pointer flex items-center justify-center"
-      >
-        <FaChevronRight className="text-black w-3 h-3" />
-      </div>
+      {/* Navigation buttons */}
+      {data.length > 1 && (
+        <>
+          <button
+            id={prevId}
+            aria-label="Précédent"
+            className="absolute left-0 top-[35%] -translate-y-1/2 bg-[#B6B499] hover:bg-[#9a977d] rounded-full w-8 h-8 z-10 cursor-pointer flex items-center justify-center transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-[#B6B499] focus:ring-opacity-50"
+          >
+            <FaChevronLeft className="text-black w-3 h-3" />
+          </button>
+          <button
+            id={nextId}
+            aria-label="Suivant"
+            className="absolute right-0 top-[35%] -translate-y-1/2 bg-[#B6B499] hover:bg-[#9a977d] rounded-full w-8 h-8 z-10 cursor-pointer flex items-center justify-center transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-[#B6B499] focus:ring-opacity-50"
+          >
+            <FaChevronRight className="text-black w-3 h-3" />
+          </button>
+        </>
+      )}
 
-      <style jsx global>{`
+      <style>{`
         .swiper-button-prev:after,
         .swiper-button-next:after {
           display: none !important;
         }
+        
+        /* Amélioration de l'accessibilité au focus */
+        .swiper-slide:focus {
+          outline: none;
+        }
       `}</style>
     </div>
   );
-}
+};
+
+SwiperContent.propTypes = {
+  slidesPerView: PropTypes.number,
+  data: PropTypes.arrayOf(
+    PropTypes.shape({
+      id: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
+      slug: PropTypes.string,
+      name: PropTypes.string,
+      image: PropTypes.string,
+      spaName: PropTypes.string,
+      spaLocation: PropTypes.string,
+      offre: PropTypes.string,
+      offreValue: PropTypes.number,
+      price: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
+      duration: PropTypes.string,
+      produit_id: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
+      exclusivite_spc: PropTypes.bool,
+      remiseDescProduit: PropTypes.string,
+    })
+  ),
+};
+
+SwiperContent.defaultProps = {
+  slidesPerView: 3,
+  data: [],
+};
+
+export default React.memo(SwiperContent);

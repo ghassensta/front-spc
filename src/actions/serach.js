@@ -41,7 +41,6 @@ export const useLocationSearch = () => {
 
         setSuggestions([...locations, ...services].slice(0, 10));
       } catch (err) {
-        console.error("Erreur recherche combinée:", err);
         setSuggestions([]);
       } finally {
         setLoading(false);
@@ -86,7 +85,6 @@ export const useServiceCategoriesSearch = () => {
 
         setSuggestions(items.slice(0, 10));
       } catch (err) {
-        console.error("Erreur recherche services/catégories:", err);
         setSuggestions([]);
       } finally {
         setLoading(false);
@@ -123,7 +121,6 @@ export const useSearchProduits = (catSlug, villeSlug) => {
         const res = await fetcher(url);
         setData(res);
       } catch (err) {
-        console.error("Erreur recherche produits:", err);
         setError(err.message || "Erreur de chargement");
         setData({ results: [], total: 0 });
       } finally {

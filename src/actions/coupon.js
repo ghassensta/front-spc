@@ -12,7 +12,6 @@ export const useValidateCoupon = () => {
       mutate(endpoints.coupons.validate); // actualiser le cache SWR
       return res;
     } catch (error) {
-      console.error("Erreur lors de la validation du coupon:", error);
       throw error;
     }
   };

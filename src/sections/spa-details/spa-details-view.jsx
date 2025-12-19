@@ -99,8 +99,8 @@ function SpaDetailsView({
         setRatings(initialRatings);
         setComment("");
       })
-      .catch((error) => {
-        console.error("Erreur lors de l'envoi de l'avis:", error);
+      .catch(() => {
+        // Gestion silencieuse de l'erreur
       });
   };
 
@@ -148,7 +148,7 @@ function SpaDetailsView({
             }`}
             onClick={() => setActiveTab("createReview")}
           >
-            Créer votre avis
+            Créez votre avis
           </button>
         </div>
 
@@ -219,7 +219,7 @@ function SpaDetailsView({
 
             {activeTab === "createReview" && (
               <>
-                {/* Formulaire ajouter avis */}
+                {}
                 <div className="bg-white p-4 rounded-lg border border-black">
                   {user ? (
                     <>
@@ -277,7 +277,7 @@ function SpaDetailsView({
                       <div className="h-60 flex flex-col justify-center items-center">
                         <p className="text-xl mb-2">Veuillez vous connecter pour mettre un avis</p>
                         <Link to={paths.auth.root} className="w-max rounded-full px-4 py-3 bg-black leading-4 text-white uppercase font-normal text-xs tracking-[3px] hover:bg-gray-800 transition font-tahoma flex items-center justify-center gap-2">
-                          Connecter Vous
+                          Connectez vous
                         </Link>
                       </div>
                     </>

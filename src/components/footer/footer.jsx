@@ -46,7 +46,7 @@ export default function Footer() {
   return (
     <footer className="bg-secondary text-white pt-8 md:pt-12 left-[calc(-50vw+50%)] relative w-screen font-roboto">
       <div className="max-w-6xl mx-auto px-6 flex flex-col md:flex-row gap-10 md:gap-2 lg:gap-8 md:py-12">
-        {/* Colonne 1: Logo + Description */}
+        {}
         <div className="text-center flex flex-col items-center mx-auto lg:mr-12">
           {siteLogoPath ? (
             <img lazyload="lazy"
@@ -65,10 +65,10 @@ export default function Footer() {
             {siteDescription}
           </p>
           <a href="tel:0182350126" className="text-sm">Tél. 01 82 35 01 26</a>{" "}
-          {/* Statique pour l'instant, rendez dynamique si besoin */}
+          {}
         </div>
 
-        {/* Colonne 2: À PROPOS - Dynamique */}
+        {}
         <div className="w-full">
           <h4 className="text-lg font-light mb-3">À PROPOS</h4>
           <ul className="space-y-2 text-sm font-roboto">
@@ -79,7 +79,7 @@ export default function Footer() {
                 </a>
               </li>
             ))}
-            {/* Fallback si pas de liens dynamiques, ajoutez les statiques manquants si nécessaire */}
+            {}
             {aboutLinks.length === 0 && (
               <>
                 <li>
@@ -88,13 +88,13 @@ export default function Footer() {
                 <li>
                   <a href={paths.collection} className="duration-300 border-0 hover:border-b-2 hover:border-primary hover:text-primary hover:font-bold">Book Collection & Prestige</a>
                 </li>
-                {/* Ajoutez les autres */}
+                {}
               </>
             )}
           </ul>
         </div>
 
-        {/* Colonne 3: PROFESSIONNEL - Dynamique */}
+        {}
         <div className="w-full">
           <h4 className="text-lg font-light mb-3">PROFESSIONNEL</h4>
           <ul className="space-y-2 text-sm font-roboto">
@@ -105,7 +105,7 @@ export default function Footer() {
                 </a>
               </li>
             ))}
-            {/* Fallback si pas de liens dynamiques */}
+            {}
             {proLinks.length === 0 && (
               <>
                 <li>
@@ -114,13 +114,13 @@ export default function Footer() {
                 <li>
                   <a href={paths.referentiel} className="duration-300 border-0 hover:border-b-2 hover:border-primary hover:text-primary hover:font-bold">Référentiel de candidature</a>
                 </li>
-                {/* Ajoutez les autres */}
+                {}
               </>
             )}
           </ul>
         </div>
 
-        {/* Colonne 4: Newsletter - Statique pour l'instant */}
+        {}
         <div className="w-full">
           <h4 className="text-lg font-light mb-3">NEWSLETTER</h4>
           <div className="bg-[#f4efe5] p-4 rounded">
@@ -155,7 +155,7 @@ export default function Footer() {
                   rel="noopener noreferrer"
                   className="hover:text-gray-900 hover:bg-white p-1 rounded-full transition-colors font-light "
                 >
-                  {/* <i className={item.icon}></i> */}
+                  {}
                   <IconComponent />
                 </a>
               );
@@ -164,7 +164,7 @@ export default function Footer() {
         </div>
       </div>
 
-      {/* Bottom bar - Statique */}
+      {}
       <div className="bg-[#B6B498] text-base  text-black  font-roboto">
         <div className="max-w-6xl mx-auto p-6 flex flex-col md:flex-row items-center justify-between">
           <p className="mb-2 md:mb-0">

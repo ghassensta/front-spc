@@ -128,7 +128,6 @@ export default function CheckoutView() {
         toast.error(res.message);
       }
     } catch (error) {
-      console.error("Erreur coupon:", error);
       toast.error("Erreur lors de la validation du coupon");
     } finally {
       setCouponLoading(false);
@@ -165,7 +164,7 @@ export default function CheckoutView() {
   return (
     <div className="container mx-auto p-4 font-tahoma">
       <div className="flex flex-col lg:flex-row gap-6">
-        {/* Panier */}
+        {}
         <div className="flex-1 bg-white p-4 rounded-lg shadow-sm overflow-x-auto">
           <h4 className="text-xl font-semibold mb-4">Panier</h4>
           <table className="table-auto w-full text-sm text-left min-w-[700px] lg:min-w-full">
@@ -275,7 +274,7 @@ export default function CheckoutView() {
               )}
             </tbody>
           </table>
-          {/* Totaux */}
+          {}
           <div className="flex flex-col items-end mt-6 space-y-1 text-sm font-medium">
             <div>Sous-total HT : {subtotalHT.toFixed(2)} €</div>
             <div>Taxe 20 % : {tax.toFixed(2)} €</div>
@@ -318,7 +317,7 @@ export default function CheckoutView() {
           </div>
         </div>
         <div className="w-full lg:w-80 flex flex-col gap-4 md:gap-6">
-          {/* Coupon */}
+          {}
           <div className="bg-white rounded-md p-4 md:p-6 shadow">
             <h2 className="text-base font-semibold mb-3 md:mb-4">
               Code Coupon

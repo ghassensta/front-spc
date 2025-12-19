@@ -5,7 +5,6 @@ import BlogPage from "src/sections/actualites/blog-page";
 export default function ActualitesByslug() {
   const { slug } = useParams(); 
   const { actualites, categories, actualitesLoading } = useGetActualitezBySlug(slug);
-    console.log("actualitesacategoriescategoriescategoriesctualites",categories);
   return (
     <BlogPage
       articles={actualites}
