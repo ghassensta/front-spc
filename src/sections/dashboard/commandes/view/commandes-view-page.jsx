@@ -3,7 +3,7 @@ import { Eye } from "lucide-react";
 
 export default function CommandesViewPage({ order }) {
   const formatPrice = (value) => (value ? Number(value).toFixed(2) : "0.00");
-
+ // console.log("orders", order);
   return (
     <div className="mt-4 grid grid-cols-1 gap-4 lg:grid-cols-3">
       <div className="border p-4 col-span-3 overflow-x-auto">
@@ -17,7 +17,9 @@ export default function CommandesViewPage({ order }) {
               <th className="border p-2 text-left text-sm">Produit</th>
               <th className="border p-2 text-left text-sm">Destinataire</th>
               <th className="border p-2 text-left text-sm">Quantité</th>
-              <th className="border p-2 text-left text-sm">Prix Unitaire TTC</th>
+              <th className="border p-2 text-left text-sm">
+                Prix Unitaire TTC
+              </th>
               <th className="border p-2 text-left text-sm">Total TTC </th>
               <th className="border p-2 text-left text-sm">Carte Cadeau</th>
             </tr>
@@ -27,14 +29,18 @@ export default function CommandesViewPage({ order }) {
             {order?.lignes?.map((item) => {
               const hasDiscount = Number(item.coupon_discount) > 0;
               const originalPrice = Number(item.prix_unitaire) || 0;
-              const unitPriceAfterDiscount = originalPrice - (hasDiscount ? Number(item.coupon_discount) : 0);
+              const unitPriceAfterDiscount =
+                originalPrice -
+                (hasDiscount ? Number(item.coupon_discount) : 0);
               const totalAfterDiscount = unitPriceAfterDiscount * item.quantite;
 
               return (
                 <tr key={item.id} className="border-t">
                   {}
                   <td className="border p-2 text-sm">
-                    <div className="font-semibold">{item.produit?.nom || "Carte Cadeau"}</div>
+                    <div className="font-semibold">
+                      {item.produit?.nom || "Carte Cadeau"}
+                    </div>
 
                     {}
                     <div className="text-xs mt-1">
@@ -65,13 +71,29 @@ export default function CommandesViewPage({ order }) {
                     <div className="text-xs mt-1 text-gray-600 space-y-0.5">
                       <div>Numéro: {item.numero_carte || "—"}</div>
                       <div>Code: {item.code_validation || "—"}</div>
+                      <div className="text-red-500">
+                        Date d'envoi:{" "}
+                        {item.date_envoi_destinataire
+                          ? new Date(
+                              item.date_envoi_destinataire
+                            ).toLocaleDateString("fr-FR", {
+                              day: "2-digit",
+                              month: "2-digit",
+                              year: "2-digit",
+                            })
+                          : "—"}
+                      </div>
                     </div>
                   </td>
 
                   {}
                   <td className="border p-2 text-sm">
-                    <div className="font-semibold">{item.destinataire_name || "—"}</div>
-                    <div className="text-gray-600 text-xs">{item.destinataire_email || "—"}</div>
+                    <div className="font-semibold">
+                      {item.destinataire_name || "—"}
+                    </div>
+                    <div className="text-gray-600 text-xs">
+                      {item.destinataire_email || "—"}
+                    </div>
                   </td>
 
                   {}
@@ -107,7 +129,9 @@ export default function CommandesViewPage({ order }) {
                         </span>
                       </>
                     ) : (
-                      <span>{formatPrice(originalPrice * item.quantite)} €</span>
+                      <span>
+                        {formatPrice(originalPrice * item.quantite)} €
+                      </span>
                     )}
                   </td>
 
@@ -148,7 +172,14 @@ export default function CommandesViewPage({ order }) {
             <div className="flex justify-between text-red-600">
               <span>Coupon appliqué :</span>
               <span>
-                -{formatPrice(order?.lignes.reduce((acc, i) => acc + Number(i.coupon_discount || 0), 0))} €
+                -
+                {formatPrice(
+                  order?.lignes.reduce(
+                    (acc, i) => acc + Number(i.coupon_discount || 0),
+                    0
+                  )
+                )}{" "}
+                €
               </span>
             </div>
           )}

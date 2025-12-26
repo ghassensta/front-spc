@@ -8,6 +8,8 @@ import Lottie from "lottie-react";
 import confettiAnimation from "src/animations/Confetti.json"; 
 import { GiFClef } from "react-icons/gi";
 import { Gift } from "lucide-react";
+import { TranslatedText } from "src/components/translated-text/translated-text";
+import { useTranslation } from "react-i18next";
 
 export default function FidelitePageView() {
   const { points: pointsData, loading } = useGetPointsFidelite();
@@ -15,6 +17,7 @@ export default function FidelitePageView() {
   const [modalOpen, setModalOpen] = useState(false);
   const [selectedRate, setSelectedRate] = useState(null);
   const [showConfetti, setShowConfetti] = useState(false);
+  const { t } = useTranslation();
 
   const points = useMemo(() => pointsData?.solde || 0, [pointsData]);
   const pendingPoints = useMemo(
@@ -53,7 +56,7 @@ export default function FidelitePageView() {
       setTimeout(() => setShowConfetti(false), 3000);
 
       toast.success(
-        res.message || `Vous avez reçu un bon de ${selectedRate.value}€ !`,
+        res.message || t(`Vous avez reçu un bon de ${selectedRate.value}€ !`),
         {
           autoClose: 8000, 
         }
@@ -64,7 +67,7 @@ export default function FidelitePageView() {
       const errMsg =
         typeof error === "string"
           ? error
-          : error?.message || "Erreur lors de l'échange de points.";
+          : error?.message || t("Erreur lors de l'échange de points.");
       toast.error(errMsg);
     } finally {
       setIsExchanging(false);
@@ -76,7 +79,7 @@ export default function FidelitePageView() {
     setSelectedRate(null);
   };
 
-  if (loading) return <p>Chargement des points...</p>;
+  if (loading) return <p><TranslatedText text="Chargement des points..." /></p>;
 
   return (
     <div className="max-w-4xl mx-auto p-6 space-y-6 relative">
@@ -85,33 +88,33 @@ export default function FidelitePageView() {
           <span role="img" aria-label="gift">
             <Gift />
           </span>
-          Programme de Fidélité
+          <TranslatedText text="Programme de Fidélité" />
         </h2>
         <p className="text-gray-600">
-          Gagnez des points et recevez des bons d'achat !
+          <TranslatedText text="Gagnez des points et recevez des bons d'achat !" />
         </p>
       </div>
 
       <div className="bg-white rounded-xl p-4 shadow-sm space-y-2">
         <p className="flex items-center gap-2 ">
-          ✔️ 1 point pour chaque euro dépensé
+          <TranslatedText text="1 point pour chaque euro dépensé" />
         </p>
         <p className="flex items-center gap-2 ">
-          ✔️ Les points sont visibles immédiatement après chaque transaction
+          <TranslatedText text="Les points sont visibles immédiatement après chaque transaction" />
         </p>
         <p className="font-medium">
-          250 pts = 10€ , 500 = 15€ , 750 = 20€ , 1000 = 25€
+          <TranslatedText text="250 pts = 10€ , 500 = 15€ , 750 = 20€ , 1000 = 25€" />
         </p>
       </div>
 
       <div className="bg-white rounded-xl p-4 shadow-sm flex flex-col md:flex-row justify-between gap-6">
         <div>
-          <h3 className="font-semibold">Votre solde</h3>
-          <p className="text-lg font-bold">{points} points</p>
-          <p className="text-gray-500">+ {pendingPoints} points en attente</p>
+          <h3 className="font-semibold"><TranslatedText text="Votre solde" /></h3>
+          <p className="text-lg font-bold">{points} <TranslatedText text="points" /></p>
+          <p className="text-gray-500">+ {pendingPoints} <TranslatedText text="points en attente" /></p>
         </div>
         <div className="flex-1">
-          <h3 className="font-semibold mb-1">Progrès vers le prochain bon</h3>
+          <h3 className="font-semibold mb-1"><TranslatedText text="Progrès vers le prochain bon" /></h3>
           <div className="w-full bg-gray-200 rounded-full h-4 overflow-hidden">
             <div
               className="bg-green-500 h-4"
@@ -123,7 +126,7 @@ export default function FidelitePageView() {
       </div>
 
       <div className="bg-white rounded-xl p-4 shadow-sm">
-        <h3 className="font-semibold mb-3">Échanger vos points :</h3>
+        <h3 className="font-semibold mb-3"><TranslatedText text="Échanger vos points :" /></h3>
         <div className="flex flex-wrap gap-3">
           {conversionRates.map((rate) => (
             <button
@@ -144,11 +147,11 @@ export default function FidelitePageView() {
 
       <ModalConfirme
         isOpen={modalOpen}
-        title="Confirmer l'échange"
-        message={`Voulez-vous échanger ${selectedRate?.points} points pour ${selectedRate?.value}€ ?`}
+        title={t("Confirmer l'échange")}
+        message={t(`Voulez-vous échanger ${selectedRate?.points} points pour ${selectedRate?.value}€ ?`)}
         onConfirm={handleConfirmRedeem}
         onCancel={handleCancel}
-        confirmText="Échanger"
+        confirmText={t("Échanger")}
       />
 
       {showConfetti && (

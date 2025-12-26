@@ -7,6 +7,8 @@ import { useAuthContext } from "src/auth/hooks/use-auth-context";
 import { toast } from "react-toastify";
 import { useRouter } from "src/hooks";
 import { useValidateCoupon } from "src/actions/coupon";
+import { TranslatedText } from "src/components/translated-text/translated-text";
+import { useTranslation } from "react-i18next";
 
 export default function CheckoutView() {
   const checkout = useCheckoutContext();
@@ -14,6 +16,7 @@ export default function CheckoutView() {
   const [loyaltyOpen, setLoyaltyOpen] = useState(false);
   const router = useRouter();
   const validateCoupon = useValidateCoupon();
+  const { t } = useTranslation();
   const itemsFiltered = checkout.items?.filter((item) => item.quantity > 0) || [];
 
   const TAX_RATE = 0.2;
@@ -44,7 +47,7 @@ export default function CheckoutView() {
       setCouponCode("");
       setCouponApplied(false);
       setCouponData(null);
-      toast.info("Les réductions et coupons ont été réinitialisés.");
+      toast.info(t("Les réductions et coupons ont été réinitialisés."));
     }
   }, []); // Only on mount (refresh)
 
@@ -123,12 +126,12 @@ export default function CheckoutView() {
           type,
           amount: discountNumber,
         });
-        toast.success(res.message);
+        toast.success(t("Le coupon a été appliqué avec succès"));
       } else {
-        toast.error(res.message);
+        toast.error(t("Erreur lors de la validation du coupon"));
       }
     } catch (error) {
-      toast.error("Erreur lors de la validation du coupon");
+      toast.error(t("Erreur lors de la validation du coupon"));
     } finally {
       setCouponLoading(false);
     }
@@ -141,8 +144,8 @@ export default function CheckoutView() {
   };
 
   const gotCheckout = () => {
-    if (isCartEmpty) return toast.error("Panier est vide");
-    if (!expediteurFullName) return toast.error("Remplir nom d'expéditeur");
+    if (isCartEmpty) return toast.error(t("Panier est vide"));
+    if (!expediteurFullName) return toast.error(t("Remplir nom d'expéditeur"));
 
     checkout.onCreateExpediteur({
       ...checkout.expediteur,
@@ -166,17 +169,17 @@ export default function CheckoutView() {
       <div className="flex flex-col lg:flex-row gap-6">
         {}
         <div className="flex-1 bg-white p-4 rounded-lg shadow-sm overflow-x-auto">
-          <h4 className="text-xl font-semibold mb-4">Panier</h4>
+          <h4 className="text-xl font-semibold mb-4"><TranslatedText text="Panier" /></h4>
           <table className="table-auto w-full text-sm text-left min-w-[700px] lg:min-w-full">
             <thead className="uppercase text-gray-700 bg-gray-50 border-b text-xs tracking-wide">
               <tr>
-                <th className="py-4 px-3">Produit</th>
-                <th className="py-4 px-3">Destinataires</th>
-                <th className="py-4 px-3">Prix TTC</th>
-                <th className="py-4 px-3">QTE</th>
-                <th className="py-4 px-3">Total TTC</th>
-                <th className="py-4 px-3">Réduction</th>
-                <th className="py-4 px-3">Actions</th>
+                <th className="py-4 px-3"><TranslatedText text="Produit" /></th>
+                <th className="py-4 px-3"><TranslatedText text="Destinataires" /></th>
+                <th className="py-4 px-3"><TranslatedText text="Prix TTC" /></th>
+                <th className="py-4 px-3"><TranslatedText text="QTE" /></th>
+                <th className="py-4 px-3"><TranslatedText text="Total TTC" /></th>
+                <th className="py-4 px-3"><TranslatedText text="Réduction" /></th>
+                <th className="py-4 px-3"><TranslatedText text="Actions" /></th>
               </tr>
             </thead>
             <tbody>
@@ -212,12 +215,12 @@ export default function CheckoutView() {
                               <li key={index}>
                                 {dest.fullName && dest.email
                                   ? `${dest.fullName} — ${dest.email}`
-                                  : "Destinataire non défini"}
+                                  : t("Pas de destinataire défini → l'expéditeur recevra lui-même")}
                               </li>
                             ))}
                           </ul>
                         ) : (
-                          "Aucun destinataire défini"
+                          t("Pas de destinataire défini → l'expéditeur recevra lui-même")
                         )}
                       </td>
                       <td className="py-3">
@@ -268,7 +271,7 @@ export default function CheckoutView() {
               ) : (
                 <tr>
                   <td colSpan={7} className="py-6 text-center text-gray-400">
-                    Votre panier est vide.
+                    <TranslatedText text="Votre panier est vide." />
                   </td>
                 </tr>
               )}
@@ -276,15 +279,15 @@ export default function CheckoutView() {
           </table>
           {}
           <div className="flex flex-col items-end mt-6 space-y-1 text-sm font-medium">
-            <div>Sous-total HT : {subtotalHT.toFixed(2)} €</div>
-            <div>Taxe 20 % : {tax.toFixed(2)} €</div>
+            <div><TranslatedText text="Sous-total HT" /> : {subtotalHT.toFixed(2)} €</div>
+            <div><TranslatedText text="Taxe 20 %" /> : {tax.toFixed(2)} €</div>
             {totalDiscount > 0 && (
               <div className="text-green-600 font-semibold">
-                Réduction : -{totalDiscount.toFixed(2)} €
+                <TranslatedText text="Réduction" /> : -{totalDiscount.toFixed(2)} €
               </div>
             )}
             <div className="text-base font-bold border-t pt-2 mt-2 w-48">
-              Total TTC : {grandTotal.toFixed(2)} €
+              <TranslatedText text="Total TTC" /> : {grandTotal.toFixed(2)} €
             </div>
           </div>
           <div className="bg-white rounded-lg shadow-md border mt-6 w-full">
@@ -295,7 +298,7 @@ export default function CheckoutView() {
             >
               <div className="flex items-center gap-3 text-left">
                 <h5 className="text-base font-semibold leading-snug">
-                  Validez cette commande et gagnez jusqu’à{" "}
+                  <TranslatedText text="Validez cette commande et gagnez jusqu'à" />{" "}
                   <span className="text-yellow-600 font-bold">{grandTotal.toFixed(0)} points</span>
                 </h5>
               </div>
@@ -309,9 +312,7 @@ export default function CheckoutView() {
             </button>
             {loyaltyOpen && (
               <div className="px-4 pb-4 text-sm text-gray-600">
-                Les points de fidélité vous permettent d'obtenir des récompenses
-                lors de vos futurs achats. Le nombre final peut varier selon les
-                remises.
+                <TranslatedText text="Les points de fidélité vous permettent d'obtenir des récompenses lors de vos futurs achats. Le nombre final peut varier selon les remises." />
               </div>
             )}
           </div>
@@ -320,13 +321,13 @@ export default function CheckoutView() {
           {}
           <div className="bg-white rounded-md p-4 md:p-6 shadow">
             <h2 className="text-base font-semibold mb-3 md:mb-4">
-              Code Coupon
+              <TranslatedText text="Code Coupon" />
             </h2>
             <div className="flex flex-col sm:flex-row gap-2">
               <input
                 type="text"
                 className="flex-1 border rounded-md p-2 w-full"
-                placeholder="Entrez votre code coupon"
+                placeholder={t("Entrez votre code coupon")}
                 value={couponCode}
                 onChange={(e) => setCouponCode(e.target.value.toUpperCase())}
                 disabled={couponApplied || couponLoading}
@@ -336,7 +337,7 @@ export default function CheckoutView() {
                   onClick={handleRemoveCoupon}
                   className="w-full sm:w-auto px-4 py-2 bg-gray-600 text-white rounded-md hover:bg-gray-700 transition"
                 >
-                  Supprimer
+                  <TranslatedText text="Supprimer" />
                 </button>
               ) : (
                 <button
@@ -344,24 +345,24 @@ export default function CheckoutView() {
                   disabled={couponLoading || !couponCode}
                   className="w-full sm:w-auto px-4 py-2 bg-black text-white rounded-md hover:bg-gray-900 disabled:opacity-50 disabled:cursor-not-allowed transition"
                 >
-                  {couponLoading ? "Validation..." : "Appliquer"}
+                  {couponLoading ? t("Validation...") : <TranslatedText text="Appliquer" />}
                 </button>
               )}
             </div>
             {couponApplied && couponData && (
               <div className="mt-3 p-2 bg-green-50 border border-green-200 rounded text-sm text-green-700">
-                ✓ Code <strong>{couponData.code}</strong> appliqué
+                ✓ <TranslatedText text="Code" /> <strong>{couponData.code}</strong> <TranslatedText text="appliqué" />
               </div>
             )}
           </div>
           {user ? (
             <div className="bg-white p-4 md:p-6 rounded-lg shadow-sm">
-              <h4 className="text-xl font-semibold mb-3 md:mb-4">Expéditeur</h4>
+              <h4 className="text-xl font-semibold mb-3 md:mb-4"><TranslatedText text="Expéditeur" /></h4>
               <div className="flex flex-col gap-3 md:gap-4">
                 <input
                   type="text"
                   className="w-full border border-gray-300 rounded-lg p-2"
-                  placeholder="Nom et prénom"
+                  placeholder={t("Nom et prénom")}
                   value={expediteurFullName}
                   onChange={(e) => {
                     setExpediteurFullName(e.target.value);
@@ -371,7 +372,7 @@ export default function CheckoutView() {
                 <textarea
                   rows={4}
                   className="w-full border border-gray-300 rounded-lg p-2"
-                  placeholder="Message (optionnel)"
+                  placeholder={t("Message (optionnel)")}
                   value={expediteurMessage}
                   onChange={(e) => {
                     setExpediteurMessage(e.target.value);
@@ -383,12 +384,12 @@ export default function CheckoutView() {
                 onClick={gotCheckout}
                 className="w-full mt-4 inline-flex justify-center items-center rounded-full gap-2 uppercase font-normal tracking-widest transition-all duration-300 px-6 py-3 text-sm bg-[#B6B499] hover:bg-black text-white"
               >
-                Commander
+                <TranslatedText text="Commander" />
               </button>
             </div>
           ) : (
             <div className="bg-white p-4 rounded-lg shadow-sm flex flex-col gap-3">
-              <p>Vous devez vous identifier pour commander</p>
+              <p><TranslatedText text="Vous devez vous identifier pour commander" /></p>
               <button
                 onClick={() =>
                   router.push(
@@ -399,7 +400,7 @@ export default function CheckoutView() {
                 }
                 className="w-full inline-flex justify-center items-center gap-2 uppercase font-normal tracking-widest transition-all duration-300 px-6 py-3 text-sm bg-[#B6B499] hover:bg-black text-white rounded-full"
               >
-                Se connecter
+                <TranslatedText text="Se connecter" />
               </button>
             </div>
           )}

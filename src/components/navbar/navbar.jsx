@@ -10,6 +10,8 @@ import { Link } from "react-router-dom";
 import { paths } from "../../router/paths";
 import { CheckoutContext } from "../../sections/checkout/context/checkout-provider";
 import { useAuthContext } from "src/auth/hooks/use-auth-context";
+import { TranslatedText } from "src/components/translated-text/translated-text";
+import { useTranslation } from "src/context/translation-context";
 
 import { useGetWishlist } from "src/actions/wishlists";
 import GiftCardIcon from "../../assets/spa-icons/SPC-picto-menu-carte-cadeau.svg";
@@ -17,6 +19,7 @@ import GiftCardIcon from "../../assets/spa-icons/SPC-picto-menu-carte-cadeau.svg
 export default function Navbar() {
   const [showMenu, setShowMenu] = useState(false);
   const buttonRef = useRef(null);
+  const { translateSync } = useTranslation();
 
   const { items } = useContext(CheckoutContext);
   const { user } = useAuthContext();
@@ -39,7 +42,9 @@ export default function Navbar() {
               className="flex items-center gap-2.5 px-2 py-2 bg-black/5 rounded-lg text-[#33373d] font-medium text-sm hover:bg-black/10 transition"
             >
               {showMenu ? <IoMdClose size={26} /> : <IoMdMenu size={26} />}
-              <span className="hidden sm:inline">Menu</span>
+              <span className="hidden sm:inline">
+                <TranslatedText text="Menu" />
+              </span>
             </button>
           </div>
           <div className="flex-1 flex justify-center md:hidden absolute w-full">
@@ -54,7 +59,11 @@ export default function Navbar() {
         <div className="hidden md:flex items-center gap-2">
           {}
           <Link to={paths.cadeau} className="hover:opacity-70 transition">
-            <img src={GiftCardIcon} alt="Carte cadeau" className="w-6 h-6" />
+            <img
+              src={GiftCardIcon}
+              alt={translateSync("Carte cadeau")}
+              className="w-6 h-6"
+            />
           </Link>
           {}
           <Link

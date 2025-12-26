@@ -1,6 +1,8 @@
 // src/components/checkout/CreditOption.jsx
 import React, { useState, useMemo, useEffect, useRef } from "react";
 import { Check, AlertCircle } from "lucide-react";
+import { TranslatedText } from "../translated-text/translated-text";
+import { useTranslation } from "react-i18next";
 
 const CreditOption = ({
   credits = [],
@@ -10,6 +12,7 @@ const CreditOption = ({
   theme = "normal",        // "parrainage" → violet, sinon beige
   forceSingleUse = false,
 }) => {
+  const { t } = useTranslation();
   const [selectedIds, setSelectedIds] = useState(new Set());
   const prevCreditsRef = useRef([]);
 
@@ -89,15 +92,15 @@ const CreditOption = ({
       <h3 className="text-base font-semibold text-gray-800">
         {title}
         <span className="text-sm font-normal text-gray-500 ml-3">
-          ({availableCredits.length} disponible{availableCredits.length > 1 ? "s" : ""})
+          ({availableCredits.length} {t("disponible")}{availableCredits.length > 1 ? "s" : ""})
         </span>
       </h3>
 
       {depassement && (
         <div className="flex items-center gap-2 text-red-600 text-sm bg-red-50 px-4 py-3 rounded-md border border-red-200">
-          <AlertCircle size={16} />
-          <span>Les crédits sélectionnés dépassent le total de la commande.</span>
-        </div>
+        <AlertCircle size={16} />
+        <span><TranslatedText text="Les crédits sélectionnés dépassent le total de la commande." /></span>
+      </div>
       )}
 
       <div className="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-8 xl:grid-cols-10 gap-2.5">
@@ -139,14 +142,14 @@ const CreditOption = ({
         <div className={`rounded-md p-4 border ${depassement ? "bg-red-50 border-red-200" : "bg-[#B6B499]/5 border-[#B6B499]/20"}`}>
           <div className="flex justify-between items-center">
             <span className="text-sm font-medium text-gray-700">
-              {selectedIds.size} crédit{selectedIds.size > 1 && !forceSingleUse ? "s" : ""} appliqué{selectedIds.size > 1 && !forceSingleUse ? "s" : ""}
+              {selectedIds.size} {t("crédit")}{selectedIds.size > 1 && !forceSingleUse ? "s" : ""} {t("appliqué")}{selectedIds.size > 1 && !forceSingleUse ? "s" : ""}
             </span>
             <span className={`text-xl font-bold ${depassement ? "text-red-600" : isParrainage ? "text-purple-600" : "text-[#B6B499]"}`}>
               - {totalSelected.toFixed(2)} €
             </span>
           </div>
           <p className="text-xs text-gray-600 mt-1">
-            {depassement ? "Dépassement → désélectionnez un crédit" : "Déduit automatiquement"}
+            {depassement ? t("Dépassement → désélectionnez un crédit") : t("Déduit automatiquement")}
           </p>
         </div>
       )}

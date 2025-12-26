@@ -34,12 +34,13 @@ export function useGetProduct(slug) {
       product: data?.product || null,
       avis: data?.avis || [],
       like: data?.inWishlist,
-      productLoading : isLoading,
-      etablissement: data?.etablissement || {}
+      productLoading: isLoading,
+      etablissement: data?.etablissement || {},
+      servicesEquipements: data?.servicesEquipements || [],
     }),
     [data]
   );
-
+  
   return memoizedValue;
 }
 

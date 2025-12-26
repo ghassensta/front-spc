@@ -5,12 +5,15 @@ import { paths } from "src/router/paths";
 import { toast } from "react-toastify";
 import { useSendInvites } from "src/actions/parrainage";
 import { CONFIG } from "src/config-global";
+import { TranslatedText } from "src/components/translated-text/translated-text";
+import { useTranslation } from "src/context/translation-context";
 
 export default function ParrainagePageView({
   filleuls = [],
   total_filleuls = 0,
 }) {
   const { user } = useAuthContext();
+  const { translateSync } = useTranslation();
   const [referralCode] = useState(user?.parrainage_code || "");
   const [referralLink] = useState(
     `${CONFIG.frontUrl}${paths.auth.register}?code=${referralCode}`
@@ -41,7 +44,7 @@ export default function ParrainagePageView({
 
   const addEmailField = () => {
     if (emails.filter(Boolean).length >= remaining) {
-      toast.error(`Limite de ${maxInvites} filleuls atteinte`);
+      toast.error(translateSync(`Limite de ${maxInvites} filleuls atteinte`));
       return;
     }
     setEmails([...emails, ""]);
@@ -52,13 +55,15 @@ export default function ParrainagePageView({
     const filledEmails = emails.map((e) => e.trim()).filter(Boolean);
 
     if (filledEmails.length === 0) {
-      toast.error("Veuillez saisir au moins un email");
+      toast.error(translateSync("Veuillez saisir au moins un email"));
       return;
     }
 
     const invalidEmails = filledEmails.filter((e) => !isValidEmail(e));
     if (invalidEmails.length > 0) {
-      toast.error(`Email(s) invalide(s) : ${invalidEmails.join(", ")}`);
+      toast.error(
+        translateSync(`Email(s) invalide(s) : ${invalidEmails.join(", ")}`)
+      );
       return;
     }
 
@@ -67,14 +72,16 @@ export default function ParrainagePageView({
       (e) => e.toLowerCase() === userEmail
     );
     if (selfEmails.length > 0) {
-      toast.warn(`Invitation ignorée (vous-même) : ${selfEmails.join(", ")}`);
+      toast.warn(
+        translateSync(`Invitation ignorée (vous-même) : ${selfEmails.join(", ")}`)
+      );
     }
 
     const emailsToSend = filledEmails.filter(
       (e) => e.toLowerCase() !== userEmail
     );
     if (emailsToSend.length === 0) {
-      toast.info("Aucun email valide à envoyer");
+      toast.info(translateSync("Aucun email valide à envoyer"));
       return;
     }
 
@@ -84,25 +91,28 @@ export default function ParrainagePageView({
       const response = await useSendInvites({
         emails: emailsToSend,
         referralLink,
-      }); :", response);
+      });
 
-      // TOUT VIENT DE L'API
-      const data = response; // ou response.data si ton hook retourne { data }
+      const data = response; 
 
       if (data.success) {
-        toast.success(data.message); // "Invitations envoyées avec succès"
+        toast.success(data.message); 
 
         if (data.invited?.length > 0) {
-          toast.success(`Invités : ${data.invited.join(", ")}`);
+          toast.success(translateSync(`Invités : ${data.invited.join(", ")}`));
         }
         if (data.ignored_existing_users?.length > 0) {
           toast.info(
-            `Déjà inscrits : ${data.ignored_existing_users.join(", ")}`
+            translateSync(
+              `Déjà inscrits : ${data.ignored_existing_users.join(", ")}`
+            )
           );
         }
         if (data.ignored_already_filleuls?.length > 0) {
           toast.info(
-            `Déjà filleuls : ${data.ignored_already_filleuls.join(", ")}`
+            translateSync(
+              `Déjà filleuls : ${data.ignored_already_filleuls.join(", ")}`
+            )
           );
         }
 
@@ -121,7 +131,7 @@ export default function ParrainagePageView({
         const messages = Object.values(data.errors).flat().join(" ");
         toast.error(messages);
       } else {
-        toast.error("Erreur inconnue");
+        toast.error(translateSync("Erreur inconnue"));
       }
     } finally {
       setIsSending(false);
@@ -135,10 +145,14 @@ export default function ParrainagePageView({
         <div className="flex justify-between items-start mb-4">
           <div className="flex items-center gap-2">
             <Handshake className="w-5 h-5 text-[#b6b499]" />
-            <h2 className="text-lg font-semibold text-gray-800">Parrainage</h2>
+            <h2 className="text-lg font-semibold text-gray-800">
+              <TranslatedText text="Parrainage" />
+            </h2>
           </div>
           <span className="text-xs text-cyan-600 bg-cyan-50 px-2 py-1 rounded">
-            Limité à {remaining} filleul{remaining > 1 ? "s" : ""}
+            <TranslatedText
+              text={`Limité à ${remaining} filleul${remaining > 1 ? "s" : ""}`}
+            />
           </span>
         </div>
 
@@ -154,28 +168,36 @@ export default function ParrainagePageView({
             className="px-3 py-2 border rounded-md text-sm bg-gray-50 hover:bg-gray-100 flex items-center gap-1"
           >
             <Copy className="w-4 h-4" />
-            Copier
+            <TranslatedText text="Copier" />
           </button>
         </div>
         {copied && (
           <p className="text-xs text-green-600 mb-2">
-            Copié dans le presse-papier
+            <TranslatedText text="Copié dans le presse-papier" />
           </p>
         )}
 
         <p className="text-sm text-gray-600 mb-6">
-          Partagez ce code par vos propres moyens.
+          <TranslatedText text="Partagez ce code par vos propres moyens." />
         </p>
 
         <div className="mt-6">
           <div className="flex items-center gap-2 mb-2">
             <Gift className="w-5 h-5 text-[#b6b499]" />
-            <h3 className="text-md font-semibold text-gray-800">Récompenses</h3>
+            <h3 className="text-md font-semibold text-gray-800">
+              <TranslatedText text="Récompenses" />
+            </h3>
           </div>
           <ul className="list-disc pl-6 text-sm text-gray-600 space-y-1">
-            <li>5€ en bon d’achat par filleul qui valide une commande</li>
-            <li>Bons cumulables, valables 12 mois</li>
-            <li>Non remboursables, non sécables, utilisables une seule fois</li>
+            <li>
+              <TranslatedText text="5€ en bon d’achat par filleul qui valide une commande" />
+            </li>
+            <li>
+              <TranslatedText text="Bons cumulables, valables 12 mois" />
+            </li>
+            <li>
+              <TranslatedText text="Non remboursables, non sécables, utilisables une seule fois" />
+            </li>
           </ul>
         </div>
       </div>
@@ -186,12 +208,14 @@ export default function ParrainagePageView({
         <div className="bg-white border rounded-xl shadow-sm p-6">
           <div className="flex items-center gap-2 mb-4">
             <Users className="w-5 h-5 text-gray-700" />
-            <h3 className="text-md font-semibold text-gray-800">Filleuls</h3>
+            <h3 className="text-md font-semibold text-gray-800">
+              <TranslatedText text="Filleuls" />
+            </h3>
           </div>
           <div className="space-y-2 min-h-32">
             {filleuls.length === 0 ? (
               <p className="text-center text-gray-500 py-8">
-                Aucun filleul pour le moment
+                <TranslatedText text="Aucun filleul pour le moment" />
               </p>
             ) : (
               filleuls.map((f, idx) => (
@@ -207,7 +231,9 @@ export default function ParrainagePageView({
                         : "bg-yellow-100 text-yellow-700"
                     }`}
                   >
-                    {f.recompense_donnee ? "Validée" : "En attente"}
+                    <TranslatedText
+                      text={f.recompense_donnee ? "Validée" : "En attente"}
+                    />
                   </span>
                 </div>
               ))
@@ -218,7 +244,7 @@ export default function ParrainagePageView({
         {}
         <div className="bg-white border rounded-xl shadow-sm p-6">
           <h3 className="text-md font-semibold text-gray-800 mb-3">
-            Inviter via un lien
+            <TranslatedText text="Inviter via un lien" />
           </h3>
           <div className="flex items-center gap-2 mb-4">
             <input
@@ -232,12 +258,12 @@ export default function ParrainagePageView({
               className="px-3 py-2 border rounded-md text-sm bg-gray-50 hover:bg-gray-100 flex items-center gap-1"
             >
               <Copy className="w-4 h-4" />
-              Copier
+              <TranslatedText text="Copier" />
             </button>
           </div>
 
           <h4 className="text-sm font-medium text-gray-700 mb-2">
-            Inviter par email
+            <TranslatedText text="Inviter par email" />
           </h4>
           {emails.map((email, idx) => (
             <input
@@ -245,7 +271,7 @@ export default function ParrainagePageView({
               type="email"
               value={email}
               onChange={(e) => handleEmailChange(idx, e.target.value)}
-              placeholder="exemple@domaine.com"
+              placeholder={translateSync("exemple@domaine.com")}
               className={`w-full border rounded-md px-3 py-2 mb-2 text-sm ${
                 email && !isValidEmail(email) ? "border-red-500" : ""
               }`}
@@ -257,7 +283,7 @@ export default function ParrainagePageView({
               onClick={addEmailField}
               className="flex items-center gap-2 text-sm text-gray-600 border px-3 py-1 rounded mb-3 hover:bg-gray-50"
             >
-              <Mail className="w-4 h-4" /> Ajouter un ami
+              <Mail className="w-4 h-4" /> <TranslatedText text="Ajouter un ami" />
             </button>
           )}
 
@@ -269,10 +295,10 @@ export default function ParrainagePageView({
             {isSending ? (
               <>
                 <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
-                Envoi...
+                <TranslatedText text="Envoi..." />
               </>
             ) : (
-              "Envoyer les invitations"
+              <TranslatedText text="Envoyer les invitations" />
             )}
           </button>
         </div>

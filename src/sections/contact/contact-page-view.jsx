@@ -7,8 +7,11 @@ import { Link } from "react-router-dom";
 import { paths } from "src/router/paths";
 import { sendMessage } from "src/actions/forms";
 import theImage from "src/assets/images/SPC-Massage-1975x1318-02.jpg";
+import { TranslatedText } from "src/components/translated-text/translated-text";
+import { useTranslation } from "src/context/translation-context";
 
 export default function ContactPageView() {
+  const { translateSync } = useTranslation();
   const [formData, setFormData] = useState({
     name: "",
     lastName: "",
@@ -29,19 +32,19 @@ export default function ContactPageView() {
     e.preventDefault();
 
     if (!recaptchaValue) {
-      toast.error("Veuillez valider le CAPTCHA");
+      toast.error(translateSync("Veuillez valider le CAPTCHA"));
       return;
     }
 
     // Validation des champs obligatoires
     if (!formData.name.trim() || !formData.email.trim() || !formData.message.trim()) {
-      toast.error("Veuillez remplir les champs obligatoires (Nom, Email, Message)");
+      toast.error(translateSync("Veuillez remplir les champs obligatoires (Nom, Email, Message)"));
       return;
     }
 
     // Validation basique de l'email
     if (!/\S+@\S+\.\S+/.test(formData.email)) {
-      toast.error("Format d'email invalide");
+      toast.error(translateSync("Format d'email invalide"));
       return;
     }
 
@@ -51,7 +54,7 @@ export default function ContactPageView() {
       const response = await sendMessage({ ...formData, recaptcha: recaptchaValue });
 
       if (response && response.success) {
-        toast.success("Votre message a été envoyé avec succès !");
+        toast.success(translateSync("Votre message a été envoyé avec succès !"));
         setFormData({
           name: "",
           lastName: "",
@@ -65,11 +68,11 @@ export default function ContactPageView() {
           window.grecaptcha.reset();
         }
       } else {
-        const errorMsg = response?.message || "Erreur lors de l'envoi du formulaire";
+        const errorMsg = response?.message || translateSync("Erreur lors de l'envoi du formulaire");
         throw new Error(errorMsg);
       }
     } catch (error) {
-      const errorMsg = error.message || (typeof error === 'string' ? error : "Une erreur est survenue lors de l'envoi du formulaire");
+      const errorMsg = error.message || (typeof error === 'string' ? error : translateSync("Une erreur est survenue lors de l'envoi du formulaire"));
       toast.error(errorMsg);
     } finally {
       setIsSubmitting(false);
@@ -88,12 +91,11 @@ export default function ContactPageView() {
           <div className="absolute inset-0 bg-black bg-opacity-40"></div>
 
           <div className="mx-auto relative z-10">
-            <h1 className="text-4xl font-serif mb-4">Contactez nous</h1>
+            <h1 className="text-4xl font-serif mb-4"><TranslatedText text="Contactez nous" /></h1>
             <p className="mb-2 font-bricolage">
-              Nous serions ravis de vous parler.
+              <TranslatedText text="Nous serions ravis de vous parler." />
               <br />
-              N’hésitez pas à nous contacter en utilisant les coordonnées
-              ci-dessous.
+              <TranslatedText text="N'hésitez pas à nous contacter en utilisant les coordonnées ci-dessous." />
             </p>
             <div className="mt-6 font-bricolage text-xl">
               <div className="flex items-center mb-4">
@@ -116,11 +118,10 @@ export default function ContactPageView() {
 
         <div className="bg-white px-10 py-6 md:py-16">
           <h2 className="text-2xl font-serif mb-2 text-center">
-            Demande d'informations
+            <TranslatedText text="Demande d'informations" />
           </h2>
           <p className="mb-6 text-center font-bricolage">
-            Vous souhaitez un renseignement, n’hésitez pas à remplir le
-            formulaire suivant :
+            <TranslatedText text="Vous souhaitez un renseignement, n'hésitez pas à remplir le formulaire suivant :" />
           </p>
 
           <form
@@ -133,7 +134,7 @@ export default function ContactPageView() {
                 name="name"
                 value={formData.name}
                 onChange={handleChange}
-                placeholder="Nom*"
+                placeholder={translateSync("Nom*")}
                 className="border p-2 w-full"
                 required
               />
@@ -142,7 +143,7 @@ export default function ContactPageView() {
                 name="lastName"
                 value={formData.lastName}
                 onChange={handleChange}
-                placeholder="Prénom"
+                placeholder={translateSync("Prénom")}
                 className="border p-2 w-full"
               />
             </div>
@@ -152,7 +153,7 @@ export default function ContactPageView() {
                 name="email"
                 value={formData.email}
                 onChange={handleChange}
-                placeholder="Email*"
+                placeholder={translateSync("Email*")}
                 className="border p-2 w-full"
                 required
               />
@@ -161,7 +162,7 @@ export default function ContactPageView() {
                 name="phone"
                 value={formData.phone}
                 onChange={handleChange}
-                placeholder="Téléphone"
+                placeholder={translateSync("Téléphone")}
                 className="border p-2 w-full"
               />
             </div>
@@ -170,11 +171,11 @@ export default function ContactPageView() {
               name="subject"
               value={formData.subject}
               onChange={handleChange}
-              placeholder="Sujet"
+              placeholder={translateSync("Sujet")}
               className="border p-2 w-full"
             />
             <textarea
-              placeholder="Message*"
+              placeholder={translateSync("Message*")}
               rows="4"
               className="border p-2 w-full"
               name="message"
@@ -196,14 +197,14 @@ export default function ContactPageView() {
                 disabled={isSubmitting || !recaptchaValue}
                 className="bg-black text-white px-6 py-2 uppercase tracking-wider hover:bg-gray-800 max-w-max rounded-full disabled:opacity-50"
               >
-                {isSubmitting ? "Envoi en cours..." : "Envoyer"}
+                {isSubmitting ? translateSync("Envoi en cours...") : translateSync("Envoyer")}
               </button>
               <Link
                 to={paths.main}
                 type="button"
                 className="bg-[#c4c0a1] text-white px-6 py-2 uppercase tracking-wider hover:opacity-90 max-w-max rounded-full"
               >
-                Accueil
+                <TranslatedText text="Accueil" />
               </Link>
             </div>
           </form>

@@ -2,8 +2,8 @@ import React, { useState, useRef } from "react";
 import { toast } from "react-toastify";
 import { sendMarques } from "src/actions/forms";
 import validator from "validator"; // Optionnel : pour validation URL avancée
-import theImage from "src/assets/images/SPC-Essence-1975x1318-02.jpg";
-import theImage2 from "src/assets/images/SPC-equipe-ce-1975x1318-1-768x513.jpg";
+import theImage from "src/assets/SPC-Collab-marque-1975x1318-01.jpg";
+import theImage2 from "src/assets/SPC-Collab-marque-1975x1318-03.jpg";
 
 export default function MarquePartenairePage() {
   const initialFormData = {

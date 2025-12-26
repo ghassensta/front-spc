@@ -9,9 +9,12 @@ import {
 } from "src/actions/serach";
 import { Link } from "react-router-dom";
 import { useGetHomePage } from "src/actions/homepage";
+import { TranslatedText } from "../translated-text/translated-text";
+import { useTranslation } from "react-i18next";
 
 const Search = () => {
   const { sections } = useGetHomePage();
+  const { t } = useTranslation();
 
   const {
     query: villeQuery,
@@ -95,14 +98,14 @@ const Search = () => {
           {}
           <div className="relative w-full md:w-64">
             <label className="block text-sm text-gray-700 mb-1 text-left">
-              Où ?
+              <TranslatedText text="Où ?" />
             </label>
             <div className="relative">
               <input
                 type="text"
                 value={villeQuery}
                 onChange={(e) => setVilleQuery(e.target.value)}
-                placeholder="Paris, 75001..."
+                placeholder={t("Paris, 75001...")}
                 className="w-full border border-gray-800 rounded-md px-3 py-2 pr-10 text-sm focus:outline-none focus:ring-1 focus:ring-gray-400"
               />
               <MapPin className="absolute right-3 top-2.5 w-4 h-4 text-gray-400" />
@@ -113,7 +116,7 @@ const Search = () => {
                 {villeLoading && (
                   <div className="flex items-center justify-center p-3 text-sm text-gray-500">
                     <Loader2 className="w-4 h-4 animate-spin mr-2" />
-                    Recherche en cours...
+                    <TranslatedText text="Recherche en cours..." />
                   </div>
                 )}
                 {villeSuggestions
@@ -135,7 +138,7 @@ const Search = () => {
           {}
           <div className="relative w-full md:w-64">
             <label className="block text-sm text-gray-700 mb-1 text-left">
-              Quoi ?
+              <TranslatedText text="Quoi ?" />
             </label>
             <div className="relative">
               <button
@@ -146,7 +149,7 @@ const Search = () => {
                 <span
                   className={selectedService ? "text-black" : "text-gray-500"}
                 >
-                  {selectedService || "Spa, massage, duo..."}
+                  {selectedService || t("Spa, massage, duo...")}
                 </span>
                 <svg
                   className="w-4 h-4 text-gray-400"
@@ -182,7 +185,7 @@ const Search = () => {
                       type="text"
                       value={serviceQuery}
                       onChange={(e) => setServiceQuery(e.target.value)}
-                      placeholder="Rechercher un soin..."
+                      placeholder={t("Rechercher un soin...")}
                       className="w-full pl-8 pr-3 py-1.5 text-sm border border-gray-300 rounded focus:outline-none focus:ring-1 focus:ring-gray-400"
                       autoFocus
                     />
@@ -192,7 +195,7 @@ const Search = () => {
                 {serviceLoading && (
                   <div className="flex items-center justify-center p-3 text-sm text-gray-500">
                     <Loader2 className="w-4 h-4 animate-spin mr-2" />
-                    Recherche...
+                    <TranslatedText text="Recherche..." />
                   </div>
                 )}
 
@@ -247,7 +250,7 @@ const Search = () => {
                   : !serviceLoading &&
                     serviceQuery.length >= 2 && (
                       <div className="p-4 text-center text-sm text-gray-500">
-                        Aucun résultat
+                        <TranslatedText text="Aucun résultat" />
                       </div>
                     )}
               </div>
@@ -265,7 +268,7 @@ const Search = () => {
                 className="bg-black text-white p-3 rounded-md hover:bg-gray-900 transition w-full md:w-auto flex items-center justify-center min-w-0 font-medium text-sm uppercase tracking-wider"
               >
                 <span className="mx-auto">
-                  Rechercher
+                  <TranslatedText text="Rechercher" />
                 </span>
               </Link>
             ) : (
@@ -275,7 +278,7 @@ const Search = () => {
                 className="bg-gray-300 text-gray-500 p-3 rounded-md cursor-not-allowed w-full md:w-auto flex items-center justify-center min-w-0 font-medium text-sm uppercase tracking-wider mt-1"
               >
                 <span className="mx-auto">
-                  Rechercher
+                  <TranslatedText text="Rechercher" />
                 </span>
               </button>
             )}

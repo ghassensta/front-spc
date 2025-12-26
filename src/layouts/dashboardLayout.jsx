@@ -15,6 +15,8 @@ import {
 } from "lucide-react";
 import { useAuthContext } from "src/auth/hooks/use-auth-context";
 import { signOut } from "src/actions/auth";
+import { TranslatedText } from "src/components/translated-text/translated-text";
+import { useTranslation } from "src/context/translation-context";
 
 const NavLink = ({ link, isActive, toggleMenu, openMenus, isMobile = false, menuRef }) => {
   const [showPopover, setShowPopover] = useState(false);
@@ -24,6 +26,7 @@ const NavLink = ({ link, isActive, toggleMenu, openMenus, isMobile = false, menu
     location.pathname === child.to || location.pathname.startsWith(child.to)
   );
   const { push } = useRouter();
+  const { translateSync } = useTranslation();
 
   const handleClick = (e) => {
     e.stopPropagation();
@@ -59,7 +62,7 @@ const NavLink = ({ link, isActive, toggleMenu, openMenus, isMobile = false, menu
                   ? "text-[#b6b499] bg-blue-50 border-blue-200"
                   : "text-gray-700 hover:bg-gray-50"
               }`}
-              aria-label={link.label}
+              aria-label={translateSync(link.label)}
               aria-expanded={hasChildren ? openMenus[link.label] : undefined}
               aria-controls={hasChildren ? `submenu-${link.label}` : undefined}
             >
@@ -72,7 +75,7 @@ const NavLink = ({ link, isActive, toggleMenu, openMenus, isMobile = false, menu
               className={`flex items-center justify-center rounded-lg  transition-all duration-200  ${
                 isActive ? "text-[#b6b499] bg-blue-50 border-blue-200" : "text-gray-700 hover:bg-gray-50"
               }`}
-              aria-label={link.label}
+              aria-label={translateSync(link.label)}
             >
               {Icon && <Icon className="w-6 h-6" />}
             </Link>
@@ -85,7 +88,7 @@ const NavLink = ({ link, isActive, toggleMenu, openMenus, isMobile = false, menu
               className="absolute top-full left-1/2 transform -translate-x-1/2 -translate-y-full z-50"
             >
               <div className="bg-gray-900 text-white px-3 py-2 rounded-lg text-sm whitespace-nowrap shadow-lg">
-                {link.label}
+                <TranslatedText text={link.label} />
                 <div className="absolute bottom-full left-1/2 transform -translate-x-1/2 w-0 h-0 border-l-4 border-r-4 border-b-4 border-transparent border-b-gray-900"></div>
               </div>
             </motion.div>
@@ -110,7 +113,7 @@ const NavLink = ({ link, isActive, toggleMenu, openMenus, isMobile = false, menu
                         isChildActive ? "text-[#b6b499] font-semibold" : "text-gray-700"
                       }`}
                     >
-                      {child.label}
+                      <TranslatedText text={child.label} />
                     </Link>
                   </li>
                 );
@@ -137,7 +140,7 @@ const NavLink = ({ link, isActive, toggleMenu, openMenus, isMobile = false, menu
             }`}
             aria-expanded={openMenus[link.label]}
             aria-controls={`submenu-${link.label}`}
-            aria-label={link.label}
+            aria-label={translateSync(link.label)}
           >
             {Icon && (
               <Icon
@@ -146,7 +149,9 @@ const NavLink = ({ link, isActive, toggleMenu, openMenus, isMobile = false, menu
                 }`}
               />
             )}
-            <span className="flex-1 text-sm group-hover:text-gray-900">{link.label}</span>
+            <span className="flex-1 text-sm group-hover:text-gray-900">
+              <TranslatedText text={link.label} />
+            </span>
             <ChevronDown
               className={`w-4 h-4 transition-transform duration-200 ${
                 openMenus[link.label] ? "rotate-180" : ""
@@ -176,7 +181,7 @@ const NavLink = ({ link, isActive, toggleMenu, openMenus, isMobile = false, menu
                           isChildActive ? "text-[#b6b499] bg-blue-50 font-semibold" : "text-gray-600 hover:text-gray-900 hover:bg-gray-50"
                         }`}
                       >
-                        {child.label}
+                        <TranslatedText text={child.label} />
                       </Link>
                     </motion.div>
                   </li>
@@ -205,7 +210,9 @@ const NavLink = ({ link, isActive, toggleMenu, openMenus, isMobile = false, menu
                 }`}
               />
             )}
-            <span className="text-sm group-hover:text-gray-900">{link.label}</span>
+            <span className="text-sm group-hover:text-gray-900">
+              <TranslatedText text={link.label} />
+            </span>
           </Link>
         </motion.div>
       )}
@@ -217,6 +224,7 @@ const LogoutButton = ({ isMobile }) => {
   const [showPopover, setShowPopover] = useState(false);
   const { push } = useRouter();
   const { user, checkUserSession } = useAuthContext();
+  const { translateSync } = useTranslation();
 
   const handleLogout = useCallback(async () => {
       try {
@@ -239,7 +247,7 @@ const LogoutButton = ({ isMobile }) => {
           <button
             onClick={handleLogout}
             className="fflex items-center justify-center rounded-lg  transition-all duration-200 text-[#b6b499]"
-            aria-label="Se déconnecter"
+            aria-label={translateSync("Se déconnecter")}
           >
             <LogOut className="w-6 h-6" />
           </button>
@@ -251,7 +259,7 @@ const LogoutButton = ({ isMobile }) => {
               className="absolute top-full left-1/2 transform -translate-x-1/2 -translate-y-full z-50"
             >
               <div className="bg-gray-900 text-white px-3 py-2 rounded-lg text-sm whitespace-nowrap shadow-lg">
-                Déconnexion
+                <TranslatedText text="Déconnexion" />
                 <div className="absolute bottom-full left-1/2 transform -translate-x-1/2 w-0 h-0 border-l-4 border-r-4 border-b-4 border-transparent border-b-gray-900"></div>
               </div>
             </motion.div>
@@ -268,10 +276,12 @@ const LogoutButton = ({ isMobile }) => {
         whileTap={{ scale: 0.98 }}
         onClick={handleLogout}
         className="flex items-center px-4 py-3 text-[#b6b499] hover:bg-[#b6b499] transition-all duration-200 rounded-lg group font-semibold w-full text-left"
-        aria-label="Se déconnecter"
+        aria-label={translateSync("Se déconnecter")}
       >
         <LogOut className="w-5 h-5 mr-3 group-hover:text-black transition-colors duration-200" />
-        <span className="text-sm group-hover:text-black">Se déconnecter</span>
+        <span className="text-sm group-hover:text-black">
+          <TranslatedText text="Se déconnecter" />
+        </span>
       </motion.button>
     </li>
   );
@@ -343,7 +353,9 @@ export default function DashboardLayout({ children }) {
           transition={{ duration: 0.3 }}
         >
           <div className="mb-4">
-            <h1 className="text-xl font-bold text-gray-900">Menu</h1>
+            <h1 className="text-xl font-bold text-gray-900">
+              <TranslatedText text="Menu" />
+            </h1>
           </div>
           <ul className="flex flex-col gap-2 list-none">
             {links.map((link, index) => {

@@ -111,13 +111,6 @@ export const routes = [
 
       // === Dashboard ===
       {
-        element: (
-          <DashboardLayout>
-            <Suspense fallback={<LoadingScreen />}>
-              <Outlet />
-            </Suspense>
-          </DashboardLayout>
-        ),
         path: "dashboard",
         element: (
           <AuthGuard>

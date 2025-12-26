@@ -13,10 +13,13 @@ import Section2 from "./comp/section2";
 import { useGetHomePage } from "src/actions/homepage";
 import "swiper/css";
 import Serach from "src/components/header/serach";
+import { TranslatedText } from "src/components/translated-text/translated-text";
+import { useTranslation } from "react-i18next";
 
 export default function HomePageView() {
   const { sections } = useGetHomePage();
   const { actualites } = useGetLastNews(3);
+  const { t } = useTranslation();
 
   const section4 = sections?.find((s) => s.key === "section4");
   const section5 = sections?.find((s) => s.key === "section5");
@@ -36,11 +39,11 @@ export default function HomePageView() {
       name: card.title,
       image: card.image,
       adresse_etab: card.adresse_etab,
-      spaName: card.etablissement_name || "Inconnu",
+      spaName: card.etablissement_name || t("Inconnu"),
       spaLocation: card.adresse_etab || "",
-      offre: card.remise != null ? `${card.remise}% de remise` : "",
+      offre: card.remise != null ? t(`${card.remise}% de remise`) : "",
       offreValue: card.remise != null ? parseInt(card.remise) : 0,
-      exclusivite_spc: card.exclusivite_spc || false,
+      exclusivite_image: card.exclusivite_image || null,
       remiseDescProduit: card.remise_desc_produit || "",
       id: card.produit_id || null,
     })),
@@ -71,8 +74,10 @@ export default function HomePageView() {
           <div className="hidden md:block bg-[#f6f5e9] rounded-lg left-[calc(-50vw+50%)] relative w-screen">
             <div className="max-w-6xl mx-auto py-6 px-3">
               <h2 className="text-3xl font-bold text-center">
-                Actualités :{" "}
-                <span className="text-[#B6B499]">Nos derniers articles</span>
+                <TranslatedText text="Actualités :" />{" "}
+                <span className="text-[#B6B499]">
+                  <TranslatedText text="Nos derniers articles" />
+                </span>
               </h2>
               <div
                 className={`grid grid-cols-1 md:grid-cols-${actualites.length} gap-4 mt-4`}
@@ -101,7 +106,7 @@ export default function HomePageView() {
                   to={paths.actualites}
                   className="inline-flex font-tahoma rounded-full items-center gap-2 uppercase font-normal tracking-widest transition-all duration-300 px-6 py-3 text-sm bg-black text-white"
                 >
-                  Tous nos articles
+                  <TranslatedText text="Tous nos articles" />
                 </Link>
               </div>
             </div>
@@ -111,7 +116,7 @@ export default function HomePageView() {
           <div className="md:hidden py-6 md:py-16 bg-[#f6f5e9]">
             <div className="max-w-6xl mx-auto px-4">
               <h2 className="text-4xl font-bold text-center mb-6 md:mb-12">
-                Actualités
+                <TranslatedText text="Actualités" />
               </h2>
               <Swiper
                 spaceBetween={30}
@@ -150,7 +155,7 @@ export default function HomePageView() {
                   to={paths.actualites}
                   className="inline-block bg-black text-white px-8 py-4 rounded-full text-sm font-normal uppercase tracking-widest font-tahoma hover:bg-gray-800 transition"
                 >
-                  Tous nos articles
+                  <TranslatedText text="Tous nos articles" />
                 </Link>
               </div>
             </div>
@@ -200,7 +205,7 @@ export default function HomePageView() {
                       >
                         <img
                           src={`${CONFIG.serverUrl}/storage/${logo.image}`}
-                          alt={`Partenaire ${index + 1}`}
+                          alt={t(`Partenaire ${index + 1}`)}
                           className="md:max-h-24 max-h-36 object-contain filter grayscale hover:grayscale-0 transition-all"
                           loading="lazy"
                         />
@@ -208,7 +213,7 @@ export default function HomePageView() {
                     ) : (
                       <img
                         src={`${CONFIG.serverUrl}/storage/${logo.image}`}
-                        alt={`Partenaire ${index + 1}`}
+                        alt={t(`Partenaire ${index + 1}`)}
                         className="md:max-h-24 max-h-36 object-contain opacity-70"
                         loading="lazy"
                       />

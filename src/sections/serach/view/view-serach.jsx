@@ -9,8 +9,6 @@ export default function SearchPageView() {
   const params = useParams();
   let { catSlug, villeSlug } = params;
 
-  // Optimisation: Détecter si le premier paramètre est en réalité un villeSlug (contient - suivi de 5 chiffres)
-  // Cela permet de gérer les recherches uniquement par ville (ex: /recherche/paris-75001)
   if (!villeSlug && catSlug && /\-\d{5}$/.test(catSlug)) {
     villeSlug = catSlug;
     catSlug = null;
@@ -31,6 +29,7 @@ export default function SearchPageView() {
         codePostal ? `(${codePostal})` : ""
       }`.trim();
 
+      console.log("produits", produits);
   return (
     <div className="max-w-6xl mx-auto p-4">
       <div className="text-center mb-8">
@@ -60,7 +59,7 @@ export default function SearchPageView() {
               offreValue={p.remise_produit}
               price={p.prix}
               remise_desc_produit={p.remise_desc_produit}
-              exclusivite_spc={p.exclusivite_spc}
+              exclusivite_image={p.exclusivite_image}
             />
           ))}
         </div>

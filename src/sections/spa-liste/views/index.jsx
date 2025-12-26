@@ -174,7 +174,6 @@ export default function CategoriesPageView({
                 location={card.adresse}
                 remise_offres={card.remise_offres}
                 prix_offres={card.prix_offres}
-                nombre_offres={card.nombre_offres}
               />
             ))
           ) : (

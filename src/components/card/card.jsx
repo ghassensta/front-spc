@@ -11,6 +11,8 @@ import { useToggleWishlist, getIsWishlisted } from "src/actions/wishlists";
 import { toast } from "react-toastify";
 import { useRouter } from "src/hooks";
 import { paths } from "src/router/paths";
+import { useTranslation } from "react-i18next";
+import { CONFIG } from "src/config-global";
 
 export default function Card({
   to = "/",
@@ -25,12 +27,14 @@ export default function Card({
   price,
   duration,
   inWishlist,
-  exclusivite_spc,
+  exclusivite_image,
   remise_desc_produit,
 }) {
+  console.log("exclusivite_image", exclusivite_image);
   const { user } = useAuthContext();
   const [isFav, setIsFav] = useState(inWishlist);
   const router = useRouter();
+  const { t } = useTranslation();
   useEffect(() => {
     let isMounted = true;
 
@@ -50,7 +54,7 @@ export default function Card({
 
   const toggleFav = async () => {
     if (id === undefined || id === null) {
-      toast.error("Produit introuvable");
+      toast.error(t("Produit introuvable"));
       return;
     }
     if (!user) {
@@ -64,12 +68,12 @@ export default function Card({
 
     toast.promise(promise, {
       pending: isFav
-        ? `Retrait de "${title}" de vos favoris...`
-        : `Ajout de "${title}" à vos favoris...`,
+        ? t(`Retrait de "${title}" de vos favoris...`)
+        : t(`Ajout de "${title}" à vos favoris...`),
       success: isFav
-        ? `"${title}" a été retiré de vos favoris !`
-        : `"${title}" a été ajouté à vos favoris !`,
-      error: `Impossible de mettre à jour "${title}"`,
+        ? t(`"${title}" a été retiré de vos favoris !`)
+        : t(`"${title}" a été ajouté à vos favoris !`),
+      error: t(`Impossible de mettre à jour "${title}"`),
       autoClose: 10000,
     });
 
@@ -109,7 +113,7 @@ export default function Card({
           <Link to={to} className="block w-full h-64">
             <img
               src={image}
-              alt={title || "spa"}
+              alt={title || t("spa")}
               loading="lazy"
               className="w-full h-full rounded-xl object-cover object-center"
             />
@@ -126,14 +130,16 @@ export default function Card({
           </span>
         )}
 
-        {(exclusivite_spc === true || exclusivite_spc === 1) && (
-          <img
-            src="/spa-prestige-logo.png"
-            alt="Exclusivité"
-            className="absolute z-10 bottom-0 right-0 mr-3 mb-2 w-16 h-16 object-contain translate-y-1/5 ml-2
-               rounded-full p-2"
-            style={{ backgroundColor: "#f6f5e9" }}
-          />
+        {exclusivite_image && (
+          <Link to={to} className="absolute bottom-1 right-1 w-16 h-16 flex items-center justify-center rounded-full bg-[#f6f5e9]">
+            <img
+              src={`${CONFIG.serverUrl}/storage/${exclusivite_image}`}
+              alt={t("Exclusivité")}
+              className="w-14 h-14 object-contain"
+              loading="lazy"
+              draggable={false}
+            />
+          </Link>
         )}
       </div>
 
@@ -151,7 +157,7 @@ export default function Card({
               <strong className="mr-3">{duration}</strong>
             </>
           )}
-          <strong className="text-xl">{price ?? 0} €</strong>
+          <strong className="text-xl">{price ?? 0}</strong>
         </div>
 
         {buttonTitle && (

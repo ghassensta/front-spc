@@ -1,17 +1,18 @@
 import React from "react";
 import { Gift, Star } from "lucide-react";
+import { TranslatedText } from "src/components/translated-text/translated-text";
 
 export default function CadeauxViewPage() {
   const items = [
     {
       icon: Gift,
-      title: "Cadeau d’anniversaire",
-      description: "Offrez à vos clients un bon d'achat de 5€ le jour de leur anniversaire.",
+      title: <TranslatedText text="Cadeau d'anniversaire" />,
+      description: <TranslatedText text="Offrez à vos clients un bon d'achat de 5€ le jour de leur anniversaire." />,
     },
     {
       icon: Star,
-      title: "Récompense Avis Client",
-      description: "10 points ajoutés à chaque avis déposé sur un produit ou service.",
+      title: <TranslatedText text="Récompense Avis Client" />,
+      description: <TranslatedText text="10 points ajoutés à chaque avis déposé sur un produit ou service." />,
     },
   ];
 
@@ -32,7 +33,7 @@ export default function CadeauxViewPage() {
               </h3>
               <p className="text-sm text-gray-600 mb-4">{item.description}</p>
               <button className="text-sm text-[#fffffd] border border-[#b6b499] bg-[#b6b499] px-4 py-1 rounded-md font-medium">
-                Automatique
+                <TranslatedText text="Automatique" />
               </button>
             </div>
           );

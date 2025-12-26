@@ -5,9 +5,11 @@ import { paths } from 'src/router/paths';
 import { CONFIG } from 'src/config-global';
 import { useToggleWishlist } from 'src/actions/wishlists';
 import { toast } from 'react-toastify';
+import { TranslatedText } from 'src/components/translated-text/translated-text';
+import { useTranslation } from 'react-i18next';
 
 export default function Wishlist({ wishlists, loading, validating }) {
-  
+  const { t } = useTranslation();
   const [wishlist, setWishlist] = useState([])
 
   useEffect(() => {
@@ -18,7 +20,7 @@ export default function Wishlist({ wishlists, loading, validating }) {
     const promise = useToggleWishlist(id);
     
         toast.promise(promise, {
-          pending: "Retirer de favoris ...",
+          pending: t("Retirer de favoris..."),
         });
     
         try {
@@ -72,9 +74,9 @@ export default function Wishlist({ wishlists, loading, validating }) {
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
         {}
         <div className="mb-8">
-          <h1 className="text-3xl font-bold text-gray-900">Ma Wishlist</h1>
+          <h1 className="text-3xl font-bold text-gray-900"><TranslatedText text="Ma Wishlist" /></h1>
           <p className="text-gray-600 mt-2">
-            Retrouvez tous vos soins et forfaits spa favoris
+            <TranslatedText text="Retrouvez tous vos soins et forfaits spa favoris" />
           </p>
         </div>
 
@@ -85,16 +87,16 @@ export default function Wishlist({ wishlists, loading, validating }) {
               <FaRegHeart className="h-16 w-16 text-gray-300" />
             </div>
             <h3 className="text-xl font-medium text-gray-900 mb-2">
-              Votre wishlist est vide
+              <TranslatedText text="Votre wishlist est vide" />
             </h3>
             <p className="text-gray-500 mb-6">
-              Ajoutez des soins et forfaits à votre wishlist pour les retrouver facilement
+              <TranslatedText text="Ajoutez des soins et forfaits à votre wishlist pour les retrouver facilement" />
             </p>
             <Link
               to={paths.spa.list}
               className="bg-[#c4c0a1] rounded-full text-white px-6 py-2 uppercase tracking-wider hover:opacity-90 max-w-max"
             >
-              Découvrir nos soins
+              <TranslatedText text="Découvrir nos soins" />
             </Link>
           </div>
         ) : (

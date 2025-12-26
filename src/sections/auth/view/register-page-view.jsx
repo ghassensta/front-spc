@@ -5,6 +5,8 @@ import { registerAccount } from "src/actions/auth";
 import Logo from "src/components/logo/logo";
 import { useRouter } from "src/hooks";
 import { paths } from "src/router/paths";
+import { TranslatedText } from "src/components/translated-text/translated-text";
+import { useTranslation } from "react-i18next";
 
 export default function RegisterPageView({ code }) {
   const [form, setForm] = useState({
@@ -20,6 +22,7 @@ export default function RegisterPageView({ code }) {
   const [errors, setErrors] = useState({});
   const router = useRouter();
   const location = useLocation();
+  const { t } = useTranslation();
 
   useEffect(() => {
     const params = new URLSearchParams(location.search);
@@ -34,7 +37,7 @@ export default function RegisterPageView({ code }) {
       ...form,
       [e.target.name]: e.target.value,
     });
-    setErrors((prev) => ({ ...prev, [e.target.name]: null })); 
+    setErrors((prev) => ({ ...prev, [e.target.name]: null }));
   };
 
   const handleSubmit = async (e) => {
@@ -44,19 +47,19 @@ export default function RegisterPageView({ code }) {
     const promise = registerAccount(form);
 
     toast.promise(promise, {
-      pending: "Inscription en cours...",
-      success: "Compte créé avec succès !",
+      pending: t("Inscription en cours..."),
+      success: t("Compte créé avec succès !"),
     });
 
     try {
       await promise;
-    router.refresh()
+      router.refresh();
     } catch (error) {
-        if (error?.message){
-            toast.error(error.message)
-        }
+      if (error?.message) {
+        toast.error(t(error.message));
+      }
       if (error?.errors) {
-        setErrors(error.errors); 
+        setErrors(error.errors);
       }
     }
   };
@@ -73,13 +76,14 @@ export default function RegisterPageView({ code }) {
           <Logo />
         </Link>
       </div>
-      <h1 className="text-xl font-semibold text-center mb-6">Créer un compte pour laisser un avis</h1>
+      <h1 className="text-xl font-semibold text-center mb-6">
+        <TranslatedText text="Créer un compte pour laisser un avis" />
+      </h1>
       <form onSubmit={handleSubmit} className="flex flex-col gap-4">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          {}
           <div className="relative">
             <label htmlFor="name" className="text-sm text-gray-600">
-              Prénom *
+              <TranslatedText text="Prénom *" />
             </label>
             <input
               type="text"
@@ -93,10 +97,9 @@ export default function RegisterPageView({ code }) {
             {renderError("name")}
           </div>
 
-          {}
           <div className="relative">
             <label htmlFor="lastName" className="text-sm text-gray-600">
-              Nom
+              <TranslatedText text="Nom" />
             </label>
             <input
               type="text"
@@ -109,10 +112,9 @@ export default function RegisterPageView({ code }) {
             {renderError("lastName")}
           </div>
 
-          {}
           <div className="relative">
             <label htmlFor="displayedName" className="text-sm text-gray-600">
-              Nom affiché
+              <TranslatedText text="Nom affiché" />
             </label>
             <input
               type="text"
@@ -125,10 +127,9 @@ export default function RegisterPageView({ code }) {
             {renderError("displayedName")}
           </div>
 
-          {}
           <div className="relative">
             <label htmlFor="email" className="text-sm text-gray-600">
-              Email *
+              <TranslatedText text="Email *" />
             </label>
             <input
               type="email"
@@ -142,10 +143,9 @@ export default function RegisterPageView({ code }) {
             {renderError("email")}
           </div>
 
-          {}
           <div className="col-span-1 md:col-span-2 relative">
             <label htmlFor="referral_code" className="text-sm text-gray-600">
-              Code
+              <TranslatedText text="Code de parrainage" />
             </label>
             <input
               disabled={!!code}
@@ -159,10 +159,9 @@ export default function RegisterPageView({ code }) {
             {renderError("referral_code")}
           </div>
 
-          {}
           <div className="relative">
             <label htmlFor="password" className="text-sm text-gray-600">
-              Mot de passe *
+              <TranslatedText text="Mot de passe *" />
             </label>
             <input
               type="password"
@@ -176,13 +175,9 @@ export default function RegisterPageView({ code }) {
             {renderError("password")}
           </div>
 
-          {}
           <div className="relative">
-            <label
-              htmlFor="password_confirmation"
-              className="text-sm text-gray-600"
-            >
-              Confirmer le mot de passe *
+            <label htmlFor="password_confirmation" className="text-sm text-gray-600">
+              <TranslatedText text="Confirmer le mot de passe *" />
             </label>
             <input
               type="password"
@@ -201,14 +196,14 @@ export default function RegisterPageView({ code }) {
           type="submit"
           className="w-full mt-6 bg-black text-white p-2 rounded hover:bg-gray-800 disabled:opacity-50"
         >
-          S'inscrire
+          <TranslatedText text="S'inscrire" />
         </button>
       </form>
 
       <p className="mt-4 text-sm text-center text-gray-600">
-        Vous avez déjà un compte ?{" "}
+        <TranslatedText text="Vous avez déjà un compte ?" />{" "}
         <Link to={paths.auth.root} className="text-[#B6B499] hover:underline">
-          Se connecter
+          <TranslatedText text="Se connecter" />
         </Link>
       </p>
     </div>

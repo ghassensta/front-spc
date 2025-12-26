@@ -4,13 +4,11 @@ import CardItem from "src/components/card-item/card-item";
 import { CONFIG } from "src/config-global";
 
 export default function ServicesTemplates({ data = {} }) {
-  // Sécurité pour éviter les erreurs si data est vide
   const produits = data.type_produit || [];
   const equipements = data.type_equipement.map(
     (pivot) => pivot.service_equipement || []
   );
-
-
+  console.log("produitsssss", produits);
   return (
     <div className="max-w-7xl mx-auto flex flex-col md:flex-row gap-6 items-start ">
       {}
@@ -27,13 +25,16 @@ export default function ServicesTemplates({ data = {} }) {
               {equipements.map((equip) => (
                 <div className="flex items-center gap-1" key={equip.id}>
                   <div className="rounded-full w-8 h-8 ">
-                    <img lazyload="lazy"
-                      src={CONFIG.serverUrl+"/storage/"+equip.image}
+                    <img
+                      lazyload="lazy"
+                      src={CONFIG.serverUrl + "/storage/" + equip.image}
                       alt={equip.name}
                       className="object-contain"
                     />
                   </div>
-                  <span className="text-secondary text-base font-tahoma uppercase">{equip.name}</span>
+                  <span className="text-secondary text-base font-tahoma uppercase">
+                    {equip.name}
+                  </span>
                 </div>
               ))}
             </div>
@@ -54,7 +55,7 @@ export default function ServicesTemplates({ data = {} }) {
                 description={prod.description}
                 access_spa={prod.access_spa}
                 prix={prod.prix}
-                exclusivite_spc={prod.exclusivite_spc}
+                exclusivite_image={prod?.type_exclusivite?.image_path || null}
                 date_fin={prod.date_fin}
                 type_id={prod.type_id}
                 conditions_utilisation={prod.conditions_utilisation}

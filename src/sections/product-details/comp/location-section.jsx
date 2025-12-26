@@ -56,8 +56,8 @@ export default function LocationSection({ data }) {
         rel="noopener noreferrer"
         className="flex items-center gap-2 text-base font-normal text-gray-800"
       >
-        <span>Comment s'y rendre ?</span>
-        <FaAngleRight className="text-gray-600" />
+       {/*  <span>Comment s'y rendre ?</span>
+        <FaAngleRight className="text-gray-600" /> */}
       </Link>
 
       {}

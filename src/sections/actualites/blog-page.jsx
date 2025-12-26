@@ -4,9 +4,11 @@ import { CONFIG } from "src/config-global";
 import { paths } from "src/router/paths";
 import PageSkeleton from "./page-skeleton";
 import theImage from "src/assets/images/SPC-Essence-1975x1318-02.jpg";
+import { TranslatedText } from "src/components/translated-text/translated-text";
+import { useTranslation } from "react-i18next";
 
 export default function BlogPage({ categories, articles, loading }) {
-
+  const { t } = useTranslation();
   const [searchTerm, setSearchTerm] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 6;
@@ -93,7 +95,7 @@ export default function BlogPage({ categories, articles, loading }) {
       >
         <div className="absolute inset-0 bg-black bg-opacity-40" />{" "}
         <div className="absolute inset-0 flex items-center justify-center">
-          <h1 className="text-white text-4xl font-bold">Actualités</h1>
+          <h1 className="text-white text-4xl font-bold"><TranslatedText text="Actualités" /></h1>
         </div>
       </div>
 
@@ -101,7 +103,7 @@ export default function BlogPage({ categories, articles, loading }) {
         <div className="md:col-span-2">
           {paginatedArticles.length === 0 ? (
             <div className="text-center text-gray-700 font-bold text-xl">
-              Aucun article trouvé.
+              <TranslatedText text="Aucun article trouvé." />
             </div>
           ) : (
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
@@ -131,7 +133,7 @@ export default function BlogPage({ categories, articles, loading }) {
                       to={paths.actualitesDetails(article.slug)}
                       className="inline-block w-max mt-4 bg-[#B6B498] text-white py-2 px-4 rounded hover:bg-black duration-300"
                     >
-                      Lire plus
+                      <TranslatedText text="Lire plus" />
                     </Link>
                   </div>
                 </div>
@@ -146,7 +148,7 @@ export default function BlogPage({ categories, articles, loading }) {
                 disabled={currentPage === 1}
                 className="bg-[#B6B498] text-white py-2 px-4 rounded hover:bg-black duration-300 disabled:opacity-50"
               >
-                Précédent
+                <TranslatedText text="Précédent" />
               </button>
               {getPageNumbers().map((page, index) =>
                 page === "..." ? (
@@ -172,7 +174,7 @@ export default function BlogPage({ categories, articles, loading }) {
                 disabled={currentPage === totalPages}
                 className="bg-[#B6B498] text-white py-2 px-4 rounded hover:bg-black duration-300 disabled:opacity-50"
               >
-                Suivant
+                <TranslatedText text="Suivant" />
               </button>
             </div>
           )}
@@ -183,7 +185,7 @@ export default function BlogPage({ categories, articles, loading }) {
           <div className="mb-6">
             <input
               type="text"
-              placeholder="À la recherche de..."
+              placeholder={t("À la recherche de...")}
               className="w-full border border-gray-300 rounded py-2 px-3"
               value={searchTerm}
               onChange={(e) => {
@@ -192,7 +194,7 @@ export default function BlogPage({ categories, articles, loading }) {
               }}
             />
           </div>
-          <h3 className="font-bold text-2xl mb-4">Catégories Articles</h3>
+          <h3 className="font-bold text-2xl mb-4"><TranslatedText text="Catégories Articles" /></h3>
           <ul className="space-y-3 text-base font-roboto">
             {categories.map((item, i) => (
               <li key={i} className="hover:underline cursor-pointer">
@@ -202,7 +204,7 @@ export default function BlogPage({ categories, articles, loading }) {
               </li>
             ))}
           </ul>
-          <h3 className="font-bold text-2xl mb-4 mt-8">Articles récents</h3>
+          <h3 className="font-bold text-2xl mb-4 mt-8"><TranslatedText text="Articles récents" /></h3>
           <ul className="space-y-3 text-base font-roboto">
             {recentArticles.map((item, i) => (
               <li key={i} className="hover:underline cursor-pointer">
@@ -219,7 +221,7 @@ export default function BlogPage({ categories, articles, loading }) {
           to={"/assistance-contact"}
           className="font-bricolage bg-[#B6B498] py-2 px-4 rounded-full text-white hover:bg-black duration-300"
         >
-          NOUS CONTACTER
+          <TranslatedText text="NOUS CONTACTER" />
         </Link>
       </div>
     </>

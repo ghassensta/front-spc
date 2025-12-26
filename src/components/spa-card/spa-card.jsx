@@ -4,6 +4,8 @@ import ButtonIcon from "../button-icon/button-icon";
 import { motion } from "framer-motion";
 import { FiMapPin } from "react-icons/fi";
 import { CONFIG } from "src/config-global";
+import { TranslatedText } from "../translated-text/translated-text";
+import { useTranslation } from "react-i18next";
 
 export default function SpaCard({
   to,
@@ -13,8 +15,8 @@ export default function SpaCard({
   location,
   remise_offres,
   prix_offres,
-  nombre_offres,
 }) {
+  const { t } = useTranslation();
   const renderLocation = () => {
     if (!location) return null;
     return (
@@ -42,14 +44,21 @@ export default function SpaCard({
   };
 
   const renderRemisePer = () => {
-    if (!remise_offres) return null;
+    if (!remise_offres && !prix_offres) return null;
+
+    const texteAAfficher = remise_offres
+      ? `Jusqu'à ${remise_offres}% de remise`
+      : prix_offres
+        ? `${prix_offres}`
+        : '';
 
     return (
       <span className="bg-[#B6B499] w-max text-black font-bold font-roboto px-2 py-1 absolute -bottom-1 left-1/2 -translate-x-1/2 rounded-3xl">
-        Jusqu'à {remise_offres}% de remise
+        <TranslatedText text={texteAAfficher} />
       </span>
     );
   };
+
 
   const renderTitle = () => {
     if (!title) return null;
@@ -70,11 +79,11 @@ export default function SpaCard({
   };
 
   const renderOffres = () => {
-    if (!prix_offres || !nombre_offres) return null;
+    if (!prix_offres || !remise_offres) return null;
 
     return (
       <p className="font-tahoma text-center mt-2">
-        {nombre_offres} offres à partir de{" "}
+        {remise_offres} <TranslatedText text="offres à partir de" />{" "}
         <strong>{parseFloat(prix_offres)} €</strong>
       </p>
     );
@@ -95,7 +104,7 @@ export default function SpaCard({
         {renderOffres()}
         <div className="mt-2 w-full flex justify-center items-center">
           <button className="inline-flex mx-auto font-tahoma rounded-full items-center gap-2 uppercase font-normal tracking-widest transition-all duration-300 bg-[#B6B499] hover:bg-black text-white px-6 py-3 text-sm">
-            Offrir une expérience
+            <TranslatedText text="Offrir une expérience" />
           </button>
         </div>
       </motion.div>

@@ -12,11 +12,14 @@ import {
 } from "src/actions/cartes-cadeaux";
 import theImage from "src/assets/images/SPC-carte-cadeau-montant-3.jpg";
 import theImage2 from "src/assets/images/SPC-Femme-cartes-square.jpg";
+import { TranslatedText } from "src/components/translated-text/translated-text";
+import { useTranslation } from "react-i18next";
 
 export default function CarteCadeau() {
   const checkout = useCheckoutContext();
   const navigate = useNavigate();
   const { cartes, loading } = useGetCarteCadeaux();
+  const { t } = useTranslation();
 
   const [amount, setAmount] = useState(null); // null | number
   const [isCustom, setIsCustom] = useState(false);
@@ -26,19 +29,17 @@ export default function CarteCadeau() {
   const addProductToCheckout = async () => {
     // Validation du montant
     if (!amount || isNaN(amount) || amount < 1 || amount > 1000) {
-      toast.error(
-        "Veuillez sélectionner ou entrer un montant valide entre 1 € et 1000 €."
-      );
+      toast.error(t("Veuillez sélectionner ou entrer un montant valide entre 1 € et 1000 €."));
       return;
     }
 
     // Validation des champs
     if (!receiver[0].fullName || !receiver[0].email) {
-      toast.error("Veuillez remplir les champs pour le destinataire.");
+      toast.error(t("Veuillez remplir les champs pour le destinataire."));
       return;
     }
     if (!checkout.expediteur.fullName) {
-      toast.error("Veuillez remplir votre nom et prénom.");
+      toast.error(t("Veuillez remplir votre nom et prénom."));
       return;
     }
 
@@ -78,11 +79,11 @@ export default function CarteCadeau() {
       };
 
       checkout.onAddToCart(cartData);
-      toast.success("Carte cadeau ajoutée au panier !");
+      toast.success(t("Carte cadeau ajoutée au panier !"));
       navigate(paths.checkout);
     } catch (error) {
       toast.error(
-        error.message || "Une erreur est survenue lors de l'ajout au panier."
+        error.message || t("Une erreur est survenue lors de l'ajout au panier.")
       );
     } finally {
       setSubmitting(false);
@@ -91,28 +92,22 @@ export default function CarteCadeau() {
 
   return (
     <>
-      {}
+      {/* ... */}
       <div className="flex bg-[#FBF6EC] w-screen relative left-[calc(-50vw+50%)] px-5">
         <div className="max-w-6xl mx-auto py-6">
           <div className="flex flex-col md:flex-row gap-6">
             <div className="md:w-1/2">
               <h1 className="text-4xl font-bold mb-4">
-                Un cadeau qui fait la différence
+                <TranslatedText text="Un cadeau qui fait la différence" />
               </h1>
               <p className="font-roboto pr-6 text-[#5E5E5E]">
-                Instantanée. Attentionnée. La carte cadeau Spa & Prestige
-                Collection vous permet d'offrir une expérience bien-être unique
-                à vos proches, en toute simplicité.
+                <TranslatedText text="Instantanée. Attentionnée. La carte cadeau Spa & Prestige Collection vous permet d'offrir une expérience bien-être unique à vos proches, en toute simplicité." />
                 <br />
-                Un choix varié de prestations exceptionnelles, à savourer en un
-                clic. Un cadeau facile à offrir, agréable à recevoir, pour des
-                moments de pure détente et d'évasion.
-                <br /> La carte cadeau Spa Prestige Collection est valable dans
-                l'ensemble de nos partenaires Spas pour une période de un an à
-                partir de la date de commande.
+                <TranslatedText text="Un choix varié de prestations exceptionnelles, à savourer en un clic. Un cadeau facile à offrir, agréable à recevoir, pour des moments de pure détente et d'évasion." />
                 <br />
-                Vous pouvez aussi offrir directement un soin (avec nos remises
-                prix) en consultant les offres de nos partenaires Spas.
+                <TranslatedText text="La carte cadeau Spa Prestige Collection est valable dans l'ensemble de nos partenaires Spas pour une période de un an à partir de la date de commande." />
+                <br />
+                <TranslatedText text="Vous pouvez aussi offrir directement un soin (avec nos remises prix) en consultant les offres de nos partenaires Spas." />
               </p>
             </div>
             <div className="md:w-1/2">
@@ -127,46 +122,46 @@ export default function CarteCadeau() {
         </div>
       </div>
 
-      {}
+      {/* ... */}
       <div className="max-w-6xl mx-auto gap-6 py-8">
         <div className="grid grid-cols-1 md:grid-cols-3 items-start">
           <div className="flex flex-col items-center justify-center">
             <h2 className="text-center text-2xl mb-4 font-bold">
-              Un cadeau instantané et pratique
+              <TranslatedText text="Un cadeau instantané et pratique" />
             </h2>
             <p className="font-roboto text-center">
-              Offrez un moment de sérénité immédiate, sans attente ni
-              contrainte.
+              <TranslatedText text="Offrez un moment de sérénité immédiate, sans attente ni contrainte." />
             </p>
           </div>
           <div className="flex flex-col items-center justify-center">
             <h2 className="text-center text-2xl mb-4 font-bold">
-              Un choix infini
+              <TranslatedText text="Un choix infini" />
             </h2>
             <p className="font-roboto text-center">
-              Des prestations variées pour toutes les occasions et tous les
-              budgets.
+              <TranslatedText text="Des prestations variées pour toutes les occasions et tous les budgets." />
             </p>
           </div>
           <div className="flex flex-col items-center justify-center">
             <h2 className="text-center text-2xl mb-4 font-bold">
-              Un bien-être sur mesure
+              <TranslatedText text="Un bien-être sur mesure" />
             </h2>
             <p className="font-roboto text-center">
-              Une invitation à se détendre, valable 1 an.
+              <TranslatedText text="Une invitation à se détendre, valable 1 an." />
             </p>
           </div>
         </div>
       </div>
 
-      {}
+      {/* ... */}
       <div className="max-w-6xl mx-auto py-12 px-4">
         <h2 className="text-3xl font-bold text-center mb-10">
-          OFFRIR UNE CARTE CADEAU :<br /> UNE ATTENTION QUI A DU SENS.
+          <TranslatedText text="OFFRIR UNE CARTE CADEAU :" />
+          <br />
+          <TranslatedText text="UNE ATTENTION QUI A DU SENS." />
         </h2>
 
         <div className="flex flex-col md:flex-row gap-8 lg:gap-12 items-start">
-          {}
+          {/* ... */}
           <div className="w-full md:w-1/2 order-1 md:order-1">
             <img
               loading="lazy"
@@ -176,16 +171,16 @@ export default function CarteCadeau() {
             />
           </div>
 
-          {}
+          {/* ... */}
           <div className="w-full md:w-1/2 order-2 md:order-2 font-roboto space-y-8">
             <div>
               <h3 className="text-2xl font-bold mb-6">
-                Sélectionnez le montant
+                <TranslatedText text="Sélectionnez le montant" />
               </h3>
               <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
                 {loading ? (
                   <p className="col-span-full text-center text-gray-500">
-                    Chargement des cartes...
+                    <TranslatedText text="Chargement des cartes..." />
                   </p>
                 ) : (
                   <>
@@ -226,17 +221,17 @@ export default function CarteCadeau() {
                   }
                 `}
                     >
-                      Montant personnalisé
+                      <TranslatedText text="Montant personnalisé" />
                     </button>
                   </>
                 )}
               </div>
 
-              {}
+              {/* ... */}
               {isCustom && (
                 <div className="mt-8 bg-gray-50 p-6 rounded-xl border">
                   <h4 className="text-xl font-bold mb-4">
-                    Entrez votre montant personnalisé
+                    <TranslatedText text="Entrez votre montant personnalisé" />
                   </h4>
                   <div className="flex items-center gap-4 max-w-md">
                     <input
@@ -244,7 +239,7 @@ export default function CarteCadeau() {
                       min="1"
                       max="1000"
                       step="0.01"
-                      placeholder="ex. 150.00"
+                      placeholder={t("ex. 150.00")}
                       className="w-full border border-gray-400 rounded-lg py-3 px-4 text-lg focus:outline-none focus:ring-2 focus:ring-black"
                       value={amount ?? ""}
                       onChange={(e) => {
@@ -258,8 +253,7 @@ export default function CarteCadeau() {
                     <span className="text-2xl font-bold">€</span>
                   </div>
                   <p className="text-sm text-gray-600 mt-3">
-                    Montant compris entre 1 € et 1 000 € (deux décimales
-                    autorisées).
+                    <TranslatedText text="Montant compris entre 1 € et 1 000 € (deux décimales autorisées)." />
                   </p>
                   <button
                     onClick={() => {
@@ -268,21 +262,21 @@ export default function CarteCadeau() {
                     }}
                     className="mt-4 text-sm underline hover:text-black transition"
                   >
-                    Annuler
+                    <TranslatedText text="Annuler" />
                   </button>
                 </div>
               )}
             </div>
 
-            {}
+            {/* ... */}
             <div>
               <h3 className="text-xl font-tahoma font-normal mb-4">
-                Nom et prénom de la personne qui recevra la carte cadeau
+                <TranslatedText text="Nom et prénom de la personne qui recevra la carte cadeau" />
               </h3>
               <div className="space-y-4">
                 <div className="flex flex-col sm:flex-row gap-4 sm:gap-6 sm:items-center">
                   <label className="sm:w-40 text-sm font-tahoma font-medium">
-                    Nom et prénom
+                    <TranslatedText text="Nom et prénom" />
                   </label>
                   <input
                     type="text"
@@ -297,7 +291,7 @@ export default function CarteCadeau() {
                 </div>
                 <div className="flex flex-col sm:flex-row gap-4 sm:gap-6 sm:items-center">
                   <label className="sm:w-40 text-sm font-tahoma font-medium">
-                    Email
+                    <TranslatedText text="Email" />
                   </label>
                   <input
                     type="email"
@@ -311,15 +305,15 @@ export default function CarteCadeau() {
               </div>
             </div>
 
-            {}
+            {/* ... */}
             <div>
               <h3 className="text-xl font-tahoma font-normal mb-4">
-                Nom et prénom de la personne qui commande
+                <TranslatedText text="Nom et prénom de la personne qui commande" />
               </h3>
               <div className="space-y-4">
                 <div className="flex flex-col sm:flex-row gap-4 sm:gap-6 sm:items-center">
                   <label className="sm:w-40 text-sm font-tahoma font-medium">
-                    Nom et prénom
+                    <TranslatedText text="Nom et prénom" />
                   </label>
                   <input
                     type="text"
@@ -335,7 +329,7 @@ export default function CarteCadeau() {
                 </div>
                 <div className="flex flex-col sm:flex-row gap-4 sm:gap-6 sm:items-start">
                   <label className="sm:w-40 text-sm font-tahoma font-medium">
-                    Message
+                    <TranslatedText text="Message" />
                   </label>
                   <textarea
                     rows={4}
@@ -352,65 +346,71 @@ export default function CarteCadeau() {
               </div>
             </div>
 
-            {}
+            {/* ... */}
             <div className="flex justify-start sm:justify-end">
               <button
                 onClick={addProductToCheckout}
                 disabled={submitting || !amount}
                 className="px-10 py-4 bg-black text-white uppercase font-tahoma text-sm tracking-[3px] rounded-full hover:bg-gray-800 transition disabled:opacity-50 disabled:cursor-not-allowed shadow-md"
               >
-                {submitting ? "Traitement en cours..." : "Offrir"}
+                {submitting ? (
+                  <TranslatedText text="Traitement en cours..." />
+                ) : (
+                  <TranslatedText text="Offrir" />
+                )}
               </button>
             </div>
           </div>
         </div>
       </div>
 
-      {}
+      {/* ... */}
       <div className="max-w-6xl mx-auto py-12 px-4">
         <h2 className="text-3xl font-bold text-center mb-10">
-          Comment ça marche ?
+          <TranslatedText text="Comment ça marche ?" />
         </h2>
         <h2 className="text-3xl text-center mb-10">
-          Explorez notre site et sélectionnez l’établissement ou la prestation
-          qui vous convient !
+          <TranslatedText text="Explorez notre site et sélectionnez l'établissement ou la prestation qui vous convient !" />
         </h2>
         <div className="grid grid-cols-1 md:grid-cols-4 gap-8 text-center">
           <div>
             <MapPin className="mx-auto mb-4 text-[#B6B498]" size={32} />
             <h3 className="font-bold text-lg mb-2">
-              Sélectionnez votre adresse bien-être
+              <TranslatedText text="Sélectionnez votre adresse bien-être" />
             </h3>
             <p className="text-sm text-gray-700 font-roboto">
-              Parcourez notre page <strong>"Tous nos spas"</strong> et
-              choisissez l'établissement qui vous correspond.
+              <TranslatedText text="Parcourez notre page" />
+              <strong>
+                <TranslatedText text="Tous nos spas" />
+              </strong>
+              <TranslatedText text="et choisissez l'établissement qui vous correspond." />
             </p>
           </div>
           <div>
             <BookOpen className="mx-auto mb-4 text-[#B6B498]" size={32} />
             <h3 className="font-bold text-lg mb-2">
-              Plongez dans l'univers du Spa
+              <TranslatedText text="Plongez dans l'univers du Spa" />
             </h3>
             <p className="text-sm text-gray-700 font-roboto">
-              Découvrez en détail les soins et installations de chaque
-              établissement.
+              <TranslatedText text="Découvrez en détail les soins et installations de chaque établissement." />
             </p>
           </div>
           <div>
             <PhoneCall className="mx-auto mb-4 text-[#B6B498]" size={32} />
             <h3 className="font-bold text-lg mb-2">
-              Réservez votre moment privilégié
+              <TranslatedText text="Réservez votre moment privilégié" />
             </h3>
             <p className="text-sm text-gray-700 font-roboto">
-              Contactez directement l'établissement en indiquant votre numéro de
-              carte cadeau.
+              <TranslatedText text="Contactez directement l'établissement en indiquant votre numéro de carte cadeau." />
             </p>
           </div>
           <div>
             <Sparkles className="mx-auto mb-4 text-[#B6B498]" size={32} />
-            <h3 className="font-bold text-lg mb-2">Vivez l'instant</h3>
+            <h3 className="font-bold text-lg mb-2">
+              <TranslatedText text="Vivez l'instant" />
+            </h3>
             <p className="text-sm text-gray-700 font-roboto">
-              Profitez d’une parenthèse de bien-être unique.
+              <TranslatedText text="Profitez d'une parenthèse de bien-être unique." />
             </p>
           </div>
         </div>
@@ -419,7 +419,7 @@ export default function CarteCadeau() {
             to={paths.spa.list}
             className="bg-[#B6B498] text-white rounded-full py-3 px-8 hover:bg-black transition font-roboto"
           >
-            Accueil
+            <TranslatedText text="Accueil" />
           </Link>
         </div>
       </div>

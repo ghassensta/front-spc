@@ -14,6 +14,7 @@ import SpaCard from "src/components/spa-card/spa-card";
 import { Link } from "react-router-dom";
 import { paths } from "src/router/paths";
 import { TranslatedText } from "src/components/translated-text/translated-text";
+import { useTranslation } from "react-i18next";
 import theImage from "src/assets/images/Piscine2.jpg";
 import theImageHeader from "src/assets/images/SPC-Essence-1975x1318-02.jpg";
 
@@ -21,6 +22,7 @@ export default function HomeView() {
   const { etablissements } = useGetEtablissements();
   const { actualites } = useGetLastNews(3);
   const { marques, prochainement, carte } = useLayout();
+  const { t } = useTranslation();
 
   return (
     <>
@@ -55,7 +57,7 @@ export default function HomeView() {
         <div className="text-center">
           <ButtonIcon
             link={paths.spa.list}
-            title="Découvrir toutes les offres"
+            title={t("Découvrir toutes les offres")}
           />
         </div>
       </div>
@@ -104,9 +106,9 @@ export default function HomeView() {
       >
         <div className="max-w-6xl mx-auto py-4">
           <h2 className="text-4xl font-bold text-center">
-            Moments de détente / Eclat & Soin de soi
+            <TranslatedText text="Moments de détente / Eclat & Soin de soi" />
             <div className="text-[#B6B499] mt-2">
-              Découvrez nos offres séjour pour une détente absolue.
+              <TranslatedText text="Découvrez nos offres séjour pour une détente absolue." />
             </div>
           </h2>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-16">
@@ -116,7 +118,7 @@ export default function HomeView() {
               )}
               title="Rituel Corps Relaxant avec Massage, Gommage et Sauna Infrarouge – Solo"
               image={`${CONFIG.serverUrl}/storage/uploads/products/vsh20tkZbTBA0YuocmFb2TgIEmFaCamZibo0cmSY.jpg`}
-              headTitle= "Maison Blanche"
+              headTitle="Maison Blanche"
               // buttonTitle= "Offrir cette expérience"
               location="11320 Montferrand France"
               bottomText="Jusqu'à 20% de remise"
@@ -126,7 +128,7 @@ export default function HomeView() {
               to={paths.product("sejour-jai-fais-un-reve")}
               title="Séjour “J’ai Fais Un Rêve”"
               image={`${CONFIG.serverUrl}/storage/products/thumbnails/8XpFhMpcDYnO8ylgwSCGFrE4VX7jzfxS7lJcsOws.jpg`}
-               headTitle= "Maison Blanche"
+              headTitle="Maison Blanche"
               // buttonTitle= "Offrir cette expérience"
               location="11320 Montferrand France"
               bottomText="Jusqu'à 20% de remise"
@@ -138,7 +140,7 @@ export default function HomeView() {
               )}
               title="Soin Hydrafacial x MyBlend – Soin Signature – Solo"
               image={`${CONFIG.serverUrl}/storage/products/thumbnails/vA3qP0AqNpUqf2kwexPYT1cwjgQCsa7J6Kbsjrkx.jpg`}
-               headTitle= "Maison Blanche"
+              headTitle="Maison Blanche"
               // buttonTitle= "Offrir cette expérience"
               location="11320 Montferrand France"
               bottomText="Jusqu'à 20% de remise"
@@ -146,7 +148,7 @@ export default function HomeView() {
             />
           </div>
           <div className="text-center">
-            <ButtonIcon link={paths.spa.list} title="DÉCOUVRIR" />
+            <ButtonIcon link={paths.spa.list} title={t("DÉCOUVRIR")} />
           </div>
         </div>
       </div>
@@ -157,9 +159,9 @@ export default function HomeView() {
       >
         <div className="max-w-6xl mx-auto py-4">
           <h2 className="text-4xl font-bold text-center">
-            Escapades Bien-Être (Offres Séjour)
+            <TranslatedText text="Escapades Bien-Être (Offres Séjour)" />
             <div className="text-[#B6B499] mt-2">
-              Savourez des moments gourmands et relaxants.
+              <TranslatedText text="Savourez des moments gourmands et relaxants." />
             </div>
           </h2>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-16">
@@ -184,7 +186,7 @@ export default function HomeView() {
             />
           </div>
           <div className="text-center">
-            <ButtonIcon link={paths.spa.list} title="Découvrir" />
+            <ButtonIcon link={paths.spa.list} title={t("Découvrir")} />
           </div>
         </div>
       </div>
@@ -195,9 +197,9 @@ export default function HomeView() {
       >
         <div className="max-w-6xl mx-auto py-4">
           <h2 className="text-4xl font-bold text-center">
-            Plaisirs & Saveurs
+            <TranslatedText text="Plaisirs & Saveurs" />
             <div className="text-[#B6B499] mt-2">
-              Boostez votre énergie avec nos activités dynamiques.
+              <TranslatedText text="Boostez votre énergie avec nos activités dynamiques." />
             </div>
           </h2>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-16">
@@ -222,7 +224,7 @@ export default function HomeView() {
             />
           </div>
           <div className="text-center">
-            <ButtonIcon link={paths.spa.list} title="Découvrir" />
+            <ButtonIcon link={paths.spa.list} title={t("Découvrir")} />
           </div>
         </div>
       </div>
@@ -232,9 +234,9 @@ export default function HomeView() {
       >
         <div className="max-w-6xl mx-auto py-4">
           <h2 className="text-4xl font-bold text-center">
-            Vitalité & Mouvement
+            <TranslatedText text="Vitalité & Mouvement" />
             <div className="text-[#B6B499] mt-2">
-              Découvrez nos offres à venir.
+              <TranslatedText text="Découvrez nos offres à venir." />
             </div>
           </h2>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-16">
@@ -259,7 +261,7 @@ export default function HomeView() {
             />
           </div>
           <div className="text-center">
-            <ButtonIcon link={paths.spa.list} title="Découvrir" />
+            <ButtonIcon link={paths.spa.list} title={t("Découvrir")} />
           </div>
         </div>
       </div>
@@ -273,10 +275,10 @@ export default function HomeView() {
       >
         <div className="max-w-6xl mx-auto py-4">
           <h2 className="text-4xl font-bold text-center">
-            {prochainement?.title || "L’univers Spa & Prestige Collection."}
+            {prochainement?.title || <TranslatedText text="L'univers Spa & Prestige Collection." />}
             <div className="text-[#B6B499] mt-2">
               {prochainement?.description ||
-                "Un réseau confidentiel dédié aux lieux d’exception."}
+                <TranslatedText text="Un réseau confidentiel dédié aux lieux d'exception." />}
             </div>
           </h2>
 
@@ -285,7 +287,7 @@ export default function HomeView() {
               <Card
                 key={index} // React nécessite une clé unique
                 to={paths.spa.list}
-                title={item.title || "Sans titre"}
+                title={item.title || <TranslatedText text="Sans titre" />}
                 image={
                   item.image
                     ? `${CONFIG.serverUrl}${item.image}`
@@ -298,28 +300,28 @@ export default function HomeView() {
       </div>
 
       {}
-      <div className=" relative w-screen left-[calc(-50vw+50%)] bg-[#f6f5e9]">
+      <div className=" Relative w-screen left-[calc(-50vw+50%)] bg-[#f6f5e9]">
         <div className="max-w-6xl mx-auto py-4">
           <h2 className="text-4xl font-bold text-center">
-            L’univers Spa & Prestige Collection.{" "}
+            <TranslatedText text="L'univers Spa & Prestige Collection." />{" "}
             <div className="text-[#B6B499]">
-              Un réseau confidentiel dédié aux lieux d’exception.
+              <TranslatedText text="Un réseau confidentiel dédié aux lieux d'exception." />
             </div>
           </h2>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-6">
             <Card
               to={paths.who}
-              title="Qui sommes-nous ?"
+              title={<TranslatedText text="Qui sommes-nous ?" />}
               image={theImageHeader}
             />
             <Card
               to={paths.referentiel}
-              title="Référentiel de candidature"
+              title={<TranslatedText text="Référentiel de candidature" />}
               image={theImageHeader}
             />
             <Card
               to={paths.collection}
-              title="Collection Prestige"
+              title={<TranslatedText text="Collection Prestige" />}
               image={theImageHeader}
             />
           </div>
@@ -331,8 +333,10 @@ export default function HomeView() {
         <div className="bg-white rounded-lg  left-[calc(-50vw+50%)] relative w-screen">
           <div className="max-w-6xl mx-auto py-4">
             <h2 className="text-4xl font-bold text-center">
-              Actualités
-              <div className="text-[#B6B499]">Nos derniers articles</div>
+              <TranslatedText text="Actualités" />
+              <div className="text-[#B6B499]">
+                <TranslatedText text="Nos derniers articles" />
+              </div>
             </h2>
 
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-8">
@@ -357,7 +361,7 @@ export default function HomeView() {
               ))}
             </div>
             <div className="text-center">
-              <ButtonIcon link={paths.actualites} title="Tous nos articles" />
+              <ButtonIcon link={paths.actualites} title={t("Tous nos articles")} />
             </div>
           </div>
         </div>
@@ -368,7 +372,7 @@ export default function HomeView() {
         <div className="bg-white rounded-lg">
           <div className="max-w-6xl mx-auto py-12">
             <h2 className="text-4xl font-bold text-center">
-              {marques.title || "Nos marques partenaires"}
+              {marques.title || <TranslatedText text="Nos marques partenaires" />}
             </h2>
             <p className="text-center text-gray-500 mt-2 mb-8">
               {marques.description}
@@ -421,7 +425,7 @@ export default function HomeView() {
               </Swiper>
             ) : (
               <p className="text-center text-gray-400">
-                Aucune marque partenaire disponible pour le moment.
+                <TranslatedText text="Aucune marque partenaire disponible pour le moment." />
               </p>
             )}
           </div>

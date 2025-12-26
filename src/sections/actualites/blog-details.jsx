@@ -10,6 +10,7 @@ import { Link } from "react-router-dom";
 import { CONFIG } from "src/config-global";
 import { paths } from "src/router/paths";
 import theImage from "src/assets/images/SPC-Essence-1975x1318-02.jpg";
+import { TranslatedText } from "src/components/translated-text/translated-text";
 
 export default function BlogDetails({ actualitie }) {
   return (
@@ -31,7 +32,7 @@ export default function BlogDetails({ actualitie }) {
         <img
           lazyload="lazy"
           src={CONFIG.serverUrl + "/storage/" + actualitie?.thumbnail_path}
-          alt=""
+          alt={actualitie?.title || ""}
           className="mb-12"
         />
 
@@ -46,7 +47,7 @@ export default function BlogDetails({ actualitie }) {
               to={paths.spa.list}
               className="bg-[#B6B499] font-roboto  text-white py-2 px-4 rounded-full"
             >
-              NOS ÉTABLISSEMENTS PARTENAIRES
+              <TranslatedText text="NOS ÉTABLISSEMENTS PARTENAIRES" />
             </Link>
           </div>
           <hr className="border-black" />
@@ -58,7 +59,7 @@ export default function BlogDetails({ actualitie }) {
               className="flex items-center font-bold gap-2"
             >
               <FaChevronLeft />
-              Précédent
+              <TranslatedText text="Précédent" />
             </Link>
             <Link
               to={paths.actualitesDetails(
@@ -66,14 +67,14 @@ export default function BlogDetails({ actualitie }) {
               )}
               className="flex items-center font-bold gap-2"
             >
-              Suivant
+              <TranslatedText text="Suivant" />
               <FaChevronRight />
             </Link>
           </div>
           {}
           {actualitie?.similaires > 0 && (
             <h5 className="text-4xl text-center font-semibold">
-              Articles Similaires
+              <TranslatedText text="Articles Similaires" />
             </h5>
           )}
 
@@ -100,7 +101,7 @@ export default function BlogDetails({ actualitie }) {
                     to={paths.actualitesDetails(article.slug)}
                     className="inline-block w-max mt-4 bg-[#B6B498] text-white py-2 px-4 rounded hover:bg-black duration-300"
                   >
-                    Lire plus
+                    <TranslatedText text="Lire plus" />
                   </Link>
                 </div>
               </div>

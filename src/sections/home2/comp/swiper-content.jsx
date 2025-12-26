@@ -1,4 +1,4 @@
-import React, { useId, useMemo } from 'react';
+import React, { useRef, useMemo } from 'react';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { Navigation } from 'swiper/modules';
 import 'swiper/css';
@@ -10,9 +10,10 @@ import { paths } from 'src/router/paths';
 import { CONFIG } from 'src/config-global';
 
 const SwiperContent = ({ slidesPerView = 3, data = [] }) => {
-  const uniqueId = useId();
-  const prevId = `prev-${uniqueId}`;
-  const nextId = `next-${uniqueId}`;
+  // Utiliser useRef au lieu de useId pour éviter les caractères invalides
+  const prevRef = useRef(null);
+  const nextRef = useRef(null);
+  const swiperRef = useRef(null);
 
   const shouldLoop = data.length > slidesPerView;
 
@@ -25,13 +26,14 @@ const SwiperContent = ({ slidesPerView = 3, data = [] }) => {
 
   // Vérification des données
   if (!Array.isArray(data) || data.length === 0) {
-    return null; // ou un composant de chargement/erreur approprié
+    return null;
   }
 
   return (
     <div className="relative max-w-[1200px] mx-auto px-4 md:px-12">
       <Swiper
-        loop={shouldLoop} // Désactive le loop s'il n'y a pas assez d'éléments
+        ref={swiperRef}
+        loop={shouldLoop} 
         spaceBetween={20}
         slidesPerView={Math.min(slidesPerView, data.length)}
         initialSlide={Math.min(2, Math.max(0, data.length - 1))}
@@ -39,8 +41,15 @@ const SwiperContent = ({ slidesPerView = 3, data = [] }) => {
         breakpoints={breakpoints}
         modules={[Navigation]}
         navigation={{
-          prevEl: `#${prevId}`,
-          nextEl: `#${nextId}`,
+          prevEl: prevRef.current,
+          nextEl: nextRef.current,
+        }}
+        onBeforeInit={(swiper) => {
+          // Initialiser la navigation avec les refs
+          if (swiper.params.navigation && typeof swiper.params.navigation !== 'boolean') {
+            swiper.params.navigation.prevEl = prevRef.current;
+            swiper.params.navigation.nextEl = nextRef.current;
+          }
         }}
         preventClicksPropagation={false}
         preventInteractionOnTransition={true}
@@ -68,7 +77,7 @@ const SwiperContent = ({ slidesPerView = 3, data = [] }) => {
                 price={item.price || ''}
                 duration={item.duration || ''}
                 id={item.produit_id || null}
-                exclusivite_spc={Boolean(item.exclusivite_spc)}
+                exclusivite_image={item.exclusivite_image}
                 remiseDescProduit={item.remiseDescProduit || ''}
               />
             </SwiperSlide>
@@ -80,14 +89,14 @@ const SwiperContent = ({ slidesPerView = 3, data = [] }) => {
       {data.length > 1 && (
         <>
           <button
-            id={prevId}
+            ref={prevRef}
             aria-label="Précédent"
             className="absolute left-0 top-[35%] -translate-y-1/2 bg-[#B6B499] hover:bg-[#9a977d] rounded-full w-8 h-8 z-10 cursor-pointer flex items-center justify-center transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-[#B6B499] focus:ring-opacity-50"
           >
             <FaChevronLeft className="text-black w-3 h-3" />
           </button>
           <button
-            id={nextId}
+            ref={nextRef}
             aria-label="Suivant"
             className="absolute right-0 top-[35%] -translate-y-1/2 bg-[#B6B499] hover:bg-[#9a977d] rounded-full w-8 h-8 z-10 cursor-pointer flex items-center justify-center transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-[#B6B499] focus:ring-opacity-50"
           >
@@ -126,7 +135,7 @@ SwiperContent.propTypes = {
       price: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
       duration: PropTypes.string,
       produit_id: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
-      exclusivite_spc: PropTypes.bool,
+      exclusivite_image: PropTypes.string,
       remiseDescProduit: PropTypes.string,
     })
   ),

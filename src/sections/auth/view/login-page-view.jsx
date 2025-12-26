@@ -5,13 +5,16 @@ import { signInWithPassword } from "src/actions/auth";
 import Logo from "src/components/logo/logo";
 import { useRouter } from "src/hooks";
 import { paths } from "src/router/paths";
+import { TranslatedText } from "src/components/translated-text/translated-text";
+import { useTranslation } from "react-i18next";
 
 export default function LoginPageView() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const router = useRouter()
+  const { t } = useTranslation();
 
-   const handleSubmit = async (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
     const promise = signInWithPassword({ email, password });
@@ -19,9 +22,9 @@ export default function LoginPageView() {
     toast.promise(
       promise,
       {
-        pending: "Connexion en cours...",
-        success: "Connecté avec succès !",
-        error: "Échec de la connexion. Vérifiez vos identifiants.",
+        pending: t("Connexion en cours..."),
+        success: t("Connecté avec succès !"),
+        error: t("Échec de la connexion. Vérifiez vos identifiants."),
       }
     );
 
@@ -39,11 +42,11 @@ export default function LoginPageView() {
           <Logo />
         </Link>
       </div>
-      <h1 className="text-xl font-semibold text-center ">Connexion à votre compte</h1>
+      <h1 className="text-xl font-semibold text-center "><TranslatedText text="Connexion à votre compte" /></h1>
       <form onSubmit={handleSubmit} className="flex flex-col gap-4">
         <div>
           <label htmlFor="email" className="text-sm text-gray-600">
-            Email
+            <TranslatedText text="Email" />
           </label>
           <input
             type="email"
@@ -57,7 +60,7 @@ export default function LoginPageView() {
 
         <div>
           <label htmlFor="password" className="text-sm text-gray-600">
-            Mot de passe
+            <TranslatedText text="Mot de passe" />
           </label>
           <input
             type="password"
@@ -67,18 +70,18 @@ export default function LoginPageView() {
             value={password}
             onChange={(e) => setPassword(e.target.value)}
           />
-        <Link className="text-xs text-gray-400" to={paths.auth.forget}>Mot de passe oublié?</Link>
+        <Link className="text-xs text-gray-400" to={paths.auth.forget}><TranslatedText text="Mot de passe oublié?" /></Link>
         </div>
 
         <button
           type="submit"
           className="w-full bg-black text-white p-2 rounded hover:bg-gray-800 disabled:opacity-50"
         >
-          Se Connecter
+          <TranslatedText text="Se Connecter" />
         </button>
       </form>
      
-      <p className="mt-4 text-sm text-center text-gray-600">Vous n'avez pas d'un compte ? <Link className="text-[#B6B499] hover:underline" to={paths.auth.register}>Créer un compte!</Link></p>
+      <p className="mt-4 text-sm text-center text-gray-600"><TranslatedText text="Vous n'avez pas d'un compte ?" /> <Link className="text-[#B6B499] hover:underline" to={paths.auth.register}><TranslatedText text="Créer un compte!" /></Link></p>
     </div>
   );
 }

@@ -13,7 +13,7 @@ import { GiTakeMyMoney } from "react-icons/gi";
 import { MdOutlineEmail } from "react-icons/md";
 import ButtonIcon from "src/components/button-icon/button-icon";
 import { paths } from "src/router/paths";
-import theImage from "src/assets/images/SPC-coeur-1975x1318-01.jpg";
+import theImage from "src/assets/SPC-Parrainage-1975x1318-01.jpg";
 
 export default function ProgrammePageView() {
   return (
