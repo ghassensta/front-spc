@@ -16,7 +16,7 @@ export default function Section({
       }`}
     >
       <div className="max-w-6xl mx-auto">
-        {/* Header */}
+        {}
         <h2 className="text-4xl font-bold text-center">
           {header}
           {!!subheader && (

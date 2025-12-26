@@ -15,7 +15,6 @@ export const signInWithPassword = async ({ email, password }) => {
 
     setSession(access_token);
   } catch (error) {
-    console.error("Error during sign in:", error);
     throw error;
   }
 };
@@ -50,20 +49,16 @@ export const registerAccount = async ({
 
     setSession(access_token);
   } catch (error) {
-    console.error("Error during registration:", error);
     throw error;
   }
 };
 
-/** **************************************
- * Sign out
- *************************************** */
+
 export const signOut = async () => {
   try {
     await axios.post(endpoints.auth.logout);
     await setSession(null);
   } catch (error) {
-    console.error("Error during sign out:", error);
     throw error;
   }
 };
@@ -78,7 +73,6 @@ export const editUser = async (data) => {
 
     return res;
   } catch (error) {
-    console.error("❌ Erreur lors de la mise à jour du profil:", error);
     throw error;
   }
 };
@@ -91,15 +85,8 @@ export const forgetPassword = async (email) => {
 
     const res = await axios.post(endpoints.auth.forgotPassword, params);
 
-    console.log("✅ Réponse forgotPassword:", res.data);
-
     return res.data;
   } catch (error) {
-    console.error("❌ Erreur complète:", {
-      message: error.message,
-      response: error.response?.data,
-      status: error.response?.status,
-    });
 
     // Extraire le message d'erreur détaillé
     const errorMessage =
@@ -113,9 +100,7 @@ export const forgetPassword = async (email) => {
   }
 };
 
-/** **************************************
- * Reset Password - Réinitialiser le mot de passe
- *************************************** */
+
 export const resetPassword = async (data) => {
   try {
     const params = {
@@ -129,10 +114,6 @@ export const resetPassword = async (data) => {
 
     return res.data; // Retourner la réponse pour afficher le message de succès
   } catch (error) {
-    console.error(
-      "❌ Erreur lors de la réinitialisation du mot de passe:",
-      error
-    );
 
     // Extraire le message d'erreur du backend
     const errorMessage =

@@ -2,9 +2,12 @@ import React, { useState } from "react";
 import { toast } from "react-toastify";
 import { editUser } from "src/actions/auth";
 import { useAuthContext } from "src/auth/hooks/use-auth-context";
+import { TranslatedText } from "src/components/translated-text/translated-text";
+import { useTranslation } from "react-i18next";
 
 export default function ProfileDetails() {
   const { user, checkUserSession } = useAuthContext();
+  const { t } = useTranslation();
 
   const [formData, setFormData] = useState({
     name: user?.name || "",
@@ -27,11 +30,11 @@ export default function ProfileDetails() {
 
   const handleSubmit = async () => {
     if (!formData.name.trim()) {
-      toast.error("Le nom est requis");
+      toast.error(t("Le nom est requis"));
       return;
     }
     if (!formData.email.trim()) {
-      toast.error("L’adresse e-mail est requise");
+      toast.error(t("L'adresse e-mail est requise"));
       return;
     }
 
@@ -46,19 +49,19 @@ export default function ProfileDetails() {
         !formData.new_password ||
         !formData.new_password_confirmation
       ) {
-        toast.error("Veuillez remplir tous les champs de mot de passe");
+        toast.error(t("Veuillez remplir tous les champs de mot de passe"));
         return;
       }
 
       if (formData.new_password.length < 8) {
         toast.error(
-          "Le nouveau mot de passe doit contenir au moins 8 caractères"
+          t("Le nouveau mot de passe doit contenir au moins 8 caractères")
         );
         return;
       }
 
       if (formData.new_password !== formData.new_password_confirmation) {
-        toast.error("Les nouveaux mots de passe ne correspondent pas");
+        toast.error(t("Les nouveaux mots de passe ne correspondent pas"));
         return;
       }
     }
@@ -67,9 +70,9 @@ export default function ProfileDetails() {
     const promise = editUser(formData);
 
     toast.promise(promise, {
-      pending: "Mise à jour en cours...",
-      success: "Profil mis à jour avec succès !",
-      error: "Erreur lors de la mise à jour",
+      pending: t("Mise à jour en cours..."),
+      success: t("Profil mis à jour avec succès !"),
+      error: t("Erreur lors de la mise à jour"),
     });
 
     try {
@@ -83,17 +86,15 @@ export default function ProfileDetails() {
         new_password: "",
         new_password_confirmation: "",
       }));
-    } catch (err) {
-      console.error(err);
-    }
+    } catch (err) {}
   };
 
   return (
     <div className="grid grid-cols-2 gap-2 p-3">
-      {/* Nom */}
+      {}
       <div className="flex flex-col">
         <label htmlFor="name" className="text-sm text-secondary">
-          Nom
+          <TranslatedText text="Nom" />
         </label>
         <input
           type="text"
@@ -105,10 +106,10 @@ export default function ProfileDetails() {
         />
       </div>
 
-      {/* Prénom */}
+      {}
       <div className="flex flex-col">
         <label htmlFor="lastName" className="text-sm text-secondary">
-          Prénom
+          <TranslatedText text="Prénom" />
         </label>
         <input
           type="text"
@@ -120,10 +121,10 @@ export default function ProfileDetails() {
         />
       </div>
 
-      {/* Nom affiché */}
+      {}
       <div className="flex flex-col">
         <label htmlFor="displayedName" className="text-sm text-secondary">
-          Nom affiché
+          <TranslatedText text="Nom affiché" />
         </label>
         <input
           type="text"
@@ -135,10 +136,10 @@ export default function ProfileDetails() {
         />
       </div>
 
-      {/* Email */}
+      {}
       <div className="flex flex-col">
         <label htmlFor="email" className="text-sm text-secondary">
-          Adresse e-mail
+          <TranslatedText text="Adresse e-mail" />
         </label>
         <input
           type="email"
@@ -152,7 +153,7 @@ export default function ProfileDetails() {
 
       <div className="flex flex-col w-full">
         <label htmlFor="dateNaissance" className="text-sm text-secondary">
-          Date de naissance
+          <TranslatedText text="Date de naissance" />
         </label>
         <input
           type="date"
@@ -169,16 +170,16 @@ export default function ProfileDetails() {
         />
         {user?.date_naissance && (
           <small className="text-xs text-gray-500 mt-1">
-            La date de naissance ne peut pas être modifiée.
+            <TranslatedText text="La date de naissance ne peut pas être modifiée." />
           </small>
         )}
       </div>
 
-      {/* Bloc mot de passe */}
+      {}
       <div className="col-span-2 mt-4 grid grid-cols-2 gap-2 border p-4">
         <div className="flex flex-col col-span-2 md:col-span-1">
           <label htmlFor="currentPassword" className="text-sm text-secondary">
-            Mot de passe actuel
+            <TranslatedText text="Mot de passe actuel" />
           </label>
           <input
             type="password"
@@ -192,7 +193,7 @@ export default function ProfileDetails() {
 
         <div className="flex flex-col col-span-2 md:col-span-1">
           <label htmlFor="newPassword" className="text-sm text-secondary">
-            Nouveau mot de passe
+            <TranslatedText text="Nouveau mot de passe" />
           </label>
           <input
             type="password"
@@ -206,7 +207,7 @@ export default function ProfileDetails() {
 
         <div className="flex flex-col col-span-2">
           <label htmlFor="confirmPassword" className="text-sm text-secondary">
-            Confirmer le mot de passe
+            <TranslatedText text="Confirmer le mot de passe" />
           </label>
           <input
             type="password"
@@ -219,14 +220,14 @@ export default function ProfileDetails() {
         </div>
       </div>
 
-      {/* Bouton d’enregistrement */}
+      {}
       <div className="col-span-2 flex justify-end">
         <button
           type="button"
           className="inline-flex font-tahoma rounded-full items-center gap-2 uppercase font-normal tracking-widest transition-all duration-300 px-6 py-3 text-sm bg-[#B6B499] hover:bg-black text-white"
           onClick={handleSubmit}
         >
-          Enregistrer
+          <TranslatedText text="Enregistrer" />
         </button>
       </div>
     </div>

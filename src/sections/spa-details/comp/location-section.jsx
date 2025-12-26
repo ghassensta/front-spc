@@ -23,7 +23,7 @@ export default function LocationSection({ data }) {
 
   return (
     <div className="flex flex-col md:flex-row gap-3 items-start py-2 max-w-6xl mx-auto">
-      {/* Map */}
+      {}
       <motion.div
         className="w-full md:w-1/2 h-[300px] bg-white p-4 rounded-lg"
         initial={{ opacity: 0, y: 50 }}
@@ -46,7 +46,7 @@ export default function LocationSection({ data }) {
         </div>
       </motion.div>
 
-      {/* Info */}
+      {}
       <motion.div
         className="w-full md:w-1/2 p-8 rounded-lg"
         initial={{ opacity: 0, x: 50 }}

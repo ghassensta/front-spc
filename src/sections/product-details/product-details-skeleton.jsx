@@ -4,12 +4,12 @@ export default function ProductDetailsSkeleton() {
   return (
     <div className="max-w-7xl mx-auto px-4 py-12">
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        {/* Image Carousel Skeleton */}
+        {}
         <div className="flex flex-col col-span-2">
           <div className="h-[300px] bg-gray-200 rounded-xl animate-pulse" />
         </div>
 
-        {/* Product Details Skeleton */}
+        {}
         <div className="bg-[#f9f7ed] px-8 py-4 col-span-2 lg:col-span-1 rounded-2xl">
           <div className="h-9 w-3/4 bg-gray-200 rounded mb-4 animate-pulse" />
           <div className="relative">
@@ -37,7 +37,7 @@ export default function ProductDetailsSkeleton() {
           <div className="h-10 w-40 bg-gray-200 rounded mx-auto mt-10 animate-pulse" />
         </div>
 
-        {/* Recipient and Location Skeleton */}
+        {}
         <div className="bg-[#f9f7ed] px-8 py-4 col-span-2 lg:col-span-1 rounded-2xl">
           <div className="h-6 w-10 bg-gray-200 rounded my-2 animate-pulse" />
           <div className="mt-6">
@@ -60,7 +60,7 @@ export default function ProductDetailsSkeleton() {
             <div className="h-10 w-40 bg-gray-200 rounded animate-pulse" />
           </div>
           <div className="border-b border-black my-4" />
-          {/* Location Section Skeleton */}
+          {}
           <div className="space-y-4">
             <div className="h-6 w-1/2 bg-gray-200 rounded animate-pulse" />
             <div className="h-4 w-3/4 bg-gray-200 rounded animate-pulse" />
@@ -70,7 +70,7 @@ export default function ProductDetailsSkeleton() {
         </div>
       </div>
 
-      {/* Reviews Section Skeleton */}
+      {}
       <div className="mt-10 bg-[#f9f7ed] p-4 rounded-xl shadow-sm">
         <div className="flex gap-4 border-b border-gray-200">
           <div className="h-6 w-16 bg-gray-200 rounded animate-pulse" />

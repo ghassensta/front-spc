@@ -2,11 +2,14 @@
 import React, { useState, useEffect } from "react";
 import { toast } from "react-toastify";
 import { sendSupport, sendMessage, useGetMessage } from "src/actions/aide";
+import { TranslatedText } from "src/components/translated-text/translated-text";
+import { useTranslation } from "react-i18next";
 
 export default function AidePageView({
   messages, messagesError, messagesLoading, messagesValidating,
   services, servicesError, servicesLoading, servicesValidating,
 }) {
+  const { t } = useTranslation();
   const [openModal, setOpenModal] = useState(false);
   const [selectedConversation, setSelectedConversation] = useState(null);
   const [conversationId, setConversationId] = useState(null);
@@ -43,16 +46,15 @@ export default function AidePageView({
     const promise = sendSupport(form);
 
     toast.promise(promise, {
-      pending: "En Cours d'envoi..",
-      success: "Envoi avec success",
-      error: "Echec d'envoi",
+      pending: t("En Cours d'envoi.."),
+      success: t("Envoi avec success"),
+      error: t("Echec d'envoi"),
     });
 
     try {
       await promise;
       setForm({ service: "", title: "", description: "" });
     } catch (error) {
-      console.error(error);
     }
   };
 
@@ -63,8 +65,6 @@ export default function AidePageView({
     setReply("");
     setOpenModal(true);
   };
-  console.log(localConversation)
-
 
   const handleSend = async () => {
     if (!reply.trim()) return;
@@ -89,7 +89,6 @@ export default function AidePageView({
         sender: "Client",
       });
     } catch (error) {
-      console.error(error);
       setLocalConversation((prev) => prev.slice(0, -1));
     }
   };
@@ -101,17 +100,17 @@ export default function AidePageView({
 
   return (
     <div className="p-6 grid grid-cols-1 md:grid-cols-2 gap-6">
-      {/* Contact Form */}
+      {}
       <div className="bg-white shadow rounded-2xl p-6">
         <h2 className="text-lg font-semibold text-gray-800">
-          Contactez Spa Prestige Collection
+          <TranslatedText text="Contactez Spa Prestige Collection" />
         </h2>
         <p className="text-sm text-gray-500 mb-4">
-          Envoyez une demande pour un service spécifique
+          <TranslatedText text="Envoyez une demande pour un service spécifique" />
         </p>
 
         {servicesError ? (
-          <p className="text-[#b6b499] text-sm">Erreur lors du chargement des services. Veuillez réessayer plus tard.</p>
+          <p className="text-[#b6b499] text-sm"><TranslatedText text="Erreur lors du chargement des services. Veuillez réessayer plus tard." /></p>
         ) : servicesLoading || servicesValidating ? (
           <div className="space-y-4">
             <Skeleton className="h-10 w-full" />
@@ -120,12 +119,12 @@ export default function AidePageView({
             <Skeleton className="h-10 w-32" />
           </div>
         ) : services.length === 0 ? (
-          <p className="text-gray-500 text-sm">Aucun service disponible pour le moment.</p>
+          <p className="text-gray-500 text-sm"><TranslatedText text="Aucun service disponible pour le moment." /></p>
         ) : (
           <form onSubmit={submitForm} className="space-y-4">
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">
-                Service
+                <TranslatedText text="Service" />
               </label>
               <select
                 name="service"
@@ -134,26 +133,26 @@ export default function AidePageView({
                 className="w-full border rounded-lg px-3 py-2 text-sm text-gray-700 focus:outline-none focus:ring-2 focus:ring-[#b6b499]"
                 required
               >
-                <option value="">Selectionnez le service</option>
+                <option value=""><TranslatedText text="Selectionnez le service" /></option>
                 {services.map((service) => (
                   <option key={service.id} value={service.id}>
-                    {service.name} {/* Adjust if needed */}
+                    {service.name} {}
                   </option>
                 ))}
-                <option value="others">Autres</option>
+                <option value="others"><TranslatedText text="Autres" /></option>
               </select>
             </div>
 
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">
-                Titre
+                <TranslatedText text="Titre" />
               </label>
               <input
                 type="text"
                 name="title"
                 value={form.title}
                 onChange={handleFormChange}
-                placeholder="Ex: Demande de rendez-vous"
+                placeholder={t("Ex: Demande de rendez-vous")}
                 className="w-full border rounded-lg px-3 py-2 text-sm text-gray-700 focus:outline-none focus:ring-2 focus:ring-[#b6b499]"
                 required
               />
@@ -161,14 +160,14 @@ export default function AidePageView({
 
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">
-                Description
+                <TranslatedText text="Description" />
               </label>
               <textarea
                 rows={4}
                 name="description"
                 value={form.description}
                 onChange={handleFormChange}
-                placeholder="Décrivez votre besoin ou question..."
+                placeholder={t("Décrivez votre besoin ou question...")}
                 className="w-full border rounded-lg px-3 py-2 text-sm text-gray-700 focus:outline-none focus:ring-2 focus:ring-[#b6b499]"
                 required
               />
@@ -178,23 +177,23 @@ export default function AidePageView({
               type="submit"
               className="bg-[#b6b499] text-white px-5 py-2 rounded-lg hover:bg-[#b6b499] transition"
             >
-              Envoyer
+              <TranslatedText text="Envoyer" />
             </button>
           </form>
         )}
       </div>
 
-      {/* Historique des demandes */}
+      {}
       <div className="bg-white shadow rounded-2xl p-6">
         <h2 className="text-lg font-semibold text-gray-800">
-          Historique des demandes
+          <TranslatedText text="Historique des demandes" />
         </h2>
         <p className="text-sm text-gray-500 mb-4">
-          Consultez vos précédentes requêtes
+          <TranslatedText text="Consultez vos précédentes requêtes" />
         </p>
 
         {messagesError ? (
-          <p className="text-[#b6b499] text-sm">Erreur lors du chargement des demandes. Veuillez réessayer plus tard.</p>
+          <p className="text-[#b6b499] text-sm"><TranslatedText text="Erreur lors du chargement des demandes. Veuillez réessayer plus tard." /></p>
         ) : messagesLoading || messagesValidating ? (
           <div className="space-y-4">
             {[...Array(3)].map((_, i) => (
@@ -209,7 +208,7 @@ export default function AidePageView({
             ))}
           </div>
         ) : allDemandes.length === 0 ? (
-          <p className="text-sm text-gray-500">Aucune demande trouvée.</p>
+          <p className="text-sm text-gray-500"><TranslatedText text="Aucune demande trouvée." /></p>
         ) : (
           <div className="space-y-4">
             {allDemandes.map((d) => (
@@ -219,14 +218,14 @@ export default function AidePageView({
               >
                 <div>
                   <h3 className="font-medium text-gray-800">{d.title}</h3>
-                  <p className="text-sm text-gray-500">Service: {d.service}</p>
+                  <p className="text-sm text-gray-500"><TranslatedText text="Service" />: {d.service}</p>
                   <p className="text-xs text-gray-400">{d.date}</p>
                 </div>
                 <button
                   onClick={() => handleVoir(d)}
                   className="bg-[#b6b499] text-white text-sm px-3 py-1 rounded-lg hover:bg-[#b6b499] transition"
                 >
-                  Voir
+                  <TranslatedText text="Voir" />
                 </button>
               </div>
             ))}
@@ -234,7 +233,7 @@ export default function AidePageView({
         )}
       </div>
 
-      {/* Modal */}
+      {}
       {openModal && selectedConversation && (
         <div className="fixed inset-0 bg-black bg-opacity-40 flex justify-center items-center z-50">
           <div className="bg-white rounded-2xl shadow-lg w-full max-w-lg">
@@ -252,7 +251,7 @@ export default function AidePageView({
 
             <div className="p-4 space-y-4 max-h-80 overflow-y-auto">
               {convError ? (
-                <p className="text-red-500 text-sm text-center">Erreur lors du chargement de la conversation. Veuillez réessayer.</p>
+                <p className="text-red-500 text-sm text-center"><TranslatedText text="Erreur lors du chargement de la conversation. Veuillez réessayer." /></p>
               ) : convLoading || convValidating ? (
                 <div className="space-y-4">
                   {[...Array(3)].map((_, i) => (
@@ -260,7 +259,7 @@ export default function AidePageView({
                   ))}
                 </div>
               ) : localConversation.length === 0 ? (
-                <p className="text-sm text-gray-500 text-center">Aucun message dans cette conversation.</p>
+                <p className="text-sm text-gray-500 text-center"><TranslatedText text="Aucun message dans cette conversation." /></p>
               ) : (
                 localConversation.map((msg, index) => (
                   <div
@@ -283,14 +282,14 @@ export default function AidePageView({
                 type="text"
                 value={reply}
                 onChange={(e) => setReply(e.target.value)}
-                placeholder="Écrire une réponse..."
+                placeholder={t("Écrire une réponse...")}
                 className="flex-1 border rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#b6b499]"
               />
               <button
                 onClick={handleSend}
                 className="bg-[#b6b499] text-white px-4 py-2 rounded-lg hover:bg-[#b6b499] transition"
               >
-                Envoyer
+                <TranslatedText text="Envoyer" />
               </button>
             </div>
           </div>

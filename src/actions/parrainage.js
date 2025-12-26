@@ -36,7 +36,6 @@ export const useSendInvites = async(data) => {
 
         return res;
     } catch (error) {
-        console.error(error)
         return error
     }
 }

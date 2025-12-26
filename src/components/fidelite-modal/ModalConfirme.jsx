@@ -1,4 +1,6 @@
 import React from "react";
+import { TranslatedText } from "../translated-text/translated-text";
+import { useTranslation } from "react-i18next";
 
 export default function ModalConfirme({ 
   isOpen, 
@@ -9,6 +11,7 @@ export default function ModalConfirme({
   confirmText = "Confirmer", 
   cancelText = "Annuler" 
 }) {
+  const { t } = useTranslation();
   if (!isOpen) return null;
 
   return (
@@ -21,13 +24,13 @@ export default function ModalConfirme({
             onClick={onCancel}
             className="px-4 py-2 rounded-lg border bg-gray-100 text-gray-700 hover:bg-gray-200"
           >
-            {cancelText}
+            {cancelText || <TranslatedText text="Annuler" />}
           </button>
           <button
             onClick={onConfirm}
             className="px-4 py-2 rounded-lg bg-[#b6b499] text-white hover:bg-[#b6b499]"
           >
-            {confirmText}
+            {confirmText || <TranslatedText text="Confirmer" />}
           </button>
         </div>
       </div>

@@ -11,6 +11,8 @@ import { useToggleWishlist, getIsWishlisted } from "src/actions/wishlists";
 import { toast } from "react-toastify";
 import { useRouter } from "src/hooks";
 import { paths } from "src/router/paths";
+import { useTranslation } from "react-i18next";
+import { CONFIG } from "src/config-global";
 
 export default function Card({
   to = "/",
@@ -25,12 +27,14 @@ export default function Card({
   price,
   duration,
   inWishlist,
-  exclusivite_spc,
+  exclusivite_image,
+  remise_desc_produit,
 }) {
-  console.log("exclusivite_spc", exclusivite_spc);
+  console.log("exclusivite_image", exclusivite_image);
   const { user } = useAuthContext();
   const [isFav, setIsFav] = useState(inWishlist);
   const router = useRouter();
+  const { t } = useTranslation();
   useEffect(() => {
     let isMounted = true;
 
@@ -49,6 +53,10 @@ export default function Card({
   }, [id, inWishlist]);
 
   const toggleFav = async () => {
+    if (id === undefined || id === null) {
+      toast.error(t("Produit introuvable"));
+      return;
+    }
     if (!user) {
       router.push(paths.auth.root);
       return;
@@ -60,19 +68,18 @@ export default function Card({
 
     toast.promise(promise, {
       pending: isFav
-        ? `Retrait de "${title}" de vos favoris...`
-        : `Ajout de "${title}" à vos favoris...`,
+        ? t(`Retrait de "${title}" de vos favoris...`)
+        : t(`Ajout de "${title}" à vos favoris...`),
       success: isFav
-        ? `"${title}" a été retiré de vos favoris !`
-        : `"${title}" a été ajouté à vos favoris !`,
-      error: `Impossible de mettre à jour "${title}"`,
+        ? t(`"${title}" a été retiré de vos favoris !`)
+        : t(`"${title}" a été ajouté à vos favoris !`),
+      error: t(`Impossible de mettre à jour "${title}"`),
       autoClose: 10000,
     });
 
     try {
       await promise;
     } catch (err) {
-      console.error(err);
       setIsFav((prev) => !prev);
     }
   };
@@ -93,38 +100,46 @@ export default function Card({
           </span>
         )}
 
-        <button
-          onClick={toggleFav}
-          className="absolute z-10 text-red-500 top-12 right-3 text-xl bg-white/70 rounded-full p-1"
-        >
-          {isFav ? <FaHeart /> : <FaRegHeart />}
-        </button>
+        {id !== undefined && id !== null && (
+          <button
+            onClick={toggleFav}
+            className="absolute z-10 text-red-500 top-12 right-3 text-xl bg-white/70 rounded-full p-1"
+          >
+            {isFav ? <FaHeart /> : <FaRegHeart />}
+          </button>
+        )}
 
         {!!image && (
           <Link to={to} className="block w-full h-64">
             <img
               src={image}
-              alt={title || "spa"}
+              alt={title || t("spa")}
               loading="lazy"
               className="w-full h-full rounded-xl object-cover object-center"
             />
           </Link>
         )}
 
-        {!!offreValue && (
+        {(offreValue || remise_desc_produit) && (
           <span className="bg-[#B6B499] w-max text-black font-bold font-roboto px-2 py-1 absolute bottom-0 left-1/2 translate-y-1/2 -translate-x-1/2 rounded-full text-s z-10">
-            <TranslatedText text={`${offreValue}% de remise`} />
+            <TranslatedText
+              text={
+                offreValue ? `${offreValue}% de remise` : remise_desc_produit
+              }
+            />
           </span>
         )}
 
-        {(exclusivite_spc === true || exclusivite_spc === 1) && (
-          <img
-            src="/spa-prestige-logo.png"
-            alt="Exclusivité"
-            className="absolute z-10 bottom-0 right-0 mr-3 mb-2 w-16 h-16 object-contain translate-y-1/5 ml-2
-               rounded-full p-2"
-            style={{ backgroundColor: "#f6f5e9" }}
-          />
+        {exclusivite_image && (
+          <Link to={to} className="absolute bottom-1 right-1 w-16 h-16 flex items-center justify-center rounded-full bg-[#f6f5e9]">
+            <img
+              src={`${CONFIG.serverUrl}/storage/${exclusivite_image}`}
+              alt={t("Exclusivité")}
+              className="w-14 h-14 object-contain"
+              loading="lazy"
+              draggable={false}
+            />
+          </Link>
         )}
       </div>
 
@@ -135,17 +150,15 @@ export default function Card({
 
         <h3 className="font-normal text-center text-lg">{title}</h3>
 
-        {!!offreValue && (
-          <div className="flex gap-1 items-center justify-center">
-            {!!duration && (
-              <>
-                <TranslatedText text="Durée" as="p" className="text-center" />
-                <strong className="mr-3">{duration}</strong>
-              </>
-            )}
-            <strong className="text-xl">{price}</strong>
-          </div>
-        )}
+        <div className="flex gap-1 items-center justify-center">
+          {!!duration && (
+            <>
+              <TranslatedText text="Durée" as="p" className="text-center" />
+              <strong className="mr-3">{duration}</strong>
+            </>
+          )}
+          <strong className="text-xl">{price ?? 0}</strong>
+        </div>
 
         {buttonTitle && (
           <div className="mt-4 w-full flex items-center justify-center">

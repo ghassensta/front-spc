@@ -1,4 +1,3 @@
-
 import { CONFIG } from "src/config-global";
 
 import axios from './axios';
@@ -21,7 +20,6 @@ export function jwtDecode(token) {
 
     return decoded;
   } catch (error) {
-    console.error('Error decoding token:', error);
     throw error;
   }
 }
@@ -44,7 +42,6 @@ export function isValidToken(accessToken) {
 
     return decoded.exp > currentTime;
   } catch (error) {
-    console.error('Error during token validation:', error);
     return false;
   }
 }

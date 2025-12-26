@@ -1,10 +1,13 @@
 import React, { useState, useMemo } from "react";
 import { useGetBonAchats } from "src/actions/bonachats";
+import { TranslatedText } from "src/components/translated-text/translated-text";
+import { useTranslation } from "react-i18next";
 
 export default function BonAchatsListView() {
   const { bonachats, loading, validating } = useGetBonAchats();
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage, setItemsPerPage] = useState(10);
+  const { t } = useTranslation();
 
   // Pagination
   const totalPages = Math.ceil((bonachats?.length || 0) / itemsPerPage);
@@ -12,8 +15,6 @@ export default function BonAchatsListView() {
     const start = (currentPage - 1) * itemsPerPage;
     return bonachats?.slice(start, start + itemsPerPage);
   }, [bonachats, currentPage, itemsPerPage]);
-
-  console.log("Lignes par page :", currentData);
   const handlePrev = () => setCurrentPage((prev) => Math.max(prev - 1, 1));
   const handleNext = () =>
     setCurrentPage((prev) => Math.min(prev + 1, totalPages));
@@ -34,10 +35,10 @@ export default function BonAchatsListView() {
           <table className="table w-full">
             <thead className="bg-gray-300">
               <tr>
-                <th>Montant</th>
-                <th>Source</th>
-                <th>Description</th>
-                <th>Statut</th>
+                <th><TranslatedText text="Montant" /></th>
+                <th><TranslatedText text="Source" /></th>
+                <th><TranslatedText text="Description" /></th>
+                <th><TranslatedText text="Statut" /></th>
               </tr>
             </thead>
             <tbody className="text-center text-sm">
@@ -65,7 +66,7 @@ export default function BonAchatsListView() {
         </p>
         <div className="flex items-center gap-2">
           <label htmlFor="itemsPerPage" className="text-sm text-gray-600 whitespace-nowrap">
-            Lignes par page :
+            <TranslatedText text="Lignes par page" /> :
           </label>
           <select
             id="itemsPerPage"
@@ -91,11 +92,11 @@ export default function BonAchatsListView() {
             <table className="table w-full min-w-[640px]">
               <thead className="bg-gray-300">
                 <tr>
-                  <th className="whitespace-nowrap">Montant</th>
-                  <th className="whitespace-nowrap">Source</th>
-                  <th className="whitespace-nowrap">Description</th>
-                  <th className="whitespace-nowrap">Statut</th>
-                  <th className="whitespace-nowrap">Utilisé le</th>
+                  <th className="whitespace-nowrap"><TranslatedText text="Montant" /></th>
+                  <th className="whitespace-nowrap"><TranslatedText text="Source" /></th>
+                  <th className="whitespace-nowrap"><TranslatedText text="Description" /></th>
+                  <th className="whitespace-nowrap"><TranslatedText text="Statut" /></th>
+                  <th className="whitespace-nowrap"><TranslatedText text="Utilisé le" /></th>
                 </tr>
               </thead>
 
@@ -104,7 +105,7 @@ export default function BonAchatsListView() {
                   <tr>
                     <td colSpan={5}>
                       <div className="flex flex-col items-center">
-                        <p className="py-2">Vous n'avez pas de bons d'achat</p>
+                        <p className="py-2"><TranslatedText text="Vous n'avez pas de bons d'achat" /></p>
                       </div>
                     </td>
                   </tr>
@@ -113,18 +114,18 @@ export default function BonAchatsListView() {
                 {currentData?.map((bon) => {
                   const sourceLabel =
                     bon.source === 0
-                      ? "Parrainage"
+                      ? t("Parrainage")
                       : bon.source === 1
-                      ? "Fidélité"
+                      ? t("Fidélité")
                       : bon.source;
 
                   const typeLabel =
                     bon.type === "points"
-                      ? `${bon.montant} points`
+                      ? `${bon.montant} ${t("points")}`
                       : `${bon.montant} €`;
 
                   const statusClass = bon.used ? "text-red-600" : "text-green-600";
-                  const statusLabel = bon.used ? "Utilisé" : "Disponible";
+                  const statusLabel = bon.used ? t("Utilisé") : t("Disponible");
 
                   const usedDate = formatDateFR(bon.used_at);
 
@@ -153,7 +154,7 @@ export default function BonAchatsListView() {
             disabled={currentPage === 1}
             className="px-3 py-1 bg-gray-200 rounded disabled:opacity-50"
           >
-            Précédent
+            <TranslatedText text="Précédent" />
           </button>
           <span className="text-sm text-gray-700">
             {currentPage} / {totalPages}
@@ -163,7 +164,7 @@ export default function BonAchatsListView() {
             disabled={currentPage === totalPages}
             className="px-3 py-1 bg-gray-200 rounded disabled:opacity-50"
           >
-            Suivant
+            <TranslatedText text="Suivant" />
           </button>
         </div>
       )}

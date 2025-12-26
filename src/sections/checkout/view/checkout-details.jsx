@@ -26,13 +26,13 @@ export default function CheckoutDetails({ checkout }) {
     expediteur = {},
   } = checkout;
 
-  // console.log(nbcmd)
+  //
 
   localStorage.removeItem("app-checkout");
   checkout.resetCheckout?.();
   return (
     <div className="max-w-6xl m-auto font-tahoma px-2">
-      {/* Header */}
+      {}
       <div className="flex justify-between items-start flex-col lg:flex-row">
         <div className="flex flex-col">
           <div className="flex gap-4 items-center">
@@ -76,7 +76,7 @@ export default function CheckoutDetails({ checkout }) {
         </div>
       </div>
 
-      {/* Articles commandés */}
+      {}
       <div className="mt-4 grid grid-cols-1 lg:grid-cols-3 gap-4">
         <div className="border p-4 col-span-2">
           <h4 className="mt-4 font-semibold text-xl">Articles commandés :</h4>
@@ -112,7 +112,7 @@ export default function CheckoutDetails({ checkout }) {
             </tbody>
           </table>
 
-          {/* Totaux */}
+          {}
           <div className="mt-4 border-t pt-2">
             <div className="flex justify-between">
               <span>Sous Total:</span>
@@ -131,7 +131,7 @@ export default function CheckoutDetails({ checkout }) {
           </div>
         </div>
 
-        {/* Expéditeur */}
+        {}
         <div className="border p-4">
           {expediteur.fullName || expediteur.nom ? (
             <>

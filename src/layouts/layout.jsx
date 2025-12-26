@@ -11,10 +11,13 @@ import { paths } from "src/router/paths";
 import etab from '../assets/spa-icons/SPC-picto-categorie-etablissement.svg';
 import { motion } from "framer-motion";
 import Header from "src/sections/home2/comp/header";
+import { TranslatedText } from "src/components/translated-text/translated-text";
+import { useTranslation } from "src/context/translation-context";
 
 export default function LayoutTheme({ children }) {
   const [header, setHeader]=useState(false)
   const router = useLocation()
+  const { translateSync } = useTranslation();
 
   useEffect(() => {
     if(router.pathname === paths.main) {
@@ -26,8 +29,6 @@ export default function LayoutTheme({ children }) {
   useScrollToTop();
 
   const { categories } = useGetCategories();
-
-  console.log("objeceeet", categories);
   const handleScrollToTop = () => {
     window.scrollTo({ top: 0, behavior: "smooth" });
   };
@@ -61,17 +62,17 @@ export default function LayoutTheme({ children }) {
                     <img
                       loading="lazy"
                       src={etab}
-                      alt="Établissements"
+                      alt={translateSync("Établissements")}
                       className="w-9 h-9 md:w-12 md:h-7 object-contain"
                     />
                     <span className="text-black text-[10px] md:text-[10px] font-tahoma uppercase tracking-wider leading-none text-center">
-                      Établissements
+                      <TranslatedText text="Établissements" />
                     </span>
                     <motion.span className="h-0.5 bg-primary w-full origin-center scale-x-0 group-hover:scale-x-100 transition-transform duration-300 mt-1" />
                   </Link>
                 </motion.div>
               </div>
-              {/* Autres catégories */}
+              {}
               {sortedCategories.map((category) => (
                 <div key={category.id} className="flex justify-center">
                   <CategoryPuce
@@ -82,7 +83,7 @@ export default function LayoutTheme({ children }) {
                 </div>
               ))}
             </div>
-            {/* MAIN CONTENT */}
+            {}
           </div>
           {header && <div className="flex-1">
             <Header />
@@ -92,7 +93,7 @@ export default function LayoutTheme({ children }) {
 
         <Footer />
 
-        {/* SCROLL TO TOP */}
+        {}
         <button
           onClick={handleScrollToTop}
           className="fixed bottom-6 right-6 z-50 bg-[#787766] hover:bg-[#676556] text-white rounded-full shadow-2xl p-1 md:p-4 transition-all duration-300"

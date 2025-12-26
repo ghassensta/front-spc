@@ -27,6 +27,9 @@ export function useGetWishlist() {
 
 export const useToggleWishlist = async (id) => {
   try {
+    if (id === undefined || id === null) {
+      throw new Error("Missing produit_id for wishlist toggle");
+    }
     const url = endpoints.wishlist.toggle;
 
     const params = { produit_id: id };
@@ -35,7 +38,7 @@ export const useToggleWishlist = async (id) => {
     mutate(endpoints.wishlist.list);
     return res;
   } catch (error) {
-    console.error(error);
+    throw error;
   }
 };
 
@@ -43,12 +46,9 @@ export async function getIsWishlisted(id) {
   try {
     const url = endpoints.wishlist.list;
     const res = await fetcher(url);
-    console.log("reswish", res);
 
     return res?.data.some((item) => item.id === id) || false;
   } catch (error) {
-    console.error(error);
     return false;
   }
 }
-

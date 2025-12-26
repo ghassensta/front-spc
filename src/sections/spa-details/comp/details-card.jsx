@@ -10,7 +10,6 @@ export default function ServiceCard({
   avisTotals = 0,
   marquesPartenaires,
 }) {
-  console.log("here",details);
   const [isExpanded, setIsExpanded] = useState(false);
   const [openSection, setOpenSection] = useState(null);
 
@@ -136,9 +135,9 @@ export default function ServiceCard({
 
   return (
     <div className="p-4 bg-white">
-      {/* Header */}
+      { }
       <div className="flex flex-col mb-4">
-        { !!details?.remise_offres && (
+        {(details?.remise_offres > 0 || details?.prix_offres) && (
           <Link
             to="#etab-services"
             className="bg-[#B6B499] w-max mb-2 text-black font-bold font-roboto px-2 py-1 rounded-2xl"
@@ -151,9 +150,14 @@ export default function ServiceCard({
               });
             }}
           >
-            Jusqu'à {details.remise_offres}% de remise
+            {details?.remise_offres > 0
+              ? `Jusqu'à ${details.remise_offres}% de remise`
+              : details.prix_offres
+                ? `${details.prix_offres}`
+                : ""}
           </Link>
         )}
+
         {notEmpty(details?.logo) && (
           <img
             lazyload="lazy"
@@ -177,8 +181,8 @@ export default function ServiceCard({
                   i <= roundedRating
                     ? "#facc15"
                     : i - 0.5 === roundedRating
-                    ? "#facc15"
-                    : "none"
+                      ? "#facc15"
+                      : "none"
                 }
                 stroke="#facc15"
               />
@@ -190,7 +194,7 @@ export default function ServiceCard({
         </div>
       </div>
 
-      {/* Description */}
+      { }
       {notEmpty(fullText) && (
         <>
           <motion.div layout transition={{ duration: 0.3, ease: "easeInOut" }}>
@@ -212,7 +216,7 @@ export default function ServiceCard({
         </>
       )}
 
-      {/* Accordion Sections */}
+      { }
       {sections.length > 0 && (
         <div className="mt-6 flex flex-col gap-0 font-roboto">
           {sections.map((section) => (

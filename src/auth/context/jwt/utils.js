@@ -20,7 +20,6 @@ export function jwtDecode(token) {
 
     return decoded;
   } catch (error) {
-    console.error('Error decoding token:', error);
     throw error;
   }
 }
@@ -43,7 +42,6 @@ export function isValidToken(accessToken) {
 
     return decoded.exp > currentTime;
   } catch (error) {
-    console.error('Error during token validation:', error);
     return false;
   }
 }
@@ -73,5 +71,7 @@ export async function setSession(accessToken = localStorage.getItem(CONFIG.stora
   localStorage.setItem(CONFIG.storageKey, accessToken);
   if (accessToken) {
     axios.defaults.headers.common.Authorization = `Bearer ${accessToken}`;
-  } 
+  } else {
+    delete axios.defaults.headers.common.Authorization;
+  }
 }

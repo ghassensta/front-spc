@@ -1,10 +1,13 @@
 import React, { useState, useRef } from "react";
 import { toast } from "react-toastify";
 import { sendDevenirPartenaire } from "src/actions/forms";
-import theImage from "src/assets/images/SPC-Essence-1975x1318-02.jpg";
-import theImage2 from "src/assets/images/SPC-equipe-ce-1975x1318-1-768x513.jpg";
+import theImage from "src/assets/SPC-Devenir-Partenaire-1975x1318-03.jpg";
+import theImage2 from "src/assets/SPC-Devenir-Partenaire-1975x1318-02.jpg";
+import { TranslatedText } from "src/components/translated-text/translated-text";
+import { useTranslation } from "src/context/translation-context";
 
 export default function DevenirPartnerView() {
+  const { translateSync } = useTranslation();
   const initialFormData = {
     etablissement: "",
     nom: "",
@@ -37,31 +40,31 @@ export default function DevenirPartnerView() {
     const errors = [];
 
     if (!formData.etablissement.trim())
-      errors.push("Le nom de l'établissement est obligatoire.");
-    if (!formData.nom.trim()) errors.push("Le nom est obligatoire.");
+      errors.push(translateSync("Le nom de l'établissement est obligatoire."));
+    if (!formData.nom.trim()) errors.push(translateSync("Le nom est obligatoire."));
     if (!formData.email.trim()) {
-      errors.push("L'email est obligatoire.");
+      errors.push(translateSync("L'email est obligatoire."));
     } else {
       const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
       if (!emailRegex.test(formData.email)) {
-        errors.push("Veuillez entrer un email valide.");
+        errors.push(translateSync("Veuillez entrer un email valide."));
       }
     }
     if (formData.telephone && !/^\+?[0-9\s-]{6,20}$/.test(formData.telephone)) {
-      errors.push("Veuillez entrer un numéro de téléphone valide.");
+      errors.push(translateSync("Veuillez entrer un numéro de téléphone valide."));
     }
     if (!formData.message.trim())
-      errors.push("Le message est obligatoire.");
-    if (!formData.secteur) errors.push("Le secteur est obligatoire.");
+      errors.push(translateSync("Le message est obligatoire."));
+    if (!formData.secteur) errors.push(translateSync("Le secteur est obligatoire."));
 
     // File validation
     if (formData.fichier) {
       const allowedTypes = ["image/jpeg", "image/png", "application/pdf"];
       if (!allowedTypes.includes(formData.fichier.type)) {
-        errors.push("Le fichier doit être en format JPEG, PNG ou PDF.");
+        errors.push(translateSync("Le fichier doit être en format JPEG, PNG ou PDF."));
       }
       if (formData.fichier.size > 5 * 1024 * 1024) {
-        errors.push("La taille du fichier ne doit pas dépasser 5 Mo.");
+        errors.push(translateSync("La taille du fichier ne doit pas dépasser 5 Mo."));
       }
     }
 
@@ -80,9 +83,9 @@ export default function DevenirPartnerView() {
     try {
       const promise = sendDevenirPartenaire(formData);
       toast.promise(promise, {
-        pending: "En cours d'envoi",
-        success: "Envoi avec succès",
-        error: "Échec lors de l'envoi",
+        pending: translateSync("En cours d'envoi"),
+        success: translateSync("Envoi avec succès"),
+        error: translateSync("Échec lors de l'envoi"),
       }).then(() => {
         setFormData(initialFormData);
         if (fileInputRef.current) {
@@ -90,14 +93,13 @@ export default function DevenirPartnerView() {
         }
       });
     } catch (error) {
-      console.error("Erreur lors de l'envoi", error);
-      toast.error("Une erreur inattendue est survenue.");
+      toast.error(translateSync("Une erreur inattendue est survenue."));
     }
   };
 
   return (
     <>
-      {/* Hero Section */}
+      {}
       <div
         className="w-screen relative left-[calc(-50vw+50%)] h-96 bg-black bg-center bg-cover bg-fixed overflow-hidden hidden md:block"
         style={{
@@ -107,21 +109,24 @@ export default function DevenirPartnerView() {
         <div className="absolute inset-0 bg-black bg-opacity-40" />
         <div className="absolute inset-0 flex items-center justify-center px-4">
           <h1 className="text-white text-4xl md:text-5xl max-w-5xl mx-auto text-center font-bold leading-snug">
-            ÉLEVEZ VOTRE ÉTABLISSEMENT AU RANG DE RÉFÉRENCE AVEC SPA & PRESTIGE
-            COLLECTION.
+            <TranslatedText text="ÉLEVEZ VOTRE ÉTABLISSEMENT AU RANG DE RÉFÉRENCE AVEC SPA & PRESTIGE COLLECTION." />
           </h1>
         </div>
       </div>
 
-      {/* Pourquoi nous rejoindre */}
+      {}
       <section className="max-w-7xl mx-auto px-4 py-16">
         <h2 className="text-4xl font-bold text-center mb-6 md:mb-12 font-serif">
-          Pourquoi nous rejoindre ?
+          <TranslatedText text="Pourquoi nous rejoindre ?" />
         </h2>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-10">
           <div className="space-y-4 text-justify font-bricolage text-sm">
             <p>
+              <strong>
+                <TranslatedText text="Boostez votre Chiffre d’Affaires :" />
+              </strong>{" "}
+              <TranslatedText text="Développez vos revenus grâce à la vente de cartes cadeaux et à des partenariats avec des comités d’entreprise." />
               <strong>Boostez votre Chiffre d’Affaires :</strong> Développez vos
               revenus grâce à la vente de cartes cadeaux et à des partenariats
               avec des comités d’entreprise.
@@ -160,7 +165,7 @@ export default function DevenirPartnerView() {
         </div>
       </section>
 
-      {/* Form */}
+      {}
       <div className="bg-[#FBF6EC] p-8 w-screen relative left-[calc(-50vw+50%)]">
         <section className="max-w-6xl mx-auto px-4 py-16 font-roboto">
           <h2 className="text-2xl md:text-3xl font-bold text-center mb-6 font-serif">
@@ -177,7 +182,7 @@ export default function DevenirPartnerView() {
             method="POST"
             className="grid grid-cols-1 md:grid-cols-2 gap-4"
           >
-            {/* Nom établissement */}
+            {}
             <label className="flex flex-col md:col-span-2">
               Nom de l'établissement*
               <input
@@ -190,7 +195,7 @@ export default function DevenirPartnerView() {
               />
             </label>
 
-            {/* Nom */}
+            {}
             <label className="flex flex-col">
               Nom*
               <input
@@ -203,7 +208,7 @@ export default function DevenirPartnerView() {
               />
             </label>
 
-            {/* Prénom */}
+            {}
             <label className="flex flex-col">
               Prénom
               <input
@@ -215,7 +220,7 @@ export default function DevenirPartnerView() {
               />
             </label>
 
-            {/* Téléphone */}
+            {}
             <label className="flex flex-col">
               Téléphone
               <input
@@ -227,7 +232,7 @@ export default function DevenirPartnerView() {
               />
             </label>
 
-            {/* Email */}
+            {}
             <label className="flex flex-col">
               E-mail*
               <input
@@ -240,7 +245,7 @@ export default function DevenirPartnerView() {
               />
             </label>
 
-            {/* Pays */}
+            {}
             <label className="flex flex-col">
               Pays
               <select
@@ -256,7 +261,7 @@ export default function DevenirPartnerView() {
               </select>
             </label>
 
-            {/* Adresse */}
+            {}
             <label className="flex flex-col">
               Adresse complète
               <input
@@ -268,7 +273,7 @@ export default function DevenirPartnerView() {
               />
             </label>
 
-            {/* Site web */}
+            {}
             <label className="flex flex-col">
               Site web
               <input
@@ -280,7 +285,7 @@ export default function DevenirPartnerView() {
               />
             </label>
 
-            {/* Rôle */}
+            {}
             <label className="flex flex-col">
               Rôle de la personne qui nous contacte
               <input
@@ -292,7 +297,7 @@ export default function DevenirPartnerView() {
               />
             </label>
 
-            {/* Secteur */}
+            {}
             <label className="flex flex-col">
               Secteur d'activité*
               <select
@@ -310,7 +315,7 @@ export default function DevenirPartnerView() {
               </select>
             </label>
 
-            {/* Comment connu */}
+            {}
             <label className="flex flex-col">
               Comment avez-vous connu Spa & Prestige Collection ?
               <input
@@ -322,7 +327,7 @@ export default function DevenirPartnerView() {
               />
             </label>
 
-            {/* Message */}
+            {}
             <label className="flex flex-col md:col-span-2">
               Message*
               <textarea
@@ -335,7 +340,7 @@ export default function DevenirPartnerView() {
               ></textarea>
             </label>
 
-            {/* Fichier */}
+            {}
             <label className="flex flex-col md:col-span-2">
               Ajouter photos (JPEG, PNG, PDF et 5 Mo maximum)
               <input
@@ -347,7 +352,7 @@ export default function DevenirPartnerView() {
               />
             </label>
 
-            {/* Submit */}
+            {}
             <div className="md:col-span-2 flex justify-center">
               <button
                 type="submit"

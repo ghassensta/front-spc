@@ -29,7 +29,6 @@ export default function PaymentCancelled({ sessionId: propSessionId }) {
     const fetchData = async () => {
       setLoading(true);
       setError(null);
-console.log("sessionId",sessionId);
 
       try {
         const res = await paymentCancel(sessionId);
@@ -41,7 +40,6 @@ console.log("sessionId",sessionId);
 
         setMessage(res.message);
       } catch (err) {
-        console.error(err);
         setError("Erreur de connexion au serveur.");
       } finally {
         setLoading(false);

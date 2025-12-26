@@ -34,12 +34,13 @@ export function useGetProduct(slug) {
       product: data?.product || null,
       avis: data?.avis || [],
       like: data?.inWishlist,
-      productLoading : isLoading,
-      etablissement: data?.etablissement || {}
+      productLoading: isLoading,
+      etablissement: data?.etablissement || {},
+      servicesEquipements: data?.servicesEquipements || [],
     }),
     [data]
   );
-
+  
   return memoizedValue;
 }
 
@@ -60,7 +61,6 @@ export const usePostProductAvis = async ({
 
     return res;
   } catch (error) {
-    console.error("❌ Erreur lors de la soumission de l'avis:", error);
     throw error;
   }
 };

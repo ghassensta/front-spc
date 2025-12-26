@@ -3,6 +3,7 @@ import { IoMdClose,IoMdMenu } from "react-icons/io";
 import { motion, AnimatePresence } from "framer-motion";
 import { useLayout } from "src/actions/layout";
 import { Link } from "react-router-dom";
+import { TranslatedText } from "src/components/translated-text/translated-text";
 
 export default function Menu({ show, onClose }) {
   const { sidebar } = useLayout();
@@ -32,7 +33,7 @@ export default function Menu({ show, onClose }) {
 
   return (
     <>
-      {/* Overlay */}
+      {}
       <AnimatePresence>
         {show && (
           <motion.div
@@ -45,7 +46,7 @@ export default function Menu({ show, onClose }) {
         )}
       </AnimatePresence>
 
-      {/* Side Menu */}
+      {}
       <AnimatePresence>
         {show && (
           <motion.div
@@ -75,13 +76,13 @@ export default function Menu({ show, onClose }) {
                           onClick={onClose} // 👈 close menu on link click
                           className="relative inline-block  hover:bg-[#B6B498] hover:text-white w-full p-2"
                         >
-                          {item.title}
+                          <TranslatedText text={item.title} />
                         </Link>
                       </motion.li>
                     ))
                 ) : (
                   <li className="text-xl font-bold text-center">
-                    Aucun élément de menu disponible
+                    <TranslatedText text="Aucun élément de menu disponible" />
                   </li>
                 )}
               </ul>

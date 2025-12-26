@@ -67,7 +67,7 @@ const InfiniteSlider = () => {
       </h3>
 
       <div className="flex items-center gap-4 mt-12">
-        {/* Button Controls */}
+        {}
         <button
           onClick={() => scroll("left")}
           className="rounded-full bg-white text-secondary shadow-md p-2 text-4xl"

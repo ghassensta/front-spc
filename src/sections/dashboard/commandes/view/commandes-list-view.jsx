@@ -3,12 +3,14 @@ import { Link } from "react-router-dom";
 import { useGetAuthOrders } from "src/actions/auth-commandes";
 import ButtonIcon from "src/components/button-icon/button-icon";
 import { paths } from "src/router/paths";
+import { TranslatedText } from "src/components/translated-text/translated-text";
+import { useTranslation } from "react-i18next";
 
 export default function CommandesListView() {
   const { orders = [], loading, validating } = useGetAuthOrders();
-  console.log("orders", orders);
   const [currentPage, setCurrentPage] = useState(1);
   const [rowsPerPage, setRowsPerPage] = useState(10);
+  const { t } = useTranslation();
 
   const safeOrders = Array.isArray(orders) ? orders : [];
   const totalPages = Math.ceil(safeOrders.length / rowsPerPage);
@@ -16,7 +18,7 @@ export default function CommandesListView() {
   const currentOrders = safeOrders.slice(startIndex, startIndex + rowsPerPage);
 
   const formatDate = (dateString) => {
-    if (!dateString) return "Date inconnue";
+    if (!dateString) return t("Date inconnue");
     return new Intl.DateTimeFormat("fr-FR", {
       weekday: "long",
       year: "numeric",
@@ -40,11 +42,12 @@ export default function CommandesListView() {
   const calculateTotalTTC = (order) => {
     if (!Array.isArray(order.lignes_commande)) return "0.00";
 
-    const totalLignes = order.lignes_commande.reduce(
-      (sum, ligne) =>
-        sum + parseFloat(ligne.prix_unitaire || 0) * (ligne.quantite || 0),
-      0
-    );
+    const totalLignes = order.lignes_commande.reduce((sum, ligne) => {
+      const prix = parseFloat(ligne.prix_unitaire || 0);
+      const quantite = parseInt(ligne.quantite || 0, 10);
+      const discount = parseFloat(ligne.remise_coupon || 0); // Remise sur la ligne
+      return sum + (prix * quantite - discount);
+    }, 0);
 
     const totalCredits = Array.isArray(order.credits)
       ? order.credits.reduce(
@@ -62,11 +65,11 @@ export default function CommandesListView() {
         <table className="table w-full">
           <thead className="bg-gray-300">
             <tr>
-              <th>Commande</th>
-              <th>Date</th>
-              <th>État</th>
-              <th>Total</th>
-              <th>Actions</th>
+              <th><TranslatedText text="Commande" /></th>
+              <th><TranslatedText text="Date" /></th>
+              <th><TranslatedText text="État" /></th>
+              <th><TranslatedText text="Total" /></th>
+              <th><TranslatedText text="Actions" /></th>
             </tr>
           </thead>
           <tbody className="text-center text-sm">
@@ -100,11 +103,11 @@ export default function CommandesListView() {
       <table className="table w-full">
         <thead className="bg-gray-300">
           <tr>
-            <th>Commande</th>
-            <th>Date</th>
-            <th>État</th>
-            <th>Total</th>
-            <th>Actions</th>
+            <th><TranslatedText text="Commande" /></th>
+            <th><TranslatedText text="Date" /></th>
+            <th><TranslatedText text="État" /></th>
+            <th><TranslatedText text="Total" /></th>
+            <th><TranslatedText text="Actions" /></th>
           </tr>
         </thead>
         <tbody className="text-center text-secondary text-sm">
@@ -113,13 +116,13 @@ export default function CommandesListView() {
               <td colSpan={5}>
                 <div className="flex flex-col items-center py-12">
                   <p className="py-4 text-gray-600 text-lg">
-                    Vous n'avez pas encore passé de commande
+                    <TranslatedText text="Vous n'avez pas encore passé de commande" />
                   </p>
                   <Link
                     to={paths.spa.list}
                     className="bg-black text-white px-8 py-3 uppercase tracking-wider hover:bg-gray-800 transition rounded"
                   >
-                    Découvrir nos offres
+                    <TranslatedText text="Découvrir nos offres" />
                   </Link>
                 </div>
               </td>
@@ -149,15 +152,15 @@ export default function CommandesListView() {
                         : "text-red-600 font-medium"
                     }
                   >
-                    {order.statut_paiement ? "Payée" : "En attente"}
+                    {order.statut_paiement ? t("Payée") : t("En attente")}
                   </td>
                   <td>
-                    {calculateTotalTTC(order)} € pour {articleCount} article
+                    {calculateTotalTTC(order)} € {t("pour")} {articleCount} {t("article")}
                     {articleCount > 1 ? "s" : ""}
                     {Array.isArray(order.credits) &&
                       order.credits.length > 0 && (
                         <div className="text-red-600 text-xs mt-1">
-                          Crédit appliqué : -
+                          <TranslatedText text="Crédit appliqué" /> : -
                           {order.credits
                             .reduce((sum, c) => sum + parseFloat(c.montant), 0)
                             .toFixed(2)}{" "}
@@ -170,7 +173,7 @@ export default function CommandesListView() {
                     <ButtonIcon
                       link={paths.dashboard.commandes.view(order.id)}
                       size="sm"
-                      title="Voir"
+                      title={t("Voir")}
                     />
                   </td>
                 </tr>
@@ -180,10 +183,10 @@ export default function CommandesListView() {
         </tbody>
       </table>
 
-      {/* ← Pagination TOUJOURS visible (comme tu le veux) */}
+      {}
       <div className="flex justify-between items-center mt-6 text-sm">
         <div>
-          <label className="mr-2">Lignes par page :</label>
+          <label className="mr-2"><TranslatedText text="Lignes par page" /> :</label>
           <select
             value={rowsPerPage}
             onChange={(e) => {
@@ -206,10 +209,10 @@ export default function CommandesListView() {
             disabled={currentPage === 1}
             className="px-4 py-2 border rounded disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-50"
           >
-            Précédent
+            <TranslatedText text="Précédent" />
           </button>
           <span className="font-medium">
-            Page {currentPage} sur {totalPages || 1}
+            <TranslatedText text="Page" /> {currentPage} <TranslatedText text="sur" /> {totalPages || 1}
           </span>
           <button
             onClick={() =>
@@ -218,7 +221,7 @@ export default function CommandesListView() {
             disabled={currentPage === totalPages || totalPages === 0}
             className="px-4 py-2 border rounded disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-50"
           >
-            Suivant
+            <TranslatedText text="Suivant" />
           </button>
         </div>
       </div>

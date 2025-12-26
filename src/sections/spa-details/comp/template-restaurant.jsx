@@ -14,16 +14,16 @@ export default function TemplateRestaurant({ data = [] }) {
 
   return (
     <>
-      {/* Bloc principal */}
+      {}
       <div className="bg-[#f9f7ed] p-6 max-w-7xl mx-auto flex flex-col md:flex-row gap-6 items-start rounded-xl">
-        {/* Carousel Section */}
+        {}
         {imagesCarousel.length > 0 && (
           <div className="w-full h-[400px] md:h-[300px]">
             <ImageCarousel images={imagesCarousel} />
           </div>
         )}
 
-        {/* Content Section */}
+        {}
         <div className="w-full">
           <span className="text-lg md:text-xl font-bold text-gray-900 mb-2">
             {data.title || "Nom du Restaurant"}
@@ -50,7 +50,7 @@ export default function TemplateRestaurant({ data = [] }) {
             )}
           </AnimatePresence>
 
-          {/* Show button only if extra_description exists */}
+          {}
           {hasExtraDescription && (
             <button
               onClick={toggleText}
@@ -64,20 +64,20 @@ export default function TemplateRestaurant({ data = [] }) {
         </div>
       </div>
 
-      {/* Bloc des cartes en dessous du bloc principal */}
+      {}
         {data.type_produit?.length > 0 && (
       <div className="bg-[#f9f7ed] p-6 grid-cols-1 md:grid-cols-1 gap-6 mt-6 rounded-xl">
           {data.type_produit.map((prod) => (
             <CardItem
               key={prod.id}
-              id={prod.id}
+              id={prod.produit_id}
               image={prod.image}
               nom={prod.nom}
               slug={prod.slug}
               description={prod.description}
               access_spa={prod.access_spa}
               prix={prod.prix}
-              exclusivite_spc={prod.exclusivite_spc}
+              exclusivite_image={prod.exclusivite_image}
               date_fin={prod.date_fin}
               type_id={prod.type_id}
               conditions_utilisation={prod.conditions_utilisation}

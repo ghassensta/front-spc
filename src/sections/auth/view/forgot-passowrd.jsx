@@ -5,18 +5,21 @@ import { forgetPassword } from "src/actions/auth";
 import Logo from "src/components/logo/logo";
 import { useRouter } from "src/hooks";
 import { paths } from "src/router/paths";
+import { TranslatedText } from "src/components/translated-text/translated-text";
+import { useTranslation } from "react-i18next";
 
 export default function ForgotPassword() {
   const [email, setEmail] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
   const router = useRouter();
+  const { t } = useTranslation();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     
     // Validation basique
     if (!email || !email.includes('@')) {
-      toast.error("Veuillez entrer une adresse email valide");
+      toast.error(t("Veuillez entrer une adresse email valide"));
       return;
     }
 
@@ -26,7 +29,7 @@ export default function ForgotPassword() {
       const response = await forgetPassword(email);
       
       // Afficher le message de succès du backend
-      toast.success(response.message || "Un email de réinitialisation a été envoyé à votre adresse.");
+      toast.success(t("Un email de réinitialisation a été envoyé à votre adresse."));
       
       // Rediriger après 2 secondes
       setTimeout(() => {
@@ -34,8 +37,7 @@ export default function ForgotPassword() {
       }, 2000);
     } catch (error) {
       // Afficher le message d'erreur
-      toast.error(error.message || "Une erreur est survenue. Veuillez réessayer.");
-      console.error(error);
+      toast.error(t("Une erreur est survenue. Veuillez réessayer."));
     } finally {
       setIsSubmitting(false);
     }
@@ -49,16 +51,16 @@ export default function ForgotPassword() {
         </Link>
       </div>
       <h1 className="text-xl font-semibold text-center mb-6">
-        Réinitialisation du mot de passe
+        <TranslatedText text="Réinitialisation du mot de passe" />
       </h1>
       
       <form onSubmit={handleSubmit} className="flex flex-col gap-4">
         <div>
           <p className="text-sm text-gray-600 mb-4">
-            Entrez votre adresse email et nous vous enverrons un lien pour réinitialiser votre mot de passe.
+            <TranslatedText text="Entrez votre adresse email et nous vous enverrons un lien pour réinitialiser votre mot de passe." />
           </p>
           <label htmlFor="email" className="text-sm text-gray-600 block mb-1">
-            Email
+            <TranslatedText text="Email" />
           </label>
           <input
             type="email"
@@ -67,7 +69,7 @@ export default function ForgotPassword() {
             required
             value={email}
             onChange={(e) => setEmail(e.target.value)}
-            placeholder="Votre adresse email"
+            placeholder={t("Votre adresse email")}
             disabled={isSubmitting}
           />
         </div>
@@ -77,7 +79,7 @@ export default function ForgotPassword() {
           disabled={isSubmitting}
           className="w-full bg-black text-white p-2 rounded hover:bg-gray-800 disabled:opacity-50 disabled:cursor-not-allowed transition-all"
         >
-          {isSubmitting ? "Envoi en cours..." : "Envoyer le lien de réinitialisation"}
+          {isSubmitting ? t("Envoi en cours...") : <TranslatedText text="Envoyer le lien de réinitialisation" />}
         </button>
       </form>
      
@@ -86,7 +88,7 @@ export default function ForgotPassword() {
           to={paths.auth.login} 
           className="text-[#B6B499] hover:underline"
         >
-          Retour à la page de connexion
+          <TranslatedText text="Retour à la page de connexion" />
         </Link>
       </p>
     </div>

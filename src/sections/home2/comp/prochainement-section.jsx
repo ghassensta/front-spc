@@ -64,7 +64,7 @@ export default function ProchainementSection({ prochainement }) {
       <div className="max-w-6xl mx-auto">
         <div className="flex flex-col md:flex-row gap-2 md:gap-6">
 
-          {/* LEFT SECTION */}
+          {}
           <div className="w-full md:w-1/2 py-8 px-3">
             <h2 className="text-3xl">{prochainement.title}</h2>
             <h3 className="text-[#B6B499] text-2xl mb-4">
@@ -87,7 +87,7 @@ export default function ProchainementSection({ prochainement }) {
             </AnimatePresence>
           </div>
 
-          {/* RIGHT SECTION */}
+          {}
           <div className="w-full md:w-1/2 items-center justify-center">
             <div className="relative rounded-3xl overflow-hidden">
               <AnimatePresence mode="wait">
@@ -109,7 +109,7 @@ export default function ProchainementSection({ prochainement }) {
               </div>
             </div>
 
-            {/* BULLETS */}
+            {}
             <div className="mt-5 mx-auto flex justify-center space-x-2">
               {cards.map((_, index) => (
                 <button

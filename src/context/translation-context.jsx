@@ -2,15 +2,17 @@ import React, { createContext, useContext, useState, useEffect } from 'react';
 
 const TranslationContext = createContext(undefined);
 
+// Cache global (persistant même entre changements de langue)
 const translationCache = new Map();
 
 export const TranslationProvider = ({ children }) => {
   const [currentLanguage, setCurrentLanguage] = useState(() => {
     const saved = localStorage.getItem('preferredLanguage');
-    return saved || 'fr';
+    return saved || 'fr'; // français par défaut
   });
 
   const [translations, setTranslations] = useState(new Map());
+  const [updateTrigger, setUpdateTrigger] = useState(0); // ← Nouveau : force re-render
 
   useEffect(() => {
     localStorage.setItem('preferredLanguage', currentLanguage);
@@ -18,7 +20,8 @@ export const TranslationProvider = ({ children }) => {
 
   const setLanguage = (lang) => {
     setCurrentLanguage(lang);
-    setTranslations(new Map());
+    setTranslations(new Map()); // on vide seulement l’état local
+    setUpdateTrigger(0);
   };
 
   const translate = async (text) => {
@@ -27,31 +30,31 @@ export const TranslationProvider = ({ children }) => {
 
     const cacheKey = `${text}:${currentLanguage}`;
 
+    // Cache par texte
     if (!translationCache.has(text)) {
       translationCache.set(text, new Map());
     }
-
     const textCache = translationCache.get(text);
+
     if (textCache.has(currentLanguage)) {
       return textCache.get(currentLanguage);
     }
 
     try {
       const url = `https://translate.googleapis.com/translate_a/single?client=gtx&sl=fr&tl=${currentLanguage}&dt=t&q=${encodeURIComponent(text)}`;
-      console.log(url)
       const response = await fetch(url);
-      const data = await response.json();
+      if (!response.ok) throw new Error('Network error');
 
-      const translatedText = data[0]
-        .map((item) => item[0])
-        .join('');
+      const data = await response.json();
+      const translatedText = data[0].map((item) => item[0]).join('');
 
       textCache.set(currentLanguage, translatedText);
       setTranslations(prev => new Map(prev).set(cacheKey, translatedText));
+      setUpdateTrigger(prev => prev + 1); // ← Déclenche le re-render global
 
       return translatedText;
     } catch (error) {
-      console.error('Translation error:', error);
+      console.warn('Translation error:', error);
       return text;
     }
   };
@@ -62,20 +65,25 @@ export const TranslationProvider = ({ children }) => {
 
     const cacheKey = `${text}:${currentLanguage}`;
 
-    if (translations.has(cacheKey)) {
-      return translations.get(cacheKey);
-    }
-
+    // Priorité : état local, puis cache global
+    if (translations.has(cacheKey)) return translations.get(cacheKey);
     if (translationCache.has(text) && translationCache.get(text).has(currentLanguage)) {
       return translationCache.get(text).get(currentLanguage);
     }
 
+    // Pas encore traduit → on déclenche l’async en arrière-plan
     translate(text);
-    return text;
+    return text; // on retourne l’original immédiatement
   };
 
   return (
-    <TranslationContext.Provider value={{ currentLanguage, setLanguage, translate, translateSync }}>
+    <TranslationContext.Provider value={{
+      currentLanguage,
+      setLanguage,
+      translate,
+      translateSync,
+      updateTrigger, // ← exposé pour forcer le re-render
+    }}>
       {children}
     </TranslationContext.Provider>
   );

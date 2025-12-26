@@ -1,18 +1,19 @@
 import React from "react";
+import { TranslatedText } from "src/components/translated-text/translated-text";
 
 export default function ConditionsPageView() {
   return (
     <div className="px-6 md:px-20 py-10 max-w-5xl mx-auto">
       <h1 className="text-3xl font-bold text-center mb-8">
-        Conditions Générales de vente.
+        <TranslatedText text="Conditions Générales de vente." />
       </h1>
 
       <div className="space-y-6 text-justify font-bricolage">
         <h2>
-          <strong>Préambule</strong>
+          <strong><TranslatedText text="Préambule" /></strong>
         </h2>
         <p>
-          <strong>1.1. Définitions</strong>
+          <strong><TranslatedText text="1.1. Définitions" /></strong>
         </p>
         <p>
           Vendeur&nbsp;: ce terme désigne Spa Prestige Collection, nom
@@ -145,11 +146,12 @@ export default function ConditionsPageView() {
           électronique.
         </p>
         <p>
-          Site&nbsp;: désigne le site internet de Spa &amp; Prestige Collection:
+          <strong><TranslatedText text="Site" />:&nbsp;</strong> désigne le site
+          internet de Spa &amp; Prestige Collection:
           www.spa-prestige-collection.com
         </p>
         <p>
-          <strong>1.2. Objet du contrat</strong>
+          <strong><TranslatedText text="1.2. Objet du contrat" /></strong>
         </p>
         <p>
           Les présentes Conditions Générales de Vente et garanties (ci-après
@@ -191,14 +193,14 @@ export default function ConditionsPageView() {
         </p>
         <p>&nbsp;</p>
         <p>
-          <strong>Commande, validation et confirmation de la commande</strong>
+          <strong><TranslatedText text="Commande, validation et confirmation de la commande" /></strong>
         </p>
         <p>
           L’Acheteur pourra passer commande des Produits par internet sur le
           site www.spa-prestige-collection.com.
         </p>
         <p>
-          <strong>2.1. Sur le Site internet&nbsp;:</strong>{" "}
+          <strong><TranslatedText text="2.1. Sur le Site internet&nbsp;:" /></strong>{" "}
           www.spa-prestige-collection.com
         </p>
         <p>
@@ -215,7 +217,7 @@ export default function ConditionsPageView() {
           auprès du Vendeur.
         </p>
         <p>
-          <strong>2.1.1. Choix du produit</strong>
+          <strong><TranslatedText text="2.1.1. Choix du produit" /></strong>
         </p>
         <p>
           Afin de passer commande sur le Site, l’Acheteur devra choisir un

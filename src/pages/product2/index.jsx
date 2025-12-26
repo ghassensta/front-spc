@@ -5,10 +5,9 @@ import { Helmet } from "react-helmet";
 
 export default function Page() {
   const { slug } = useParams();
-  const { product, avis, productLoading, like, etablissement } =
+  const { product,avis,servicesEquipements, productLoading, like, etablissement } =
     useGetProduct(slug);
 
-  // Valeurs par défaut pour le SEO si le produit n'est pas chargé
   const defaultTitle = "Détails du Produit";
   const defaultDescription = "Découvrez les détails de ce produit exclusif.";
   const defaultKeywords = "produit, spa, bien-être";
@@ -54,6 +53,7 @@ export default function Page() {
         like={like}
         etablissement={etablissement}
         loading={productLoading}
+        servicesEquipements={servicesEquipements}
       />
     </>
   );

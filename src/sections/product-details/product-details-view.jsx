@@ -34,8 +34,6 @@ export default function ProductDetailsView({
   const [isFav, setIsFav] = useState(false);
   const [visibleReviews, setVisibleReviews] = useState(5);
 
-  console.log("hello => ", product);
-
   useEffect(() => {
     if (user) {
       setName(user.name);
@@ -134,7 +132,6 @@ export default function ProductDetailsView({
       await promise;
       setIsFav((prev) => !prev);
     } catch (err) {
-      console.error(err);
 
       throw err;
     }
@@ -180,7 +177,6 @@ export default function ProductDetailsView({
         setComment("");
       })
       .catch((error) => {
-        console.error("Erreur lors de l'envoi de l'avis:", error);
       });
   };
 
@@ -227,23 +223,7 @@ export default function ProductDetailsView({
               </motion.button>
             </div>
           )}
-          {/* <div className="flex flex-wrap gap-2 mb-4">
-            {[
-              product?.type?.etablissement?.nom +
-                " - Tél. :" +
-                product?.type?.etablissement?.telephone,
-              " - Email:" + product?.type?.etablissement?.email,
-              product?.type?.etablissement?.adresse,
-              "France",
-            ].map((text, i) => (
-              <div
-                key={i}
-                className="bg-primary text-secondary font-tahoma text-xs px-3 p-1 rounded-ss-xl rounded-ee-xl"
-              >
-                {text || "Information non disponible"}
-              </div>
-            ))}
-          </div> */}
+          {}
           <h4 className="font-semibold text-[#333] text-4xl mb-4">
             {product ? product.nom : "Chargement..."}
           </h4>
@@ -295,7 +275,7 @@ export default function ProductDetailsView({
               {product.conditions_utilisation}
             </div>
           )}
-          {/* Repeater for multiple recipients */}
+          {}
           <div className="mt-6">
             <h5 className="text-xl font-semibold mb-4">
               Ajouter des destinataires pour les cartes cadeaux
@@ -388,7 +368,7 @@ export default function ProductDetailsView({
             }`}
             onClick={() => setActiveTab("createReview")}
           >
-            Créer votre avis
+            Créez votre avis
           </button>
         </div>
 
@@ -461,7 +441,7 @@ export default function ProductDetailsView({
 
             {activeTab === "createReview" && (
               <>
-                {/* Formulaire ajouter avis */}
+                {}
                 <div className="bg-white p-4 rounded-lg border border-black">
                   {user ? (
                     <>
@@ -512,7 +492,7 @@ export default function ProductDetailsView({
                           to={paths.auth.root}
                           className="w-max px-4 py-3 bg-black leading-4 text-white uppercase font-normal text-xs tracking-[3px] hover:bg-gray-800 transition font-tahoma flex items-center justify-center gap-2"
                         >
-                          Connecter Vous
+                          Connectez vous
                         </Link>
                       </div>
                     </>

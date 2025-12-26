@@ -8,6 +8,7 @@ import Card from "src/components/card/card";
 import { CONFIG } from "src/config-global";
 import Select from "react-select";
 
+
 export default function CategoriesPageView({
   cardsByCategory = [],
   villes = [],
@@ -19,10 +20,18 @@ export default function CategoriesPageView({
   slug_categorie = "",
   description = ""
 }) {
+  const overallPrices = useMemo(() => {
+    const prices = cardsByCategory.filter(card => card && typeof card.prix === 'number').map(card => card.prix);
+    if (!prices.length) return { min: 0, max: 1000 };
+    return { min: Math.floor(Math.min(...prices)), max: Math.ceil(Math.max(...prices)) };
+  }, [cardsByCategory]);
+
   const [filters, setFilters] = useState({
     etablissement: null,
     region: null,
     service: null,
+    minPrice: null,
+    maxPrice: null,
   });
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 12;
@@ -30,13 +39,13 @@ export default function CategoriesPageView({
   const typeOptions = types.map((t) => ({ value: t.id, label: t.name }));
   const villeOptions = villes.map((v) => ({ value: v.id, label: v.name }));
   const serviceOptions = services.map((s) => ({ value: s.id, label: s.name }));
-  console.log("services options",serviceOptions);
 
   const customStyles = {
     control: (provided) => ({
       ...provided,
       border: "none",
       borderRadius: "0.5rem",
+      marginTop:"0.5rem",
       boxShadow: "none",
       padding: "0.25rem",
       backgroundColor: "transparent",
@@ -74,7 +83,29 @@ export default function CategoriesPageView({
     setCurrentPage(1);
   };
 
-  console.log(cardsByCategory)
+  const handleMinPriceChange = (e) => {
+    let value = e.target.value ? parseFloat(e.target.value) : null;
+    if (value !== null) {
+      value = Math.max(overallPrices.min, Math.min(overallPrices.max, value));
+      if (filters.maxPrice !== null && value > filters.maxPrice) {
+        value = filters.maxPrice;
+      }
+    }
+    setFilters((prev) => ({ ...prev, minPrice: value }));
+    setCurrentPage(1);
+  };
+
+  const handleMaxPriceChange = (e) => {
+    let value = e.target.value ? parseFloat(e.target.value) : null;
+    if (value !== null) {
+      value = Math.max(overallPrices.min, Math.min(overallPrices.max, value));
+      if (filters.minPrice !== null && value < filters.minPrice) {
+        value = filters.minPrice;
+      }
+    }
+    setFilters((prev) => ({ ...prev, maxPrice: value }));
+    setCurrentPage(1);
+  };
 
   const filteredCards = useMemo(() => {
     return cardsByCategory.filter((card) => {
@@ -82,8 +113,8 @@ export default function CategoriesPageView({
 
       const matchType = filters.etablissement
         ? card.types_etablissement_ids?.includes(
-            parseInt(filters.etablissement)
-          )
+          parseInt(filters.etablissement)
+        )
         : true;
 
       const matchRegion = filters.region
@@ -94,7 +125,11 @@ export default function CategoriesPageView({
         ? card.type_equipement_ids?.includes(parseInt(filters.service))
         : true;
 
-      return matchType && matchRegion && matchService;
+      const matchPrice =
+        (filters.minPrice === null || card.prix >= filters.minPrice) &&
+        (filters.maxPrice === null || card.prix <= filters.maxPrice);
+
+      return matchType && matchRegion && matchService && matchPrice;
     });
   }, [cardsByCategory, filters]);
 
@@ -161,12 +196,16 @@ export default function CategoriesPageView({
   if (filterLoading) {
     return <FiltersSkeleton />;
   }
-  //console.log("card",card);
+  //
+
+  const displayMin = filters.minPrice ?? overallPrices.min;
+  const displayMax = filters.maxPrice ?? overallPrices.max;
 
   return (
+
     <div className="max-w-6xl mx-auto p-1">
       <p className="text-center text-4xl font-semibold my-4">Filtrer par</p>
-      <div className="grid grid-cols-1 md:grid-cols-3 px-2 gap-4 font-roboto mb-8">
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 px-2 gap-4 font-roboto mb-8">
         <div className="border rounded-lg">
           <Select
             instanceId="select-region"
@@ -201,7 +240,7 @@ export default function CategoriesPageView({
           />
         </div>
 
-        {/* Services & équipements */}
+        {}
         <div className="border rounded-lg">
           <Select
             instanceId="select-service"
@@ -219,6 +258,69 @@ export default function CategoriesPageView({
             menuPosition="fixed"
           />
         </div>
+        <div className="border rounded-lg p-2">
+          <div className="relative mb-6 h-2">
+            <div className="absolute w-full h-1 bg-gray-200 rounded-full top-1/2 transform -translate-y-1/2"></div>
+            <div
+              className="absolute h-1 bg-black rounded-full top-1/2 transform -translate-y-1/2"
+              style={{
+                left: `${((displayMin - overallPrices.min) / (overallPrices.max - overallPrices.min)) * 100}%`,
+                width: `${((displayMax - displayMin) / (overallPrices.max - overallPrices.min)) * 100}%`,
+              }}
+            ></div>
+            <input
+              type="range"
+              aria-label="De"
+              className="absolute w-full top-1/2 transform -translate-y-1/2 appearance-none bg-transparent pointer-events-auto h-1 range-slider"
+              min={overallPrices.min}
+              max={overallPrices.max}
+              step="1"
+              value={displayMin}
+              onChange={handleMinPriceChange}
+            />
+            <input
+              type="range"
+              aria-label="A"
+              className="absolute w-full top-1/2 transform -translate-y-1/2 appearance-none bg-transparent pointer-events-auto h-1 range-slider"
+              min={overallPrices.min}
+              max={overallPrices.max}
+              step="1"
+              value={displayMax}
+              onChange={handleMaxPriceChange}
+            />
+          </div>
+          <div className="flex items-center justify-between gap-2">
+            <label className="flex items-center flex-1 text-sm">
+              <span className="prefix text-gray-500 mr-1">€</span>
+              <input
+                aria-label="De"
+                className="field w-full bg-transparent focus:outline-none"
+                type="number"
+                min={overallPrices.min}
+                max={overallPrices.max}
+                step="1"
+                placeholder={overallPrices.min}
+                value={filters.minPrice ?? ""}
+                onChange={handleMinPriceChange}
+              />
+            </label>
+            <span className="text-gray-500 text-sm">à</span>
+            <label className="flex items-center flex-1 text-sm">
+              <span className="prefix text-gray-500 mr-1">€</span>
+              <input
+                aria-label="A"
+                className="field w-full bg-transparent focus:outline-none"
+                type="number"
+                min={overallPrices.min}
+                max={overallPrices.max}
+                step="1"
+                placeholder={overallPrices.max}
+                value={filters.maxPrice ?? ""}
+                onChange={handleMaxPriceChange}
+              />
+            </label>
+          </div>
+        </div>
       </div>
 
       <div className="mb-10">
@@ -232,7 +334,7 @@ export default function CategoriesPageView({
         <CategoriesSkeleton />
       ) : (
         <>
-          {/* Affichage du nombre de résultats et de la page */}
+          {}
           {filteredCards.length > 0 && (
             <div className="px-3 mb-4 flex justify-between items-center text-sm text-gray-600">
               <p>
@@ -263,7 +365,8 @@ export default function CategoriesPageView({
                   inWishlist={card.inWishlist}
                   price={card.prix+ "€"}
                   duration={card.duree}
-                  exclusivite_spc={card.exclusivite_spc}
+                  exclusivite_image={card.exclusivite_image}
+                  remise_desc_produit={card.remise_desc_produit}
                 />
               ))
             ) : (
@@ -336,5 +439,8 @@ export default function CategoriesPageView({
         <ButtonIcon title="Accueil" link={paths.main} />
       </div>
     </div>
+    
   );
 }
+
+

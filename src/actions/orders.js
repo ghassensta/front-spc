@@ -42,8 +42,6 @@ export function useGetOrder(id) {
     
     const { data } = useSWR(url, fetcher, swrOptions);
 
-    console.log(data)
-
     const memoizedValue = useMemo(
         () => ({
             order: data?.data || null,

@@ -19,6 +19,7 @@ import { usePostProductAvis } from "src/actions/products";
 import ProductDetailsSkeleton from "./product-details-skeleton";
 import { CONFIG } from "src/config-global";
 import Section3 from "src/sections/home2/comp/section2";
+import { useTranslation } from "src/context/translation-context";
 
 export default function ProductDetailsView({
   product,
@@ -26,8 +27,8 @@ export default function ProductDetailsView({
   like = false,
   etablissement,
   loading,
+  servicesEquipements,
 }) {
-  console.log(etablissement);
   const gallery = [
     ...(etablissement?.image_avant ? [etablissement.image_avant] : []),
     ...(etablissement?.gallerie?.length > 0
@@ -46,6 +47,7 @@ export default function ProductDetailsView({
     return <ProductDetailsSkeleton />;
   }
 
+  //console.log("producttttttttttttt", product);
   const spaData = {
     iframeUrl: etablissement?.iframeUrl,
     nom: etablissement?.nom,
@@ -57,6 +59,7 @@ export default function ProductDetailsView({
   const navigate = useNavigate();
   const checkout = useCheckoutContext();
   const { user } = useAuthContext();
+  const { translateSync } = useTranslation();
   const [rating, setRating] = useState(0);
 
   const [name, setName] = useState(user?.name + " " + user?.lastName || "");
@@ -67,13 +70,15 @@ export default function ProductDetailsView({
   const [isFav, setIsFav] = useState(false);
   const validateForm = () => {
     if (!name || !email) {
-      toast.error("Veuillez remplir tous les champs (nom, email) !");
+      toast.error(
+        translateSync("Veuillez remplir tous les champs (nom, email) !")
+      );
       return false;
     }
 
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!emailRegex.test(email)) {
-      toast.error("Veuillez entrer un email valide.");
+      toast.error(translateSync("Veuillez entrer un email valide."));
       return false;
     }
 
@@ -94,18 +99,16 @@ export default function ProductDetailsView({
           slug: product.slug,
         }),
         {
-          pending: "Envoi de votre avis...",
-          success: "Avis envoyé avec succès !",
-          error: "Erreur lors de l'envoi de l'avis.",
+          pending: translateSync("Envoi de votre avis..."),
+          success: translateSync("Avis envoyé avec succès !"),
+          error: translateSync("Erreur lors de l'envoi de l'avis."),
         }
       )
       .then(() => {
         setRating(0);
         setComment("");
       })
-      .catch((error) => {
-        console.error("Erreur lors de l'envoi de l'avis:", error);
-      });
+      .catch((error) => {});
   };
 
   const handleLoadMore = () => {
@@ -114,7 +117,7 @@ export default function ProductDetailsView({
 
   const addProductToCheckout = () => {
     if (!product) {
-      toast.error("Produit non disponible.");
+      toast.error(translateSync("Produit non disponible."));
       return;
     }
     // Check for duplicate emails (ignore empty emails)
@@ -124,7 +127,9 @@ export default function ProductDetailsView({
     const emailSet = new Set(emails);
     if (emailSet.size !== emails.length) {
       toast.error(
-        "Emails en double détectés. Chaque destinataire doit avoir un email unique."
+        translateSync(
+          "Emails en double détectés. Chaque destinataire doit avoir un email unique."
+        )
       );
       return;
     }
@@ -135,7 +140,10 @@ export default function ProductDetailsView({
     const uniqueRecipients = Array.from(
       new Map(
         recipients.map((r, i) => {
-          const key = (r.email || "").trim() !== "" ? r.email.toLowerCase() : `__idx_${i}`;
+          const key =
+            (r.email || "").trim() !== ""
+              ? r.email.toLowerCase()
+              : `__idx_${i}`;
           return [key, r];
         })
       ).values()
@@ -159,17 +167,32 @@ export default function ProductDetailsView({
 
     // Clear repeater state after adding (preserve today as default date)
     setRecipients([
-      { fullName: "", email: "", message: "", date: new Date().toISOString().slice(0, 10) },
+      {
+        fullName: "",
+        email: "",
+        message: "",
+        date: new Date().toISOString().slice(0, 10),
+      },
     ]);
     navigate(paths.checkout);
   };
   const [recipients, setRecipients] = useState([
-    { fullName: "", email: "", message: "", date: new Date().toISOString().slice(0, 10) },
+    {
+      fullName: "",
+      email: "",
+      message: "",
+      date: new Date().toISOString().slice(0, 10),
+    },
   ]);
   const handleAddRecipient = () => {
     setRecipients([
       ...recipients,
-      { fullName: "", email: "", message: "", date: new Date().toISOString().slice(0, 10) },
+      {
+        fullName: "",
+        email: "",
+        message: "",
+        date: new Date().toISOString().slice(0, 10),
+      },
     ]);
   };
 
@@ -206,7 +229,9 @@ export default function ProductDetailsView({
     const promise = useToggleWishlist(product.id);
 
     toast.promise(promise, {
-      pending: isFav ? "Retirer de favoris..." : "Ajouter aux favoris...",
+      pending: isFav
+        ? translateSync("Retirer de favoris...")
+        : translateSync("Ajouter aux favoris..."),
     });
 
     try {
@@ -217,8 +242,6 @@ export default function ProductDetailsView({
       await promise;
       setIsFav((prev) => !prev);
     } catch (err) {
-      console.error(err);
-
       throw err;
     }
   };
@@ -263,22 +286,26 @@ export default function ProductDetailsView({
                 image={product?.image}
               />
             </div>
-            <div className="flex flex-wrap gap-3 mt-10 font-tahoma">
-              {categories.map((cat) => (
-                <span className="bg-[#e2dfba] px-2 py-1 text-sm rounded">
-                  {cat}
-                </span>
-              ))}
-            </div>
+            {servicesEquipements.length > 0 && (
+              <div className="flex flex-wrap gap-3 mt-10 font-tahoma">
+                {servicesEquipements.map((cat, index) => (
+                  <TranslatedText
+                    key={index}
+                    text={cat}
+                    className="bg-[#e2dfba] px-2 py-1 text-sm rounded"
+                  />
+                ))}
+              </div>
+            )}
 
             {product?.remise_produit > 0 && (
               <span className="inline-block bg-[#B6B499] text-black font-bold font-roboto px-4 py-2 rounded-full text-sm mt-4">
-                {product.remise_produit}% de remise
+                <TranslatedText text={`${product.remise_produit}% de remise`} />
               </span>
             )}
 
             <h1 className="text-4xl font-bold mb-4 text-[#333] my-2">
-              {product?.nom}
+              <TranslatedText text={product?.nom} />
             </h1>
 
             <div className="flex font-tahoma items-center gap-1 mb-2">
@@ -298,7 +325,7 @@ export default function ProductDetailsView({
                 />
               ))}
               <span className="text-sm text-gray-600 ml-2">
-                ({stars.toFixed(1)} avis){" "}
+                ({stars.toFixed(1)} <TranslatedText text="avis" />){" "}
                 <a href="#avis">
                   <TranslatedText text="Déposer un avis" />
                 </a>
@@ -312,7 +339,9 @@ export default function ProductDetailsView({
             )}
 
             <div className="font-normal text-[#333] text-lg font-tahoma mb-2">
-              {product?.prix ? `${product.prix} €` : "Prix non disponible"}
+              {product?.prix
+                ? `${product.prix} €`
+                : translateSync("Prix non disponible")}
             </div>
             {!!product?.prix_au_lieu_de && (
               <TranslatedText
@@ -322,14 +351,22 @@ export default function ProductDetailsView({
               />
             )}
 
-            <div className="leading-base text-base font-light font-tahoma text-[#333] my-3">
-              {product?.description || "Aucune description disponible."}
-            </div>
+            <div
+              className="leading-base text-base font-light font-tahoma text-[#333] my-3"
+              dangerouslySetInnerHTML={{
+                __html:
+                  product?.description ||
+                  translateSync("Aucune description disponible."),
+              }}
+            />
 
             {product?.conditions_utilisation && (
-              <div className="leading-base text-base font-tahoma">
-                {product.conditions_utilisation}
-              </div>
+              <div
+                className="leading-base text-base font-tahoma"
+                dangerouslySetInnerHTML={{
+                  __html: product.conditions_utilisation,
+                }}
+              />
             )}
 
             <Link
@@ -338,6 +375,15 @@ export default function ProductDetailsView({
             >
               <TranslatedText text="Voir l'établissement" />
             </Link>
+            <div className="flex flex-col items-center gap-4 mt-10">
+              {/* Bouton Ajouter au panier */}
+              <button
+                onClick={addProductToCheckout}
+                className="w-max rounded-full px-5 py-3 bg-black text-white uppercase font-normal text-xs tracking-[3px] hover:bg-gray-800 transition font-tahoma flex items-center justify-center gap-2"
+              >
+                <TranslatedText text="Ajouter au panier" />
+              </button>
+            </div>
           </div>
 
           <div className="bg-[beige] px-8 py-4 col-span-2 lg:col-span-1 rounded-2xl">
@@ -348,7 +394,9 @@ export default function ProductDetailsView({
             )}
 
             <div className="font-normal text-[#333] text-2xl font-tahoma mb-2">
-              {product?.prix ? `${product.prix} €` : "Prix non disponible"}
+              {product?.prix
+                ? `${product.prix} €`
+                : translateSync("Prix non disponible")}
             </div>
             {!!product?.prix_au_lieu_de && (
               <TranslatedText
@@ -357,30 +405,31 @@ export default function ProductDetailsView({
                 as="span"
               />
             )}
-            {!!product?.exclusivite_spc && (
+            {product?.type_exclusivite?.image_path && (
               <img
                 loading="lazy"
-                src={exclusive}
-                alt="Exclusivité"
-                className="w-auto h-auto my-2"
+                src={`${CONFIG.serverUrl}/storage/${product.type_exclusivite.image_path}`}
+                alt={translateSync("Exclusivité")}
+                className="w-auto h-auto my-2 max-w-[100px]"
               />
             )}
+
             <div className="mt-4 font-tahoma">
               <span className="text-xl font-semibold mb-4">
-                Destinataire : {recipients.length}
+                <TranslatedText text={`Destinataire : ${recipients.length}`} />
               </span>
               {recipients.map((recipient, index) => (
                 <div key={index} className="mb-4">
                   <div className="flex justify-between items-center mb-2">
                     <span className="text-sm font-normal">
-                      Destinataire {index + 1}
+                      <TranslatedText text={`Destinataire ${index + 1}`} />
                     </span>
                     {recipients.length > 1 && (
                       <button
                         onClick={() => handleRemoveRecipient(index)}
                         className="mt-2 text-xs text-red-500 hover:text-red-700"
                       >
-                        Supprimer ce destinataire
+                        <TranslatedText text="Supprimer ce destinataire" />
                       </button>
                     )}
                   </div>
@@ -388,7 +437,7 @@ export default function ProductDetailsView({
                     <input
                       type="text"
                       className="w-full border border-gray-300 p-2"
-                      placeholder="Nom et prénom"
+                      placeholder={translateSync("Nom et prénom (optionnel)")}
                       value={recipient.fullName}
                       onChange={(e) =>
                         handleRecipientChange(index, "fullName", e.target.value)
@@ -397,7 +446,9 @@ export default function ProductDetailsView({
                     <input
                       type="email"
                       className="w-full border border-gray-300 p-2"
-                      placeholder="Email du destinataire (optionnel)"
+                      placeholder={translateSync(
+                        "Email du destinataire (optionnel)"
+                      )}
                       value={recipient.email}
                       onChange={(e) =>
                         handleRecipientChange(index, "email", e.target.value)
@@ -405,7 +456,7 @@ export default function ProductDetailsView({
                     />
                     <textarea
                       className="w-full border border-gray-300 p-2 mt-2"
-                      placeholder="Votre message (optionnel)"
+                      placeholder={translateSync("Votre message (optionnel)")}
                       value={recipient.message || ""}
                       onChange={(e) =>
                         handleRecipientChange(index, "message", e.target.value)
@@ -413,17 +464,20 @@ export default function ProductDetailsView({
                       rows={3}
                     />
                     <p className="text-sm text-gray-600 mt-2">
-                      Choisissez la date d'envoi (la carte cadeau sera envoyée
-                      à 7h du matin le jour J)
+                      <TranslatedText text="Choisissez la date d'envoi (la carte cadeau sera envoyée à 7h du matin le jour J)" />
                     </p>
                     <input
                       type="date"
                       className="w-full border border-gray-300 p-2 mt-1"
-                      value={recipient.date || new Date().toISOString().slice(0, 10)}
+                      value={
+                        recipient.date || new Date().toISOString().slice(0, 10)
+                      }
+                      min={new Date().toISOString().slice(0, 10)}
                       onChange={(e) =>
                         handleRecipientChange(index, "date", e.target.value)
                       }
                     />
+
                     <button
                       onClick={toggleFav}
                       className="z-10  top-3 right-3 text-lg"
@@ -432,20 +486,22 @@ export default function ProductDetailsView({
                         <span className="flex items-center justify-center gap-2">
                           <FaHeart className="text-red-500" />
                           <span className="text-sm">
-                            Retirer de votre whishliste
+                            <TranslatedText text="Retirer de votre wishlist" />
                           </span>{" "}
                         </span>
                       ) : (
                         <span className="flex items-center justify-center gap-2">
                           <FaRegHeart className="text-red-500" />
                           <span className="text-sm">
-                            Ajouter à votre whisliste
+                            <TranslatedText text="Ajouter à votre wishlist" />
                           </span>
                         </span>
                       )}
                     </button>
                     <div className="flex items-center gap-2 text-xs">
-                      <span>Quantité :</span>
+                      <span>
+                        <TranslatedText text="Quantité :" />
+                      </span>
                       <input
                         type="number"
                         className="w-16 border border-gray-300 p-2"
@@ -460,7 +516,7 @@ export default function ProductDetailsView({
                 onClick={handleAddRecipient}
                 className="px-4 py-2 bg-gray-200 text-black text-sm rounded-full hover:bg-gray-300 transition mb-4"
               >
-                Ajouter un autre destinataire
+                <TranslatedText text="Ajouter un autre destinataire" />
               </button>
 
               <div className="flex">
@@ -468,7 +524,9 @@ export default function ProductDetailsView({
                   onClick={addProductToCheckout}
                   className="w-max px-5 py-3 bg-black leading-4 rounded-full text-white uppercase font-normal text-xs tracking-[3px] hover:bg-gray-800 transition font-tahoma flex items-center justify-center gap-2"
                 >
-                  <span>Ajouter au panier</span>
+                  <span>
+                    <TranslatedText text="Ajouter au panier" />
+                  </span>
                 </button>
               </div>
             </div>
@@ -499,7 +557,7 @@ export default function ProductDetailsView({
               }`}
               onClick={() => setActiveTab("reviews")}
             >
-              Avis
+              <TranslatedText text="Avis" />
             </button>
             <button
               className={`px-4 py-2 font-semibold ${
@@ -509,7 +567,7 @@ export default function ProductDetailsView({
               }`}
               onClick={() => setActiveTab("createReview")}
             >
-              Créer votre avis
+              <TranslatedText text="Créez votre avis" />
             </button>
           </div>
 
@@ -556,7 +614,7 @@ export default function ProductDetailsView({
                               onClick={handleLoadMore}
                               className="px-4 py-2 bg-gray-200 text-black text-sm rounded-md hover:bg-gray-300 transition"
                             >
-                              Charger plus d'avis
+                              <TranslatedText text="Charger plus d'avis" />
                             </button>
                           </div>
                         )}
@@ -564,15 +622,17 @@ export default function ProductDetailsView({
                     ) : (
                       <>
                         <p className="text-gray-600">
-                          Aucun avis pour le moment.
+                          <TranslatedText text="Aucun avis pour le moment." />
                         </p>
                         <p className="text-gray-600">
-                          Soyez le premier à laisser votre avis sur "
-                          {product?.nom || "ce produit"}" !
+                          <TranslatedText
+                            text={`Soyez le premier à laisser votre avis sur "${
+                              product?.nom || translateSync("ce produit")
+                            }" !`}
+                          />
                         </p>
                         <p className="text-gray-600">
-                          Votre adresse e-mail ne sera pas publiée. Les champs
-                          obligatoires sont indiqués avec *
+                          <TranslatedText text="Votre adresse e-mail ne sera pas publiée. Les champs obligatoires sont indiqués avec *" />
                         </p>
                       </>
                     )}
@@ -582,17 +642,17 @@ export default function ProductDetailsView({
 
               {activeTab === "createReview" && (
                 <>
-                  {/* Formulaire ajouter avis */}
+                  {}
                   <div className="bg-white p-4 rounded-lg border border-black">
                     {user ? (
                       <>
                         <span className="font-semibold text-lg mb-2">
-                          Laisser un avis
+                          <TranslatedText text="Laisser un avis" />
                         </span>
                         <input
                           type="text"
                           className="w-full border border-gray-300 rounded-lg p-2 mb-3"
-                          placeholder="Votre nom*"
+                          placeholder={translateSync("Votre nom*")}
                           value={name}
                           onChange={(e) => setName(e.target.value)}
                           disabled={!!name}
@@ -600,7 +660,7 @@ export default function ProductDetailsView({
                         <input
                           type="email"
                           className="w-full border border-gray-300 rounded-lg p-2 mb-3"
-                          placeholder="Votre email*"
+                          placeholder={translateSync("Votre email*")}
                           value={email}
                           onChange={(e) => setEmail(e.target.value)}
                           disabled={!!name}
@@ -608,7 +668,9 @@ export default function ProductDetailsView({
                         <textarea
                           rows={4}
                           className="w-full border border-gray-300 rounded-lg p-2 mb-3"
-                          placeholder="Partagez votre expérience..."
+                          placeholder={translateSync(
+                            "Partagez votre expérience..."
+                          )}
                           value={comment}
                           onChange={(e) => setComment(e.target.value)}
                         />
@@ -619,7 +681,7 @@ export default function ProductDetailsView({
                             className="w-max px-4 py-3 bg-black leading-4 text-white uppercase font-normal text-xs tracking-[3px] hover:bg-gray-800 transition font-tahoma flex items-center justify-center gap-2"
                             type="button"
                           >
-                            Envoyer l'avis
+                            <TranslatedText text="Envoyer l'avis" />
                           </button>
                         </div>
                       </>
@@ -627,13 +689,13 @@ export default function ProductDetailsView({
                       <>
                         <div className="flex flex-col justify-center items-center">
                           <p className="text-xl mb-4">
-                            Veuillez vous connecter pour mettre un avis
+                            <TranslatedText text="Veuillez vous connecter pour mettre un avis" />
                           </p>
                           <button
                             onClick={() => goToAuth()}
                             className="w-max px-4 py-3 bg-black leading-4 text-white uppercase font-normal text-xs tracking-[3px] hover:bg-gray-800 transition font-tahoma flex items-center justify-center gap-2 rounded-full"
                           >
-                            Connecter Vous
+                            <TranslatedText text="Connectez vous" />
                           </button>
                         </div>
                       </>

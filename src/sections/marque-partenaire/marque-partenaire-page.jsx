@@ -2,8 +2,8 @@ import React, { useState, useRef } from "react";
 import { toast } from "react-toastify";
 import { sendMarques } from "src/actions/forms";
 import validator from "validator"; // Optionnel : pour validation URL avancée
-import theImage from "src/assets/images/SPC-Essence-1975x1318-02.jpg";
-import theImage2 from "src/assets/images/SPC-equipe-ce-1975x1318-1-768x513.jpg";
+import theImage from "src/assets/SPC-Collab-marque-1975x1318-01.jpg";
+import theImage2 from "src/assets/SPC-Collab-marque-1975x1318-03.jpg";
 
 export default function MarquePartenairePage() {
   const initialFormData = {
@@ -102,7 +102,6 @@ export default function MarquePartenairePage() {
         fileInputRef.current.value = "";
       }
     } catch (error) {
-      console.error("Erreur lors de l'envoi", error);
       toast.error("Une erreur inattendue est survenue.");
     }
   };
@@ -110,7 +109,7 @@ export default function MarquePartenairePage() {
   // Le reste du JSX reste inchangé...
   return (
     <>
-      {/* Hero Section */}
+      {}
       <div
         className="w-screen relative left-[calc(-50vw+50%)] h-96 bg-black bg-center bg-cover bg-fixed overflow-hidden hidden md:block"
         style={{
@@ -126,7 +125,7 @@ export default function MarquePartenairePage() {
           </h1>
         </div>
       </div>
-      {/* Pourquoi nous rejoindre */}
+      {}
       <section className="max-w-6xl mx-auto px-4 py-16">
         <h2 className="text-5xl italic text-center mb-12 font-serif">
           Pourquoi nous rejoindre ?
@@ -176,7 +175,7 @@ export default function MarquePartenairePage() {
           </div>
         </div>
       </section>
-      {/* Form */}
+      {}
       <div className="bg-[#FBF6EC] p-8 w-screen relative left-[calc(-50vw+50%)]">
         <section className="max-w-6xl mx-auto px-4">
           <h2 className="text-xl italic text-center mb-6 font-serif">

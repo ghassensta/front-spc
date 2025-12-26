@@ -3,7 +3,7 @@ import React from 'react'
 export default function PageSkeleton() {
   return (
     <div className="max-w-6xl mx-auto py-10 px-4 grid grid-cols-1 md:grid-cols-3 gap-8">
-        {/* Skeleton for Articles Grid */}
+        {}
         <div className="md:col-span-2 grid grid-cols-1 sm:grid-cols-2 gap-6">
           {[...Array(4)].map((_, index) => (
             <div
@@ -22,7 +22,7 @@ export default function PageSkeleton() {
           ))}
         </div>
 
-        {/* Skeleton for Sidebar */}
+        {}
         <div>
           <div className="mb-6">
             <div className="w-full h-10 bg-gray-200 rounded" />

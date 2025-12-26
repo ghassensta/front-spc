@@ -35,8 +35,6 @@ export default function Page() {
   const canonicalUrl = `${window.location.origin}/categories/${
     category?.slug || slug
   }`;
-
-  console.log(category)
   return (
     <>
       <Helmet>
@@ -50,18 +48,18 @@ export default function Page() {
           content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1"
         />
 
-        {/* Open Graph */}
+        {}
         <meta property="og:title" content={pageTitle} />
         <meta property="og:description" content={pageDescription} />
         <meta property="og:type" content="website" />
         <meta property="og:url" content={canonicalUrl} />
 
-        {/* Twitter Card */}
+        {}
         <meta name="twitter:card" content="summary_large_image" />
         <meta name="twitter:title" content={pageTitle} />
         <meta name="twitter:description" content={pageDescription} />
 
-        {/* Canonical */}
+        {}
         <link rel="canonical" href={canonicalUrl} />
       </Helmet>
 

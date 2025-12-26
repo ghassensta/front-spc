@@ -11,7 +11,6 @@ export const sendDevenirPartenaire = async (data) => {
 
     return res;
   } catch (error) {
-    console.error(error);
 
     throw error;
   }
@@ -27,7 +26,6 @@ export const sendEntreprise = async (data) => {
 
     return res;
   } catch (error) {
-    console.error(error);
 
     throw error;
   }
@@ -43,7 +41,6 @@ export const sendMarques = async (data) => {
 
     return res;
   } catch (error) {
-    console.error(error);
 
     throw error;
   }
@@ -59,7 +56,6 @@ export const sendMessage = async (data) => {
 
     return res;
   } catch (error) {
-    console.error(error);
 
     throw error;
   }

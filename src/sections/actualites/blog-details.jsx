@@ -10,9 +10,9 @@ import { Link } from "react-router-dom";
 import { CONFIG } from "src/config-global";
 import { paths } from "src/router/paths";
 import theImage from "src/assets/images/SPC-Essence-1975x1318-02.jpg";
+import { TranslatedText } from "src/components/translated-text/translated-text";
 
 export default function BlogDetails({ actualitie }) {
-  console.log(actualitie);
   return (
     <>
       <div
@@ -23,7 +23,7 @@ export default function BlogDetails({ actualitie }) {
         }}
       >
         <div className="absolute inset-0 bg-black bg-opacity-40 " />{" "}
-        {/* overlay */}
+        {}
         <div className="absolute inset-0 flex items-center justify-center max-w-6xl mx-auto px-3 text-center">
           <h1 className="text-white text-4xl font-bold">{actualitie?.title}</h1>
         </div>
@@ -32,7 +32,7 @@ export default function BlogDetails({ actualitie }) {
         <img
           lazyload="lazy"
           src={CONFIG.serverUrl + "/storage/" + actualitie?.thumbnail_path}
-          alt=""
+          alt={actualitie?.title || ""}
           className="mb-12"
         />
 
@@ -41,13 +41,13 @@ export default function BlogDetails({ actualitie }) {
             className="prose space-y-4 max-w-none font-tahoma blog-container" // optional Tailwind typography plugin for better style
             dangerouslySetInnerHTML={{ __html: actualitie?.content }}
           />
-          {/* {actualitie?.content} */}
+          {}
           <div className="w-full flex items-center justify-center mb-4">
             <Link
               to={paths.spa.list}
               className="bg-[#B6B499] font-roboto  text-white py-2 px-4 rounded-full"
             >
-              NOS ÉTABLISSEMENTS PARTENAIRES
+              <TranslatedText text="NOS ÉTABLISSEMENTS PARTENAIRES" />
             </Link>
           </div>
           <hr className="border-black" />
@@ -59,7 +59,7 @@ export default function BlogDetails({ actualitie }) {
               className="flex items-center font-bold gap-2"
             >
               <FaChevronLeft />
-              Précédent
+              <TranslatedText text="Précédent" />
             </Link>
             <Link
               to={paths.actualitesDetails(
@@ -67,21 +67,14 @@ export default function BlogDetails({ actualitie }) {
               )}
               className="flex items-center font-bold gap-2"
             >
-              Suivant
+              <TranslatedText text="Suivant" />
               <FaChevronRight />
             </Link>
           </div>
-          {/*  <div className="font-bricolage flex items-center gap-4 text-xl">
-            <strong>Partager la publication: </strong>
-            <div className="flex gap-2">
-              <FaFacebook />
-              <FaXTwitter />
-              <FaLinkedin />
-            </div>
-          </div> */}
+          {}
           {actualitie?.similaires > 0 && (
             <h5 className="text-4xl text-center font-semibold">
-              Articles Similaires
+              <TranslatedText text="Articles Similaires" />
             </h5>
           )}
 
@@ -108,7 +101,7 @@ export default function BlogDetails({ actualitie }) {
                     to={paths.actualitesDetails(article.slug)}
                     className="inline-block w-max mt-4 bg-[#B6B498] text-white py-2 px-4 rounded hover:bg-black duration-300"
                   >
-                    Lire plus
+                    <TranslatedText text="Lire plus" />
                   </Link>
                 </div>
               </div>

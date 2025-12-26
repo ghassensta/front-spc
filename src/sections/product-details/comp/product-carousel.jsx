@@ -95,7 +95,7 @@ export default function ProductCarousel({ gallery = [], image = "" }) {
             >
                 <FaChevronRight size={20} />
             </button>
-            {/* Navigation Dots (limited to max 20) */}
+            {}
             <div className="absolute mt-3 left-1/2 transform -translate-x-1/2 flex space-x-2">
                 {(() => {
                     const MAX_DOTS = 20;

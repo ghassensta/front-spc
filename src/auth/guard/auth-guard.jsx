@@ -30,7 +30,6 @@ export function AuthGuard({ children }) {
   const checkPermissions = async () => {
     if (loading) return;
 
-    // 🚫 Not authenticated
     if (!authenticated) {
       const signInPath = paths.auth.root
       const href = `${signInPath}?${createQueryString('returnTo', pathname)}`;
