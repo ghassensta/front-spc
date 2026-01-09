@@ -4,19 +4,21 @@ import { CONFIG } from "src/config-global";
 import { paths } from "src/router/paths";
 import PageSkeleton from "./page-skeleton";
 import theImage from "src/assets/images/SPC-Essence-1975x1318-02.jpg";
-import { TranslatedText } from "src/components/translated-text/translated-text";
-import { useTranslation } from "react-i18next";
+import { useTranslation } from "src/context/translation-context";
 
 export default function BlogPage({ categories, articles, loading }) {
-  const { t } = useTranslation();
+  const { translateSync } = useTranslation();
   const [searchTerm, setSearchTerm] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 6;
 
+  if (loading) return <PageSkeleton />;
+
   // Filter articles based on search term
-  const filteredArticles = articles.filter((article) =>
-    article.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    article.summary.toLowerCase().includes(searchTerm.toLowerCase())
+  const filteredArticles = articles.filter(
+    (article) =>
+      article.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      article.summary.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
   // Sort filtered articles by view_count descending
@@ -24,15 +26,12 @@ export default function BlogPage({ categories, articles, loading }) {
     (a, b) => b.view_count - a.view_count
   );
 
-  // Recent articles (unchanged, sorted by date, top 8)
+  // Recent articles (sorted by date, top 8)
   const recentArticles = [...articles]
     .sort((a, b) => new Date(b.created_at) - new Date(a.created_at))
     .slice(0, 8);
 
-  // Determine if pagination should be used
   const usePagination = searchTerm === "";
-
-  // Pagination calculations
   const totalPages = usePagination
     ? Math.ceil(sortedArticles.length / itemsPerPage)
     : 1;
@@ -43,14 +42,10 @@ export default function BlogPage({ categories, articles, loading }) {
       )
     : sortedArticles;
 
-  // Handle page change
   const handlePageChange = (page) => {
-    if (page >= 1 && page <= totalPages) {
-      setCurrentPage(page);
-    }
+    if (page >= 1 && page <= totalPages) setCurrentPage(page);
   };
 
-  // Get page numbers with ellipses
   const getPageNumbers = () => {
     const delta = 2;
     const left = currentPage - delta;
@@ -60,18 +55,13 @@ export default function BlogPage({ categories, articles, loading }) {
     let l;
 
     for (let i = 1; i <= totalPages; i++) {
-      if (i === 1 || i === totalPages || (i >= left && i < right)) {
-        range.push(i);
-      }
+      if (i === 1 || i === totalPages || (i >= left && i < right)) range.push(i);
     }
 
     for (let i of range) {
       if (l) {
-        if (i - l === 2) {
-          rangeWithDots.push(l + 1);
-        } else if (i - l !== 1) {
-          rangeWithDots.push("...");
-        }
+        if (i - l === 2) rangeWithDots.push(l + 1);
+        else if (i - l !== 1) rangeWithDots.push("...");
       }
       rangeWithDots.push(i);
       l = i;
@@ -80,22 +70,17 @@ export default function BlogPage({ categories, articles, loading }) {
     return rangeWithDots;
   };
 
-  if (loading) {
-    return <PageSkeleton />;
-  }
-
   return (
     <>
       <div
         className="w-screen relative left-[calc(-50vw+50%)] h-96 bg-black bg-center bg-cover bg-fixed overflow-hidden hidden md:block"
-        style={{
-          backgroundImage:
-            `url(${theImage})`,
-        }}
+        style={{ backgroundImage: `url(${theImage})` }}
       >
-        <div className="absolute inset-0 bg-black bg-opacity-40" />{" "}
+        <div className="absolute inset-0 bg-black bg-opacity-40" />
         <div className="absolute inset-0 flex items-center justify-center">
-          <h1 className="text-white text-4xl font-bold"><TranslatedText text="Actualités" /></h1>
+          <h1 className="text-white text-4xl font-bold">
+            {translateSync("Actualités")}
+          </h1>
         </div>
       </div>
 
@@ -103,7 +88,7 @@ export default function BlogPage({ categories, articles, loading }) {
         <div className="md:col-span-2">
           {paginatedArticles.length === 0 ? (
             <div className="text-center text-gray-700 font-bold text-xl">
-              <TranslatedText text="Aucun article trouvé." />
+              {translateSync("Aucun article trouvé.")}
             </div>
           ) : (
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
@@ -133,14 +118,13 @@ export default function BlogPage({ categories, articles, loading }) {
                       to={paths.actualitesDetails(article.slug)}
                       className="inline-block w-max mt-4 bg-[#B6B498] text-white py-2 px-4 rounded hover:bg-black duration-300"
                     >
-                      <TranslatedText text="Lire plus" />
+                      {translateSync("Lire plus")}
                     </Link>
                   </div>
                 </div>
               ))}
             </div>
           )}
-          {}
           {totalPages > 1 && (
             <div className="flex justify-center mt-6 space-x-2">
               <button
@@ -148,7 +132,7 @@ export default function BlogPage({ categories, articles, loading }) {
                 disabled={currentPage === 1}
                 className="bg-[#B6B498] text-white py-2 px-4 rounded hover:bg-black duration-300 disabled:opacity-50"
               >
-                <TranslatedText text="Précédent" />
+                {translateSync("Précédent")}
               </button>
               {getPageNumbers().map((page, index) =>
                 page === "..." ? (
@@ -174,27 +158,28 @@ export default function BlogPage({ categories, articles, loading }) {
                 disabled={currentPage === totalPages}
                 className="bg-[#B6B498] text-white py-2 px-4 rounded hover:bg-black duration-300 disabled:opacity-50"
               >
-                <TranslatedText text="Suivant" />
+                {translateSync("Suivant")}
               </button>
             </div>
           )}
         </div>
 
-        {}
         <div>
           <div className="mb-6">
             <input
               type="text"
-              placeholder={t("À la recherche de...")}
+              placeholder={translateSync("À la recherche de...")}
               className="w-full border border-gray-300 rounded py-2 px-3"
               value={searchTerm}
               onChange={(e) => {
                 setSearchTerm(e.target.value);
-                setCurrentPage(1); // Reset to first page on search
+                setCurrentPage(1);
               }}
             />
           </div>
-          <h3 className="font-bold text-2xl mb-4"><TranslatedText text="Catégories Articles" /></h3>
+          <h3 className="font-bold text-2xl mb-4">
+            {translateSync("Catégories Articles")}
+          </h3>
           <ul className="space-y-3 text-base font-roboto">
             {categories.map((item, i) => (
               <li key={i} className="hover:underline cursor-pointer">
@@ -204,7 +189,9 @@ export default function BlogPage({ categories, articles, loading }) {
               </li>
             ))}
           </ul>
-          <h3 className="font-bold text-2xl mb-4 mt-8"><TranslatedText text="Articles récents" /></h3>
+          <h3 className="font-bold text-2xl mb-4 mt-8">
+            {translateSync("Articles récents")}
+          </h3>
           <ul className="space-y-3 text-base font-roboto">
             {recentArticles.map((item, i) => (
               <li key={i} className="hover:underline cursor-pointer">
@@ -221,7 +208,7 @@ export default function BlogPage({ categories, articles, loading }) {
           to={"/assistance-contact"}
           className="font-bricolage bg-[#B6B498] py-2 px-4 rounded-full text-white hover:bg-black duration-300"
         >
-          <TranslatedText text="NOUS CONTACTER" />
+          {translateSync("NOUS CONTACTER")}
         </Link>
       </div>
     </>

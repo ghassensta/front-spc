@@ -1,12 +1,8 @@
-import React, { useCallback, useEffect, useRef, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import ImageCarousel from "../spa-details/comp/image-carousel";
 import ProductCarousel from "./comp/product-carousel";
-import { TranslatedText } from "src/components/translated-text/translated-text";
 import { Star } from "lucide-react";
 import { Link, useNavigate } from "react-router-dom";
-import exclusive from "../../assets/exclusive.png";
-import { paths } from "src/router/paths";
-import { useCheckoutContext } from "../checkout/context";
 import { FaHeart, FaRegHeart, FaStar } from "react-icons/fa";
 import LocationSection from "./comp/location-section";
 import { motion, AnimatePresence } from "framer-motion";
@@ -19,15 +15,17 @@ import { usePostProductAvis } from "src/actions/products";
 import ProductDetailsSkeleton from "./product-details-skeleton";
 import { CONFIG } from "src/config-global";
 import Section3 from "src/sections/home2/comp/section2";
+import { paths } from "src/router/paths";
+import { useCheckoutContext } from "../checkout/context";
 import { useTranslation } from "src/context/translation-context";
 
-export default function ProductDetailsView({
+export default function ({
   product,
   avis = [],
   like = false,
   etablissement,
   loading,
-  servicesEquipements,
+  servicesEquipements = [],
 }) {
   const gallery = [
     ...(etablissement?.image_avant ? [etablissement.image_avant] : []),
@@ -35,19 +33,27 @@ export default function ProductDetailsView({
       ? etablissement.gallerie.map((img) => img)
       : []),
   ].filter(Boolean);
+  //console.log("product",product);
+  const { translateSync } = useTranslation();
+  const navigate = useNavigate();
+  const checkout = useCheckoutContext();
+  const { user } = useAuthContext();
+  const [rating, setRating] = useState(0);
+  const [name, setName] = useState(user?.name + " " + user?.lastName || "");
+  const [email, setEmail] = useState(user?.email || "");
+  const [comment, setComment] = useState("");
+  const [activeTab, setActiveTab] = useState("reviews");
+  const [visibleReviews, setVisibleReviews] = useState(5);
+  const [isFav, setIsFav] = useState(like);
+  const [recipients, setRecipients] = useState([
+    {
+      fullName: "",
+      email: "",
+      message: "",
+      date: new Date().toISOString().slice(0, 10),
+    },
+  ]);
 
-  const categories = [
-    "Offre exclusive",
-    "Sauna",
-    "Douche sensorielle",
-    "Tisanerie",
-  ];
-
-  if (loading) {
-    return <ProductDetailsSkeleton />;
-  }
-
-  //console.log("producttttttttttttt", product);
   const spaData = {
     iframeUrl: etablissement?.iframeUrl,
     nom: etablissement?.nom,
@@ -56,18 +62,11 @@ export default function ProductDetailsView({
     horaires_ouverture: etablissement?.horaires_ouverture,
     email: etablissement?.email,
   };
-  const navigate = useNavigate();
-  const checkout = useCheckoutContext();
-  const { user } = useAuthContext();
-  const { translateSync } = useTranslation();
-  const [rating, setRating] = useState(0);
 
-  const [name, setName] = useState(user?.name + " " + user?.lastName || "");
-  const [email, setEmail] = useState(user?.email || "");
-  const [comment, setComment] = useState("");
-  const [activeTab, setActiveTab] = useState("reviews");
-  const [visibleReviews, setVisibleReviews] = useState(5);
-  const [isFav, setIsFav] = useState(false);
+  useEffect(() => {
+    setIsFav(like);
+  }, [like]);
+
   const validateForm = () => {
     if (!name || !email) {
       toast.error(
@@ -84,6 +83,7 @@ export default function ProductDetailsView({
 
     return true;
   };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (!validateForm()) return;
@@ -107,83 +107,13 @@ export default function ProductDetailsView({
       .then(() => {
         setRating(0);
         setComment("");
-      })
-      .catch((error) => {});
+      });
   };
 
   const handleLoadMore = () => {
     setVisibleReviews((prev) => prev + 5);
   };
 
-  const addProductToCheckout = () => {
-    if (!product) {
-      toast.error(translateSync("Produit non disponible."));
-      return;
-    }
-    // Check for duplicate emails (ignore empty emails)
-    const emails = recipients
-      .map((r) => (r.email || "").toLowerCase())
-      .filter((e) => e.trim() !== "");
-    const emailSet = new Set(emails);
-    if (emailSet.size !== emails.length) {
-      toast.error(
-        translateSync(
-          "Emails en double détectés. Chaque destinataire doit avoir un email unique."
-        )
-      );
-      return;
-    }
-
-    // Get unique recipients.
-    // If email is empty, use an index-based key so multiple recipients
-    // without emails are kept distinct.
-    const uniqueRecipients = Array.from(
-      new Map(
-        recipients.map((r, i) => {
-          const key =
-            (r.email || "").trim() !== ""
-              ? r.email.toLowerCase()
-              : `__idx_${i}`;
-          return [key, r];
-        })
-      ).values()
-    );
-
-    // Add all recipients to checkout in a single call
-    const existingItem = checkout.items.find((item) => item.id === product.id);
-    checkout.onAddToCart({
-      id: product.id,
-      name: product.nom,
-      slug: product.slug,
-      price: product.prix,
-      image: CONFIG.serverUrl + "/storage/" + product.image,
-      description: product.description,
-      destinataires: recipients,
-      expediteur: {},
-      quantity: existingItem
-        ? existingItem.destinataires.length + uniqueRecipients.length
-        : uniqueRecipients.length,
-    });
-
-    // Clear repeater state after adding (preserve today as default date)
-    setRecipients([
-      {
-        fullName: "",
-        email: "",
-        message: "",
-        date: new Date().toISOString().slice(0, 10),
-      },
-    ]);
-    navigate(paths.checkout);
-  };
-  const [recipients, setRecipients] = useState([
-    {
-      fullName: "",
-      email: "",
-      message: "",
-      date: new Date().toISOString().slice(0, 10),
-    },
-  ]);
   const handleAddRecipient = () => {
     setRecipients([
       ...recipients,
@@ -218,12 +148,37 @@ export default function ProductDetailsView({
     setRecipients(newRecipients);
   };
 
-  const stars = product?.avg_rating || 0;
-  const roundedRating = Math.round(stars * 2) / 2;
+  const addProductToCheckout = () => {
+    if (!product) {
+      toast.error(translateSync("Produit non disponible."));
+      return;
+    }
 
-  useEffect(() => {
-    setIsFav(like);
-  }, [like]);
+    const existingItem = checkout.items.find((item) => item.id === product.id);
+    checkout.onAddToCart({
+      id: product.id,
+      name: product.nom,
+      slug: product.slug,
+      price: product.prix,
+      image: CONFIG.serverUrl + "/storage/" + product.image,
+      description: product.description,
+      destinataires: recipients,
+      expediteur: {},
+      quantity: existingItem
+        ? existingItem.destinataires.length + recipients.length
+        : recipients.length,
+    });
+
+    setRecipients([
+      {
+        fullName: "",
+        email: "",
+        message: "",
+        date: new Date().toISOString().slice(0, 10),
+      },
+    ]);
+    navigate(paths.checkout);
+  };
 
   const toggleFav = async () => {
     const promise = useToggleWishlist(product.id);
@@ -236,7 +191,7 @@ export default function ProductDetailsView({
 
     try {
       if (!user) {
-        router.push(paths.auth.root);
+        goToAuth();
         return;
       }
       await promise;
@@ -245,9 +200,10 @@ export default function ProductDetailsView({
       throw err;
     }
   };
+
   const searchParams = useSearchParams();
   const pathname = usePathname();
-
+  const router = useRouter();
   const createQueryString = useCallback(
     (name, value) => {
       const params = new URLSearchParams(searchParams.toString());
@@ -256,16 +212,19 @@ export default function ProductDetailsView({
     },
     [searchParams]
   );
-  const router = useRouter();
-
   const goToAuth = () => {
     const signInPath = paths.auth.root;
     const href = `${signInPath}?${createQueryString("returnTo", pathname)}`;
     router.replace(href);
-    return;
   };
+
+  const stars = product?.avg_rating || 0;
+  const roundedRating = Math.round(stars * 2) / 2;
+
+  if (loading) return <ProductDetailsSkeleton />;
+
   return (
-    <div className="max-w-7xl mx-auto px-4 ">
+    <div className="max-w-7xl mx-auto px-4">
       <div className="py-6">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
           <div className="flex flex-col col-span-2 h-[300px] md:h-[600px]">
@@ -277,7 +236,7 @@ export default function ProductDetailsView({
               to={paths.spa.details(etablissement?.slug)}
               className="text-4xl font-bold mb-4 text-[#333]"
             >
-              {etablissement?.nom}
+              {translateSync(etablissement?.nom)}
             </Link>
 
             <div className="relative">
@@ -286,26 +245,28 @@ export default function ProductDetailsView({
                 image={product?.image}
               />
             </div>
+
             {servicesEquipements.length > 0 && (
               <div className="flex flex-wrap gap-3 mt-10 font-tahoma">
                 {servicesEquipements.map((cat, index) => (
-                  <TranslatedText
+                  <span
                     key={index}
-                    text={cat}
                     className="bg-[#e2dfba] px-2 py-1 text-sm rounded"
-                  />
+                  >
+                    {translateSync(cat)}
+                  </span>
                 ))}
               </div>
             )}
 
             {product?.remise_produit > 0 && (
               <span className="inline-block bg-[#B6B499] text-black font-bold font-roboto px-4 py-2 rounded-full text-sm mt-4">
-                <TranslatedText text={`${product.remise_produit}% de remise`} />
+                {translateSync(`${product.remise_produit}% de remise`)}
               </span>
             )}
 
             <h1 className="text-4xl font-bold mb-4 text-[#333] my-2">
-              <TranslatedText text={product?.nom} />
+              {translateSync(product?.nom)}
             </h1>
 
             <div className="flex font-tahoma items-center gap-1 mb-2">
@@ -325,63 +286,39 @@ export default function ProductDetailsView({
                 />
               ))}
               <span className="text-sm text-gray-600 ml-2">
-                ({stars.toFixed(1)} <TranslatedText text="avis" />){" "}
-                <a href="#avis">
-                  <TranslatedText text="Déposer un avis" />
-                </a>
+                ({stars.toFixed(1)} {translateSync("avis")}){" "}
+                <a href="#avis">{translateSync("Déposer un avis")}</a>
               </span>
             </div>
-
-            {!!product?.prix_barre && (
-              <span className="text-sm text-gray-500 line-through font-tahoma">
-                {product?.prix_barre}
-              </span>
-            )}
 
             <div className="font-normal text-[#333] text-lg font-tahoma mb-2">
               {product?.prix
                 ? `${product.prix} €`
                 : translateSync("Prix non disponible")}
             </div>
-            {!!product?.prix_au_lieu_de && (
-              <TranslatedText
-                text={`Au lieu de ${product?.prix_au_lieu_de}€`}
-                className="text-sm text-gray-500 font-tahoma"
-                as="span"
-              />
-            )}
 
             <div
               className="leading-base text-base font-light font-tahoma text-[#333] my-3"
               dangerouslySetInnerHTML={{
-                __html:
-                  product?.description ||
-                  translateSync("Aucune description disponible."),
+                __html: product?.description
+                  ? translateSync(product.description)
+                  : translateSync("Aucune description disponible."),
               }}
             />
-
-            {product?.conditions_utilisation && (
-              <div
-                className="leading-base text-base font-tahoma"
-                dangerouslySetInnerHTML={{
-                  __html: product.conditions_utilisation,
-                }}
-              />
-            )}
 
             <Link
               to={paths.spa.details(etablissement?.slug)}
               className="w-max rounded-md mx-auto mt-10 px-5 py-3 bg-black leading-4 text-white uppercase font-normal text-xs tracking-[3px] hover:bg-gray-800 transition font-tahoma flex items-center justify-center gap-2"
             >
-              <TranslatedText text="Voir l'établissement" />
+              {translateSync("Voir l'établissement")}
             </Link>
+
             <div className="flex flex-col items-center gap-4 mt-10">
-              {/* Bouton Ajouter au panier */}
               <button
                 onClick={addProductToCheckout}
                 className="w-max rounded-full px-5 py-3 bg-black text-white uppercase font-normal text-xs tracking-[3px] hover:bg-gray-800 transition font-tahoma flex items-center justify-center gap-2"
               >
-                <TranslatedText text="Ajouter au panier" />
+                {translateSync("Ajouter au panier")}
               </button>
             </div>
           </div>
@@ -394,9 +331,7 @@ export default function ProductDetailsView({
             )}
 
             <div className="font-normal text-[#333] text-2xl font-tahoma mb-2">
-              {product?.prix
-                ? `${product.prix} €`
-                : translateSync("Prix non disponible")}
+              {product?.prix ? `${product.prix} €` : "Prix non disponible"}
             </div>
             {!!product?.prix_au_lieu_de && (
               <TranslatedText
@@ -409,27 +344,27 @@ export default function ProductDetailsView({
               <img
                 loading="lazy"
                 src={`${CONFIG.serverUrl}/storage/${product.type_exclusivite.image_path}`}
-                alt={translateSync("Exclusivité")}
-                className="w-auto h-auto my-2 max-w-[100px]"
+                alt="Exclusivité"
+                className="w-auto h-auto my-2"
               />
             )}
 
             <div className="mt-4 font-tahoma">
               <span className="text-xl font-semibold mb-4">
-                <TranslatedText text={`Destinataire : ${recipients.length}`} />
+                {translateSync(`Destinataire : ${recipients.length}`)}
               </span>
               {recipients.map((recipient, index) => (
                 <div key={index} className="mb-4">
                   <div className="flex justify-between items-center mb-2">
                     <span className="text-sm font-normal">
-                      <TranslatedText text={`Destinataire ${index + 1}`} />
+                      {translateSync(`Destinataire ${index + 1}`)}
                     </span>
                     {recipients.length > 1 && (
                       <button
                         onClick={() => handleRemoveRecipient(index)}
                         className="mt-2 text-xs text-red-500 hover:text-red-700"
                       >
-                        <TranslatedText text="Supprimer ce destinataire" />
+                        {translateSync("Supprimer ce destinataire")}
                       </button>
                     )}
                   </div>
@@ -464,7 +399,9 @@ export default function ProductDetailsView({
                       rows={3}
                     />
                     <p className="text-sm text-gray-600 mt-2">
-                      <TranslatedText text="Choisissez la date d'envoi (la carte cadeau sera envoyée à 7h du matin le jour J)" />
+                      {translateSync(
+                        "Choisissez la date d'envoi (la carte cadeau sera envoyée à 7h du matin le jour J)"
+                      )}
                     </p>
                     <input
                       type="date"
@@ -477,38 +414,6 @@ export default function ProductDetailsView({
                         handleRecipientChange(index, "date", e.target.value)
                       }
                     />
-
-                    <button
-                      onClick={toggleFav}
-                      className="z-10  top-3 right-3 text-lg"
-                    >
-                      {isFav ? (
-                        <span className="flex items-center justify-center gap-2">
-                          <FaHeart className="text-red-500" />
-                          <span className="text-sm">
-                            <TranslatedText text="Retirer de votre wishlist" />
-                          </span>{" "}
-                        </span>
-                      ) : (
-                        <span className="flex items-center justify-center gap-2">
-                          <FaRegHeart className="text-red-500" />
-                          <span className="text-sm">
-                            <TranslatedText text="Ajouter à votre wishlist" />
-                          </span>
-                        </span>
-                      )}
-                    </button>
-                    <div className="flex items-center gap-2 text-xs">
-                      <span>
-                        <TranslatedText text="Quantité :" />
-                      </span>
-                      <input
-                        type="number"
-                        className="w-16 border border-gray-300 p-2"
-                        value={1}
-                        disabled
-                      />
-                    </div>
                   </div>
                 </div>
               ))}
@@ -516,7 +421,7 @@ export default function ProductDetailsView({
                 onClick={handleAddRecipient}
                 className="px-4 py-2 bg-gray-200 text-black text-sm rounded-full hover:bg-gray-300 transition mb-4"
               >
-                <TranslatedText text="Ajouter un autre destinataire" />
+                {translateSync("Ajouter un autre destinataire")}
               </button>
 
               <div className="flex">
@@ -524,9 +429,7 @@ export default function ProductDetailsView({
                   onClick={addProductToCheckout}
                   className="w-max px-5 py-3 bg-black leading-4 rounded-full text-white uppercase font-normal text-xs tracking-[3px] hover:bg-gray-800 transition font-tahoma flex items-center justify-center gap-2"
                 >
-                  <span>
-                    <TranslatedText text="Ajouter au panier" />
-                  </span>
+                  {translateSync("Ajouter au panier")}
                 </button>
               </div>
             </div>
@@ -534,120 +437,123 @@ export default function ProductDetailsView({
             <div className="border-b border-black my-4 font-tahoma">
               <div className="py-3 gap-2">
                 <FaHeart className="inline-block mr-1" />
-                <TranslatedText text="Programme fidélité 1€ = 1 point : " />
+                {translateSync("Programme fidélité 1€ = 1 point : ")}
                 <Link to={paths.recompense}>
-                  <TranslatedText text="en savoir plus" className="underline" />
+                  <span className="underline">
+                    {translateSync("en savoir plus")}
+                  </span>
                 </Link>
               </div>
             </div>
             <LocationSection data={spaData} />
           </div>
-        </div>
 
-        <div
-          id="avis"
-          className="mt-10 bg-[beige] p-4 font-tahoma rounded-xl shadow-sm"
-        >
-          <div className="flex gap-4 border-b border-gray-200">
-            <button
-              className={`px-4 py-2 font-semibold ${
-                activeTab === "reviews"
-                  ? "border-b-2 border-secondary text-secondary"
-                  : "text-gray-600"
-              }`}
-              onClick={() => setActiveTab("reviews")}
-            >
-              <TranslatedText text="Avis" />
-            </button>
-            <button
-              className={`px-4 py-2 font-semibold ${
-                activeTab === "createReview"
-                  ? "border-b-2 border-secondary text-secondary"
-                  : "text-gray-600"
-              }`}
-              onClick={() => setActiveTab("createReview")}
-            >
-              <TranslatedText text="Créez votre avis" />
-            </button>
-          </div>
+          <div
+            id="avis"
+            className="mt-10 bg-[beige] p-4 font-tahoma rounded-xl shadow-sm"
+          >
+            <div className="flex gap-4 border-b border-gray-200">
+              <button
+                className={`px-4 py-2 font-semibold ${
+                  activeTab === "reviews"
+                    ? "border-b-2 border-secondary text-secondary"
+                    : "text-gray-600"
+                }`}
+                onClick={() => setActiveTab("reviews")}
+              >
+                {translateSync("Avis")}
+              </button>
+              <button
+                className={`px-4 py-2 font-semibold ${
+                  activeTab === "createReview"
+                    ? "border-b-2 border-secondary text-secondary"
+                    : "text-gray-600"
+                }`}
+                onClick={() => setActiveTab("createReview")}
+              >
+                {translateSync("Créez votre avis")}
+              </button>
+            </div>
 
-          <div className="min-h-[150px] mt-2">
-            <AnimatePresence mode="wait">
-              {activeTab === "reviews" && (
-                <motion.div
-                  key="reviews"
-                  initial={{ opacity: 0, y: 10 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  exit={{ opacity: 0, y: -10 }}
-                  transition={{ duration: 0.3 }}
-                >
-                  <div className="space-y-4">
-                    {avis.length > 0 ? (
-                      <>
-                        {avis.slice(0, visibleReviews).map((avis, index) => (
-                          <div
-                            key={index}
-                            className="bg-white border border-black p-4 rounded-md"
-                          >
-                            <div className="flex items-center gap-4">
-                              <div className="text-yellow-500 flex gap-1">
-                                {[1, 2, 3, 4, 5].map((i) => (
-                                  <FaStar
-                                    key={i}
-                                    fill={
-                                      i <= avis.ratings ? "#facc15" : "#f4efe5"
-                                    }
-                                    stroke="#facc15"
-                                  />
-                                ))}
-                              </div>
-                              <p className="font-normal">- {avis.name}</p>
-                            </div>
-                            <p className="whitespace-pre-wrap break-words text-base text-gray-600">
-                              {avis.comment}
-                            </p>
-                          </div>
-                        ))}
-                        {avis.length > visibleReviews && (
-                          <div className="flex justify-center mt-4">
-                            <button
-                              onClick={handleLoadMore}
-                              className="px-4 py-2 bg-gray-200 text-black text-sm rounded-md hover:bg-gray-300 transition"
+            <div className="min-h-[150px] mt-2">
+              <AnimatePresence mode="wait">
+                {activeTab === "reviews" && (
+                  <motion.div
+                    key="reviews"
+                    initial={{ opacity: 0, y: 10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, y: -10 }}
+                    transition={{ duration: 0.3 }}
+                  >
+                    <div className="space-y-4">
+                      {avis.length > 0 ? (
+                        <>
+                          {avis.slice(0, visibleReviews).map((avis, index) => (
+                            <div
+                              key={index}
+                              className="bg-white border border-black p-4 rounded-md"
                             >
-                              <TranslatedText text="Charger plus d'avis" />
-                            </button>
-                          </div>
-                        )}
-                      </>
-                    ) : (
-                      <>
-                        <p className="text-gray-600">
-                          <TranslatedText text="Aucun avis pour le moment." />
-                        </p>
-                        <p className="text-gray-600">
-                          <TranslatedText
-                            text={`Soyez le premier à laisser votre avis sur "${
-                              product?.nom || translateSync("ce produit")
-                            }" !`}
-                          />
-                        </p>
-                        <p className="text-gray-600">
-                          <TranslatedText text="Votre adresse e-mail ne sera pas publiée. Les champs obligatoires sont indiqués avec *" />
-                        </p>
-                      </>
-                    )}
-                  </div>
-                </motion.div>
-              )}
+                              <div className="flex items-center gap-4">
+                                <div className="text-yellow-500 flex gap-1">
+                                  {[1, 2, 3, 4, 5].map((i) => (
+                                    <FaStar
+                                      key={i}
+                                      fill={
+                                        i <= avis.ratings
+                                          ? "#facc15"
+                                          : "#f4efe5"
+                                      }
+                                      stroke="#facc15"
+                                    />
+                                  ))}
+                                </div>
+                                <p className="font-normal">- {avis.name}</p>
+                              </div>
+                              <p className="whitespace-pre-wrap break-words text-base text-gray-600">
+                                {avis.comment}
+                              </p>
+                            </div>
+                          ))}
+                          {avis.length > visibleReviews && (
+                            <div className="flex justify-center mt-4">
+                              <button
+                                onClick={handleLoadMore}
+                                className="px-4 py-2 bg-gray-200 text-black text-sm rounded-md hover:bg-gray-300 transition"
+                              >
+                                {translateSync("Charger plus d'avis")}
+                              </button>
+                            </div>
+                          )}
+                        </>
+                      ) : (
+                        <>
+                          <p className="text-gray-600">
+                            {translateSync("Aucun avis pour le moment.")}
+                          </p>
+                          <p className="text-gray-600">
+                            {translateSync(
+                              `Soyez le premier à laisser votre avis sur "${
+                                product?.nom || translateSync("ce produit")
+                              }" !`
+                            )}
+                          </p>
+                          <p className="text-gray-600">
+                            {translateSync(
+                              "Votre adresse e-mail ne sera pas publiée. Les champs obligatoires sont indiqués avec *"
+                            )}
+                          </p>
+                        </>
+                      )}
+                    </div>
+                  </motion.div>
+                )}
 
-              {activeTab === "createReview" && (
-                <>
-                  {}
+                {activeTab === "createReview" && (
                   <div className="bg-white p-4 rounded-lg border border-black">
                     {user ? (
                       <>
                         <span className="font-semibold text-lg mb-2">
-                          <TranslatedText text="Laisser un avis" />
+                          {translateSync("Laisser un avis")}
                         </span>
                         <input
                           type="text"
@@ -681,29 +587,29 @@ export default function ProductDetailsView({
                             className="w-max px-4 py-3 bg-black leading-4 text-white uppercase font-normal text-xs tracking-[3px] hover:bg-gray-800 transition font-tahoma flex items-center justify-center gap-2"
                             type="button"
                           >
-                            <TranslatedText text="Envoyer l'avis" />
+                            {translateSync("Envoyer l'avis")}
                           </button>
                         </div>
                       </>
                     ) : (
-                      <>
-                        <div className="flex flex-col justify-center items-center">
-                          <p className="text-xl mb-4">
-                            <TranslatedText text="Veuillez vous connecter pour mettre un avis" />
-                          </p>
-                          <button
-                            onClick={() => goToAuth()}
-                            className="w-max px-4 py-3 bg-black leading-4 text-white uppercase font-normal text-xs tracking-[3px] hover:bg-gray-800 transition font-tahoma flex items-center justify-center gap-2 rounded-full"
-                          >
-                            <TranslatedText text="Connectez vous" />
-                          </button>
-                        </div>
-                      </>
+                      <div className="flex flex-col justify-center items-center">
+                        <p className="text-xl mb-4">
+                          {translateSync(
+                            "Veuillez vous connecter pour mettre un avis"
+                          )}
+                        </p>
+                        <button
+                          onClick={() => goToAuth()}
+                          className="w-max px-4 py-3 bg-black leading-4 text-white uppercase font-normal text-xs tracking-[3px] hover:bg-gray-800 transition font-tahoma flex items-center justify-center gap-2 rounded-full"
+                        >
+                          {translateSync("Connectez vous")}
+                        </button>
+                      </div>
                     )}
                   </div>
-                </>
-              )}
-            </AnimatePresence>
+                )}
+              </AnimatePresence>
+            </div>
           </div>
         </div>
       </div>

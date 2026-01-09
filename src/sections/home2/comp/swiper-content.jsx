@@ -1,30 +1,32 @@
-import React, { useRef, useMemo } from 'react';
-import { Swiper, SwiperSlide } from 'swiper/react';
-import { Navigation } from 'swiper/modules';
-import 'swiper/css';
-import 'swiper/css/navigation';
-import { FaChevronLeft, FaChevronRight } from 'react-icons/fa';
-import PropTypes from 'prop-types';
-import Card from 'src/components/card/card';
-import { paths } from 'src/router/paths';
-import { CONFIG } from 'src/config-global';
+import React, { useRef, useMemo } from "react";
+import { Swiper, SwiperSlide } from "swiper/react";
+import { Navigation } from "swiper/modules";
+import "swiper/css";
+import "swiper/css/navigation";
+import { FaChevronLeft, FaChevronRight } from "react-icons/fa";
+import PropTypes from "prop-types";
+import Card from "src/components/card/card";
+import { paths } from "src/router/paths";
+import { CONFIG } from "src/config-global";
+import { useTranslation } from "src/context/translation-context";
 
 const SwiperContent = ({ slidesPerView = 3, data = [] }) => {
-  // Utiliser useRef au lieu de useId pour éviter les caractères invalides
   const prevRef = useRef(null);
   const nextRef = useRef(null);
   const swiperRef = useRef(null);
+  const { translateSync } = useTranslation();
 
   const shouldLoop = data.length > slidesPerView;
 
-  // Mémorisation des points de rupture pour éviter les recalculs inutiles
-  const breakpoints = useMemo(() => ({
-    320: { slidesPerView: 1, spaceBetween: 10, centeredSlides: true },
-    768: { slidesPerView: 2, spaceBetween: 15, centeredSlides: true },
-    1024: { slidesPerView, spaceBetween: 20, centeredSlides: false },
-  }), [slidesPerView]);
+  const breakpoints = useMemo(
+    () => ({
+      320: { slidesPerView: 1, spaceBetween: 10, centeredSlides: true },
+      768: { slidesPerView: 2, spaceBetween: 15, centeredSlides: true },
+      1024: { slidesPerView, spaceBetween: 20, centeredSlides: false },
+    }),
+    [slidesPerView]
+  );
 
-  // Vérification des données
   if (!Array.isArray(data) || data.length === 0) {
     return null;
   }
@@ -33,7 +35,7 @@ const SwiperContent = ({ slidesPerView = 3, data = [] }) => {
     <div className="relative max-w-[1200px] mx-auto px-4 md:px-12">
       <Swiper
         ref={swiperRef}
-        loop={shouldLoop} 
+        loop={shouldLoop}
         spaceBetween={20}
         slidesPerView={Math.min(slidesPerView, data.length)}
         initialSlide={Math.min(2, Math.max(0, data.length - 1))}
@@ -45,8 +47,10 @@ const SwiperContent = ({ slidesPerView = 3, data = [] }) => {
           nextEl: nextRef.current,
         }}
         onBeforeInit={(swiper) => {
-          // Initialiser la navigation avec les refs
-          if (swiper.params.navigation && typeof swiper.params.navigation !== 'boolean') {
+          if (
+            swiper.params.navigation &&
+            typeof swiper.params.navigation !== "boolean"
+          ) {
             swiper.params.navigation.prevEl = prevRef.current;
             swiper.params.navigation.nextEl = nextRef.current;
           }
@@ -56,29 +60,29 @@ const SwiperContent = ({ slidesPerView = 3, data = [] }) => {
       >
         {data.map((item) => {
           if (!item) return null;
-          
+
           return (
-            <SwiperSlide 
-              className="pt-8" 
-              key={`${item.id || ''}-${item.slug || ''}`}
+            <SwiperSlide
+              className="pt-8"
+              key={`${item.id || ""}-${item.slug || ""}`}
             >
               <Card
-                to={item.slug ? paths.product(item.slug) : '#'}
-                title={item.name || 'Produit'}
+                to={item.slug ? paths.product(item.slug) : "#"}
+                title={translateSync(item.name || "Produit")}
                 image={
                   item.image
                     ? `${CONFIG.serverUrl}/storage/${item.image}`
-                    : '/placeholder.png'
+                    : "/placeholder.png"
                 }
-                headTitle={item.spaName || ''}
-                location={item.spaLocation || ''}
-                bottomText={item.offre || ''}
+                headTitle={translateSync(item.spaName || "")}
+                location={translateSync(item.spaLocation || "")}
+                bottomText={translateSync(item.offre || "")}
                 offreValue={item.offreValue || 0}
-                price={item.price || ''}
-                duration={item.duration || ''}
+                price={item.price || ""}
+                duration={translateSync(item.duration || "")}
                 id={item.produit_id || null}
                 exclusivite_image={item.exclusivite_image}
-                remiseDescProduit={item.remiseDescProduit || ''}
+                remiseDescProduit={translateSync(item.remiseDescProduit || "")}
               />
             </SwiperSlide>
           );
@@ -90,14 +94,15 @@ const SwiperContent = ({ slidesPerView = 3, data = [] }) => {
         <>
           <button
             ref={prevRef}
-            aria-label="Précédent"
+            aria-label={translateSync("Précédent")}
             className="absolute left-0 top-[35%] -translate-y-1/2 bg-[#B6B499] hover:bg-[#9a977d] rounded-full w-8 h-8 z-10 cursor-pointer flex items-center justify-center transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-[#B6B499] focus:ring-opacity-50"
           >
             <FaChevronLeft className="text-black w-3 h-3" />
           </button>
+
           <button
             ref={nextRef}
-            aria-label="Suivant"
+            aria-label={translateSync("Suivant")}
             className="absolute right-0 top-[35%] -translate-y-1/2 bg-[#B6B499] hover:bg-[#9a977d] rounded-full w-8 h-8 z-10 cursor-pointer flex items-center justify-center transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-[#B6B499] focus:ring-opacity-50"
           >
             <FaChevronRight className="text-black w-3 h-3" />
@@ -110,8 +115,7 @@ const SwiperContent = ({ slidesPerView = 3, data = [] }) => {
         .swiper-button-next:after {
           display: none !important;
         }
-        
-        /* Amélioration de l'accessibilité au focus */
+
         .swiper-slide:focus {
           outline: none;
         }

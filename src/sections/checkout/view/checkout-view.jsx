@@ -321,7 +321,7 @@ export default function CheckoutView() {
           {}
           <div className="bg-white rounded-md p-4 md:p-6 shadow">
             <h2 className="text-base font-semibold mb-3 md:mb-4">
-              <TranslatedText text="Code Coupon" />
+              <TranslatedText text="Code Promo" />
             </h2>
             <div className="flex flex-col sm:flex-row gap-2">
               <input

@@ -4,6 +4,7 @@ import { Star, Minus, Plus } from "lucide-react";
 import { CONFIG } from "src/config-global";
 import defaultAvatar from "../../../assets/default-avatar.png";
 import { Link } from "react-router-dom";
+import { useTranslation } from "src/context/translation-context";
 
 export default function ServiceCard({
   details,
@@ -17,7 +18,8 @@ export default function ServiceCard({
     setOpenSection((prev) => (prev === key ? null : key));
   };
 
-  // Helpers
+  const { translateSync } = useTranslation();
+
   const notEmpty = (val) =>
     val !== null && val !== undefined && String(val).trim() !== "";
 
@@ -27,7 +29,6 @@ export default function ServiceCard({
   const shouldTruncate = fullText.length > DESCRIPTION_LIMIT;
   const shortText = fullText.slice(0, DESCRIPTION_LIMIT) + "...";
 
-  // Sections config
   const sections = [];
 
   if (
@@ -37,22 +38,22 @@ export default function ServiceCard({
   ) {
     sections.push({
       key: "general",
-      title: "Informations Générales",
+      title: translateSync("Informations Générales"),
       content: (
         <ul>
           {notEmpty(details?.avant_adresse) && (
             <li className="mb-2">
-              <span className="font-bold">Adresse :</span> {details.avant_adresse}
+              <span className="font-bold">{translateSync("Adresse")} :</span> {details.avant_adresse}
             </li>
           )}
           {notEmpty(details?.email) && (
             <li className="mb-2">
-              <span className="font-bold">Email :</span> {details.email}
+              <span className="font-bold">{translateSync("Email")} :</span> {details.email}
             </li>
           )}
           {notEmpty(details?.telephone) && (
             <li>
-              <span className="font-bold">Tél. :</span> {details.telephone}
+              <span className="font-bold">{translateSync("Tél.")} :</span> {details.telephone}
             </li>
           )}
         </ul>
@@ -63,10 +64,10 @@ export default function ServiceCard({
   if (notEmpty(details?.horaires_ouverture)) {
     sections.push({
       key: "utiles",
-      title: "Informations Utiles",
+      title: translateSync("Informations Utiles"),
       content: (
         <p>
-          <strong>Jours et Horaires d’ouverture :</strong>{" "}
+          <strong>{translateSync("Jours et Horaires d’ouverture")} :</strong>{" "}
           {details.horaires_ouverture}
         </p>
       ),
@@ -79,7 +80,7 @@ export default function ServiceCard({
   ) {
     sections.push({
       key: "partenaire",
-      title: "PORTRAIT DE L'EQUIPE",
+      title: translateSync("Portrait de l'équipe"),
       content: (
         <div className="flex border bg-white shadow-md rounded-xl flex-col gap-4">
           {details.portrait_equipe.map((person, index) => (
@@ -106,7 +107,7 @@ export default function ServiceCard({
                   </span>
                 </h6>
                 {notEmpty(person.description) && (
-                  <p className="text-sm text-gray-600">{person.description}</p>
+                  <p className="text-sm text-gray-600">{translateSync(person.description)}</p>
                 )}
               </div>
             </div>
@@ -119,7 +120,7 @@ export default function ServiceCard({
   if (Array.isArray(marquesPartenaires) && marquesPartenaires.length > 0) {
     sections.push({
       key: "marques",
-      title: "Marques Partenaires",
+      title: translateSync("Marques Partenaires"),
       content: (
         <div className="flex flex-wrap">
           {marquesPartenaires.map((marque, index) => (
@@ -135,28 +136,9 @@ export default function ServiceCard({
 
   return (
     <div className="p-4 bg-white">
-      { }
+      {/* Offres */}
       <div className="flex flex-col mb-4">
-        {(details?.remise_offres > 0 || details?.prix_offres) && (
-          <Link
-            to="#etab-services"
-            className="bg-[#B6B499] w-max mb-2 text-black font-bold font-roboto px-2 py-1 rounded-2xl"
-            onClick={(e) => {
-              e.preventDefault();
-              window.scrollTo({
-                left: 0,
-                top: document.getElementById("etab-services")?.offsetTop,
-                behavior: "smooth",
-              });
-            }}
-          >
-            {details?.remise_offres > 0
-              ? `Jusqu'à ${details.remise_offres}% de remise`
-              : details.prix_offres
-                ? `${details.prix_offres}`
-                : ""}
-          </Link>
-        )}
+        
 
         {notEmpty(details?.logo) && (
           <img
@@ -171,7 +153,7 @@ export default function ServiceCard({
           />
         )}
         <div>
-          <h1 className="font-black text-5xl">{details?.nom}</h1>
+          <h1 className="font-black text-5xl">{translateSync(details?.nom)}</h1>
           <div className="flex items-center gap-1 mt-1">
             {[1, 2, 3, 4, 5].map((i) => (
               <Star
@@ -188,18 +170,41 @@ export default function ServiceCard({
               />
             ))}
             <a href="#avis" className="text-sm text-gray-600 ml-2 font-roboto">
-              ({avisTotals} avis)
+              ({avisTotals} {translateSync("avis")})
             </a>
+            
           </div>
+          <div className="mt-4">{(details?.remise_offres > 0 || details?.prix_offres) && (
+          <Link
+            to="#etab-services"
+            className="bg-[#B6B499] w-max mb-2 text-black font-bold font-roboto px-2 py-1 rounded-2xl"
+            onClick={(e) => {
+              e.preventDefault();
+              window.scrollTo({
+                left: 0,
+                top: document.getElementById("etab-services")?.offsetTop,
+                behavior: "smooth",
+              });
+            }}
+          >
+            {details?.remise_offres > 0
+              ? translateSync(`Jusqu'à ${details.remise_offres}% de remise`)
+              : details.prix_offres
+                ? `${details.prix_offres}`
+                : ""}
+          </Link>
+        )}</div>
         </div>
       </div>
 
-      { }
+      {/* Description */}
       {notEmpty(fullText) && (
         <>
           <motion.div layout transition={{ duration: 0.3, ease: "easeInOut" }}>
             <p className="leading-base text-2xl font-normal mb-2">
-              {isExpanded || !shouldTruncate ? fullText : shortText}
+              {isExpanded || !shouldTruncate
+                ? translateSync(fullText)
+                : translateSync(shortText)}
             </p>
           </motion.div>
 
@@ -209,14 +214,17 @@ export default function ServiceCard({
                 onClick={() => setIsExpanded((prev) => !prev)}
                 className="font-roboto text-base font-bold text-gray-700 uppercase"
               >
-                {isExpanded ? "Voir moins" : "Voir plus"}
+                {isExpanded
+                  ? translateSync("Voir moins")
+                  : translateSync("Voir plus")}
               </button>
             </div>
           )}
         </>
       )}
 
-      { }
+
+      {/* Sections */}
       {sections.length > 0 && (
         <div className="mt-6 flex flex-col gap-0 font-roboto">
           {sections.map((section) => (
@@ -234,7 +242,7 @@ export default function ServiceCard({
                 ) : (
                   <Plus size={18} />
                 )}
-                <span className="font-[400] uppercase">{section.title}</span>
+                <span className="font-[400] uppercase">{translateSync(section.title)}</span>
               </button>
               <AnimatePresence initial={false}>
                 {openSection === section.key && (
