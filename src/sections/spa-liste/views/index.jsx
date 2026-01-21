@@ -4,7 +4,8 @@ import { paths } from "src/router/paths";
 import CategoriesSkeleton from "../categories-skeleton";
 import FiltersSkeleton from "../filters-skeleton";
 import ButtonIcon from "src/components/button-icon/button-icon";
-import Select from "react-select"; // ← Ajouté
+import Select from "react-select";
+import { useTranslation } from "src/context/translation-context";
 
 export default function CategoriesPageView({
   cardsByCategory = [],
@@ -20,12 +21,12 @@ export default function CategoriesPageView({
     service: null,
   });
 
-  // Conversion des données pour react-select
-  const typeOptions = types.map((t) => ({ value: t.id, label: t.name }));
-  const villeOptions = villes.map((v) => ({ value: v.id, label: v.name }));
-  const serviceOptions = services.map((s) => ({ value: s.id, label: s.name }));
+  const { translateSync } = useTranslation();
 
-  // Styles personnalisés (proche de ton design actuel)
+  const typeOptions = types.map((t) => ({ value: t.id, label: translateSync(t.name) }));
+  const villeOptions = villes.map((v) => ({ value: v.id, label: translateSync(v.name) }));
+  const serviceOptions = services.map((s) => ({ value: s.id, label: translateSync(s.name) }));
+
   const customStyles = {
     control: (base) => ({
       ...base,
@@ -35,20 +36,9 @@ export default function CategoriesPageView({
       minHeight: "48px",
       backgroundColor: "transparent",
     }),
-    placeholder: (base) => ({
-      ...base,
-      color: "#9ca3af",
-    }),
-    singleValue: (base) => ({
-      ...base,
-      color: "#111",
-    }),
-    menu: (base) => ({
-      ...base,
-      borderRadius: "0.5rem",
-      marginTop: "4px",
-      zIndex: 9999,
-    }),
+    placeholder: (base) => ({ ...base, color: "#9ca3af" }),
+    singleValue: (base) => ({ ...base, color: "#111" }),
+    menu: (base) => ({ ...base, borderRadius: "0.5rem", marginTop: "4px", zIndex: 9999 }),
     menuPortal: (base) => ({ ...base, zIndex: 9999 }),
   };
 
@@ -59,48 +49,36 @@ export default function CategoriesPageView({
     }));
   };
 
-  // Filtrage optimisé avec useMemo
   const filteredCards = useMemo(() => {
     return cardsByCategory.filter((card) => {
       const matchType = filters.etablissement
-        ? card.types_etablissement_ids?.includes(
-            parseInt(filters.etablissement)
-          )
+        ? card.types_etablissement_ids?.includes(parseInt(filters.etablissement))
         : true;
-
       const matchRegion = filters.region
         ? card.region_ids?.includes(parseInt(filters.region))
         : true;
-
       const matchService = filters.service
         ? card.type_equipement_ids?.includes(parseInt(filters.service))
         : true;
-
       return matchType && matchRegion && matchService;
     });
   }, [cardsByCategory, filters]);
 
-  if (filterLoading) {
-    return <FiltersSkeleton />;
-  }
+  if (filterLoading) return <FiltersSkeleton />;
 
   return (
     <div className="max-w-6xl mx-auto p-1">
-      {}
-      <p className="text-center text-4xl font-semibold my-4">Filtrer par</p>
+      {/* Filtres */}
+      <p className="text-center text-4xl font-semibold my-4">{translateSync("Filtrer par")}</p>
 
-      {}
       <div className="grid grid-cols-1 md:grid-cols-3 px-2 gap-4 font-roboto mb-16">
-        {}
         <div className="border rounded-lg">
           <Select
             instanceId="select-region"
             styles={customStyles}
-            placeholder="Région ou ville"
+            placeholder={translateSync("Région ou ville")}
             options={villeOptions}
-            value={
-              villeOptions.find((opt) => opt.value === filters.region) || null
-            }
+            value={villeOptions.find((opt) => opt.value === filters.region) || null}
             onChange={handleSelectChange("region")}
             isClearable
             isSearchable
@@ -108,36 +86,29 @@ export default function CategoriesPageView({
             menuPosition="fixed"
           />
         </div>
-        {}
+
         <div className="border rounded-lg">
           <Select
             instanceId="select-etablissement"
             styles={customStyles}
-            placeholder="Sélectionnez type d'établissement"
+            placeholder={translateSync("Sélectionnez type d'établissement")}
             options={typeOptions}
-            value={
-              typeOptions.find((opt) => opt.value === filters.etablissement) ||
-              null
-            }
+            value={typeOptions.find((opt) => opt.value === filters.etablissement) || null}
             onChange={handleSelectChange("etablissement")}
             isClearable
             isSearchable
-            menuPortalTarget={document.body} // ← Z-index parfait
+            menuPortalTarget={document.body}
             menuPosition="fixed"
           />
         </div>
 
-        {}
         <div className="border rounded-lg">
           <Select
             instanceId="select-service"
             styles={customStyles}
-            placeholder="Services et équipements"
+            placeholder={translateSync("Services et équipements")}
             options={serviceOptions}
-            value={
-              serviceOptions.find((opt) => opt.value === filters.service) ||
-              null
-            }
+            value={serviceOptions.find((opt) => opt.value === filters.service) || null}
             onChange={handleSelectChange("service")}
             isClearable
             isSearchable
@@ -147,18 +118,17 @@ export default function CategoriesPageView({
         </div>
       </div>
 
-      {}
-      <div className="mb-10">
-        <h1 className="text-center text-4xl font-normal my-4">
-          Nos établissements
-        </h1>
-        <h2 className="text-center text-3xl font-normal my-4 text-[#777765]">
-          Une collection choisie avec soin, pour celles et ceux en quête
-          d’exceptions.
+      {/* Titres */}
+      <div className="mb-10 text-center">
+        <h1 className="text-4xl font-normal my-4">{translateSync("Nos établissements")}</h1>
+        <h2 className="text-3xl font-normal my-4 text-[#777765]">
+          {translateSync(
+            "Une collection choisie avec soin, pour celles et ceux en quête d’exceptions."
+          )}
         </h2>
       </div>
 
-      {}
+      {/* Cartes */}
       {loading ? (
         <CategoriesSkeleton />
       ) : (
@@ -177,13 +147,14 @@ export default function CategoriesPageView({
               />
             ))
           ) : (
-            <p className="col-span-3 text-center">Aucun résultat trouvé.</p>
+            <p className="col-span-3 text-center">{translateSync("Aucun résultat trouvé.")}</p>
           )}
         </div>
       )}
 
+      {/* Bouton retour */}
       <div className="w-full flex items-center justify-center mb-2">
-        <ButtonIcon title="Accueil" link={paths.main} />
+        <ButtonIcon title={translateSync("Accueil")} link={paths.main} />
       </div>
     </div>
   );

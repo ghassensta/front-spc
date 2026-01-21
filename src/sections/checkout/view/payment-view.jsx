@@ -86,7 +86,6 @@ export default function PaymentView() {
   const creditsDepassent = totalCreditsApplied > totalTTC;
 
   const handleSubmit = async () => {
-    // Always validate and show errors - even if form is closed
     const { fullName, address, city, postalCode, country } =
       checkout.expediteur || {};
     const newErrors = {};
@@ -285,6 +284,7 @@ export default function PaymentView() {
                 </label>
                 <input
                   type="text"
+                  autoComplete="off"
                   name="expediteur_fullName"
                   className={`w-full border rounded-md p-2 focus:outline-none focus:ring-2 ${
                     errors.fullName
@@ -415,7 +415,7 @@ export default function PaymentView() {
                         ? "border-red-500 focus:ring-red-500"
                         : "border-gray-300 focus:ring-blue-400"
                     }`}
-                    value={checkout.expediteur?.country || t("France")}
+                    value={checkout.expediteur?.country || t("")}
                     onChange={(e) =>
                       handleExpediteurChange("country", e.target.value)
                     }

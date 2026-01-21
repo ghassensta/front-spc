@@ -1,49 +1,65 @@
-import React, { useEffect, useState } from 'react';
-import { Link } from 'react-router-dom';
-import { FaHeart, FaRegHeart, FaEye } from 'react-icons/fa';
-import { paths } from 'src/router/paths';
-import { CONFIG } from 'src/config-global';
-import { useToggleWishlist } from 'src/actions/wishlists';
-import { toast } from 'react-toastify';
-import { TranslatedText } from 'src/components/translated-text/translated-text';
-import { useTranslation } from 'react-i18next';
+import React, { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
+import { FaHeart, FaRegHeart, FaEye, FaShareAlt } from "react-icons/fa";
+import { paths } from "src/router/paths";
+import { CONFIG } from "src/config-global";
+import { useToggleWishlist } from "src/actions/wishlists";
+import { toast } from "react-toastify";
+import { TranslatedText } from "src/components/translated-text/translated-text";
+import { useTranslation } from "react-i18next";
+import ShareModal from "src/components/wishlist-modal/modal";
 
 export default function Wishlist({ wishlists, loading, validating }) {
   const { t } = useTranslation();
-  const [wishlist, setWishlist] = useState([])
-
+  const [wishlist, setWishlist] = useState([]);
+  const [shareModalOpen, setShareModalOpen] = useState(false);
+  const [selectedProduct, setSelectedProduct] = useState(null);
+  console.log("wishlists", wishlists);
   useEffect(() => {
-    setWishlist(wishlists)
-  }, [wishlists])
+    setWishlist(wishlists);
+  }, [wishlists]);
 
-  const toggleLike = async(id) => {
+  const toggleLike = async (id) => {
     const promise = useToggleWishlist(id);
-    
-        toast.promise(promise, {
-          pending: t("Retirer de favoris..."),
-        });
-    
-        try {
-          await promise;
-        } catch (err) {
-          throw err
-        }
+    toast.promise(promise, {
+      pending: t("Retirer de favoris..."),
+    });
+    try {
+      await promise;
+    } catch (err) {
+      throw err;
+    }
   };
 
-  if(loading || validating){
-    return(
+  const openShareModal = (item) => {
+    setSelectedProduct(item);
+    setShareModalOpen(true);
+  };
+
+  const closeShareModal = () => {
+    setShareModalOpen(false);
+    setSelectedProduct(null);
+  };
+
+  if (loading || validating) {
+    return (
       <div className="min-h-screen py-8">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-          {}
           <div className="mb-8">
-            <div className="h-8 bg-gray-200 animate-pulse w-1/4 rounded mb-2" />
-            <div className="h-4 bg-gray-200 animate-pulse w-1/2 rounded" />
+            <h1 className="text-3xl font-bold text-gray-900">
+              <TranslatedText text="Ma Wishlist" />
+            </h1>
+            <p className="text-gray-600 mt-2">
+              <TranslatedText text="Retrouvez tous vos soins et forfaits spa favoris" />
+            </p>
           </div>
 
-          {}
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {[...Array(6)].map((_, index) => (
-              <div key={index} className="bg-white rounded-lg shadow-sm overflow-hidden">
+              <div
+                key={index}
+                className="bg-white rounded-lg shadow-sm overflow-hidden"
+              >
                 <div className="relative">
                   <div className="w-full h-48 bg-gray-200 animate-pulse" />
                   <div className="absolute top-3 right-3">
@@ -66,21 +82,21 @@ export default function Wishlist({ wishlists, loading, validating }) {
           </div>
         </div>
       </div>
-    )
+    );
   }
 
   return (
     <div className="min-h-screen py-8">
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-        {}
         <div className="mb-8">
-          <h1 className="text-3xl font-bold text-gray-900"><TranslatedText text="Ma Wishlist" /></h1>
+          <h1 className="text-3xl font-bold text-gray-900">
+            <TranslatedText text="Ma Wishlist" />
+          </h1>
           <p className="text-gray-600 mt-2">
             <TranslatedText text="Retrouvez tous vos soins et forfaits spa favoris" />
           </p>
         </div>
 
-        {}
         {wishlist.length === 0 ? (
           <div className="bg-white rounded-lg shadow-sm p-8 text-center">
             <div className="flex justify-center mb-4">
@@ -102,36 +118,66 @@ export default function Wishlist({ wishlists, loading, validating }) {
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {wishlist.map((item) => (
-              <div key={item.id} className="bg-white rounded-lg shadow-sm overflow-hidden hover:shadow-md transition-shadow duration-300">
-                <div className="relative">
-                  <img 
-                    loading="lazy" 
-                    src={CONFIG.serverUrl+"/storage/"+item.image} 
-                    alt={item.name}
-                    className="w-full h-48 object-cover"
+              <div
+                key={item.id}
+                className="bg-white rounded-lg shadow-sm overflow-hidden hover:shadow-md transition-shadow duration-300"
+              >
+                <div className="relative w-full">
+                  {/* Image principale */}
+                  <img
+                    loading="lazy"
+                    src={CONFIG.serverUrl + "/storage/" + item.image}
+                    alt={item.nom}
+                    className="w-full h-48 object-cover rounded-md"
                   />
+
+                  {/* Image exclusivité en bas à droite avec bg */}
+                  {item?.type_exclusivite?.image_path && (
+                    <div className="absolute bottom-2 right-2 w-14 h-14 p-1 bg-white rounded-full shadow-md flex items-center justify-center">
+                      <img
+                        src={
+                          CONFIG.serverUrl +
+                          "/storage/" +
+                          item.type_exclusivite.image_path
+                        }
+                        alt="exclusivite spc"
+                        className="w-full h-full object-cover rounded-full"
+                      />
+                    </div>
+                  )}
+
+                  {/* Bouton like en haut à droite */}
                   <div className="absolute top-3 right-3">
                     <button
                       onClick={() => toggleLike(item.id)}
                       className="p-2 bg-white rounded-full shadow-md text-red-500 hover:text-red-600 focus:outline-none"
                     >
                       <FaHeart />
-                      {}
                     </button>
                   </div>
-                
                 </div>
-                
+
                 <div className="p-4">
                   <div className="flex justify-between items-start mb-2">
                     <h3 className="font-medium text-gray-900">{item.nom}</h3>
                   </div>
                   <div className="flex justify-between items-center mt-4">
-                    <span className="text-lg font-bold text-secondary">{item.prix} €</span>
+                    <span className="text-lg font-bold text-secondary">
+                      {item.prix} €
+                    </span>
                     <div className="flex space-x-2">
-                      <Link to={paths.product(item.slug)} className="p-2 text-gray-600 hover:text-primary border border-gray-200 rounded-md">
+                      <Link
+                        to={paths.product(item.slug)}
+                        className="p-2 text-gray-600 hover:text-primary border border-gray-200 rounded-md"
+                      >
                         <FaEye />
                       </Link>
+                      <button
+                        onClick={() => openShareModal(item)}
+                        className="p-2 text-gray-600 hover:text-primary border border-gray-200 rounded-md"
+                      >
+                        <FaShareAlt />
+                      </button>
                     </div>
                   </div>
                 </div>
@@ -139,8 +185,13 @@ export default function Wishlist({ wishlists, loading, validating }) {
             ))}
           </div>
         )}
-
       </div>
+
+      <ShareModal
+        isOpen={shareModalOpen}
+        product={selectedProduct}
+        onClose={closeShareModal}
+      />
     </div>
   );
 }

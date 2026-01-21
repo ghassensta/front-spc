@@ -19,7 +19,7 @@ export function useGetWishlist() {
       loading: isLoading,
       validating: isValidating,
     }),
-    [data]
+    [data, isLoading, isValidating]
   );
 
   return memoizedValue;
@@ -50,5 +50,23 @@ export async function getIsWishlisted(id) {
     return res?.data.some((item) => item.id === id) || false;
   } catch (error) {
     return false;
+  }
+}
+
+export async function sendWishlistByEmail(email, message = "") {
+  if (!email || !email.trim()) {
+    throw new Error("L'adresse email est requise");
+  }
+
+  try {
+    const res = await poster(endpoints.wishlist.shareProduct, {
+      email,
+      message: message.trim(),
+    });
+
+    return res;
+  } catch (error) {
+    console.error("Erreur envoi wishlist par email :", error);
+    throw error.response?.data?.message || error.message || "Échec de l'envoi";
   }
 }

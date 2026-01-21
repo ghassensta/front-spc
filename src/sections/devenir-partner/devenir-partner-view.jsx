@@ -3,11 +3,11 @@ import { toast } from "react-toastify";
 import { sendDevenirPartenaire } from "src/actions/forms";
 import theImage from "src/assets/SPC-Devenir-Partenaire-1975x1318-03.jpg";
 import theImage2 from "src/assets/SPC-Devenir-Partenaire-1975x1318-02.jpg";
-import { TranslatedText } from "src/components/translated-text/translated-text";
 import { useTranslation } from "src/context/translation-context";
 
 export default function DevenirPartnerView() {
   const { translateSync } = useTranslation();
+
   const initialFormData = {
     etablissement: "",
     nom: "",
@@ -41,7 +41,8 @@ export default function DevenirPartnerView() {
 
     if (!formData.etablissement.trim())
       errors.push(translateSync("Le nom de l'établissement est obligatoire."));
-    if (!formData.nom.trim()) errors.push(translateSync("Le nom est obligatoire."));
+    if (!formData.nom.trim())
+      errors.push(translateSync("Le nom est obligatoire."));
     if (!formData.email.trim()) {
       errors.push(translateSync("L'email est obligatoire."));
     } else {
@@ -55,16 +56,20 @@ export default function DevenirPartnerView() {
     }
     if (!formData.message.trim())
       errors.push(translateSync("Le message est obligatoire."));
-    if (!formData.secteur) errors.push(translateSync("Le secteur est obligatoire."));
+    if (!formData.secteur)
+      errors.push(translateSync("Le secteur est obligatoire."));
 
-    // File validation
     if (formData.fichier) {
       const allowedTypes = ["image/jpeg", "image/png", "application/pdf"];
       if (!allowedTypes.includes(formData.fichier.type)) {
-        errors.push(translateSync("Le fichier doit être en format JPEG, PNG ou PDF."));
+        errors.push(
+          translateSync("Le fichier doit être en format JPEG, PNG ou PDF.")
+        );
       }
       if (formData.fichier.size > 5 * 1024 * 1024) {
-        errors.push(translateSync("La taille du fichier ne doit pas dépasser 5 Mo."));
+        errors.push(
+          translateSync("La taille du fichier ne doit pas dépasser 5 Mo.")
+        );
       }
     }
 
@@ -88,9 +93,7 @@ export default function DevenirPartnerView() {
         error: translateSync("Échec lors de l'envoi"),
       }).then(() => {
         setFormData(initialFormData);
-        if (fileInputRef.current) {
-          fileInputRef.current.value = "";
-        }
+        if (fileInputRef.current) fileInputRef.current.value = "";
       });
     } catch (error) {
       toast.error(translateSync("Une erreur inattendue est survenue."));
@@ -99,58 +102,70 @@ export default function DevenirPartnerView() {
 
   return (
     <>
-      {}
+      {/* Header Image */}
       <div
         className="w-screen relative left-[calc(-50vw+50%)] h-96 bg-black bg-center bg-cover bg-fixed overflow-hidden hidden md:block"
-        style={{
-          backgroundImage: `url(${theImage})`,
-        }}
+        style={{ backgroundImage: `url(${theImage})` }}
       >
         <div className="absolute inset-0 bg-black bg-opacity-40" />
         <div className="absolute inset-0 flex items-center justify-center px-4">
           <h1 className="text-white text-4xl md:text-5xl max-w-5xl mx-auto text-center font-bold leading-snug">
-            <TranslatedText text="ÉLEVEZ VOTRE ÉTABLISSEMENT AU RANG DE RÉFÉRENCE AVEC SPA & PRESTIGE COLLECTION." />
+            {translateSync(
+              "ÉLEVEZ VOTRE ÉTABLISSEMENT AU RANG DE RÉFÉRENCE AVEC SPA & PRESTIGE COLLECTION."
+            )}
           </h1>
         </div>
       </div>
 
-      {}
+      {/* Pourquoi nous rejoindre */}
       <section className="max-w-7xl mx-auto px-4 py-16">
         <h2 className="text-4xl font-bold text-center mb-6 md:mb-12 font-serif">
-          <TranslatedText text="Pourquoi nous rejoindre ?" />
+          {translateSync("Pourquoi nous rejoindre ?")}
         </h2>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-10">
           <div className="space-y-4 text-justify font-bricolage text-sm">
             <p>
               <strong>
-                <TranslatedText text="Boostez votre Chiffre d’Affaires :" />
+                {translateSync("Boostez votre Chiffre d’Affaires :")}
               </strong>{" "}
-              <TranslatedText text="Développez vos revenus grâce à la vente de cartes cadeaux et à des partenariats avec des comités d’entreprise." />
-              <strong>Boostez votre Chiffre d’Affaires :</strong> Développez vos
-              revenus grâce à la vente de cartes cadeaux et à des partenariats
-              avec des comités d’entreprise.
+              {translateSync(
+                "Développez vos revenus grâce à la vente de cartes cadeaux et à des partenariats avec des comités d’entreprise."
+              )}
             </p>
             <p>
-              <strong>Recrutez et fidélisez une clientèle qualifiée :</strong>{" "}
-              Grâce à des actions ciblées et des programmes de fidélité.
+              <strong>
+                {translateSync("Recrutez et fidélisez une clientèle qualifiée :")}
+              </strong>{" "}
+              {translateSync(
+                "Grâce à des actions ciblées et des programmes de fidélité."
+              )}
             </p>
             <p>
-              <strong>Maximisez votre taux d’occupation :</strong> Augmentez
-              votre présence en ligne avec des offres de dernière minute.
+              <strong>
+                {translateSync("Maximisez votre taux d’occupation :")}
+              </strong>{" "}
+              {translateSync(
+                "Augmentez votre présence en ligne avec des offres de dernière minute."
+              )}
             </p>
             <p>
-              <strong>Renforcez votre visibilité :</strong> Profitez de
-              stratégies de communication sur mesure et de votre présence au
-              sein du guide exclusif : Collection Prestige.
+              <strong>{translateSync("Renforcez votre visibilité :")}</strong>{" "}
+              {translateSync(
+                "Profitez de stratégies de communication sur mesure et de votre présence au sein du guide exclusif : Collection Prestige."
+              )}
             </p>
             <p>
-              <strong>Bénéficiez d’un accompagnement personnalisé :</strong>{" "}
-              Optimisez votre stratégie avec un soutien sur mesure.
+              <strong>{translateSync("Bénéficiez d’un accompagnement personnalisé :")}</strong>{" "}
+              {translateSync(
+                "Optimisez votre stratégie avec un soutien sur mesure."
+              )}
             </p>
             <p>
-              <strong>Créez des synergies :</strong> Stimulez votre croissance
-              avec des partenariats stratégiques.
+              <strong>{translateSync("Créez des synergies :")}</strong>{" "}
+              {translateSync(
+                "Stimulez votre croissance avec des partenariats stratégiques."
+              )}
             </p>
           </div>
 
@@ -158,33 +173,37 @@ export default function DevenirPartnerView() {
             <img
               loading="lazy"
               src={theImage2}
-              alt="Piscine spa"
+              alt={translateSync("Piscine spa")}
               className="w-full h-auto object-cover rounded-lg shadow-lg"
             />
           </div>
         </div>
       </section>
 
-      {}
+      {/* Formulaire */}
       <div className="bg-[#FBF6EC] p-8 w-screen relative left-[calc(-50vw+50%)]">
         <section className="max-w-6xl mx-auto px-4 py-16 font-roboto">
           <h2 className="text-2xl md:text-3xl font-bold text-center mb-6 font-serif">
-            Vous souhaitez devenir adhérent de Spa & Prestige Collection ?
+            {translateSync(
+              "Vous souhaitez devenir adhérent de Spa & Prestige Collection ?"
+            )}
           </h2>
           <p className="text-center text-sm mb-8">
-            Veuillez remplir ce formulaire, et nous vous recontacterons dans les
-            plus brefs délais !<br />
-            <span className="text-red-500">*</span> Champs obligatoires
+            {translateSync(
+              "Veuillez remplir ce formulaire, et nous vous recontacterons dans les plus brefs délais !"
+            )}
+            <br />
+            <span className="text-red-500">*</span>{" "}
+            {translateSync("Champs obligatoires")}
           </p>
 
           <form
-            onSubmit={(e) => handleSubmit(e)}
+            onSubmit={handleSubmit}
             method="POST"
             className="grid grid-cols-1 md:grid-cols-2 gap-4"
           >
-            {}
             <label className="flex flex-col md:col-span-2">
-              Nom de l'établissement*
+              {translateSync("Nom de l'établissement*")}
               <input
                 type="text"
                 name="etablissement"
@@ -195,9 +214,8 @@ export default function DevenirPartnerView() {
               />
             </label>
 
-            {}
             <label className="flex flex-col">
-              Nom*
+              {translateSync("Nom*")}
               <input
                 type="text"
                 name="nom"
@@ -208,9 +226,8 @@ export default function DevenirPartnerView() {
               />
             </label>
 
-            {}
             <label className="flex flex-col">
-              Prénom
+              {translateSync("Prénom")}
               <input
                 type="text"
                 name="prenom"
@@ -220,9 +237,8 @@ export default function DevenirPartnerView() {
               />
             </label>
 
-            {}
             <label className="flex flex-col">
-              Téléphone
+              {translateSync("Téléphone")}
               <input
                 type="tel"
                 name="telephone"
@@ -232,9 +248,8 @@ export default function DevenirPartnerView() {
               />
             </label>
 
-            {}
             <label className="flex flex-col">
-              E-mail*
+              {translateSync("E-mail*")}
               <input
                 type="email"
                 name="email"
@@ -245,25 +260,23 @@ export default function DevenirPartnerView() {
               />
             </label>
 
-            {}
             <label className="flex flex-col">
-              Pays
+              {translateSync("Pays")}
               <select
                 name="pays"
                 value={formData.pays}
                 onChange={handleChange}
                 className="border p-2 rounded w-full"
               >
-                <option value="France">France</option>
-                <option value="Belgique">Belgique</option>
-                <option value="Suisse">Suisse</option>
-                <option value="Autre">Autre</option>
+                <option value="France">{translateSync("France")}</option>
+                <option value="Belgique">{translateSync("Belgique")}</option>
+                <option value="Suisse">{translateSync("Suisse")}</option>
+                <option value="Autre">{translateSync("Autre")}</option>
               </select>
             </label>
 
-            {}
             <label className="flex flex-col">
-              Adresse complète
+              {translateSync("Adresse complète")}
               <input
                 type="text"
                 name="adresse"
@@ -273,9 +286,8 @@ export default function DevenirPartnerView() {
               />
             </label>
 
-            {}
             <label className="flex flex-col">
-              Site web
+              {translateSync("Site web")}
               <input
                 type="text"
                 name="siteweb"
@@ -285,9 +297,8 @@ export default function DevenirPartnerView() {
               />
             </label>
 
-            {}
             <label className="flex flex-col">
-              Rôle de la personne qui nous contacte
+              {translateSync("Rôle de la personne qui nous contacte")}
               <input
                 type="text"
                 name="role"
@@ -297,9 +308,8 @@ export default function DevenirPartnerView() {
               />
             </label>
 
-            {}
             <label className="flex flex-col">
-              Secteur d'activité*
+              {translateSync("Secteur d'activité*")}
               <select
                 name="secteur"
                 value={formData.secteur}
@@ -307,17 +317,16 @@ export default function DevenirPartnerView() {
                 required
                 className="border p-2 rounded w-full"
               >
-                <option value="Hôtel">Hôtel</option>
-                <option value="Spa">Spa</option>
-                <option value="Centre de beauté">Centre de beauté</option>
-                <option value="Restaurant">Restaurant</option>
-                <option value="Autre">Autre</option>
+                <option value="Hôtel">{translateSync("Hôtel")}</option>
+                <option value="Spa">{translateSync("Spa")}</option>
+                <option value="Centre de beauté">{translateSync("Centre de beauté")}</option>
+                <option value="Restaurant">{translateSync("Restaurant")}</option>
+                <option value="Autre">{translateSync("Autre")}</option>
               </select>
             </label>
 
-            {}
             <label className="flex flex-col">
-              Comment avez-vous connu Spa & Prestige Collection ?
+              {translateSync("Comment avez-vous connu Spa & Prestige Collection ?")}
               <input
                 type="text"
                 name="connaissance"
@@ -327,9 +336,8 @@ export default function DevenirPartnerView() {
               />
             </label>
 
-            {}
             <label className="flex flex-col md:col-span-2">
-              Message*
+              {translateSync("Message*")}
               <textarea
                 name="message"
                 value={formData.message}
@@ -337,12 +345,11 @@ export default function DevenirPartnerView() {
                 className="border p-2 rounded w-full"
                 rows="4"
                 required
-              ></textarea>
+              />
             </label>
 
-            {}
             <label className="flex flex-col md:col-span-2">
-              Ajouter photos (JPEG, PNG, PDF et 5 Mo maximum)
+              {translateSync("Ajouter photos (JPEG, PNG, PDF et 5 Mo maximum)")}
               <input
                 type="file"
                 name="fichier"
@@ -352,13 +359,12 @@ export default function DevenirPartnerView() {
               />
             </label>
 
-            {}
             <div className="md:col-span-2 flex justify-center">
               <button
                 type="submit"
                 className="bg-[#c4c0a1] text-white px-8 py-2 rounded-full hover:bg-[#b09456] transition"
               >
-                Envoyer
+                {translateSync("Envoyer")}
               </button>
             </div>
           </form>

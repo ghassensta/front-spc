@@ -1,7 +1,6 @@
 import MarquePartenairePage from "src/sections/marque-partenaire/marque-partenaire-page";
 import { Helmet } from 'react-helmet'
 import theImage from "src/assets/images/SPC-equipe-ce-1975x1318-1-768x513.jpg";
-
 export default function Page() {
   const pageTitle = "Marques Partenaires - Spa & Prestige Collection";
   const pageDescription = "Rejoignez le cercle des fournisseurs et marques partenaires de Spa & Prestige Collection. Gagnez en visibilité et développez vos collaborations stratégiques.";

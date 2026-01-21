@@ -17,6 +17,7 @@ import { Link } from "react-router-dom";
 import { paths } from "src/router/paths";
 import { useAuthContext } from "src/auth/hooks/use-auth-context";
 import { motion, AnimatePresence } from "framer-motion";
+import { useTranslation } from "src/context/translation-context";
 
 const criteria = [
   "Practicien(ne)",
@@ -29,11 +30,6 @@ const criteria = [
   "Boutique",
 ];
 
-const initialRatings = {};
-criteria.forEach((key) => {
-  initialRatings[key] = 0;
-});
-
 function SpaDetailsView({
   spaData,
   types,
@@ -43,6 +39,13 @@ function SpaDetailsView({
   loading,
 }) {
   const { user } = useAuthContext();
+  const { translateSync } = useTranslation();
+
+  const initialRatings = {};
+  criteria.forEach((key) => {
+    initialRatings[key] = 0;
+  });
+
   const [ratings, setRatings] = useState(initialRatings);
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
@@ -63,13 +66,13 @@ function SpaDetailsView({
 
   const validateForm = () => {
     if (!name || !email) {
-      toast.error("Veuillez remplir tous les champs (nom, email) !");
+      toast.error(translateSync("Veuillez remplir tous les champs (nom, email) !"));
       return false;
     }
 
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!emailRegex.test(email)) {
-      toast.error("Veuillez entrer un email valide.");
+      toast.error(translateSync("Veuillez entrer un email valide."));
       return false;
     }
 
@@ -90,18 +93,16 @@ function SpaDetailsView({
           id: spaData.id,
         }),
         {
-          pending: "Envoi de votre avis...",
-          success: "Avis envoyé avec succès !",
-          error: "Erreur lors de l'envoi de l'avis.",
+          pending: translateSync("Envoi de votre avis..."),
+          success: translateSync("Avis envoyé avec succès !"),
+          error: translateSync("Erreur lors de l'envoi de l'avis."),
         }
       )
       .then(() => {
         setRatings(initialRatings);
         setComment("");
       })
-      .catch(() => {
-        // Gestion silencieuse de l'erreur
-      });
+      .catch(() => {});
   };
 
   const handleLoadMore = () => {
@@ -131,24 +132,22 @@ function SpaDetailsView({
       <div id="avis" className="mt-10 rounded-xl max-w-7xl mx-auto bg-[#f9f7ed] p-4 font-tahoma shadow-sm">
         <div className="flex gap-4 border-b border-gray-200 ">
           <button
-            className={`px-4 py-2 font-semibold ${
-              activeTab === "reviews"
+            className={`px-4 py-2 font-semibold ${activeTab === "reviews"
                 ? "border-b-2 border-secondary text-secondary"
                 : "text-gray-600"
-            }`}
+              }`}
             onClick={() => setActiveTab("reviews")}
           >
-            Avis
+            {translateSync("Avis")}
           </button>
           <button
-            className={`px-4 py-2 font-semibold ${
-              activeTab === "createReview"
+            className={`px-4 py-2 font-semibold ${activeTab === "createReview"
                 ? "border-b-2 border-secondary text-secondary"
                 : "text-gray-600"
-            }`}
+              }`}
             onClick={() => setActiveTab("createReview")}
           >
-            Créez votre avis
+            {translateSync("Créez votre avis")}
           </button>
         </div>
 
@@ -183,7 +182,7 @@ function SpaDetailsView({
                             <p className="font-normal">- {avis.name}</p>
                           </div>
                           <p className="whitespace-pre-wrap break-words text-base text-gray-600">
-                            {avis.comment}
+                            {translateSync(avis.comment)}
                           </p>
                         </div>
                       ))}
@@ -193,7 +192,7 @@ function SpaDetailsView({
                             onClick={handleLoadMore}
                             className="w-auto mx-auto mt-4 px-4 py-3 bg-transparent leading-4 text-black border border-black uppercase font-normal text-xs tracking-[3px] hover:bg-black hover:text-white transition font-tahoma flex items-center justify-center gap-2"
                           >
-                            Charger plus d'avis
+                            {translateSync("Charger plus d'avis")}
                           </button>
                         </div>
                       )}
@@ -201,15 +200,13 @@ function SpaDetailsView({
                   ) : (
                     <>
                       <p className="text-gray-600">
-                        Aucun avis pour le moment.
+                        {translateSync("Aucun avis pour le moment.")}
                       </p>
                       <p className="text-gray-600">
-                        Soyez le premier à laisser votre avis sur "
-                        {spaData?.nom || "ce produit"}" !
+                        {translateSync(`Soyez le premier à laisser votre avis sur "${spaData?.nom || translateSync("ce produit")}" !`)}
                       </p>
                       <p className="text-gray-600">
-                        Votre adresse e-mail ne sera pas publiée. Les champs
-                        obligatoires sont indiqués avec *
+                        {translateSync("Votre adresse e-mail ne sera pas publiée. Les champs obligatoires sont indiqués avec *")}
                       </p>
                     </>
                   )}
@@ -218,72 +215,72 @@ function SpaDetailsView({
             )}
 
             {activeTab === "createReview" && (
-              <>
-                {}
-                <div className="bg-white p-4 rounded-lg border border-black">
-                  {user ? (
-                    <>
-                      <h6 className="font-semibold text-lg mb-2">
-                        Laisser un avis
-                      </h6>
-                      <input
-                        type="text"
-                        className="w-full border border-gray-300 rounded-lg p-2 mb-3"
-                        placeholder="Votre nom*"
-                        value={name}
-                        onChange={(e) => setName(e.target.value)}
-                        disabled={!!name}
-                      />
-                      <input
-                        type="email"
-                        className="w-full border border-gray-300 rounded-lg p-2 mb-3"
-                        placeholder="Votre email*"
-                        value={email}
-                        onChange={(e) => setEmail(e.target.value)}
-                        disabled={!!name}
-                      />
-                      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 mb-6">
-                        {criteria.map((criterion) => (
-                          <div key={criterion}>
-                            <label className="block text-sm font-medium mb-1 ">
-                              {criterion}
-                            </label>
-                            <StarRatingInput
-                              value={ratings[criterion]}
-                              onChange={(value) => handleRatingChange(criterion, value)}
-                            />
-                          </div>
-                        ))}
-                      </div>
-                      <textarea
-                        rows={4}
-                        className="w-full border border-gray-300 rounded-lg p-2 mb-3"
-                        placeholder="Partagez votre expérience..."
-                        value={comment}
-                        onChange={(e) => setComment(e.target.value)}
-                      />
-                      <div className="flex justify-end mt-3">
-                        <button
-                          onClick={handleSubmit}
-                          className="w-max px-4 py-3 bg-black leading-4 text-white uppercase font-normal text-xs tracking-[3px] hover:bg-gray-800 transition font-tahoma flex items-center justify-center gap-2"
-                          type="button"
-                        >
-                          Envoyer l'avis
-                        </button>
-                      </div>
-                    </>
-                  ) : (
-                    <>
-                      <div className="h-60 flex flex-col justify-center items-center">
-                        <p className="text-xl mb-2">Veuillez vous connecter pour mettre un avis</p>
-                        <Link to={paths.auth.root} className="w-max rounded-full px-4 py-3 bg-black leading-4 text-white uppercase font-normal text-xs tracking-[3px] hover:bg-gray-800 transition font-tahoma flex items-center justify-center gap-2">
-                          Connectez vous
-                        </Link>
-                      </div>
-                    </>
-                  )}
-                </div>
-              </>
+              <div className="bg-white p-4 rounded-lg border border-black">
+                {user ? (
+                  <>
+                    <h6 className="font-semibold text-lg mb-2">
+                      {translateSync("Laisser un avis")}
+                    </h6>
+                    <input
+                      type="text"
+                      className="w-full border border-gray-300 rounded-lg p-2 mb-3"
+                      placeholder={translateSync("Votre nom*")}
+                      value={name}
+                      onChange={(e) => setName(e.target.value)}
+                      disabled={!!name}
+                    />
+                    <input
+                      type="email"
+                      className="w-full border border-gray-300 rounded-lg p-2 mb-3"
+                      placeholder={translateSync("Votre email*")}
+                      value={email}
+                      onChange={(e) => setEmail(e.target.value)}
+                      disabled={!!name}
+                    />
+                    <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 mb-6">
+                      {criteria.map((criterion) => (
+                        <div key={criterion}>
+                          <label className="block text-sm font-medium mb-1 ">
+                            {translateSync(criterion)}
+                          </label>
+                          <StarRatingInput
+                            value={ratings[criterion]}
+                            onChange={(value) => handleRatingChange(criterion, value)}
+                          />
+                        </div>
+                      ))}
+                    </div>
+                    <textarea
+                      rows={4}
+                      className="w-full border border-gray-300 rounded-lg p-2 mb-3"
+                      placeholder={translateSync("Partagez votre expérience...")}
+                      value={comment}
+                      onChange={(e) => setComment(e.target.value)}
+                    />
+                    <div className="flex justify-end mt-3">
+                      <button
+                        onClick={handleSubmit}
+                        className="w-max px-4 py-3 bg-black leading-4 text-white uppercase font-normal text-xs tracking-[3px] hover:bg-gray-800 transition font-tahoma flex items-center justify-center gap-2"
+                        type="button"
+                      >
+                        {translateSync("Envoyer l'avis")}
+                      </button>
+                    </div>
+                  </>
+                ) : (
+                  <div className="h-60 flex flex-col justify-center items-center">
+                    <p className="text-xl mb-2">
+                      {translateSync("Veuillez vous connecter pour mettre un avis")}
+                    </p>
+                    <Link
+                      to={paths.auth.root}
+                      className="w-max rounded-full px-4 py-3 bg-black leading-4 text-white uppercase font-normal text-xs tracking-[3px] hover:bg-gray-800 transition font-tahoma flex items-center justify-center gap-2"
+                    >
+                      {translateSync("Connectez vous")}
+                    </Link>
+                  </div>
+                )}
+              </div>
             )}
           </AnimatePresence>
         </div>
@@ -302,25 +299,33 @@ function SpaDetailsView({
           <img
             loading="lazy"
             src={logoSpc}
-            alt="Logo Spa & Prestige Collection"
+            alt={translateSync("Logo Spa & Prestige Collection")}
             className="w-36 mb-4"
           />
           <span className="text-3xl font-bold mb-4">
-            – Le conseil Spa & Prestige Collection –
+            {translateSync("– Le conseil Spa & Prestige Collection –")}
           </span>
           <p className="text-lg font-normal font-tahoma">
-            {spaData?.text_conseil}
+            {translateSync(spaData?.text_conseil)}
           </p>
         </div>
       </div>
+
       <LocationSection data={spaData} />
       <TestimonialsSection testimonials={simlairesEtablissment} />
+
       <div className="flex items-center justify-center gap-2">
-        <Link to={paths.spa.list} className="inline-flex font-tahoma rounded-full items-center gap-2 uppercase font-normal tracking-widest transition-all duration-300 px-6 py-3 text-sm bg-[#B6B499] hover:bg-black text-white">
-          Nos établissements
+        <Link
+          to={paths.spa.list}
+          className="inline-flex font-tahoma rounded-full items-center gap-2 uppercase font-normal tracking-widest transition-all duration-300 px-6 py-3 text-sm bg-[#B6B499] hover:bg-black text-white"
+        >
+          {translateSync("Nos établissements")}
         </Link>
-        <Link to={paths.main} className="inline-flex font-tahoma rounded-full items-center gap-2 uppercase font-normal tracking-widest transition-all duration-300 px-6 py-3 text-sm bg-[#B6B499] hover:bg-black text-white">
-          Accueil
+        <Link
+          to={paths.main}
+          className="inline-flex font-tahoma rounded-full items-center gap-2 uppercase font-normal tracking-widest transition-all duration-300 px-6 py-3 text-sm bg-[#B6B499] hover:bg-black text-white"
+        >
+          {translateSync("Accueil")}
         </Link>
       </div>
     </div>

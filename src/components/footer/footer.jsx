@@ -1,20 +1,20 @@
-import React from "react";
+import React, { useEffect } from "react";
 import {
   FaFacebookF,
   FaInstagram,
-  FaTiktok ,
+  FaTiktok,
   FaLinkedinIn,
 } from "react-icons/fa";
 import { paths } from "src/router/paths";
 import { useLayout } from "src/actions/layout";
 import { CONFIG } from "src/config-global";
-import { TranslatedText } from "src/components/translated-text/translated-text";
 import { useTranslation } from "src/context/translation-context";
+import { Link } from "react-router-dom";
 
 const iconMap = {
   "ti ti-brand-facebook": FaFacebookF,
-  "ti ti-brand-instagram": FaInstagram ,
-  "ti ti-brand-tiktok": FaTiktok ,
+  "ti ti-brand-instagram": FaInstagram,
+  "ti ti-brand-tiktok": FaTiktok,
   "ti ti-brand-linkedin": FaLinkedinIn,
 };
 
@@ -22,140 +22,124 @@ export default function Footer() {
   const { footer } = useLayout();
   const { translateSync } = useTranslation();
 
-  const { settings, footer_about, footer_pro, social_links } = footer || {};
+  useEffect(() => {
+    const script = document.createElement("script");
+    script.src = "https://app.mailjet.com/pas-nc-embedded-v1.js";
+    script.type = "text/javascript";
+    script.async = true;
+
+    document.body.appendChild(script);
+
+    return () => {
+      document.body.removeChild(script);
+    };
+  }, []);
+
+  if (!footer) return null;
+
+  const { settings, footer_about, footer_pro, social_links } = footer;
 
   const siteLogoPath = settings?.site_logo?.value || "";
-
   const siteDescription =
-    settings?.site_description?.value || translateSync("Description par défaut du site.");
+    settings?.site_description?.value ||
+    translateSync("Description par défaut du site.");
 
-  const aboutLinks = footer_about
-    ? footer_about
-        .filter((item) => item.is_active)
-        .sort((a, b) => a.order - b.order)
+  const aboutLinks = Array.isArray(footer_about)
+    ? footer_about.filter((i) => i.is_active).sort((a, b) => a.order - b.order)
     : [];
 
-  const proLinks = footer_pro
-    ? footer_pro
-        .filter((item) => item.is_active)
-        .sort((a, b) => a.order - b.order)
+  const proLinks = Array.isArray(footer_pro)
+    ? footer_pro.filter((i) => i.is_active).sort((a, b) => a.order - b.order)
     : [];
 
-  const socialLinksFiltered = social_links
-    ? social_links
-        .filter((item) => item.is_active)
-        .sort((a, b) => a.order - b.order)
+  const socialLinksFiltered = Array.isArray(social_links)
+    ? social_links.filter((i) => i.is_active).sort((a, b) => a.order - b.order)
     : [];
 
   return (
     <footer className="bg-secondary text-white pt-8 md:pt-12 left-[calc(-50vw+50%)] relative w-screen font-roboto">
       <div className="max-w-6xl mx-auto px-6 flex flex-col md:flex-row gap-10 md:gap-2 lg:gap-8 md:py-12">
+
         <div className="text-center flex flex-col items-center mx-auto lg:mr-12">
           {siteLogoPath ? (
-            <img lazyload="lazy"
+            <img
               src={`${CONFIG.serverUrl}/storage/${siteLogoPath}`}
               alt={translateSync("SPC Logo")}
-              className="w-32 md:w-60 mb-4 d-block"
+              className="w-32 md:w-60 mb-4 block"
               width={150}
-              onError={(e) => {}}
             />
           ) : (
             <div className="w-24 h-24 bg-gray-600 mb-4 rounded-full flex items-center justify-center">
-              <TranslatedText text="Logo" />
+              {translateSync("Logo")}
             </div>
           )}
-          <p className="text-sm leading-relaxed font-roboto mb-4 font-[300]">
+          <p className="text-sm leading-relaxed font-[300] mb-4">
             {siteDescription}
           </p>
           <a href="tel:0182350126" className="text-sm">
-            <TranslatedText text="Tél." /> 01 82 35 01 26
-          </a>{" "}
+            {translateSync("Tél.")} 01 82 35 01 26
+          </a>
         </div>
 
         <div className="w-full">
           <h4 className="text-lg font-light mb-3">
-            <TranslatedText text="À PROPOS" />
+            {translateSync("À PROPOS")}
           </h4>
-          <ul className="space-y-2 text-sm font-roboto">
-            {aboutLinks.map((item) => (
-              <li key={item.id}>
-                <a href={item.url} className="duration-300 border-0 hover:border-b-2 hover:border-primary hover:text-primary hover:font-bold">
-                  {item.title}
-                </a>
-              </li>
-            ))}
-            {aboutLinks.length === 0 && (
-              <>
-                <li>
-                  <a href={paths.who} className="duration-300 border-0 hover:border-b-2 hover:border-primary hover:text-primary hover:font-bold">
-                    <TranslatedText text="Qui sommes nous" />
-                  </a>
+          <ul className="space-y-2 text-sm">
+            {aboutLinks.length
+              ? aboutLinks.map((item) => (
+                <li key={item.id}>
+                  <Link
+                    to={item.url}
+                    className="hover:border-b-2 hover:border-primary hover:text-primary hover:font-bold duration-300"
+                  >
+                    {translateSync(item.title)}
+                  </Link>
                 </li>
-                <li>
-                  <a href={paths.collection} className="duration-300 border-0 hover:border-b-2 hover:border-primary hover:text-primary hover:font-bold">
-                    <TranslatedText text="Book Collection & Prestige" />
-                  </a>
+              ))
+              : null}
+          </ul>
+        </div>
+
+        {/* Professionnel */}
+        <div className="w-full">
+          <h4 className="text-lg font-light mb-3">
+            {translateSync("PROFESSIONNEL")}
+          </h4>
+          <ul className="space-y-2 text-sm">
+            {proLinks.length
+              ? proLinks.map((item) => (
+                <li key={item.id}>
+                  <Link
+                    to={item.url}
+                    className="hover:border-b-2 hover:border-primary hover:text-primary hover:font-bold duration-300"
+                  >
+                    {translateSync(item.title)}
+                  </Link>
                 </li>
-              </>
-            )}
+              ))
+              : null}
           </ul>
         </div>
 
         <div className="w-full">
           <h4 className="text-lg font-light mb-3">
-            <TranslatedText text="PROFESSIONNEL" />
+            {translateSync("NEWSLETTER")}
           </h4>
-          <ul className="space-y-2 text-sm font-roboto">
-            {proLinks.map((item) => (
-              <li key={item.id}>
-                <a href={item.url} className="duration-300 border-0 hover:border-b-2 hover:border-primary hover:text-primary hover:font-bold">
-                  {item.title}
-                </a>
-              </li>
-            ))}
-            {proLinks.length === 0 && (
-              <>
-                <li>
-                  <a href={paths.partenaire} className="duration-300 border-0 hover:border-b-2 hover:border-primary hover:text-primary hover:font-bold">
-                    <TranslatedText text="Devenir partenaire" />
-                  </a>
-                </li>
-                <li>
-                  <a href={paths.referentiel} className="duration-300 border-0 hover:border-b-2 hover:border-primary hover:text-primary hover:font-bold">
-                    <TranslatedText text="Référentiel de candidature" />
-                  </a>
-                </li>
-              </>
-            )}
-          </ul>
-        </div>
 
-        <div className="w-full">
-          <h4 className="text-lg font-light mb-3">
-            <TranslatedText text="NEWSLETTER" />
-          </h4>
-          <div className="bg-[#f4efe5] p-4 rounded">
-            <label className="block text-sm mb-1 text-black">
-              <TranslatedText text="Email" />
-            </label>
-            <input
-              type="email"
-              className="w-full border border-gray-300 text-black px-2 py-1 rounded mb-3"
-              placeholder={translateSync("Votre email")}
+          <div className="bg-[#f4efe5] p-4 rounded overflow-hidden">
+            <iframe
+              data-w-type="embedded"
+              frameBorder="0"
+              scrolling="no"
+              marginHeight="0"
+              marginWidth="0"
+              src="https://srm3t.mjt.lu/wgt/srm3t/0wp5/form?c=31298976"
+              style={{ width: "100%", height: "0" }}
+              title="Mailjet Newsletter"
             />
-            <label className="flex items-start text-xs text-black mb-3 gap-2">
-              <input type="checkbox" className="mt-1" />
-              <TranslatedText text="J'accepte l'inscription à la base de données Newsletter SPC." />
-            </label>
-            <button className="bg-black text-white w-full py-2 rounded-full font-semibold text-sm hover:bg-gray-800 transition-colors">
-              <TranslatedText text="Valider" />
-            </button>
-            <div className="mt-4 text-center">
-              <button className="bg-black text-white px-4 py-1 text-xs rounded-full hover:bg-gray-800 transition-colors">
-                <TranslatedText text="Powered by" /> <strong>Mailjet</strong>
-              </button>
-            </div>
           </div>
+
           <div className="flex justify-center md:justify-start gap-2 mt-6 mb-4 text-white text-lg">
             {socialLinksFiltered.map((item) => {
               const IconComponent = iconMap[item.icon];
@@ -166,7 +150,7 @@ export default function Footer() {
                   href={item.url}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="hover:text-gray-900 hover:bg-white p-1 rounded-full transition-colors font-light "
+                  className="hover:text-gray-900 hover:bg-white p-1 rounded-full transition-colors"
                 >
                   <IconComponent />
                 </a>
@@ -176,19 +160,23 @@ export default function Footer() {
         </div>
       </div>
 
-      <div className="bg-[#B6B498] text-base  text-black  font-roboto">
+      <div className="bg-[#B6B498] text-base text-black">
         <div className="max-w-6xl mx-auto p-6 flex flex-col md:flex-row items-center justify-between">
-          <p className="mb-2 md:mb-0">
-            &copy; 2025 - 2026 – <TranslatedText text="Réalisation" />{" "}
+          <p>
+            &copy; 2025 - 2026 – {translateSync("Réalisation")}{" "}
             <span className="font-semibold">éCOM Design</span>
           </p>
-          <div className="flex gap-4">
+          <div className="flex gap-4 items-center">
             <a href={paths.mentions} className="hover:underline">
-              <TranslatedText text="Mentions légales" />
+              {translateSync("Mentions légales")}
             </a>
             <span>•</span>
             <a href={paths.conditions} className="hover:underline">
-              <TranslatedText text="CGV" />
+              {translateSync("CGV")}
+            </a>
+            <span>•</span>
+            <a href={CONFIG.serverUrl} target="_blank" className="hover:underline">
+              {translateSync("Admin")}
             </a>
           </div>
         </div>

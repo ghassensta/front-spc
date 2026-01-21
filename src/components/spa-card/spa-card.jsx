@@ -6,6 +6,7 @@ import { FiMapPin } from "react-icons/fi";
 import { CONFIG } from "src/config-global";
 import { TranslatedText } from "../translated-text/translated-text";
 import { useTranslation } from "react-i18next";
+import defaultImage from "../../assets/default-image-avant-etablissment.png";
 
 export default function SpaCard({
   to,
@@ -27,21 +28,26 @@ export default function SpaCard({
     );
   };
 
-  const renderImage = () => {
-    if (!image) return null;
-    return (
-      <div className="relative">
-        {renderLocation()}
-        <img
-          lazyload="lazy"
-          src={CONFIG.serverUrl + "/storage/" + image}
-          alt={title}
-          className="w-full  rounded-3xl object-cover overflow-hidden max-h-[242px]"
-        />
-        {renderRemisePer()}
-      </div>
-    );
-  };
+ const renderImage = () => {
+  return (
+    <div className="relative">
+      {renderLocation()}
+
+      <img
+        loading="lazy"
+        src={
+          image
+            ? `${CONFIG.serverUrl}/storage/${image}`
+            : defaultImage
+        }
+        alt={title || "Établissement"}
+        className="w-full rounded-3xl object-cover overflow-hidden max-h-[242px]"
+      />
+
+      {renderRemisePer()}
+    </div>
+  );
+};
 
   const renderRemisePer = () => {
     if (!remise_offres && !prix_offres) return null;

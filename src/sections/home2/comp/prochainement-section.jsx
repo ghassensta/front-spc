@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef } from "react";
 import { FiChevronLeft, FiChevronRight } from "react-icons/fi";
 import { motion, AnimatePresence } from "framer-motion";
 import { CONFIG } from "src/config-global";
+import { useTranslation } from "src/context/translation-context";
 
 export default function ProchainementSection({ prochainement }) {
   if (
@@ -12,6 +13,8 @@ export default function ProchainementSection({ prochainement }) {
   ) {
     return null;
   }
+
+  const { translateSync } = useTranslation();
 
   const [currentIndex, setCurrentIndex] = useState(0);
   const cards = prochainement.extra_data.cards;
@@ -24,7 +27,9 @@ export default function ProchainementSection({ prochainement }) {
   };
 
   const prevSlide = () => {
-    setCurrentIndex((prevIndex) => (prevIndex - 1 + cards.length) % cards.length);
+    setCurrentIndex(
+      (prevIndex) => (prevIndex - 1 + cards.length) % cards.length
+    );
     resetTimer();
   };
 
@@ -63,12 +68,14 @@ export default function ProchainementSection({ prochainement }) {
     >
       <div className="max-w-6xl mx-auto">
         <div className="flex flex-col md:flex-row gap-2 md:gap-6">
-
-          {}
+          {/* Texte */}
           <div className="w-full md:w-1/2 py-8 px-3">
-            <h2 className="text-3xl">{prochainement.title}</h2>
+            <h2 className="text-3xl">
+              {translateSync(prochainement.title)}
+            </h2>
+
             <h3 className="text-[#B6B499] text-2xl mb-4">
-              {prochainement.description}
+              {translateSync(prochainement.description)}
             </h3>
 
             <AnimatePresence mode="wait">
@@ -79,15 +86,18 @@ export default function ProchainementSection({ prochainement }) {
                 exit={{ opacity: 0, y: -20 }}
                 transition={{ duration: 0.5 }}
               >
-                <h3 className="text-2xl mt-3">{cards[currentIndex].title}</h3>
+                <h3 className="text-2xl mt-3">
+                  {translateSync(cards[currentIndex].title)}
+                </h3>
+
                 <p className="font-tahoma text-sm">
-                  {cards[currentIndex].description}
+                  {translateSync(cards[currentIndex].description)}
                 </p>
               </motion.div>
             </AnimatePresence>
           </div>
 
-          {}
+          {/* Image */}
           <div className="w-full md:w-1/2 items-center justify-center">
             <div className="relative rounded-3xl overflow-hidden">
               <AnimatePresence mode="wait">
@@ -99,28 +109,27 @@ export default function ProchainementSection({ prochainement }) {
                   animate={{ opacity: 1 }}
                   exit={{ opacity: 0 }}
                   transition={{ duration: 0.5 }}
-                  className="w-full h-96 object-cover"   // ← ICI : toutes les images ont la même hauteur fixe
-                  alt={cards[currentIndex]?.title || ""}
+                  className="w-full h-96 object-cover"
+                  alt={translateSync(cards[currentIndex]?.title || "")}
                 />
               </AnimatePresence>
 
               <div className="absolute w-full bg-[#B6B499] left-0 bottom-0 text-center px-4 py-2 text-lg font-bold text-white">
-                {cards[currentIndex].title}
+                {translateSync(cards[currentIndex].title)}
               </div>
             </div>
 
-            {}
+            {/* Dots */}
             <div className="mt-5 mx-auto flex justify-center space-x-2">
               {cards.map((_, index) => (
                 <button
                   key={index}
                   onClick={() => goToSlide(index)}
-                  className={`w-3 h-3 rounded-full ${
-                    currentIndex === index
+                  className={`w-3 h-3 rounded-full ${currentIndex === index
                       ? "bg-[#B6B498]"
                       : "bg-gray-400 hover:bg-[#B6B498]"
-                  } transition-colors duration-300`}
-                  aria-label={`Go to slide ${index + 1}`}
+                    } transition-colors duration-300`}
+                  aria-label={translateSync("Aller à la diapositive") + ` ${index + 1}`}
                 />
               ))}
             </div>

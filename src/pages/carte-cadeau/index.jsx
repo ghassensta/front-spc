@@ -1,11 +1,12 @@
 import CarteCadeau from "src/sections/carte-cadeau/carte-cadeau";
 import { Helmet } from 'react-helmet'
+import { CONFIG } from "src/config-global";
 
 export default function Page() {
   const pageTitle = "Carte Cadeau - Offrez le Parfait Cadeau";
   const pageDescription = "Découvrez notre sélection de cartes cadeaux. Offrez la liberté de choisir avec nos cartes cadeaux disponibles en plusieurs montants.";
-  const pageUrl = "https://example.com/carte-cadeau";
-  const imageUrl = "https://example.com/og-carte-cadeau.jpg";
+  const pageUrl = `${CONFIG.frontUrl}/carte-cadeau`;
+  const imageUrl = `${CONFIG.frontUrl}/og-carte-cadeau.jpg`;
 
   const schemaData = {
     "@context": "https://schema.org",

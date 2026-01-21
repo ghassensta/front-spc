@@ -17,7 +17,8 @@ export default function CheckoutView() {
   const router = useRouter();
   const validateCoupon = useValidateCoupon();
   const { t } = useTranslation();
-  const itemsFiltered = checkout.items?.filter((item) => item.quantity > 0) || [];
+  const itemsFiltered =
+    checkout.items?.filter((item) => item.quantity > 0) || [];
 
   const TAX_RATE = 0.2;
   const [expediteurFullName, setExpediteurFullName] = useState(
@@ -33,23 +34,23 @@ export default function CheckoutView() {
   const [couponData, setCouponData] = useState(null);
 
   useEffect(() => {
-    const hasDiscount = checkout.items?.some((item) => (item.discount || 0) > 0);
+    const hasDiscount = checkout.items?.some(
+      (item) => (item.discount || 0) > 0
+    );
     const hasCoupon = !!checkout.couponId;
     if (hasDiscount || hasCoupon) {
-      // Clear persisted coupon and discounts
       checkout.onApplyCouponId(null);
       const resetItems = checkout.items.map((item) => ({
         ...item,
         discount: 0,
       }));
       checkout.onUpdateField("items", resetItems);
-      // Clear local state too
       setCouponCode("");
       setCouponApplied(false);
       setCouponData(null);
       toast.info(t("Les réductions et coupons ont été réinitialisés."));
     }
-  }, []); // Only on mount (refresh)
+  }, []);
 
   useEffect(() => {
     if (user) setExpediteurFullName(user.name);
@@ -59,39 +60,44 @@ export default function CheckoutView() {
     checkout.onCreateExpediteur({ ...checkout.expediteur, [field]: value });
   };
 
+  const hasValidDestinataire = (item) => {
+    if (!item.destinataires || item.destinataires.length === 0) {
+      return false;
+    }
+
+    return item.destinataires.some((dest) => {
+      const name = (dest.fullName || "").trim();
+      const email = (dest.email || "").trim();
+      return name !== "" || email !== "";
+    });
+  };
   const handleDelete = (productId) => {
     checkout.onDeleteCart(productId);
-    // Clear local coupon state on delete
     setCouponCode("");
     setCouponApplied(false);
     setCouponData(null);
   };
 
-  // Sous-total TTC AVANT réduction
   const subtotalTTC = itemsFiltered.reduce(
     (acc, item) => acc + Number(item.price || 0) * item.quantity,
     0
   );
 
-  // Total des réductions (coupon local state only for display)
-  const totalDiscount = couponApplied && couponData ? Number(couponData.amount || 0) : 0;
+  const totalDiscount =
+    couponApplied && couponData ? Number(couponData.amount || 0) : 0;
 
-  // Sous-total HT et taxe basés sur TTC original
   const subtotalHT = subtotalTTC / (1 + TAX_RATE);
   const tax = subtotalTTC - subtotalHT;
 
-  // Grand total TTC APRÈS réduction (for display)
   const grandTotal = subtotalTTC - totalDiscount;
 
   const isCartEmpty = itemsFiltered.length === 0;
 
-  // Calculate proportional discount for display only (not updating items)
   const getDisplayDiscountForItem = (itemTotal) => {
     if (!couponApplied || !couponData || subtotalTTC === 0) return 0;
     return (itemTotal / subtotalTTC) * totalDiscount;
   };
 
-  // Apply discount to items (called only on order confirmation)
   const applyDiscountToItems = (items, totalDiscountAmount) => {
     const totalCart = items.reduce(
       (acc, i) => acc + Number(i.price || 0) * Number(i.quantity || 0),
@@ -110,7 +116,6 @@ export default function CheckoutView() {
     return updatedItems;
   };
 
-  // Gestion du coupon (local only)
   const handleApplyCoupon = async () => {
     if (!couponCode) return;
     setCouponLoading(true);
@@ -153,7 +158,6 @@ export default function CheckoutView() {
       message: expediteurMessage,
     });
 
-    // Now apply coupon to context if present
     if (couponApplied && couponData) {
       applyDiscountToItems(itemsFiltered, Number(couponData.amount));
       checkout.onApplyCouponId(couponData.id);
@@ -169,17 +173,33 @@ export default function CheckoutView() {
       <div className="flex flex-col lg:flex-row gap-6">
         {}
         <div className="flex-1 bg-white p-4 rounded-lg shadow-sm overflow-x-auto">
-          <h4 className="text-xl font-semibold mb-4"><TranslatedText text="Panier" /></h4>
+          <h4 className="text-xl font-semibold mb-4">
+            <TranslatedText text="Panier" />
+          </h4>
           <table className="table-auto w-full text-sm text-left min-w-[700px] lg:min-w-full">
             <thead className="uppercase text-gray-700 bg-gray-50 border-b text-xs tracking-wide">
               <tr>
-                <th className="py-4 px-3"><TranslatedText text="Produit" /></th>
-                <th className="py-4 px-3"><TranslatedText text="Destinataires" /></th>
-                <th className="py-4 px-3"><TranslatedText text="Prix TTC" /></th>
-                <th className="py-4 px-3"><TranslatedText text="QTE" /></th>
-                <th className="py-4 px-3"><TranslatedText text="Total TTC" /></th>
-                <th className="py-4 px-3"><TranslatedText text="Réduction" /></th>
-                <th className="py-4 px-3"><TranslatedText text="Actions" /></th>
+                <th className="py-4 px-3">
+                  <TranslatedText text="Produit" />
+                </th>
+                <th className="py-4 px-3">
+                  <TranslatedText text="Destinataires" />
+                </th>
+                <th className="py-4 px-3">
+                  <TranslatedText text="Prix TTC" />
+                </th>
+                <th className="py-4 px-3">
+                  <TranslatedText text="QTE" />
+                </th>
+                <th className="py-4 px-3">
+                  <TranslatedText text="Total TTC" />
+                </th>
+                <th className="py-4 px-3">
+                  <TranslatedText text="Réduction" />
+                </th>
+                <th className="py-4 px-3">
+                  <TranslatedText text="Actions" />
+                </th>
               </tr>
             </thead>
             <tbody>
@@ -215,24 +235,61 @@ export default function CheckoutView() {
                               <li key={index}>
                                 {dest.fullName && dest.email
                                   ? `${dest.fullName} — ${dest.email}`
-                                  : t("Pas de destinataire défini → l'expéditeur recevra lui-même")}
+                                  : t(
+                                      "Pas de destinataire défini → l'expéditeur recevra lui-même"
+                                    )}
                               </li>
                             ))}
                           </ul>
                         ) : (
-                          t("Pas de destinataire défini → l'expéditeur recevra lui-même")
+                          t(
+                            "Pas de destinataire défini → l'expéditeur recevra lui-même"
+                          )
                         )}
                       </td>
                       <td className="py-3">
                         {Number(item.price || 0).toFixed(2)} €
                       </td>
-                      <td className="py-3">
-                        <input
-                          type="number"
-                          readOnly
-                          value={item.quantity}
-                          className="w-12 text-center border border-gray-300 rounded-md"
-                        />
+                      <td className="py-3 px-2 text-center">
+                        {hasValidDestinataire(item) ? (
+                          <input
+                            type="number"
+                            readOnly
+                            value={item.quantity}
+                            className="w-16 text-center border border-gray-300 rounded-md bg-gray-100 cursor-not-allowed text-gray-600"
+                          />
+                        ) : (
+                          <input
+                            type="number"
+                            min="1"
+                            value={item.quantity}
+                            onChange={(e) => {
+                              const val = e.target.value.trim();
+                              if (val === "") return;
+
+                              const qty = parseInt(val, 10);
+                              if (!isNaN(qty) && qty >= 1) {
+                                // Mise à jour de la quantité
+                                const updatedItems = checkout.items.map((it) =>
+                                  it.id === item.id
+                                    ? { ...it, quantity: qty }
+                                    : it
+                                );
+                                checkout.onUpdateField("items", updatedItems);
+
+                                if (couponApplied) {
+                                  handleRemoveCoupon();
+                                  toast.info(
+                                    t(
+                                      "Le coupon a été retiré car la quantité a changé"
+                                    )
+                                  );
+                                }
+                              }
+                            }}
+                            className="w-16 text-center border border-gray-400 rounded-md focus:border-black focus:ring-1 focus:ring-black"
+                          />
+                        )}
                       </td>
                       <td className="py-3">
                         <div className="flex flex-col">
@@ -279,11 +336,17 @@ export default function CheckoutView() {
           </table>
           {}
           <div className="flex flex-col items-end mt-6 space-y-1 text-sm font-medium">
-            <div><TranslatedText text="Sous-total HT" /> : {subtotalHT.toFixed(2)} €</div>
-            <div><TranslatedText text="Taxe 20 %" /> : {tax.toFixed(2)} €</div>
+            <div>
+              <TranslatedText text="Sous-total HT" /> : {subtotalHT.toFixed(2)}{" "}
+              €
+            </div>
+            <div>
+              <TranslatedText text="Taxe 20 %" /> : {tax.toFixed(2)} €
+            </div>
             {totalDiscount > 0 && (
               <div className="text-green-600 font-semibold">
-                <TranslatedText text="Réduction" /> : -{totalDiscount.toFixed(2)} €
+                <TranslatedText text="Réduction" /> : -
+                {totalDiscount.toFixed(2)} €
               </div>
             )}
             <div className="text-base font-bold border-t pt-2 mt-2 w-48">
@@ -299,7 +362,9 @@ export default function CheckoutView() {
               <div className="flex items-center gap-3 text-left">
                 <h5 className="text-base font-semibold leading-snug">
                   <TranslatedText text="Validez cette commande et gagnez jusqu'à" />{" "}
-                  <span className="text-yellow-600 font-bold">{grandTotal.toFixed(0)} points</span>
+                  <span className="text-yellow-600 font-bold">
+                    {grandTotal.toFixed(0)} points
+                  </span>
                 </h5>
               </div>
               <div className="text-gray-600">
@@ -321,7 +386,7 @@ export default function CheckoutView() {
           {}
           <div className="bg-white rounded-md p-4 md:p-6 shadow">
             <h2 className="text-base font-semibold mb-3 md:mb-4">
-              <TranslatedText text="Code Coupon" />
+              <TranslatedText text="Code Promo" />
             </h2>
             <div className="flex flex-col sm:flex-row gap-2">
               <input
@@ -345,19 +410,27 @@ export default function CheckoutView() {
                   disabled={couponLoading || !couponCode}
                   className="w-full sm:w-auto px-4 py-2 bg-black text-white rounded-md hover:bg-gray-900 disabled:opacity-50 disabled:cursor-not-allowed transition"
                 >
-                  {couponLoading ? t("Validation...") : <TranslatedText text="Appliquer" />}
+                  {couponLoading ? (
+                    t("Validation...")
+                  ) : (
+                    <TranslatedText text="Appliquer" />
+                  )}
                 </button>
               )}
             </div>
             {couponApplied && couponData && (
               <div className="mt-3 p-2 bg-green-50 border border-green-200 rounded text-sm text-green-700">
-                ✓ <TranslatedText text="Code" /> <strong>{couponData.code}</strong> <TranslatedText text="appliqué" />
+                ✓ <TranslatedText text="Code" />{" "}
+                <strong>{couponData.code}</strong>{" "}
+                <TranslatedText text="appliqué" />
               </div>
             )}
           </div>
           {user ? (
             <div className="bg-white p-4 md:p-6 rounded-lg shadow-sm">
-              <h4 className="text-xl font-semibold mb-3 md:mb-4"><TranslatedText text="Expéditeur" /></h4>
+              <h4 className="text-xl font-semibold mb-3 md:mb-4">
+                <TranslatedText text="Expéditeur" />
+              </h4>
               <div className="flex flex-col gap-3 md:gap-4">
                 <input
                   type="text"
@@ -389,7 +462,9 @@ export default function CheckoutView() {
             </div>
           ) : (
             <div className="bg-white p-4 rounded-lg shadow-sm flex flex-col gap-3">
-              <p><TranslatedText text="Vous devez vous identifier pour commander" /></p>
+              <p>
+                <TranslatedText text="Vous devez vous identifier pour commander" />
+              </p>
               <button
                 onClick={() =>
                   router.push(

@@ -12,7 +12,6 @@ export default function Tabs({ data = [] }) {
   useEffect(() => {
     if (!data || data.length === 0) return;
 
-    // ✅ TRI PAR ORDRE (champ correct)
     const sortedData = [...data].sort((a, b) => a.ordre - b.ordre);
 
     const dynamicTabs = sortedData.map((type) => {

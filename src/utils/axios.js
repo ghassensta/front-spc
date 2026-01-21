@@ -130,6 +130,7 @@ export const endpoints = {
   wishlist: {
     toggle: "/api/auth/wishlists",
     list: "/api/auth/wishlists",
+    shareProduct: "/api/auth/produit/share",
   },
   parrainage: {
     get: "/api/auth/parrainage",

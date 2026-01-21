@@ -131,7 +131,10 @@ export default function Card({
         )}
 
         {exclusivite_image && (
-          <Link to={to} className="absolute bottom-1 right-1 w-16 h-16 flex items-center justify-center rounded-full bg-[#f6f5e9]">
+          <Link
+            to={to}
+            className="absolute bottom-1 right-1 w-16 h-16 flex items-center justify-center rounded-full bg-[#f6f5e9]"
+          >
             <img
               src={`${CONFIG.serverUrl}/storage/${exclusivite_image}`}
               alt={t("Exclusivité")}
@@ -157,7 +160,7 @@ export default function Card({
               <strong className="mr-3">{duration}</strong>
             </>
           )}
-          <strong className="text-xl">{price ?? 0}</strong>
+          <strong className="text-xl">{price ?? 0}€</strong>
         </div>
 
         {buttonTitle && (

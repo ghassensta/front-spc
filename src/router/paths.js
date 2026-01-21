@@ -13,7 +13,7 @@ export const paths = {
   checkout: "/checkout",
   actualites: "/actualites" ,
   actualitesDetails: (slug) => `/actualites/${slug}`,
-  who: "/qui-somme-nous" ,
+  who: "/qui-sommes-nous" ,
   categories: (slug) => `/categories/${slug}`,
   payment: "/payment",
   recompense: "/recompense" ,

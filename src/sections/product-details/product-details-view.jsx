@@ -45,7 +45,6 @@ export default function ProductDetailsView({
     setIsFav(like);
   }, [like]);
 
-  // Ensure galleries_images is an array and filter out empty strings
   const gallery = [
     ...(product?.image ? [product.image] : []),
     ...(Array.isArray(product?.galleries_images)

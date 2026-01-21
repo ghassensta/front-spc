@@ -2,29 +2,33 @@ import React from "react";
 import CategoryPuce from "../../../components/category-puce/categoryPuce";
 import CardItem from "src/components/card-item/card-item";
 import { CONFIG } from "src/config-global";
+import { useTranslation } from "src/context/translation-context";
 
 export default function ServicesTemplates({ data = {} }) {
+  const { translateSync } = useTranslation();
   const produits = data.type_produit || [];
+
   const equipements = data.type_equipement.map(
     (pivot) => pivot.service_equipement || []
   );
-  console.log("produitsssss", produits);
+   console.log("ServicesTemplates data:", produits);
+
   return (
-    <div className="max-w-7xl mx-auto flex flex-col md:flex-row gap-6 items-start ">
-      {}
+    <div className="max-w-7xl mx-auto flex flex-col md:flex-row gap-6 items-start">
       <div className="w-full text-center">
         <div className="p-2 bg-[#F6F5E9] rounded-xl">
           <h2 className="text-2xl md:text-3xl font-bold text-gray-900 mb-2">
-            Équipements
+            {translateSync("Équipements")}
           </h2>
           <p className="text-base font-normal font-tahoma text-gray-800 mt-1">
-            {data.description}
+            {translateSync(data.description || "")}
           </p>
+
           {equipements.length > 0 && (
             <div className="flex flex-wrap gap-4 mx-auto items-center justify-center mb-4 mt-4">
               {equipements.map((equip) => (
                 <div className="flex items-center gap-1" key={equip.id}>
-                  <div className="rounded-full w-8 h-8 ">
+                  <div className="rounded-full w-8 h-8">
                     <img
                       lazyload="lazy"
                       src={CONFIG.serverUrl + "/storage/" + equip.image}
@@ -33,7 +37,7 @@ export default function ServicesTemplates({ data = {} }) {
                     />
                   </div>
                   <span className="text-secondary text-base font-tahoma uppercase">
-                    {equip.name}
+                    {translateSync(equip.name)}
                   </span>
                 </div>
               ))}
@@ -41,7 +45,6 @@ export default function ServicesTemplates({ data = {} }) {
           )}
         </div>
 
-        {}
         {produits.length > 0 ? (
           <div className="grid bg-[#F6F5E9] px-6 grid-cols-1 md:grid-cols-1 gap-6 mt-6 rounded-xl">
             {produits.map((prod) => (
@@ -51,14 +54,14 @@ export default function ServicesTemplates({ data = {} }) {
                 image={prod.image}
                 gallery={prod.galleries_images}
                 slug={prod.slug}
-                nom={prod.nom}
-                description={prod.description}
+                nom={translateSync(prod.nom)}
+                description={translateSync(prod.description)}
                 access_spa={prod.access_spa}
                 prix={prod.prix}
                 exclusivite_image={prod?.type_exclusivite?.image_path || null}
                 date_fin={prod.date_fin}
                 type_id={prod.type_id}
-                conditions_utilisation={prod.conditions_utilisation}
+                conditions_utilisation={translateSync(prod.conditions_utilisation)}
                 offre_flash={prod.offre_flash}
                 date_debut={prod.date_debut}
                 prix_barre={prod.prix_barre}
@@ -70,7 +73,7 @@ export default function ServicesTemplates({ data = {} }) {
         ) : equipements.length === 0 ? (
           <div className="bg-[#F6F5E9] px-6 mt-6 rounded-xl">
             <p className="text-gray-500 col-span-3 font-tahoma py-12">
-              Aucun produit disponible.
+              {translateSync("Aucun produit disponible.")}
             </p>
           </div>
         ) : null}
