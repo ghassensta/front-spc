@@ -86,7 +86,6 @@ export default function PaymentView() {
   const creditsDepassent = totalCreditsApplied > totalTTC;
 
   const handleSubmit = async () => {
-    // Always validate and show errors - even if form is closed
     const { fullName, address, city, postalCode, country } =
       checkout.expediteur || {};
     const newErrors = {};

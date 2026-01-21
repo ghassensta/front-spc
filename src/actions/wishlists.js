@@ -19,7 +19,7 @@ export function useGetWishlist() {
       loading: isLoading,
       validating: isValidating,
     }),
-    [data]
+    [data, isLoading, isValidating]
   );
 
   return memoizedValue;

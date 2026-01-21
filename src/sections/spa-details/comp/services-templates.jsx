@@ -7,9 +7,11 @@ import { useTranslation } from "src/context/translation-context";
 export default function ServicesTemplates({ data = {} }) {
   const { translateSync } = useTranslation();
   const produits = data.type_produit || [];
+
   const equipements = data.type_equipement.map(
     (pivot) => pivot.service_equipement || []
   );
+   console.log("ServicesTemplates data:", produits);
 
   return (
     <div className="max-w-7xl mx-auto flex flex-col md:flex-row gap-6 items-start">

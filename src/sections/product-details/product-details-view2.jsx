@@ -33,11 +33,12 @@ export default function ({
       ? etablissement.gallerie.map((img) => img)
       : []),
   ].filter(Boolean);
-  //console.log("product",product);
+
   const { translateSync } = useTranslation();
   const navigate = useNavigate();
   const checkout = useCheckoutContext();
   const { user } = useAuthContext();
+
   const [rating, setRating] = useState(0);
   const [name, setName] = useState(user?.name + " " + user?.lastName || "");
   const [email, setEmail] = useState(user?.email || "");
@@ -53,6 +54,11 @@ export default function ({
       date: new Date().toISOString().slice(0, 10),
     },
   ]);
+
+  const isFlashOfferActive =
+    product?.offre_flash === 1 &&
+    product?.date_fin &&
+    new Date(product.date_fin) > new Date();
 
   const spaData = {
     iframeUrl: etablissement?.iframeUrl,
@@ -234,7 +240,7 @@ export default function ({
           <div className="bg-[beige] px-8 py-4 col-span-2 lg:col-span-1 rounded-2xl">
             <Link
               to={paths.spa.details(etablissement?.slug)}
-              className="text-4xl font-bold mb-4 text-[#333]"
+              className="text-4xl font-bold mb-6 text-[#333]"
             >
               {translateSync(etablissement?.nom)}
             </Link>
@@ -243,6 +249,9 @@ export default function ({
               <ProductCarousel
                 gallery={product?.galleries_images}
                 image={product?.image}
+                showArrows={!!(
+                  (product?.galleries_images?.length || 0) > 1
+                )}
               />
             </div>
 
@@ -324,6 +333,8 @@ export default function ({
           </div>
 
           <div className="bg-[beige] px-8 py-4 col-span-2 lg:col-span-1 rounded-2xl">
+            <div>
+
             {!!product?.prix_barre && (
               <span className="text-sm text-gray-500 line-through font-tahoma">
                 {product?.prix_barre}
@@ -334,12 +345,13 @@ export default function ({
               {product?.prix ? `${product.prix} €` : "Prix non disponible"}
             </div>
             {!!product?.prix_au_lieu_de && (
-              <TranslatedText
+              <translateSync
                 text={`Au lieu de ${product?.prix_au_lieu_de}€`}
                 className="text-sm text-gray-500 font-tahoma"
                 as="span"
               />
             )}
+
             {product?.type_exclusivite?.image_path && (
               <img
                 loading="lazy"
@@ -348,6 +360,20 @@ export default function ({
                 className="w-auto h-auto my-2"
               />
             )}
+            <div>
+            {isFlashOfferActive && (
+              <div className="mt-4 p-4 border-2 border-dashed border-red-600 rounded-xl text-center">
+                <div className="text-red-600 font-bold text-lg">
+                  {translateSync("Offre Flash en cours !")}
+                </div>
+                <div className="text-gray-800 mt-1">
+                  {translateSync("Valable jusqu'au")}{" "}
+                  {new Date(product.date_fin).toLocaleDateString()}
+                </div>
+              </div>
+            )}
+            </div>
+            </div>
 
             <div className="mt-4 font-tahoma">
               <span className="text-xl font-semibold mb-4">

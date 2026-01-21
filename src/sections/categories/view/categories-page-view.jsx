@@ -315,7 +315,7 @@ export default function CategoriesPageView({
                   title={translateSync(card.nom)}
                   offreValue={card.remise_produit}
                   inWishlist={card.inWishlist}
-                  price={card.prix + "€"}
+                  price={card.prix}
                   duration={card.duree}
                   exclusivite_image={card.exclusivite_image}
                   remise_desc_produit={translateSync(card.remise_desc_produit)}

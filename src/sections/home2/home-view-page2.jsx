@@ -14,13 +14,15 @@ import { Autoplay } from "swiper/modules";
 import "swiper/css";
 import { Link } from "react-router-dom";
 import { useTranslation } from "src/context/translation-context";
+import Partenaires from "./comp/partenaires";
 
 export default function HomePageView() {
   const { sections } = useGetHomePage();
   const { actualites } = useGetLastNews(3);
   const { translateSync } = useTranslation();
 
-  if (!sections || !Array.isArray(sections) || sections.length === 0) return null;
+  if (!sections || !Array.isArray(sections) || sections.length === 0)
+    return null;
 
   const section4 = sections.find((s) => s.key === "section4");
   const section5 = sections.find((s) => s.key === "section5");
@@ -28,7 +30,6 @@ export default function HomePageView() {
 
   if (!section4 || !section5) return null;
 
-  // Construction dynamique des sections
   const dynamicSections =
     Array.isArray(section4.extra_data?.categories) &&
     section4.extra_data.categories.length > 0
@@ -86,7 +87,6 @@ export default function HomePageView() {
       {/* Section Informations */}
       <InformationsSection />
 
-      {/* ===== ACTUALITES ===== */}
       {Array.isArray(actualites) && actualites.length > 0 && (
         <>
           {/* Desktop */}
@@ -183,64 +183,7 @@ export default function HomePageView() {
       )}
 
       {/* ===== LOGOS PARTENAIRES ===== */}
-      {section6?.extra_data?.logos?.length > 0 && (
-        <div className="bg-white py-2 md:py-16">
-          <div className="max-w-7xl mx-auto px-4 text-center">
-            <h2 className="text-4xl md:text-5xl font-bold mb-4">
-              {translateSync(section6.title)}
-            </h2>
-
-            {section6.description && (
-              <p className="text-gray-600 text-lg max-w-3xl mx-auto mb-12">
-                {translateSync(section6.description)}
-              </p>
-            )}
-
-            <Swiper
-              modules={[Autoplay]}
-              spaceBetween={40}
-              slidesPerView={2}
-              loop
-              autoplay={{ delay: 3000, disableOnInteraction: false }}
-              breakpoints={{
-                425: { slidesPerView: 2 },
-                640: { slidesPerView: 3 },
-                768: { slidesPerView: 4 },
-                1024: { slidesPerView: 5 },
-                1280: { slidesPerView: 6 },
-              }}
-              className="py-8"
-            >
-              {section6.extra_data.logos.map((logo, index) => (
-                <SwiperSlide key={index} className="flex items-center justify-center">
-                  {logo.link ? (
-                    <a
-                      href={logo.link}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="block p-6 hover:scale-110 transition"
-                    >
-                      <img
-                        src={`${CONFIG.serverUrl}/storage/${logo.image}`}
-                        alt={translateSync(`Partenaire ${index + 1}`)}
-                        className="md:max-h-24 max-h-36 object-contain grayscale hover:grayscale-0 transition"
-                        loading="lazy"
-                      />
-                    </a>
-                  ) : (
-                    <img
-                      src={`${CONFIG.serverUrl}/storage/${logo.image}`}
-                      alt={translateSync(`Partenaire ${index + 1}`)}
-                      className="md:max-h-24 max-h-36 object-contain opacity-70"
-                      loading="lazy"
-                    />
-                  )}
-                </SwiperSlide>
-              ))}
-            </Swiper>
-          </div>
-        </div>
-      )}
+      <Partenaires section={section6} />
     </div>
   );
 }

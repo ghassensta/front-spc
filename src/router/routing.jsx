@@ -94,7 +94,7 @@ export const routes = [
       { element: <Glossaire />, path: "glossaire" },
       { element: <Solutions />, path: "solutions-ce" },
       { element: <Marques />, path: "marque-partenaire" },
-      { element: <Who />, path: "qui-somme-nous" },
+      { element: <Who />, path: "qui-sommes-nous" },
       { element: <Referentiel />, path: "referentiel-de-candidature" },
       { element: <CarteCadeau />, path: "carte-cadeau" },
       { element: <Recompense />, path: "recompense" },

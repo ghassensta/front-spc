@@ -1,48 +1,82 @@
 import React from "react";
 import { Eye } from "lucide-react";
 
-export default function CommandesViewPage({ order }) {
+export default function CommandesViewPage({ order, loading }) {
   const formatPrice = (value) => (value ? Number(value).toFixed(2) : "0.00");
- // console.log("orders", order);
+
+  // === LOADING SKELETON ===
+  if (loading) {
+    return (
+      <div className="mt-4 grid grid-cols-1 gap-4 lg:grid-cols-3">
+        <div className="border p-4 col-span-3 overflow-x-auto animate-pulse">
+          <h4 className="mt-4 font-semibold text-xl bg-gray-200 h-6 w-1/3 rounded"></h4>
+          <table className="w-full mt-2 min-w-[600px] border-collapse">
+            <thead>
+              <tr>
+                {["Produit", "Destinataire", "Quantité", "Prix Unitaire TTC", "Total TTC", "Carte Cadeau"].map((text, idx) => (
+                  <th key={idx} className="border p-2 text-left text-sm bg-gray-200 h-4 rounded"></th>
+                ))}
+              </tr>
+            </thead>
+            <tbody>
+              {[...Array(5)].map((_, i) => (
+                <tr key={i} className="border-t">
+                  {[...Array(6)].map((_, j) => (
+                    <td key={j} className="border p-2">
+                      <div className="bg-gray-200 h-4 rounded w-full"></div>
+                    </td>
+                  ))}
+                </tr>
+              ))}
+            </tbody>
+          </table>
+
+          <div className="mt-4 border-t pt-2 space-y-1">
+            {[...Array(5)].map((_, i) => (
+              <div key={i} className="flex justify-between">
+                <div className="bg-gray-200 h-4 w-1/4 rounded"></div>
+                <div className="bg-gray-200 h-4 w-1/6 rounded"></div>
+              </div>
+            ))}
+          </div>
+
+          <div className="mt-6">
+            <div className="bg-gray-200 h-6 w-1/4 rounded"></div>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  // === MAIN CONTENT ===
   return (
     <div className="mt-4 grid grid-cols-1 gap-4 lg:grid-cols-3">
       <div className="border p-4 col-span-3 overflow-x-auto">
-        {}
         <h4 className="mt-4 font-semibold text-xl">Articles commandés :</h4>
 
-        {}
         <table className="w-full mt-2 min-w-[600px] border-collapse">
           <thead>
             <tr>
               <th className="border p-2 text-left text-sm">Produit</th>
               <th className="border p-2 text-left text-sm">Destinataire</th>
               <th className="border p-2 text-left text-sm">Quantité</th>
-              <th className="border p-2 text-left text-sm">
-                Prix Unitaire TTC
-              </th>
+              <th className="border p-2 text-left text-sm">Prix Unitaire TTC</th>
               <th className="border p-2 text-left text-sm">Total TTC </th>
               <th className="border p-2 text-left text-sm">Carte Cadeau</th>
             </tr>
           </thead>
-
           <tbody>
             {order?.lignes?.map((item) => {
               const hasDiscount = Number(item.coupon_discount) > 0;
               const originalPrice = Number(item.prix_unitaire) || 0;
               const unitPriceAfterDiscount =
-                originalPrice -
-                (hasDiscount ? Number(item.coupon_discount) : 0);
+                originalPrice - (hasDiscount ? Number(item.coupon_discount) : 0);
               const totalAfterDiscount = unitPriceAfterDiscount * item.quantite;
 
               return (
                 <tr key={item.id} className="border-t">
-                  {}
                   <td className="border p-2 text-sm">
-                    <div className="font-semibold">
-                      {item.produit?.nom || "Carte Cadeau"}
-                    </div>
-
-                    {}
+                    <div className="font-semibold">{item.produit?.nom || "Carte Cadeau"}</div>
                     <div className="text-xs mt-1">
                       Statut:{" "}
                       {item.statut === "En cours" ? (
@@ -59,24 +93,18 @@ export default function CommandesViewPage({ order }) {
                         </span>
                       )}
                     </div>
-
-                    {}
                     {hasDiscount && (
                       <div className="text-xs mt-1 text-red-600">
                         Coupon: {formatPrice(item.coupon_discount)} € appliqué
                       </div>
                     )}
-
-                    {}
                     <div className="text-xs mt-1 text-gray-600 space-y-0.5">
                       <div>Numéro: {item.numero_carte || "—"}</div>
                       <div>Code: {item.code_validation || "—"}</div>
                       <div className="text-red-500">
                         Date d'envoi:{" "}
                         {item.date_envoi_destinataire
-                          ? new Date(
-                              item.date_envoi_destinataire
-                            ).toLocaleDateString("fr-FR", {
+                          ? new Date(item.date_envoi_destinataire).toLocaleDateString("fr-FR", {
                               day: "2-digit",
                               month: "2-digit",
                               year: "2-digit",
@@ -86,56 +114,37 @@ export default function CommandesViewPage({ order }) {
                     </div>
                   </td>
 
-                  {}
                   <td className="border p-2 text-sm">
-                    <div className="font-semibold">
-                      {item.destinataire_name || "—"}
-                    </div>
-                    <div className="text-gray-600 text-xs">
-                      {item.destinataire_email || "—"}
-                    </div>
+                    <div className="font-semibold">{item.destinataire_name || "—"}</div>
+                    <div className="text-gray-600 text-xs">{item.destinataire_email || "—"}</div>
                   </td>
 
-                  {}
                   <td className="border p-2 text-sm">{item.quantite}</td>
 
-                  {}
                   <td className="border p-2 text-sm">
                     {hasDiscount ? (
                       <>
-                        <span className="line-through text-gray-400 text-xs">
-                          {formatPrice(originalPrice)} €
-                        </span>
+                        <span className="line-through text-gray-400 text-xs">{formatPrice(originalPrice)} €</span>
                         <br />
-                        <span className="font-semibold text-green-700">
-                          {formatPrice(unitPriceAfterDiscount)} €
-                        </span>
+                        <span className="font-semibold text-green-700">{formatPrice(unitPriceAfterDiscount)} €</span>
                       </>
                     ) : (
                       <span>{formatPrice(originalPrice)} €</span>
                     )}
                   </td>
 
-                  {}
                   <td className="border p-2 text-sm">
                     {hasDiscount ? (
                       <>
-                        <span className="line-through text-gray-400 text-xs">
-                          {formatPrice(originalPrice * item.quantite)} €
-                        </span>
+                        <span className="line-through text-gray-400 text-xs">{formatPrice(originalPrice * item.quantite)} €</span>
                         <br />
-                        <span className="font-semibold text-green-700">
-                          {formatPrice(totalAfterDiscount)} €
-                        </span>
+                        <span className="font-semibold text-green-700">{formatPrice(totalAfterDiscount)} €</span>
                       </>
                     ) : (
-                      <span>
-                        {formatPrice(originalPrice * item.quantite)} €
-                      </span>
+                      <span>{formatPrice(originalPrice * item.quantite)} €</span>
                     )}
                   </td>
 
-                  {}
                   <td className="border p-2 text-sm">
                     {item.url_pdf_carte ? (
                       <a
@@ -156,7 +165,6 @@ export default function CommandesViewPage({ order }) {
           </tbody>
         </table>
 
-        {}
         <div className="mt-4 border-t pt-2 space-y-1 text-sm">
           <div className="flex justify-between">
             <span>Sous-total (HT) :</span>
@@ -172,14 +180,7 @@ export default function CommandesViewPage({ order }) {
             <div className="flex justify-between text-red-600">
               <span>Coupon appliqué :</span>
               <span>
-                -
-                {formatPrice(
-                  order?.lignes.reduce(
-                    (acc, i) => acc + Number(i.coupon_discount || 0),
-                    0
-                  )
-                )}{" "}
-                €
+                -{formatPrice(order?.lignes.reduce((acc, i) => acc + Number(i.coupon_discount || 0), 0))} €
               </span>
             </div>
           )}
@@ -202,7 +203,6 @@ export default function CommandesViewPage({ order }) {
           </div>
         </div>
 
-        {}
         <div className="mt-6">
           {order?.statut ? (
             <div className="inline-block px-3 py-1 rounded bg-green-100 text-green-700 font-semibold">
