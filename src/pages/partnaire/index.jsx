@@ -1,11 +1,19 @@
+import { useLocation } from "react-router-dom";
 import DevenirPartnerView from "src/sections/devenir-partner/devenir-partner-view";
-import { Helmet } from 'react-helmet'
+import { Helmet } from 'react-helmet';
 import theImage from "src/assets/images/SPC-equipe-ce-1975x1318-1-768x513.jpg";
 
 export default function Page() {
+  const location = useLocation();
+
+  // ✅ Canonical dynamique
+  const canonicalUrl = `${window.location.origin}${location.pathname}`;
+
   const pageTitle = "Devenir Partenaire - Spa & Prestige Collection";
-  const pageDescription = "Rejoignez le réseau Spa & Prestige Collection. Boostez votre chiffre d'affaires, augmentez votre visibilité et bénéficiez d'un accompagnement personnalisé.";
-  const pageUrl = "https://spa-prestige-collection.com/devenir-partenaire";
+  const pageDescription =
+    "Rejoignez le réseau Spa & Prestige Collection. Boostez votre chiffre d'affaires, augmentez votre visibilité et bénéficiez d'un accompagnement personnalisé.";
+  const pageKeywords =
+    "devenir partenaire spa, partenariat prestige, réseau spa, établissement bien-être, candidature spa, franchise bien-être";
   const imageUrl = theImage;
 
   const schemaData = {
@@ -13,7 +21,7 @@ export default function Page() {
     "@type": "WebPage",
     "name": pageTitle,
     "description": pageDescription,
-    "url": pageUrl,
+    "url": canonicalUrl,
     "image": imageUrl,
     "publisher": {
       "@type": "Organization",
@@ -24,7 +32,7 @@ export default function Page() {
       }
     },
     "mainEntity": {
-      "@type": "BuisinessOpportunity",
+      "@type": "BusinessOpportunity",
       "name": "Partenariat Spa & Prestige Collection",
       "description": "Opportunité de partenariat pour établissements spécialisés dans le bien-être",
       "benefits": [
@@ -50,13 +58,13 @@ export default function Page() {
         "@type": "ListItem",
         "position": 1,
         "name": "Accueil",
-        "item": "https://spa-prestige-collection.com"
+        "item": window.location.origin
       },
       {
         "@type": "ListItem",
         "position": 2,
         "name": "Devenir Partenaire",
-        "item": pageUrl
+        "item": canonicalUrl
       }
     ]
   };
@@ -70,7 +78,7 @@ export default function Page() {
         "name": "Pourquoi rejoindre Spa & Prestige Collection?",
         "acceptedAnswer": {
           "@type": "Answer",
-          "text": "En rejoignant notre réseau, vous bénéficiez de plusieurs avantages : augmentation de votre chiffre d'affaires, recrutement de clientèle qualifiée, maximisation de votre taux d'occupation, renforcement de votre visibilité en ligne, accompagnement personnalisé et opportunités de partenariats stratégiques."
+          "text": "En rejoignant notre réseau, vous bénéficiez de plusieurs avantages : augmentation de votre chiffre d'affaires, recrutement de clientèle qualifiée, maximisation du taux d'occupation, renforcement de votre visibilité en ligne, accompagnement personnalisé et opportunités de partenariats stratégiques."
         }
       },
       {
@@ -118,40 +126,34 @@ export default function Page() {
 
   return (
     <>
-      <Helmet>
+      <Helmet htmlAttributes={{ lang: "fr" }}>
         <title>{pageTitle}</title>
         <meta name="description" content={pageDescription} />
-        <meta name="keywords" content="devenir partenaire spa, partenariat prestige, réseau spa, établissement bien-être, candidature spa, franchise bien-être" />
-        
-        <link rel="canonical" href={pageUrl} />
-        
+        <meta name="keywords" content={pageKeywords} />
+        <meta name="author" content="Spa & Prestige Collection" />
+        <meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1" />
+
+        {/* Open Graph */}
         <meta property="og:type" content="website" />
         <meta property="og:title" content={pageTitle} />
         <meta property="og:description" content={pageDescription} />
         <meta property="og:image" content={imageUrl} />
-        <meta property="og:url" content={pageUrl} />
+        <meta property="og:url" content={canonicalUrl} />
         <meta property="og:site_name" content="Spa & Prestige Collection" />
-        
+
+        {/* Twitter Card */}
         <meta name="twitter:card" content="summary_large_image" />
         <meta name="twitter:title" content={pageTitle} />
         <meta name="twitter:description" content={pageDescription} />
         <meta name="twitter:image" content={imageUrl} />
-        
-        <script type="application/ld+json">
-          {JSON.stringify(schemaData)}
-        </script>
-        
-        <script type="application/ld+json">
-          {JSON.stringify(breadcrumbSchema)}
-        </script>
-        
-        <script type="application/ld+json">
-          {JSON.stringify(faqSchema)}
-        </script>
-        
-        <meta name="language" content="fr-FR" />
-        <meta name="author" content="Spa & Prestige Collection" />
-        <meta name="robots" content="index, follow" />
+
+        {/* Canonical URL dynamique */}
+        <link rel="canonical" href={canonicalUrl} />
+
+        {/* JSON-LD */}
+        <script type="application/ld+json">{JSON.stringify(schemaData)}</script>
+        <script type="application/ld+json">{JSON.stringify(breadcrumbSchema)}</script>
+        <script type="application/ld+json">{JSON.stringify(faqSchema)}</script>
       </Helmet>
 
       <DevenirPartnerView />

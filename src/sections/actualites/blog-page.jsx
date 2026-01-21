@@ -18,12 +18,12 @@ export default function BlogPage({ categories, articles, loading }) {
   const filteredArticles = articles.filter(
     (article) =>
       article.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      article.summary.toLowerCase().includes(searchTerm.toLowerCase())
+      article.summary.toLowerCase().includes(searchTerm.toLowerCase()),
   );
 
   // Sort filtered articles by view_count descending
   const sortedArticles = [...filteredArticles].sort(
-    (a, b) => b.view_count - a.view_count
+    (a, b) => b.view_count - a.view_count,
   );
 
   // Recent articles (sorted by date, top 8)
@@ -38,7 +38,7 @@ export default function BlogPage({ categories, articles, loading }) {
   const paginatedArticles = usePagination
     ? sortedArticles.slice(
         (currentPage - 1) * itemsPerPage,
-        currentPage * itemsPerPage
+        currentPage * itemsPerPage,
       )
     : sortedArticles;
 
@@ -55,7 +55,8 @@ export default function BlogPage({ categories, articles, loading }) {
     let l;
 
     for (let i = 1; i <= totalPages; i++) {
-      if (i === 1 || i === totalPages || (i >= left && i < right)) range.push(i);
+      if (i === 1 || i === totalPages || (i >= left && i < right))
+        range.push(i);
     }
 
     for (let i of range) {
@@ -77,10 +78,15 @@ export default function BlogPage({ categories, articles, loading }) {
         style={{ backgroundImage: `url(${theImage})` }}
       >
         <div className="absolute inset-0 bg-black bg-opacity-40" />
-        <div className="absolute inset-0 flex items-center justify-center">
+        <div className="absolute inset-0 flex flex-col items-center justify-center text-center">
           <h1 className="text-white text-4xl font-bold">
             {translateSync("Actualités")}
           </h1>
+          <h2 className="text-white text-xl mt-2">
+            {translateSync(
+              "Découvrez toutes les dernières nouvelles et événements",
+            )}
+          </h2>
         </div>
       </div>
 
@@ -151,7 +157,7 @@ export default function BlogPage({ categories, articles, loading }) {
                   >
                     {page}
                   </button>
-                )
+                ),
               )}
               <button
                 onClick={() => handlePageChange(currentPage + 1)}

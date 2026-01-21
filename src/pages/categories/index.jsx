@@ -1,4 +1,4 @@
-import { useParams } from "react-router-dom";
+import { useParams, useLocation } from "react-router-dom";
 import { toast } from "react-toastify";
 import { useGetSpaByCategory } from "src/actions/categories";
 import { useGetFiltersEtablissements } from "src/actions/etablissements";
@@ -9,6 +9,7 @@ import { Helmet } from "react-helmet";
 
 export default function Page() {
   const { slug } = useParams();
+  const location = useLocation();
   const router = useRouter();
 
   if (!slug) {
@@ -21,7 +22,6 @@ export default function Page() {
   const { villes, types, services, filtersLoading } =
     useGetFiltersEtablissements();
 
-  // Fallbacks si meta fields sont null
   const pageTitle =
     category?.meta_title || `${category?.nom || "Catégorie"} - Nos SPAs`;
   const pageDescription =
@@ -32,42 +32,38 @@ export default function Page() {
   const pageKeywords =
     category?.meta_keywords || `${category?.nom || ""}, SPA, bien-être`;
 
-  const canonicalUrl = `${window.location.origin}/categories/${
-    category?.slug || slug
-  }`;
+  // ✅ Canonical dynamique basé sur l'origine et le pathname
+  const canonicalUrl = `${window.location.origin}${location.pathname}`;
+
   return (
     <>
-      <Helmet>
+      <Helmet htmlAttributes={{ lang: "fr" }}>
         <title>{pageTitle}</title>
         <meta name="description" content={pageDescription} />
         <meta name="keywords" content={pageKeywords} />
         <meta name="author" content="Spa & Prestige Collection" />
-
         <meta
           name="robots"
-          content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1"
+          content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1"
         />
 
-        {}
         <meta property="og:title" content={pageTitle} />
         <meta property="og:description" content={pageDescription} />
         <meta property="og:type" content="website" />
         <meta property="og:url" content={canonicalUrl} />
+        <meta property="og:site_name" content="Spa & Prestige Collection" />
 
-        {}
         <meta name="twitter:card" content="summary_large_image" />
         <meta name="twitter:title" content={pageTitle} />
         <meta name="twitter:description" content={pageDescription} />
 
-        {}
         <link rel="canonical" href={canonicalUrl} />
       </Helmet>
 
-
       <CategoriesPageView
-        nomcat={category.nom}
-        slug_categorie={category.slug}
-        description={category.meta_description}
+        nomcat={category?.nom}
+        slug_categorie={category?.slug}
+        description={category?.meta_description}
         cardsByCategory={spaList}
         villes={villes}
         types={types}
