@@ -43,7 +43,7 @@ export default function LayoutTheme({ children }) {
       <div className="min-h-screen relative m-auto flex flex-col">
         <div className={header ? "h-screen flex flex-col" : ""}>
           <Navbar />
-          <div className="">
+          <div className="w-full px-4 md:px-8 pt-8 md:pt-10 flex flex-col items-center">
             <div className="
               grid grid-cols-4
               gap-x-2 gap-y-0
