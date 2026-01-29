@@ -5,15 +5,15 @@ import { FaBagShopping } from "react-icons/fa6";
 import { Link } from "react-router-dom";
 import ButtonIcon from "../button-icon/button-icon";
 import { TranslatedText } from "../translated-text/translated-text";
-import { FaRegHeart, FaHeart } from "react-icons/fa";
 import { useAuthContext } from "src/auth/hooks/use-auth-context";
 import { useToggleWishlist, getIsWishlisted } from "src/actions/wishlists";
+import { FaShoppingBag, FaRegHeart, FaHeart } from "react-icons/fa";
 import { toast } from "react-toastify";
 import { useRouter } from "src/hooks";
 import { paths } from "src/router/paths";
 import { useTranslation } from "react-i18next";
 import { CONFIG } from "src/config-global";
-
+import OfferFlashBadge from "../../../src/components/offre-flash/offer-flash-badge";
 export default function Card({
   to = "/",
   id,
@@ -29,15 +29,19 @@ export default function Card({
   inWishlist,
   exclusivite_image,
   remise_desc_produit,
+  date_fin,
+  date_debut,
+  offre_flash,
 }) {
   console.log("exclusivite_image", exclusivite_image);
   const { user } = useAuthContext();
   const [isFav, setIsFav] = useState(inWishlist);
   const router = useRouter();
   const { t } = useTranslation();
+  const [remainingTime, setRemainingTime] = useState("");
+
   useEffect(() => {
     let isMounted = true;
-
     const loadInitialState = async () => {
       if (!inWishlist) {
         const status = await getIsWishlisted(id);
@@ -51,6 +55,36 @@ export default function Card({
       isMounted = false;
     };
   }, [id, inWishlist]);
+
+  const isOfferActive =
+    offre_flash === 1 && date_fin && new Date(date_fin) > new Date();
+  useEffect(() => {
+    if (!isOfferActive) {
+      setRemainingTime("");
+      return;
+    }
+
+    const updateCountdown = () => {
+      const diffMs = new Date(date_fin) - new Date();
+
+      if (diffMs <= 0) {
+        setRemainingTime(t("Expiré"));
+        return;
+      }
+
+      const days = Math.floor(diffMs / 86400000);
+      const hours = Math.floor((diffMs / 3600000) % 24);
+      const minutes = Math.floor((diffMs / 60000) % 60);
+      const seconds = Math.floor((diffMs / 1000) % 60);
+
+      setRemainingTime(`${days}j ${hours}h ${minutes}m ${seconds}s`);
+    };
+
+    updateCountdown();
+    const interval = setInterval(updateCountdown, 1000);
+
+    return () => clearInterval(interval);
+  }, [date_fin, isOfferActive, t]);
 
   const toggleFav = async () => {
     if (id === undefined || id === null) {
@@ -83,6 +117,12 @@ export default function Card({
       setIsFav((prev) => !prev);
     }
   };
+  const showOfferFlash = isOfferActive;
+  const showExclusivite = !!exclusivite_image;
+
+  const offerPosition = showExclusivite
+    ? "bottom-3 right-1 w-30 h-30"
+    : "bottom-20 right-1 w-16 h-16";
 
   return (
     <motion.div
@@ -130,10 +170,25 @@ export default function Card({
           </span>
         )}
 
-        {exclusivite_image && (
+        {/* OFFRE FLASH */}
+        {showOfferFlash && (
           <Link
             to={to}
-            className="absolute bottom-1 right-1 w-16 h-16 flex items-center justify-center rounded-full bg-[#f6f5e9]"
+            className={`absolute ${offerPosition} flex items-center justify-center bg-[#f6f5e9] ${
+              showExclusivite ? "" : "rounded-full"
+            }`}
+          >
+            <OfferFlashBadge remainingTime={remainingTime} />
+          </Link>
+        )}
+
+        {/* EXCLUSIVITÉ */}
+        {showExclusivite && (
+          <Link
+            to={to}
+            className={`absolute ${
+              showOfferFlash ? "bottom-20" : "bottom-1"
+            } right-1 w-16 h-16 flex items-center justify-center rounded-full bg-[#f6f5e9]`}
           >
             <img
               src={`${CONFIG.serverUrl}/storage/${exclusivite_image}`}

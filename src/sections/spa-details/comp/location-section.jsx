@@ -31,7 +31,7 @@ export default function LocationSection({ data }) {
       key: "labellise_spa_france",
       url: "https://www.spasdefrance.fr/",
       img: "logo-spas-de-france.svg",
-      text: "Labellisé Spas-de-France",
+      text: "Spas de France",
     },
   ];
 

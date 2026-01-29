@@ -7,6 +7,7 @@ import { Link } from "react-router-dom";
 import { paths } from "src/router/paths";
 import { TranslatedText } from "../translated-text/translated-text";
 import { useTranslation } from "react-i18next";
+import offre_flash_image from "../../assets/images/SPC-picto-offre-flash-2.svg";
 
 export default function CardItem({
   nom,
@@ -35,8 +36,7 @@ export default function CardItem({
 
   const hasMultipleImages = images.length > 1;
 
-  const isOfferActive =
-    offre_flash === 1 && date_fin && new Date(date_fin) > new Date();
+  const isOfferActive =offre_flash === 1 && date_fin && new Date(date_fin) > new Date();
 
   useEffect(() => {
     const allImages = [];
@@ -116,7 +116,10 @@ export default function CardItem({
   const getVisibleDots = (current, total, visibleCount = 5) => {
     let start = Math.max(0, current - Math.floor(visibleCount / 2));
     start = Math.min(start, total - visibleCount);
-    return Array.from({ length: Math.min(visibleCount, total) }, (_, i) => start + i);
+    return Array.from(
+      { length: Math.min(visibleCount, total) },
+      (_, i) => start + i,
+    );
   };
 
   const dotsStyle = `
@@ -124,12 +127,8 @@ export default function CardItem({
     .dots-container { -ms-overflow-style: none; scrollbar-width: none; }
   `;
 
-  // ───────────────────────────────────────────────────────────
-  //                   R E N D E R
-  // ───────────────────────────────────────────────────────────
   return (
     <motion.div className="flex flex-col gap-4 py-7 border-b border-gray-400 md:flex-row">
-      {/* ====================== IMAGES ====================== */}
       <div className="relative w-full md:w-[30%]">
         <div className="w-full h-[190px] rounded-md relative overflow-hidden">
           {images.map((src, index) => (
@@ -141,8 +140,8 @@ export default function CardItem({
                 currentSlide === index
                   ? "translate-x-0"
                   : index < currentSlide
-                  ? "-translate-x-full"
-                  : "translate-x-full"
+                    ? "-translate-x-full"
+                    : "translate-x-full"
               }`}
               loading="lazy"
             />
@@ -191,7 +190,6 @@ export default function CardItem({
         )}
       </div>
 
-      {/* ====================== CONTENT ====================== */}
       <div className="w-full md:w-[40%]">
         <h3 className="text-2xl text-left font-normal text-gray-900">{nom}</h3>
 
@@ -201,8 +199,8 @@ export default function CardItem({
               __html: showFullDescription
                 ? description || ""
                 : description?.length > 150
-                ? description.slice(0, 175) + "..."
-                : description || "",
+                  ? description.slice(0, 175) + "..."
+                  : description || "",
             }}
           />
 
@@ -221,7 +219,6 @@ export default function CardItem({
         </p>
       </div>
 
-      {/* ====================== DESKTOP RIGHT SIDE ====================== */}
       <div className="hidden md:flex md:w-[30%] flex-col items-center justify-center gap-4">
         {/* Prix */}
         <div className="flex flex-col items-center font-tahoma gap-1">
@@ -248,8 +245,8 @@ export default function CardItem({
           )}
         </div>
 
-        {/* Exclusivité + Flash */}
         <div className="flex flex-col items-center gap-3">
+          {/* Image exclusivité */}
           {exclusivite_image && (
             <img
               loading="lazy"
@@ -259,13 +256,17 @@ export default function CardItem({
             />
           )}
 
+          {/* Offre flash */}
           {isOfferActive && (
-            <div className="flex flex-col items-center px-1 py-2 border-dashed rounded-lg border-2 font-tahoma w-full">
-              <span className="text-sm font-medium text-red-600">
-                <TranslatedText text="Offre flash" />
-              </span>
-              <div className="text-xs font-bold text-gray-800 mt-1">
-                {remainingTime}
+            <div className="flex items-center gap-2 px-3 py-2 border-dashed rounded-lg border-2 font-tahoma w-full justify-center">
+              <div class="w-full border-t-4 border-b-4 border-black py-3 text-center">
+                <span class="font-bold text-black tracking-[0.2em] uppercase">
+                  OFFRE FLASH
+                </span>
+
+                <div class="text-xs font-bold text-gray-800 mt-1">
+                  {remainingTime}
+                </div>
               </div>
             </div>
           )}
@@ -310,12 +311,14 @@ export default function CardItem({
           )}
 
           {isOfferActive && (
-            <div className="flex flex-col items-center px-2 py-1 border-dashed rounded-lg border-2 font-tahoma">
-              <span className="text-xs font-medium text-red-600">
-                <TranslatedText text="Offre flash" />
-              </span>
-              <div className="text-xs font-bold text-gray-800">
-                {remainingTime}
+            <div className="w-full flex flex-col items-center justify-center gap-1 px-2 py-1 border-2 border-dashed rounded-lg font-tahoma">
+              <div className="w-full border-t-2 border-b-2 border-black py-1 text-center">
+                <span className="font-bold text-black text-xs tracking-[0.15em] uppercase">
+                  <TranslatedText text="OFFRE FLASH" />
+                </span>
+                <div className="text-[10px] font-bold text-gray-800 mt-1">
+                  {remainingTime}
+                </div>
               </div>
             </div>
           )}

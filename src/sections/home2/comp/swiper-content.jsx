@@ -83,6 +83,9 @@ const SwiperContent = ({ slidesPerView = 3, data = [] }) => {
                 id={item.produit_id || null}
                 exclusivite_image={item.exclusivite_image}
                 remiseDescProduit={translateSync(item.remiseDescProduit || "")}
+                offre_flash={translateSync(item.offre_flash || "")}
+                date_debut={translateSync(item.date_debut || "")}
+                date_fin={translateSync(item.date_fin || "")}
               />
             </SwiperSlide>
           );
@@ -141,6 +144,9 @@ SwiperContent.propTypes = {
       produit_id: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
       exclusivite_image: PropTypes.string,
       remiseDescProduit: PropTypes.string,
+      offre_flash:PropTypes.string,
+      date_debut:PropTypes.string,
+      date_fin:PropTypes.string,
     })
   ),
 };

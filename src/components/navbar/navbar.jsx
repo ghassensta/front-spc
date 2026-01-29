@@ -17,7 +17,7 @@ import GiftCardIcon from "../../assets/spa-icons/SPC-picto-menu-carte-cadeau.svg
 
 export default function Navbar() {
   const [showMenu, setShowMenu] = useState(false);
-  const [scrolled, setScrolled] = useState(false); // pour gérer le style quand scroll
+  const [scrolled, setScrolled] = useState(false);
   const buttonRef = useRef(null);
   const { translateSync } = useTranslation();
 
@@ -118,17 +118,17 @@ export default function Navbar() {
             </Link>
           </div>
         </div>
-      </div>
-
-      {/* Spacer pour ne pas cacher le contenu */}
-      <div className="h-[80px] md:h-[64px]" />
-
-      {/* Menu Popover */}
+         {/* Menu Popover */}
       <MenuPopover
         anchorRef={buttonRef}
         open={showMenu}
         onClose={() => setShowMenu(false)}
       />
+      </div>
+
+      <div className="h-[80px] md:h-[64px]" />
+
+     
     </>
   );
 }

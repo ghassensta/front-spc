@@ -27,36 +27,53 @@ export default function HomePageView() {
   const section4 = sections.find((s) => s.key === "section4");
   const section5 = sections.find((s) => s.key === "section5");
   const section6 = sections.find((s) => s.key === "section6");
-
+  console.log("section4", section4);
   if (!section4 || !section5) return null;
 
   const dynamicSections =
-    Array.isArray(section4.extra_data?.categories) &&
-    section4.extra_data.categories.length > 0
-      ? section4.extra_data.categories.map((cat, idx) => ({
+    Array.isArray(section4.extra_data) && section4.extra_data.length > 0
+      ? section4.extra_data.map((cat, idx) => ({
           bg: cat.background === "beige" ? "beige" : "white",
           header: cat.title || "",
           subheader: cat.description || "",
           link: cat.button_url || "#",
+
           data:
             Array.isArray(cat.cards) && cat.cards.length > 0
               ? cat.cards.map((card) => ({
-                  price: card.prix || 0,
-                  duration: "",
-                  slug: card.adresse || "#",
+                  id: card.produit_id ?? null,
+
                   name: card.title || "",
+                  slug: card.slug || "#",
+
                   image: card.image || "",
-                  adresse_etab: card.adresse_etab || "",
-                  spaName: card.etablissement_name || translateSync("Inconnu"),
-                  spaLocation: card.adresse_etab || "",
+
+                  price: card.prix ? Number(card.prix) : 0,
+                  duration: "",
+
+                  offre_flash: card.offre_flash ?? 0,
+                  date_debut: card.date_debut ?? null,
+                  date_fin: card.date_fin ?? null,
+
+                  spaName: card.etablissement?.nom || translateSync("Inconnu"),
+
+                  spaLocation: card.etablissement?.adresse || "",
+
+                  spaSlug: card.etablissement?.slug || "#",
+
                   offre:
-                    card.remise != null
+                    card.remise !== null && card.remise !== undefined
                       ? translateSync(`${card.remise}% de remise`)
                       : "",
-                  offreValue: card.remise != null ? parseInt(card.remise) : 0,
+
+                  offreValue:
+                    card.remise !== null && card.remise !== undefined
+                      ? parseInt(card.remise)
+                      : 0,
+
                   exclusivite_image: card.exclusivite_image || null,
+
                   remiseDescProduit: card.remise_desc_produit || "",
-                  id: card.produit_id || null,
                 }))
               : [],
         }))

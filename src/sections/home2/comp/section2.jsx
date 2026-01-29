@@ -2,6 +2,7 @@ import React from "react";
 import { useGetHomePage } from "src/actions/homepage";
 import { CONFIG } from "src/config-global";
 import { useTranslation } from "src/context/translation-context";
+import defaultBackground from "../../../assets/images/SPC-fond-beige-4.webp"; // Image par défaut
 
 const Section3 = () => {
   const { sections } = useGetHomePage();
@@ -10,17 +11,20 @@ const Section3 = () => {
   const section = sections?.find((s) => s.key === "section3");
   if (!section) return null;
 
+  const backgroundStyle = `url(${defaultBackground}) center/cover no-repeat`;
+
   return (
     <div
       className="w-screen relative left-[calc(-50vw+50%)] min-h-32 overflow-hidden"
-      style={{ background: section.extra_data?.background || "white" }}
+      style={{
+        background: backgroundStyle,
+        backgroundColor: section?.extra_data?.background ? undefined : "#f5f5dc", // couleur si pas d'image
+      }}
     >
       <div className="max-w-6xl mx-auto px-8 flex flex-col md:flex-row gap-2 py-8">
         {/* Texte */}
         <div className="md:w-1/2">
-          <h2 className="text-4xl font-semibold">
-            {translateSync(section.title)}
-          </h2>
+          <h2 className="text-4xl font-semibold">{translateSync(section.title)}</h2>
 
           {section.extra_data?.sousTitre && (
             <h2 className="text-[#B6B599] text-4xl font-semibold">
@@ -28,9 +32,7 @@ const Section3 = () => {
             </h2>
           )}
 
-          <p className="mt-2 text-3xl mb-5">
-            {translateSync(section.description)}
-          </p>
+          <p className="mt-2 text-3xl mb-5">{translateSync(section.description)}</p>
 
           {section.extra_data?.longdescription && (
             <p className="text-lg uppercase hidden md:block mb-5">

@@ -319,6 +319,9 @@ export default function CategoriesPageView({
                   duration={card.duree}
                   exclusivite_image={card.exclusivite_image}
                   remise_desc_produit={translateSync(card.remise_desc_produit)}
+                  date_fin={card.date_fin}
+                  date_debut={card.date_debut}
+                  offre_flash={card.offre_flash}
                 />
               ))
             ) : (
