@@ -105,7 +105,7 @@ function Container({ children }) {
 
   useEffect(() => {
     updateTotalField();
-  }, [state.items, state.discount, state.shipping, updateTotalField]);
+  }, [state.items, state.discount, state.shipping]);
 
   // Cart actions
   const onAddToCart = useCallback(
@@ -130,13 +130,11 @@ function Container({ children }) {
           discount: 0, // Initialize discount
         });
       }
-      setField("items", updatedItems);
-      updateCartTimestamp();
-      // Clear coupon on add
-      setField("couponId", null);
-      setField("couponTimestamp", null);
       const clearedItems = updatedItems.map((item) => ({ ...item, discount: 0 }));
       setField("items", clearedItems);
+      updateCartTimestamp();
+      setField("couponId", null);
+      setField("couponTimestamp", null);
     },
     [state.items, setField, updateCartTimestamp]
   );
@@ -144,13 +142,12 @@ function Container({ children }) {
   const onDeleteCart = useCallback(
     (itemId) => {
       const updatedItems = state.items.filter((item) => item.id !== itemId);
-      setField("items", updatedItems);
+      const clearedItems = updatedItems.map((item) => ({ ...item, discount: 0 }));
+      setField("items", clearedItems);
       updateCartTimestamp();
       // Clear coupon on delete
       setField("couponId", null);
       setField("couponTimestamp", null);
-      const clearedItems = updatedItems.map((item) => ({ ...item, discount: 0 }));
-      setField("items", clearedItems);
     },
     [state.items, setField, updateCartTimestamp]
   );

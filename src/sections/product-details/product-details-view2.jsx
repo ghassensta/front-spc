@@ -258,7 +258,7 @@ export default function ({
               <div className="flex flex-wrap gap-3 mt-10 font-tahoma">
                 {servicesEquipements.map((cat, index) => (
                   <span
-                    key={index}
+                    key={`${cat}-${index}`}
                     className="bg-[#e2dfba] px-2 py-1 text-sm rounded"
                   >
                     {translateSync(cat)}

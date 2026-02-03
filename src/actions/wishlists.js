@@ -1,6 +1,7 @@
 import { useMemo } from "react";
 import { endpoints, fetcher, poster } from "src/utils/axios";
 import useSWR, { mutate } from "swr";
+import { useAuthContext } from "src/auth/hooks/use-auth-context";
 
 const swrOptions = {
   revalidateIfStale: true,
@@ -9,7 +10,8 @@ const swrOptions = {
 };
 
 export function useGetWishlist() {
-  const url = endpoints.wishlist.list;
+  const { authenticated } = useAuthContext();
+  const url = authenticated ? endpoints.wishlist.list : null;
 
   const { data, isLoading, isValidating } = useSWR(url, fetcher, swrOptions);
 
@@ -44,6 +46,9 @@ export const useToggleWishlist = async (id) => {
 
 export async function getIsWishlisted(id) {
   try {
+    const accessToken = localStorage.getItem("accessToken");
+    if (!accessToken) return false;
+    
     const url = endpoints.wishlist.list;
     const res = await fetcher(url);
 

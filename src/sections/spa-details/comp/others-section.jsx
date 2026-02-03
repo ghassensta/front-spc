@@ -42,7 +42,7 @@ export default function TestimonialsSection({ testimonials = [] }) {
           768: { slidesPerView: 2, spaceBetween: 24 },
           1024: { slidesPerView: 3, spaceBetween: 24 },
         }}
-        loop={true}
+        loop={testimonials.length > 3}
         className="mySwiper"
       >
         {testimonials.map((testimonial) => (

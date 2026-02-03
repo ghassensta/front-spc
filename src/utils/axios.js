@@ -10,10 +10,11 @@ const axiosInstance = axios.create({
 
 axiosInstance.interceptors.response.use(
   (response) => response,
-  (error) =>
-    Promise.reject(
+  (error) => {
+    return Promise.reject(
       (error.response && error.response.data) || "Something went wrong!"
-    )
+    );
+  }
 );
 
 export default axiosInstance;
@@ -31,7 +32,12 @@ export const blobFetcher = (url) =>
 
 export const fetcher = async (args) => {
   try {
-    const [url, config] = Array.isArray(args) ? args : [args];
+    const [url, config = {}] = Array.isArray(args) ? args : [args];
+
+    // Guard: bloquer les appels auth sans token
+    if ((url.includes('/api/auth/') || url.includes('/api/wishlist')) && !localStorage.getItem(CONFIG.storageKey)) {
+      return null;
+    }
 
     const res = await axiosInstance.get(url, { ...config });
 

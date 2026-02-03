@@ -58,13 +58,13 @@ const SwiperContent = ({ slidesPerView = 3, data = [] }) => {
         preventClicksPropagation={false}
         preventInteractionOnTransition={true}
       >
-        {data.map((item) => {
+        {data.map((item, index) => {
           if (!item) return null;
 
           return (
             <SwiperSlide
               className="pt-8"
-              key={`${item.id || ""}-${item.slug || ""}`}
+              key={item.id ? `item-${item.id}` : `slide-${index}`}
             >
               <Card
                 to={item.slug ? paths.product(item.slug) : "#"}
@@ -144,16 +144,11 @@ SwiperContent.propTypes = {
       produit_id: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
       exclusivite_image: PropTypes.string,
       remiseDescProduit: PropTypes.string,
-      offre_flash:PropTypes.string,
+      offre_flash: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
       date_debut:PropTypes.string,
       date_fin:PropTypes.string,
     })
   ),
-};
-
-SwiperContent.defaultProps = {
-  slidesPerView: 3,
-  data: [],
 };
 
 export default React.memo(SwiperContent);

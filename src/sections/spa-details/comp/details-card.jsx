@@ -85,7 +85,7 @@ export default function ServiceCard({
         <div className="flex border bg-white shadow-md rounded-xl flex-col gap-4">
           {details.portrait_equipe.map((person, index) => (
             <div
-              key={index}
+              key={person.id || `person-${index}`}
               className="flex justify-start items-center gap-4 p-1"
             >
               <img
@@ -124,7 +124,7 @@ export default function ServiceCard({
       content: (
         <div className="flex flex-wrap">
           {marquesPartenaires.map((marque, index) => (
-            <div key={index} className="text-sm text-secondary mr-1">
+            <div key={marque.id || `marque-${index}`} className="text-sm text-secondary mr-1">
               {marque.name}
               {index < marquesPartenaires.length - 1 && ","}
             </div>

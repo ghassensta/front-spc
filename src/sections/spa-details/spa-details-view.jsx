@@ -164,9 +164,9 @@ function SpaDetailsView({
                 <div className="space-y-4">
                   {avis.length > 0 ? (
                     <>
-                      {avis.slice(0, visibleReviews).map((avis, index) => (
+                      {avis.slice(0, visibleReviews).map((avisItem, index) => (
                         <div
-                          key={index}
+                          key={`avis-${avisItem.id || index}`}
                           className="bg-white border border-black p-4 rounded-md"
                         >
                           <div className="flex items-center gap-4">
@@ -174,15 +174,15 @@ function SpaDetailsView({
                               {[1, 2, 3, 4, 5].map((i) => (
                                 <FaStar
                                   key={i}
-                                  fill={i <= avis.average_rating ? "#facc15" : "#f4efe5"}
+                                  fill={i <= avisItem.average_rating ? "#facc15" : "#f4efe5"}
                                   stroke="#facc15"
                                 />
                               ))}
                             </div>
-                            <p className="font-normal">- {avis.name}</p>
+                            <p className="font-normal">- {avisItem.name}</p>
                           </div>
                           <p className="whitespace-pre-wrap break-words text-base text-gray-600">
-                            {translateSync(avis.comment)}
+                            {translateSync(avisItem.comment)}
                           </p>
                         </div>
                       ))}

@@ -21,21 +21,24 @@ export function AuthProvider({ children }) {
     try {
       const accessToken = localStorage.getItem(CONFIG.storageKey);
 
-      if (accessToken) {
-        setSession(accessToken);
-
-        const res = await axios.get(endpoints.auth.me);
-
-        const user = res.data;
-
-        setState({ user: { ...user, accessToken }, loading: false });
-      } else {
+      if (!accessToken) {
         setState({ user: null, loading: false });
+        return;
       }
+
+      setSession(accessToken);
+
+      const res = await axios.get(endpoints.auth.me);
+
+      const user = res.data;
+
+      setState({ user: { ...user, accessToken }, loading: false });
     } catch (error) {
+      // Nettoyer le token invalide
+      localStorage.removeItem(CONFIG.storageKey);
       setState({ user: null, loading: false });
     }
-  }, [setState]);
+  }, []);
 
   useEffect(() => {
     checkUserSession();
@@ -60,7 +63,7 @@ export function AuthProvider({ children }) {
       authenticated: status === "authenticated",
       unauthenticated: status === "unauthenticated",
     }),
-    [checkUserSession, state.user, status]
+    [state.user, status]
   );
 
   return (
