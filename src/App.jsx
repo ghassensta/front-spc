@@ -7,6 +7,7 @@ import { ToastContainer } from "react-toastify";
 import { AuthProvider } from "./auth/context/jwt/auth-provider";
 import { useEffect } from "react";
 import MailjetNewsletterIframe from "./components/mailjetpopIn/MailjetPopIn";
+import WelcomeModal from "./components/modals/WelcomeModal";
 
 function App() {
   useScrollToTop();
@@ -22,7 +23,7 @@ function App() {
           includedLanguages: "fr,it,es,de,en",
           autoDisplay: false,
         },
-        "google_translate_element"
+        "google_translate_element",
       );
     };
 
@@ -37,6 +38,7 @@ function App() {
   return (
     <AuthProvider>
       <CheckoutProvider>
+        <WelcomeModal />
         <ToastContainer
           position="top-right"
           autoClose={3000}
@@ -51,4 +53,3 @@ function App() {
 }
 
 export default App;
-

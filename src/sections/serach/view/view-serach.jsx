@@ -60,6 +60,9 @@ export default function SearchPageView() {
               price={p.prix}
               remise_desc_produit={p.remise_desc_produit}
               exclusivite_image={p.exclusivite_image}
+              offre_flash={p.offre_flash}
+              date_debut={p.date_debut}
+              date_fin={p.date_fin}
             />
           ))}
         </div>

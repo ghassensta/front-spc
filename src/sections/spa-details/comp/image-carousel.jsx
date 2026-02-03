@@ -22,7 +22,7 @@ const variants = {
 };
 
 export default function ImageCarousel({ height, images = [] }) {
-  const { translateSync } = useTranslation(); // ✅ Translation hook
+  const { translateSync } = useTranslation(); 
   const [[index, direction], setIndex] = useState([0, 0]);
   const [org, setOrg] = useState([]);
   const [visible, setVisible] = useState(false);

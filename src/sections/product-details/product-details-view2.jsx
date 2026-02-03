@@ -18,8 +18,7 @@ import Section3 from "src/sections/home2/comp/section2";
 import { paths } from "src/router/paths";
 import { useCheckoutContext } from "../checkout/context";
 import { useTranslation } from "src/context/translation-context";
-import offre_flash_image from "../../assets/images/SPC-picto-offre-flash-2.svg";
-import OfferFlashBadge from "../../../src/components/offre-flash/offer-flash-badge";
+import OfferFlashSVG from "../../../src/components/offre-flash/offer-flash-badge";
 
 export default function ({
   product,
@@ -352,7 +351,7 @@ export default function ({
                   {translateSync(`Au lieu de ${product.prix_au_lieu_de}€`)}
                 </span>
               )}
-
+                <div className="flex row">
               {/* Image exclusivité */}
               {product?.type_exclusivite?.image_path && (
                 <img
@@ -365,14 +364,18 @@ export default function ({
 
               {/* Offre Flash */}
               {isFlashOfferActive && (
-                <div className="flex items-center gap-3 mt-2 rounded-xl px-3 py-2 bg-[#f6f5e9]">
-                  <OfferFlashBadge
-                    remainingTime={new Date(
-                      product.date_fin,
-                    ).toLocaleDateString()}
+                <div className="flex items-center gap-3 mt-2 rounded-xl px-3 py-2">
+                  <OfferFlashSVG
+                    width={135}
+                    height={135}
+                    tailledetime={30}
+                    offre_flash={product.offre_flash}
+                    date_debut={product.date_debut}
+                    date_fin={product.date_fin}
                   />
                 </div>
               )}
+              </div>
             </div>
 
             <div className="mt-4 font-tahoma">

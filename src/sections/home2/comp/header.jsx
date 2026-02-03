@@ -48,23 +48,21 @@ export default function Header() {
 
   return (
     <div className="relative w-screen left-[calc(-50vw+50%)] h-full overflow-hidden">
-      {/* Background slider */}
       {etablissements.map((s, index) => (
         <div
           key={index}
           className={`absolute inset-0 transition-opacity duration-700 ease-in-out ${index === currentSlide ? "opacity-100" : "opacity-0"
             }`}
-          style={{
-            backgroundImage: `url(${CONFIG.serverUrl}${s.image})`,
-            backgroundSize: "cover",
-            backgroundPosition: "center",
-          }}
+         style={{
+        backgroundImage: `url(${CONFIG.serverUrl}/storage/${s.image})`,
+        backgroundSize: "cover",
+        backgroundPosition: "center",
+      }}
         >
           <div className="absolute inset-0 bg-black/40" />
         </div>
       ))}
 
-      {/* Card content */}
       {!!current && (
         <div className="absolute bottom-24 md:bottom-8 left-4 md:left-12 z-20 text-gray-900 rounded-md shadow-lg w-[90%] max-w-md backdrop-blur-sm">
           <Link

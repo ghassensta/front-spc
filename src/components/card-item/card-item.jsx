@@ -7,7 +7,7 @@ import { Link } from "react-router-dom";
 import { paths } from "src/router/paths";
 import { TranslatedText } from "../translated-text/translated-text";
 import { useTranslation } from "react-i18next";
-import offre_flash_image from "../../assets/images/SPC-picto-offre-flash-2.svg";
+import OfferFlashSVG from "../offre-flash/offer-flash-badge";
 
 export default function CardItem({
   nom,
@@ -29,14 +29,11 @@ export default function CardItem({
   const [images, setImages] = useState([]);
   const [currentSlide, setCurrentSlide] = useState(0);
   const [showFullDescription, setShowFullDescription] = useState(false);
-  const [remainingTime, setRemainingTime] = useState("");
 
   const timerRef = useRef(null);
   const dotsContainerRef = useRef(null);
 
   const hasMultipleImages = images.length > 1;
-
-  const isOfferActive =offre_flash === 1 && date_fin && new Date(date_fin) > new Date();
 
   useEffect(() => {
     const allImages = [];
@@ -48,34 +45,6 @@ export default function CardItem({
 
     setImages(allImages);
   }, [image, gallery]);
-
-  useEffect(() => {
-    if (!isOfferActive) {
-      setRemainingTime("");
-      return;
-    }
-
-    const updateCountdown = () => {
-      const diffMs = new Date(date_fin) - new Date();
-
-      if (diffMs <= 0) {
-        setRemainingTime(t("Expiré"));
-        return;
-      }
-
-      const days = Math.floor(diffMs / 86400000);
-      const hours = Math.floor((diffMs / 3600000) % 24);
-      const minutes = Math.floor((diffMs / 60000) % 60);
-      const seconds = Math.floor((diffMs / 1000) % 60);
-
-      setRemainingTime(`${days}j ${hours}h ${minutes}m ${seconds}s`);
-    };
-
-    updateCountdown();
-    const interval = setInterval(updateCountdown, 1000);
-
-    return () => clearInterval(interval);
-  }, [date_fin, isOfferActive, t]);
 
   // ─── Auto slider ───────────────────────────────────────────
   useEffect(() => {
@@ -245,34 +214,29 @@ export default function CardItem({
           )}
         </div>
 
-        <div className="flex flex-col items-center gap-3">
-          {/* Image exclusivité */}
+        <div className="flex flex-col items-center gap-4">
           {exclusivite_image && (
             <img
               loading="lazy"
               src={`${CONFIG.serverUrl}/storage/${exclusivite_image}`}
               alt="Exclusivité"
-              className="w-auto h-auto my-2"
+              className="w-auto max-h-40 object-contain"
             />
           )}
 
-          {/* Offre flash */}
-          {isOfferActive && (
-            <div className="flex items-center gap-2 px-3 py-2 border-dashed rounded-lg border-2 font-tahoma w-full justify-center">
-              <div class="w-full border-t-4 border-b-4 border-black py-3 text-center">
-                <span class="font-bold text-black tracking-[0.2em] uppercase">
-                  OFFRE FLASH
-                </span>
-
-                <div class="text-xs font-bold text-gray-800 mt-1">
-                  {remainingTime}
-                </div>
-              </div>
+         
+            <div className="w-full flex justify-center right-1 rounded-3xl mt-1">
+              <OfferFlashSVG
+                width={70}
+                height={67}
+                tailledetime={34}
+                offre_flash={offre_flash}
+                date_debut={date_debut}
+                date_fin={date_fin}
+              />
             </div>
-          )}
         </div>
 
-        {/* Button */}
         {slug && (
           <Link to={paths.product(slug)} className="w-full mt-2">
             <button className="w-auto mx-auto px-4 py-3 bg-black leading-4 rounded-2xl text-white uppercase font-normal text-xs tracking-[3px] hover:bg-gray-800 transition font-tahoma flex items-center justify-center gap-2">
@@ -282,9 +246,7 @@ export default function CardItem({
         )}
       </div>
 
-      {/* ====================== MOBILE BOTTOM BAR ====================== */}
       <div className="flex md:hidden w-full items-center justify-between gap-3 mt-2">
-        {/* Prix mobile */}
         <div className="flex flex-col items-center font-tahoma">
           {prix_barre && Number(prix_barre) !== Number(prix) && (
             <span className="text-gray-500 line-through text-sm">
@@ -299,7 +261,6 @@ export default function CardItem({
           )}
         </div>
 
-        {/* Exclusivité + Flash mobile */}
         <div className="flex flex-col gap-2 items-center">
           {exclusivite_image && (
             <img
@@ -310,21 +271,14 @@ export default function CardItem({
             />
           )}
 
-          {isOfferActive && (
-            <div className="w-full flex flex-col items-center justify-center gap-1 px-2 py-1 border-2 border-dashed rounded-lg font-tahoma">
-              <div className="w-full border-t-2 border-b-2 border-black py-1 text-center">
-                <span className="font-bold text-black text-xs tracking-[0.15em] uppercase">
-                  <TranslatedText text="OFFRE FLASH" />
-                </span>
-                <div className="text-[10px] font-bold text-gray-800 mt-1">
-                  {remainingTime}
-                </div>
-              </div>
-            </div>
-          )}
+          {<OfferFlashSVG width={70}
+                height={67}
+                tailledetime={34}
+                offre_flash={offre_flash}
+                date_debut={date_debut}
+                date_fin={date_fin} />}
         </div>
 
-        {/* Button mobile */}
         {slug && (
           <Link to={paths.product(slug)}>
             <button className="px-4 py-3 bg-black leading-4 rounded-2xl text-white uppercase font-normal text-xs tracking-[3px] hover:bg-gray-800 transition font-tahoma whitespace-nowrap">

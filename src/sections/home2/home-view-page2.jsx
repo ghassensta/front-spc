@@ -27,7 +27,6 @@ export default function HomePageView() {
   const section4 = sections.find((s) => s.key === "section4");
   const section5 = sections.find((s) => s.key === "section5");
   const section6 = sections.find((s) => s.key === "section6");
-  console.log("section4", section4);
   if (!section4 || !section5) return null;
 
   const dynamicSections =

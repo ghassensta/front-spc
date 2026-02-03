@@ -13,7 +13,7 @@ import { useRouter } from "src/hooks";
 import { paths } from "src/router/paths";
 import { useTranslation } from "react-i18next";
 import { CONFIG } from "src/config-global";
-import OfferFlashBadge from "../../../src/components/offre-flash/offer-flash-badge";
+import OfferFlashSVG from "../offre-flash/offer-flash-badge";
 export default function Card({
   to = "/",
   id,
@@ -33,7 +33,8 @@ export default function Card({
   date_debut,
   offre_flash,
 }) {
-  console.log("exclusivite_image", exclusivite_image);
+  
+
   const { user } = useAuthContext();
   const [isFav, setIsFav] = useState(inWishlist);
   const router = useRouter();
@@ -56,8 +57,7 @@ export default function Card({
     };
   }, [id, inWishlist]);
 
-  const isOfferActive =
-    offre_flash === 1 && date_fin && new Date(date_fin) > new Date();
+  const isOfferActive =offre_flash === 1 && date_fin && new Date(date_fin) > new Date();
   useEffect(() => {
     if (!isOfferActive) {
       setRemainingTime("");
@@ -121,7 +121,7 @@ export default function Card({
   const showExclusivite = !!exclusivite_image;
 
   const offerPosition = showExclusivite
-    ? "bottom-3 right-1 w-30 h-30"
+    ? "bottom-2 right-1 w-30 h-30"
     : "bottom-20 right-1 w-16 h-16";
 
   return (
@@ -160,29 +160,37 @@ export default function Card({
           </Link>
         )}
 
-        {(offreValue || remise_desc_produit) && (
+        {(offreValue > 0 ||
+          (remise_desc_produit && remise_desc_produit.trim() !== "")) && (
           <span className="bg-[#B6B499] w-max text-black font-bold font-roboto px-2 py-1 absolute bottom-0 left-1/2 translate-y-1/2 -translate-x-1/2 rounded-full text-s z-10">
             <TranslatedText
               text={
-                offreValue ? `${offreValue}% de remise` : remise_desc_produit
+                offreValue > 0
+                  ? `${offreValue}% de remise`
+                  : remise_desc_produit
               }
             />
           </span>
         )}
 
-        {/* OFFRE FLASH */}
         {showOfferFlash && (
           <Link
             to={to}
-            className={`absolute ${offerPosition} flex items-center justify-center bg-[#f6f5e9] ${
+            className={`absolute ${offerPosition} flex items-center justify-center  ${
               showExclusivite ? "" : "rounded-full"
             }`}
           >
-            <OfferFlashBadge remainingTime={remainingTime} />
+        <OfferFlashSVG
+          width={70}
+          height={67}
+          tailledetime={35}
+          offre_flash={offre_flash}
+          date_fin={date_fin}
+          date_debut={date_debut}
+        />
           </Link>
         )}
 
-        {/* EXCLUSIVITÉ */}
         {showExclusivite && (
           <Link
             to={to}

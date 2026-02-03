@@ -80,9 +80,9 @@ const SwiperContent = ({ slidesPerView = 3, data = [] }) => {
                 offreValue={item.offreValue || 0}
                 price={item.price || ""}
                 duration={translateSync(item.duration || "")}
-                id={item.produit_id || null}
+                id={item.produit_id || item.id || null}
                 exclusivite_image={item.exclusivite_image}
-                remiseDescProduit={translateSync(item.remiseDescProduit || "")}
+                remise_desc_produit={translateSync(item.remiseDescProduit || "")}
                 offre_flash={item.offre_flash || ""}
                 date_debut={item.date_debut || ""}
                 date_fin={item.date_fin || ""}
