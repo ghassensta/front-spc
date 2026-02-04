@@ -6,7 +6,7 @@ import { useTranslation } from "src/context/translation-context";
 
 export default function TemplateRestaurant({ data = [] }) {
   const { translateSync } = useTranslation();
-   console.log("ServicesTemplates datassss:", data);
+   //console.log("ServicesTemplates datassss:", data);
 
   const imagesCarousel = data.type_media?.map((media) => `${media.path}`) || [];
   const [expanded, setExpanded] = useState(false);

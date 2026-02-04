@@ -77,16 +77,29 @@ export const TranslationProvider = ({ children }) => {
     // Pas encore traduit → on déclenche l'async en arrière-plan SEULEMENT si pas déjà en cours
     setTranslatingSet(prev => new Set(prev).add(cacheKey));
     
-    // Timeout pour éviter les appels synchrones immédiats
-    setTimeout(() => {
-      translate(text).finally(() => {
-        setTranslatingSet(prev => {
-          const newSet = new Set(prev);
-          newSet.delete(cacheKey);
-          return newSet;
+    // Utiliser requestIdleCallback pour éviter les setState pendant le render
+    if (window.requestIdleCallback) {
+      window.requestIdleCallback(() => {
+        translate(text).finally(() => {
+          setTranslatingSet(prev => {
+            const newSet = new Set(prev);
+            newSet.delete(cacheKey);
+            return newSet;
+          });
         });
       });
-    }, 0);
+    } else {
+      // Fallback pour les vieux navigateurs
+      setTimeout(() => {
+        translate(text).finally(() => {
+          setTranslatingSet(prev => {
+            const newSet = new Set(prev);
+            newSet.delete(cacheKey);
+            return newSet;
+          });
+        });
+      }, 0);
+    }
     
     return text; // on retourne l'original immédiatement
   };

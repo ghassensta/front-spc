@@ -125,6 +125,9 @@ export default function HomePageView() {
                           src={`${CONFIG.serverUrl}/storage/${actualite.thumbnail_path}`}
                           alt={translateSync(actualite.title)}
                           className="w-full h-64 object-cover"
+                          width="400"
+                          height="256"
+                          style={{ aspectRatio: '400/256' }}
                         />
                         <span className="absolute inset-0 bg-black/25" />
                       </div>
@@ -171,6 +174,8 @@ export default function HomePageView() {
                             src={`${CONFIG.serverUrl}/storage/${actualite.thumbnail_path}`}
                             alt={translateSync(actualite.title)}
                             className="w-full h-full object-cover"
+                            width="256"
+                            height="256"
                           />
                         </div>
 

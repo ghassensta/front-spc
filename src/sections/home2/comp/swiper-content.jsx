@@ -1,20 +1,30 @@
-import React, { useRef, useMemo } from "react";
-import { Swiper, SwiperSlide } from "swiper/react";
-import { Navigation } from "swiper/modules";
-import "swiper/css";
-import "swiper/css/navigation";
-import { FaChevronLeft, FaChevronRight } from "react-icons/fa";
-import PropTypes from "prop-types";
-import Card from "src/components/card/card";
+import React, { useRef, useMemo, useState, useEffect } from "react";
 import { paths } from "src/router/paths";
 import { CONFIG } from "src/config-global";
 import { useTranslation } from "src/context/translation-context";
+import PropTypes from "prop-types";
+import Card from "src/components/card/card";
 
 const SwiperContent = ({ slidesPerView = 3, data = [] }) => {
+  const [Swiper, setSwiper] = useState(null);
   const prevRef = useRef(null);
   const nextRef = useRef(null);
   const swiperRef = useRef(null);
   const { translateSync } = useTranslation();
+
+  // Lazy charger Swiper seulement si nécessaire
+  useEffect(() => {
+    if (data.length > 1) {
+      import("swiper/react").then((swiperModule) => {
+        import("swiper/modules").then((modules) => {
+          setSwiper({
+            ...swiperModule,
+            Navigation: modules.Navigation
+          });
+        });
+      });
+    }
+  }, [data.length]);
 
   const shouldLoop = data.length > slidesPerView;
 
@@ -31,9 +41,61 @@ const SwiperContent = ({ slidesPerView = 3, data = [] }) => {
     return null;
   }
 
+  // Afficher un fallback simple si Swiper n'est pas encore chargé
+  if (!Swiper && data.length > 1) {
+    return (
+      <div className="relative max-w-[1200px] mx-auto px-4 md:px-12">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+          {data.slice(0, slidesPerView).map((item, index) => (
+            <div key={item.id ? `item-${item.id}` : `slide-${index}`} className="pt-8">
+              {/* Card component here - simplifié pour le fallback */}
+              <div className="bg-white rounded-lg shadow-md p-4">
+                <div className="w-full h-48 bg-gray-200 rounded mb-4"></div>
+                <h3 className="text-lg font-semibold mb-2">{translateSync(item.name || "Produit")}</h3>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+    );
+  }
+
+  if (data.length === 1) {
+    // Single item - no Swiper needed
+    const item = data[0];
+    return (
+      <div className="relative max-w-[1200px] mx-auto px-4 md:px-12">
+        <div className="pt-8">
+          {/* Card component here */}
+          <Card
+            to={item.slug ? paths.product(item.slug) : "#"}
+            title={translateSync(item.name || "Produit")}
+            image={
+              item.image
+                ? `${CONFIG.serverUrl}/storage/${item.image}`
+                : "/placeholder.png"
+            }
+            headTitle={translateSync(item.spaName || "")}
+            location={translateSync(item.spaLocation || "")}
+            bottomText={translateSync(item.offre || "")}
+            offreValue={item.offreValue || 0}
+            price={item.price || ""}
+            duration={translateSync(item.duration || "")}
+            id={item.produit_id || item.id || null}
+            exclusivite_image={item.exclusivite_image}
+            remise_desc_produit={translateSync(item.remiseDescProduit || "")}
+            offre_flash={item.offre_flash || ""}
+            date_debut={item.date_debut || ""}
+            date_fin={item.date_fin || ""}
+          />
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="relative max-w-[1200px] mx-auto px-4 md:px-12">
-      <Swiper
+      <Swiper.Swiper
         ref={swiperRef}
         loop={shouldLoop}
         spaceBetween={20}
@@ -41,7 +103,7 @@ const SwiperContent = ({ slidesPerView = 3, data = [] }) => {
         initialSlide={Math.min(2, Math.max(0, data.length - 1))}
         centeredSlides={data.length <= 2}
         breakpoints={breakpoints}
-        modules={[Navigation]}
+        modules={[Swiper.Navigation]}
         navigation={{
           prevEl: prevRef.current,
           nextEl: nextRef.current,
@@ -62,9 +124,9 @@ const SwiperContent = ({ slidesPerView = 3, data = [] }) => {
           if (!item) return null;
 
           return (
-            <SwiperSlide
+            <Swiper.SwiperSlide
               className="pt-8"
-              key={item.id ? `item-${item.id}` : `slide-${index}`}
+              key={item.id ? `item-${item.id}-${index}` : `slide-${index}-${Math.random().toString(36).substr(2, 9)}`}
             >
               <Card
                 to={item.slug ? paths.product(item.slug) : "#"}
@@ -87,10 +149,10 @@ const SwiperContent = ({ slidesPerView = 3, data = [] }) => {
                 date_debut={item.date_debut || ""}
                 date_fin={item.date_fin || ""}
               />
-            </SwiperSlide>
+            </Swiper.SwiperSlide>
           );
         })}
-      </Swiper>
+      </Swiper.Swiper>
 
       {/* Navigation buttons */}
       {data.length > 1 && (
@@ -100,7 +162,7 @@ const SwiperContent = ({ slidesPerView = 3, data = [] }) => {
             aria-label={translateSync("Précédent")}
             className="absolute left-0 top-[35%] -translate-y-1/2 bg-[#B6B499] hover:bg-[#9a977d] rounded-full w-8 h-8 z-10 cursor-pointer flex items-center justify-center transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-[#B6B499] focus:ring-opacity-50"
           >
-            <FaChevronLeft className="text-black w-3 h-3" />
+            ←
           </button>
 
           <button
@@ -108,7 +170,7 @@ const SwiperContent = ({ slidesPerView = 3, data = [] }) => {
             aria-label={translateSync("Suivant")}
             className="absolute right-0 top-[35%] -translate-y-1/2 bg-[#B6B499] hover:bg-[#9a977d] rounded-full w-8 h-8 z-10 cursor-pointer flex items-center justify-center transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-[#B6B499] focus:ring-opacity-50"
           >
-            <FaChevronRight className="text-black w-3 h-3" />
+            →
           </button>
         </>
       )}

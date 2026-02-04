@@ -41,7 +41,7 @@ export default function Partenaires({ section }) {
           modules={[Autoplay]}
           spaceBetween={40}
           slidesPerView={2}
-          loop
+          loop={logos.length >= 2}
           autoplay={{ delay: 3000, disableOnInteraction: false }}
           breakpoints={{
             425: { slidesPerView: 2 },
@@ -54,7 +54,7 @@ export default function Partenaires({ section }) {
         >
           {logos.map((logo, index) => (
             <SwiperSlide
-              key={index}
+              key={logo.id ? `logo-${logo.id}` : `partner-${index}`}
               className="flex items-center justify-center"
             >
               {logo.link ? (

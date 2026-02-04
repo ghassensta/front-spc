@@ -96,6 +96,8 @@ export default function CardItem({
     .dots-container { -ms-overflow-style: none; scrollbar-width: none; }
   `;
 
+  
+
   return (
     <motion.div className="flex flex-col gap-4 py-7 border-b border-gray-400 md:flex-row">
       <div className="relative w-full md:w-[30%]">
@@ -227,9 +229,9 @@ export default function CardItem({
          
             <div className="w-full flex justify-center right-1 rounded-3xl mt-1">
               <OfferFlashSVG
-                width={70}
-                height={67}
-                tailledetime={34}
+                width={140}
+                height={140}
+                tailledetime={30}
                 offre_flash={offre_flash}
                 date_debut={date_debut}
                 date_fin={date_fin}

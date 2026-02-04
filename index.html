@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="fr">
   <head>
     <meta charset="UTF-8" />
     <link rel="icon" type="image/svg+xml" href="/spa-prestige-logo.png" />
@@ -10,23 +10,53 @@
       href="/spa-prestige-logo.png"
     />
     <title>Spa-Prestige</title>
-    <script async src="https://www.googletagmanager.com/gtag/js?id=G-3GYQ0VKY8L"></script> <script>   window.dataLayer = window.dataLayer || [];   function gtag(){dataLayer.push(arguments);}   gtag('js', new Date());   gtag('config', 'G-3GYQ0VKY8L'); </script>
+    
+    <!-- Préconnecter les fonts critiques -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    
+    <!-- CSS critique inline pour éviter le render bloquant -->
+    <style>
+      body{margin:0;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Oxygen,Ubuntu,Cantarell,'Open Sans','Helvetica Neue',sans-serif;background:#fff}
+      #root{min-height:100vh}
+      .loading{display:flex;justify-content:center;align-items:center;height:100vh}
+      /* Réserver l'espace pour éviter CLS */
+      .hero-placeholder{min-height:400px;background:#f5f5f5}
+    </style>
+    
+    <!-- Décaler GTM après le chargement principal -->
+    <script>
+      window.gtag = window.gtag || function(){(window.dataLayer = window.dataLayer || []).push(arguments);};
+      window.addEventListener('load', function() {
+        (function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src='https://www.googletagmanager.com/gtag/js?id=G-3GYQ0VKY8L';f.parentNode.insertBefore(j,f);})(window,document,'script','dataLayer');
+        gtag('js', new Date());
+        gtag('config', 'G-3GYQ0VKY8L');
+      });
+    </script>
   </head>
   <body>
-    <div id="root"></div>
+    <div id="root">
+      <div class="loading">Chargement...</div>
+    </div>
     <script type="module" src="/src/main.jsx"></script>
     
-  </body>
-  <script>
-      window.gtranslateSettings = {
-        default_language: "fr",
-        detect_browser_language: true,
-        languages: ["fr", "it", "es", "de", "en"],
-        wrapper_selector: ".gtranslate_wrapper",
-      };
+    <!-- Google Translate après interaction -->
+    <script>
+      let gtranslateLoaded = false;
+      document.addEventListener('click', function() {
+        if (!gtranslateLoaded) {
+          gtranslateLoaded = true;
+          window.gtranslateSettings = {
+            default_language: "fr",
+            detect_browser_language: true,
+            languages: ["fr", "it", "es", "de", "en"],
+            wrapper_selector: ".gtranslate_wrapper",
+          };
+          const script = document.createElement('script');
+          script.src = 'https://cdn.gtranslate.net/widgets/latest/flags.js';
+          script.defer = true;
+          document.body.appendChild(script);
+        }
+      }, { once: true });
     </script>
-    <script
-      src="https://cdn.gtranslate.net/widgets/latest/flags.js"
-      defer
-    ></script>
 </html>

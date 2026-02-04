@@ -156,6 +156,10 @@ export default function Card({
               alt={title || t("spa")}
               loading="lazy"
               className="w-full h-full rounded-xl object-cover object-center"
+              width="400"
+              height="256"
+              style={{ aspectRatio: '400/256' }}
+              fetchpriority="high"
             />
           </Link>
         )}

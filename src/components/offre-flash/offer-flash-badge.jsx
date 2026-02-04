@@ -4,9 +4,9 @@ export default function OfferFlashSVG({
   width ,
   height ,
   tailledetime = 34,
-  offre_flash = false, // boolean
-  date_debut = null, // date string ou Date
-  date_fin = null, // date string ou Date
+  offre_flash = false, 
+  date_debut = null, 
+  date_fin = null,
 }) {
   const [remainingTime, setRemainingTime] = useState("");
 
@@ -43,7 +43,6 @@ export default function OfferFlashSVG({
     return () => clearInterval(timer);
   }, [offre_flash, date_fin]);
 
-  // Ne rien afficher si pas d’offre flash
   if (!offre_flash) return null;
 
   return (
