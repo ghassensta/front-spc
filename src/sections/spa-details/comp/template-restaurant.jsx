@@ -6,7 +6,7 @@ import { useTranslation } from "src/context/translation-context";
 
 export default function TemplateRestaurant({ data = [] }) {
   const { translateSync } = useTranslation();
-   console.log("ServicesTemplates datasss:", data);
+   //console.log("ServicesTemplates datassss:", data);
 
   const imagesCarousel = data.type_media?.map((media) => `${media.path}`) || [];
   const [expanded, setExpanded] = useState(false);
@@ -78,7 +78,7 @@ export default function TemplateRestaurant({ data = [] }) {
               description={translateSync(prod.description)}
               access_spa={prod.access_spa}
               prix={prod.prix}
-              exclusivite_image={prod?.type_exclusivite.image_path || null}
+              exclusivite_image={prod.exclusivite_image_path}
               date_fin={prod.date_fin}
               type_id={prod.type_id}
               conditions_utilisation={translateSync(prod.conditions_utilisation)}

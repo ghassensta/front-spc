@@ -6,6 +6,8 @@ import { useScrollToTop } from "./hooks/use-scroll-to-top";
 import { ToastContainer } from "react-toastify";
 import { AuthProvider } from "./auth/context/jwt/auth-provider";
 import { useEffect } from "react";
+import MailjetNewsletterIframe from "./components/mailjetpopIn/MailjetPopIn";
+import WelcomeModal from "./components/modals/WelcomeModal";
 
 function App() {
   useScrollToTop();
@@ -14,7 +16,6 @@ function App() {
     // Only add once
     if (document.getElementById("google-translate-script")) return;
 
-    // Define the global init function ONCE
     window.googleTranslateElementInit = () => {
       new window.google.translate.TranslateElement(
         {
@@ -22,11 +23,10 @@ function App() {
           includedLanguages: "fr,it,es,de,en",
           autoDisplay: false,
         },
-        "google_translate_element"
+        "google_translate_element",
       );
     };
 
-    // Load Google Translate script
     const script = document.createElement("script");
     script.id = "google-translate-script";
     script.src =
@@ -38,6 +38,7 @@ function App() {
   return (
     <AuthProvider>
       <CheckoutProvider>
+        <WelcomeModal />
         <ToastContainer
           position="top-right"
           autoClose={3000}

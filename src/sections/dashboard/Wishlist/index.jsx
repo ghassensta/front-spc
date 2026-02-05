@@ -14,21 +14,40 @@ export default function Wishlist({ wishlists, loading, validating }) {
   const [wishlist, setWishlist] = useState([]);
   const [shareModalOpen, setShareModalOpen] = useState(false);
   const [selectedProduct, setSelectedProduct] = useState(null);
-  console.log("wishlists", wishlists);
+  const [remainingTimes, setRemainingTimes] = useState({}); // pour stocker countdown par produit
+
   useEffect(() => {
-    setWishlist(wishlists);
+    setWishlist(wishlists || []);
   }, [wishlists]);
+
+  // ================= COUNTDOWN OFFRE FLASH =================
+  useEffect(() => {
+    const interval = setInterval(() => {
+      const newTimes = {};
+      wishlist.forEach((item) => {
+        if (item.offre_flash === 1 && item.date_fin) {
+          const diff = new Date(item.date_fin) - new Date();
+          if (diff <= 0) {
+            newTimes[item.id] = t("Expiré");
+          } else {
+            const d = Math.floor(diff / 86400000);
+            const h = Math.floor((diff / 3600000) % 24);
+            const m = Math.floor((diff / 60000) % 60);
+            const s = Math.floor((diff / 1000) % 60);
+            newTimes[item.id] = `${d}j ${h}h ${m}m ${s}s`;
+          }
+        }
+      });
+      setRemainingTimes(newTimes);
+    }, 1000);
+
+    return () => clearInterval(interval);
+  }, [wishlist, t]);
 
   const toggleLike = async (id) => {
     const promise = useToggleWishlist(id);
-    toast.promise(promise, {
-      pending: t("Retirer de favoris..."),
-    });
-    try {
-      await promise;
-    } catch (err) {
-      throw err;
-    }
+    toast.promise(promise, { pending: t("Retirer de favoris...") });
+    await promise;
   };
 
   const openShareModal = (item) => {
@@ -53,7 +72,6 @@ export default function Wishlist({ wishlists, loading, validating }) {
               <TranslatedText text="Retrouvez tous vos soins et forfaits spa favoris" />
             </p>
           </div>
-
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {[...Array(6)].map((_, index) => (
               <div
@@ -99,90 +117,95 @@ export default function Wishlist({ wishlists, loading, validating }) {
 
         {wishlist.length === 0 ? (
           <div className="bg-white rounded-lg shadow-sm p-8 text-center">
-            <div className="flex justify-center mb-4">
-              <FaRegHeart className="h-16 w-16 text-gray-300" />
-            </div>
+            <FaRegHeart className="mx-auto h-16 w-16 text-gray-300 mb-4" />
             <h3 className="text-xl font-medium text-gray-900 mb-2">
               <TranslatedText text="Votre wishlist est vide" />
             </h3>
-            <p className="text-gray-500 mb-6">
-              <TranslatedText text="Ajoutez des soins et forfaits à votre wishlist pour les retrouver facilement" />
-            </p>
             <Link
               to={paths.spa.list}
-              className="bg-[#c4c0a1] rounded-full text-white px-6 py-2 uppercase tracking-wider hover:opacity-90 max-w-max"
+              className="bg-[#c4c0a1] rounded-full text-white px-6 py-2 uppercase"
             >
               <TranslatedText text="Découvrir nos soins" />
             </Link>
           </div>
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {wishlist.map((item) => (
-              <div
-                key={item.id}
-                className="bg-white rounded-lg shadow-sm overflow-hidden hover:shadow-md transition-shadow duration-300"
-              >
-                <div className="relative w-full">
-                  {/* Image principale */}
-                  <img
-                    loading="lazy"
-                    src={CONFIG.serverUrl + "/storage/" + item.image}
-                    alt={item.nom}
-                    className="w-full h-48 object-cover rounded-md"
-                  />
+            {wishlist.map((item) => {
+              const isOfferActive =
+                item.offre_flash === 1 &&
+                item.date_fin &&
+                new Date(item.date_fin) > new Date();
 
-                  {/* Image exclusivité en bas à droite avec bg */}
-                  {item?.type_exclusivite?.image_path && (
-                    <div className="absolute bottom-2 right-2 w-14 h-14 p-1 bg-white rounded-full shadow-md flex items-center justify-center">
+              return (
+                <div
+                  key={item.id}
+                  className="bg-white rounded-lg shadow-sm overflow-hidden hover:shadow-md transition"
+                >
+                  <div className="relative">
+                    <Link to={paths.product(item.slug)}>
                       <img
-                        src={
-                          CONFIG.serverUrl +
-                          "/storage/" +
-                          item.type_exclusivite.image_path
-                        }
-                        alt="exclusivite spc"
-                        className="w-full h-full object-cover rounded-full"
+                        src={`${CONFIG.serverUrl}/storage/${item.image}`}
+                        alt={item.nom}
+                        className="w-full h-48 object-cover"
                       />
-                    </div>
-                  )}
 
-                  {/* Bouton like en haut à droite */}
-                  <div className="absolute top-3 right-3">
+                      {/* OFFRE FLASH */}
+                      {isOfferActive && (
+                        <div className="absolute top-2 left-2 bg-red-600 text-white text-xs px-3 py-1 rounded-full shadow flex flex-col items-center">
+                          <TranslatedText text="Offre flash" />
+                          <span className="text-[10px] font-bold mt-1">
+                            {remainingTimes[item.id]}
+                          </span>
+                        </div>
+                      )}
+
+                      {/* EXCLUSIVITÉ */}
+                      {item?.type_exclusivite?.image_path && (
+                        <div className="absolute bottom-2 right-2 w-14 h-14 bg-white rounded-full p-1 shadow">
+                          <img
+                            src={`${CONFIG.serverUrl}/storage/${item.type_exclusivite.image_path}`}
+                            alt="exclusivité"
+                            className="w-full h-full object-cover rounded-full"
+                          />
+                        </div>
+                      )}
+                    </Link>
+                    {/* LIKE */}
                     <button
                       onClick={() => toggleLike(item.id)}
-                      className="p-2 bg-white rounded-full shadow-md text-red-500 hover:text-red-600 focus:outline-none"
+                      className="absolute top-2 right-2 bg-white p-2 rounded-full shadow text-red-500"
                     >
                       <FaHeart />
                     </button>
                   </div>
-                </div>
 
-                <div className="p-4">
-                  <div className="flex justify-between items-start mb-2">
-                    <h3 className="font-medium text-gray-900">{item.nom}</h3>
-                  </div>
-                  <div className="flex justify-between items-center mt-4">
-                    <span className="text-lg font-bold text-secondary">
-                      {item.prix} €
-                    </span>
-                    <div className="flex space-x-2">
-                      <Link
-                        to={paths.product(item.slug)}
-                        className="p-2 text-gray-600 hover:text-primary border border-gray-200 rounded-md"
-                      >
-                        <FaEye />
-                      </Link>
-                      <button
-                        onClick={() => openShareModal(item)}
-                        className="p-2 text-gray-600 hover:text-primary border border-gray-200 rounded-md"
-                      >
-                        <FaShareAlt />
-                      </button>
+                  <div className="p-4">
+                    <h3 className="font-medium text-gray-900 mb-2">
+                      {item.nom}
+                    </h3>
+
+                    <div className="flex justify-between items-center">
+                      <span className="text-lg font-bold">{item.prix} €</span>
+
+                      <div className="flex gap-2">
+                        <Link
+                          to={paths.product(item.slug)}
+                          className="p-2 border rounded-md"
+                        >
+                          <FaEye />
+                        </Link>
+                        <button
+                          onClick={() => openShareModal(item)}
+                          className="p-2 border rounded-md"
+                        >
+                          <FaShareAlt />
+                        </button>
+                      </div>
                     </div>
                   </div>
                 </div>
-              </div>
-            ))}
+              );
+            })}
           </div>
         )}
       </div>

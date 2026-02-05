@@ -4,11 +4,25 @@ import { Autoplay } from "swiper/modules";
 import "swiper/css";
 import { CONFIG } from "src/config-global";
 import { useTranslation } from "src/context/translation-context";
+import { useLocation } from "react-router-dom";
 
 export default function Partenaires({ section }) {
   const { translateSync } = useTranslation();
+  const location = useLocation();
 
-  if (!section?.extra_data?.logos?.length) return null;
+  // Déterminer quelle page utiliser selon l'URL
+  const getPageKey = () => {
+    const path = location.pathname;
+    if (path === "/" || path === "/accueil") return "page_accueil";
+    if (path === "/marque-partenaire") return "collaboration_avec_les_marques";
+    if (path === "/solutions-ce") return "page_solutions";
+    return "page_accueil"; // fallback
+  };
+
+  const pageKey = getPageKey();
+  const logos = section?.extra_data?.pages?.[pageKey]?.logos || [];
+
+  if (!logos.length) return null;
 
   return (
     <div className="bg-white py-2 md:py-16">
@@ -27,7 +41,7 @@ export default function Partenaires({ section }) {
           modules={[Autoplay]}
           spaceBetween={40}
           slidesPerView={2}
-          loop
+          loop={logos.length >= 2}
           autoplay={{ delay: 3000, disableOnInteraction: false }}
           breakpoints={{
             425: { slidesPerView: 2 },
@@ -38,9 +52,9 @@ export default function Partenaires({ section }) {
           }}
           className="py-8"
         >
-          {section.extra_data.logos.map((logo, index) => (
+          {logos.map((logo, index) => (
             <SwiperSlide
-              key={index}
+              key={logo.id ? `logo-${logo.id}` : `partner-${index}`}
               className="flex items-center justify-center"
             >
               {logo.link ? (

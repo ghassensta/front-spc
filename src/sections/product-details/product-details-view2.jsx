@@ -18,6 +18,7 @@ import Section3 from "src/sections/home2/comp/section2";
 import { paths } from "src/router/paths";
 import { useCheckoutContext } from "../checkout/context";
 import { useTranslation } from "src/context/translation-context";
+import OfferFlashSVG from "../../../src/components/offre-flash/offer-flash-badge";
 
 export default function ({
   product,
@@ -76,7 +77,7 @@ export default function ({
   const validateForm = () => {
     if (!name || !email) {
       toast.error(
-        translateSync("Veuillez remplir tous les champs (nom, email) !")
+        translateSync("Veuillez remplir tous les champs (nom, email) !"),
       );
       return false;
     }
@@ -108,7 +109,7 @@ export default function ({
           pending: translateSync("Envoi de votre avis..."),
           success: translateSync("Avis envoyé avec succès !"),
           error: translateSync("Erreur lors de l'envoi de l'avis."),
-        }
+        },
       )
       .then(() => {
         setRating(0);
@@ -144,7 +145,7 @@ export default function ({
               message: "",
               date: new Date().toISOString().slice(0, 10),
             },
-          ]
+          ],
     );
   };
 
@@ -216,7 +217,7 @@ export default function ({
       params.set(name, value);
       return params.toString();
     },
-    [searchParams]
+    [searchParams],
   );
   const goToAuth = () => {
     const signInPath = paths.auth.root;
@@ -249,9 +250,7 @@ export default function ({
               <ProductCarousel
                 gallery={product?.galleries_images}
                 image={product?.image}
-                showArrows={!!(
-                  (product?.galleries_images?.length || 0) > 1
-                )}
+                showArrows={!!((product?.galleries_images?.length || 0) > 1)}
               />
             </div>
 
@@ -259,7 +258,7 @@ export default function ({
               <div className="flex flex-wrap gap-3 mt-10 font-tahoma">
                 {servicesEquipements.map((cat, index) => (
                   <span
-                    key={index}
+                    key={`${cat}-${index}`}
                     className="bg-[#e2dfba] px-2 py-1 text-sm rounded"
                   >
                     {translateSync(cat)}
@@ -287,9 +286,9 @@ export default function ({
                     i <= Math.floor(roundedRating)
                       ? "#facc15"
                       : i === Math.ceil(roundedRating) &&
-                        roundedRating % 1 !== 0
-                      ? "#facc15"
-                      : "none"
+                          roundedRating % 1 !== 0
+                        ? "#facc15"
+                        : "none"
                   }
                   stroke="#facc15"
                 />
@@ -334,45 +333,49 @@ export default function ({
 
           <div className="bg-[beige] px-8 py-4 col-span-2 lg:col-span-1 rounded-2xl">
             <div>
+              {/* Prix barré */}
+              {!!product?.prix_barre && (
+                <span className="text-sm text-gray-500 line-through font-tahoma">
+                  {product.prix_barre} €
+                </span>
+              )}
 
-            {!!product?.prix_barre && (
-              <span className="text-sm text-gray-500 line-through font-tahoma">
-                {product?.prix_barre}
-              </span>
-            )}
-
-            <div className="font-normal text-[#333] text-2xl font-tahoma mb-2">
-              {product?.prix ? `${product.prix} €` : "Prix non disponible"}
-            </div>
-            {!!product?.prix_au_lieu_de && (
-              <translateSync
-                text={`Au lieu de ${product?.prix_au_lieu_de}€`}
-                className="text-sm text-gray-500 font-tahoma"
-                as="span"
-              />
-            )}
-
-            {product?.type_exclusivite?.image_path && (
-              <img
-                loading="lazy"
-                src={`${CONFIG.serverUrl}/storage/${product.type_exclusivite.image_path}`}
-                alt="Exclusivité"
-                className="w-auto h-auto my-2"
-              />
-            )}
-            <div>
-            {isFlashOfferActive && (
-              <div className="mt-4 p-4 border-2 border-dashed border-red-600 rounded-xl text-center">
-                <div className="text-red-600 font-bold text-lg">
-                  {translateSync("Offre Flash en cours !")}
-                </div>
-                <div className="text-gray-800 mt-1">
-                  {translateSync("Valable jusqu'au")}{" "}
-                  {new Date(product.date_fin).toLocaleDateString()}
-                </div>
+              {/* Prix principal */}
+              <div className="font-normal text-[#333] text-2xl font-tahoma mb-2">
+                {product?.prix ? `${product.prix} €` : "Prix non disponible"}
               </div>
-            )}
-            </div>
+
+              {/* Prix au lieu de */}
+              {!!product?.prix_au_lieu_de && (
+                <span className="text-sm text-gray-500 font-tahoma">
+                  {translateSync(`Au lieu de ${product.prix_au_lieu_de}€`)}
+                </span>
+              )}
+                <div className="flex row">
+              {/* Image exclusivité */}
+              {product?.type_exclusivite?.image_path && (
+                <img
+                  loading="lazy"
+                  src={`${CONFIG.serverUrl}/storage/${product.type_exclusivite.image_path}`}
+                  alt="Exclusivité"
+                  className="w-auto h-auto my-2"
+                />
+              )}
+
+              {/* Offre Flash */}
+              {isFlashOfferActive && (
+                <div className="flex items-center gap-3 mt-2 rounded-xl px-3 py-2">
+                  <OfferFlashSVG
+                    width={135}
+                    height={135}
+                    tailledetime={30}
+                    offre_flash={product.offre_flash}
+                    date_debut={product.date_debut}
+                    date_fin={product.date_fin}
+                  />
+                </div>
+              )}
+              </div>
             </div>
 
             <div className="mt-4 font-tahoma">
@@ -408,7 +411,7 @@ export default function ({
                       type="email"
                       className="w-full border border-gray-300 p-2"
                       placeholder={translateSync(
-                        "Email du destinataire (optionnel)"
+                        "Email du destinataire (optionnel)",
                       )}
                       value={recipient.email}
                       onChange={(e) =>
@@ -426,7 +429,7 @@ export default function ({
                     />
                     <p className="text-sm text-gray-600 mt-2">
                       {translateSync(
-                        "Choisissez la date d'envoi (la carte cadeau sera envoyée à 7h du matin le jour J)"
+                        "Choisissez la date d'envoi (la carte cadeau sera envoyée à 7h du matin le jour J)",
                       )}
                     </p>
                     <input
@@ -560,12 +563,12 @@ export default function ({
                             {translateSync(
                               `Soyez le premier à laisser votre avis sur "${
                                 product?.nom || translateSync("ce produit")
-                              }" !`
+                              }" !`,
                             )}
                           </p>
                           <p className="text-gray-600">
                             {translateSync(
-                              "Votre adresse e-mail ne sera pas publiée. Les champs obligatoires sont indiqués avec *"
+                              "Votre adresse e-mail ne sera pas publiée. Les champs obligatoires sont indiqués avec *",
                             )}
                           </p>
                         </>
@@ -601,7 +604,7 @@ export default function ({
                           rows={4}
                           className="w-full border border-gray-300 rounded-lg p-2 mb-3"
                           placeholder={translateSync(
-                            "Partagez votre expérience..."
+                            "Partagez votre expérience...",
                           )}
                           value={comment}
                           onChange={(e) => setComment(e.target.value)}
@@ -621,7 +624,7 @@ export default function ({
                       <div className="flex flex-col justify-center items-center">
                         <p className="text-xl mb-4">
                           {translateSync(
-                            "Veuillez vous connecter pour mettre un avis"
+                            "Veuillez vous connecter pour mettre un avis",
                           )}
                         </p>
                         <button

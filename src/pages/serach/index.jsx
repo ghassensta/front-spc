@@ -1,24 +1,24 @@
 // src/pages/search/index.jsx
-import { useParams } from "react-router-dom";
-import { Helmet } from 'react-helmet'
+import { useParams, useLocation } from "react-router-dom";
+import { Helmet } from "react-helmet";
 import { useSearchProduits } from "src/actions/serach";
 import SearchPageView from "src/sections/serach/view/view-serach";
-import { paths } from "src/router/paths";
 import { useRouter } from "src/hooks";
 import theImage from "src/assets/images/SPA-images-1975x1318-Qui-Sommes-Nous-02.jpg";
 
 export default function SearchPage() {
   const { catSlug, villeSlug } = useParams();
+  const location = useLocation();
+  const currentUrl = `${window.location.origin}${location.pathname}`; // URL dynamique
   const router = useRouter();
 
   const { data, loading } = useSearchProduits(catSlug, villeSlug);
-  
+
   if (!catSlug && !villeSlug) {
-    router.push(paths.main);
+    router.push("/");
     return null;
   }
 
-  // Construire les titres et descriptions dynamiques
   const pageTitle = villeSlug && catSlug 
     ? `${data?.categorie || catSlug} à ${data?.ville || villeSlug} - Spa & Prestige Collection`
     : villeSlug
@@ -31,27 +31,25 @@ export default function SearchPage() {
     ? `Trouvez les meilleurs spas et établissements de bien-être à ${data?.ville || villeSlug}. ${data?.total || 0} lieux d'exception à explorer.`
     : `Découvrez nos ${data?.categorie || catSlug} - établissements de prestige pour votre bien-être. ${data?.total || 0} options disponibles.`;
 
-  const pageUrl = `https://spa-prestige-collection.com/search/${catSlug}/${villeSlug}`;
   const imageUrl = theImage;
 
-  // Schema pour Search Results Page
   const searchResultsSchema = {
     "@context": "https://schema.org",
     "@type": "SearchResultsPage",
-    "name": pageTitle,
-    "url": pageUrl,
-    "description": pageDescription,
-    "mainEntity": {
+    name: pageTitle,
+    url: currentUrl,
+    description: pageDescription,
+    mainEntity: {
       "@type": "ItemList",
-      "name": `Résultats - ${data?.categorie || catSlug}`,
-      "numberOfItems": data?.total || 0,
-      "itemListElement": (data?.results || []).slice(0, 10).map((item, index) => ({
+      name: `Résultats - ${data?.categorie || catSlug}`,
+      numberOfItems: data?.total || 0,
+      itemListElement: (data?.results || []).slice(0, 10).map((item, index) => ({
         "@type": "ListItem",
-        "position": index + 1,
-        "name": item.name || "Établissement",
-        "description": item.description || "Établissement de prestige",
-        "image": item.image || imageUrl,
-        "url": `https://spa-prestige-collection.com/etablissements/${item.id || item.slug}`
+        position: index + 1,
+        name: item.name || "Établissement",
+        description: item.description || "Établissement de prestige",
+        image: item.image || imageUrl,
+        url: `${window.location.origin}/etablissements/${item.id || item.slug}` // URL dynamique
       }))
     }
   };
@@ -60,30 +58,30 @@ export default function SearchPage() {
   const breadcrumbSchema = {
     "@context": "https://schema.org",
     "@type": "BreadcrumbList",
-    "itemListElement": [
+    itemListElement: [
       {
         "@type": "ListItem",
-        "position": 1,
-        "name": "Accueil",
-        "item": "https://spa-prestige-collection.com"
+        position: 1,
+        name: "Accueil",
+        item: window.location.origin // dynamique
       },
       {
         "@type": "ListItem",
-        "position": 2,
-        "name": "Établissements",
-        "item": "https://spa-prestige-collection.com/etablissements"
+        position: 2,
+        name: "Établissements",
+        item: `${window.location.origin}/etablissements`
       },
       ...(catSlug ? [{
         "@type": "ListItem",
-        "position": 3,
-        "name": data?.categorie || catSlug,
-        "item": `https://spa-prestige-collection.com/search/${catSlug}`
+        position: 3,
+        name: data?.categorie || catSlug,
+        item: `${window.location.origin}/search/${catSlug}`
       }] : []),
       ...(villeSlug ? [{
         "@type": "ListItem",
-        "position": catSlug ? 4 : 3,
-        "name": data?.ville || villeSlug,
-        "item": pageUrl
+        position: catSlug ? 4 : 3,
+        name: data?.ville || villeSlug,
+        item: currentUrl
       }] : [])
     ]
   };
@@ -93,30 +91,28 @@ export default function SearchPage() {
       <Helmet>
         <title>{pageTitle}</title>
         <meta name="description" content={pageDescription} />
-        <meta name="keywords" content={`spa ${villeSlug || ''}, ${catSlug || ''}, bien-être, prestige, massage, relaxation, établissements`} />
-        
-        <link rel="canonical" href={pageUrl} />
-        
+        <meta
+          name="keywords"
+          content={`spa ${villeSlug || ''}, ${catSlug || ''}, bien-être, prestige, massage, relaxation, établissements`}
+        />
+
+        <link rel="canonical" href={currentUrl} />
+
         <meta property="og:type" content="website" />
         <meta property="og:title" content={pageTitle} />
         <meta property="og:description" content={pageDescription} />
         <meta property="og:image" content={imageUrl} />
-        <meta property="og:url" content={pageUrl} />
+        <meta property="og:url" content={currentUrl} />
         <meta property="og:site_name" content="Spa & Prestige Collection" />
-        
+
         <meta name="twitter:card" content="summary_large_image" />
         <meta name="twitter:title" content={pageTitle} />
         <meta name="twitter:description" content={pageDescription} />
         <meta name="twitter:image" content={imageUrl} />
-        
-        <script type="application/ld+json">
-          {JSON.stringify(searchResultsSchema)}
-        </script>
-        
-        <script type="application/ld+json">
-          {JSON.stringify(breadcrumbSchema)}
-        </script>
-        
+
+        <script type="application/ld+json">{JSON.stringify(searchResultsSchema)}</script>
+        <script type="application/ld+json">{JSON.stringify(breadcrumbSchema)}</script>
+
         <meta name="language" content="fr-FR" />
         <meta name="author" content="Spa & Prestige Collection" />
         <meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large" />

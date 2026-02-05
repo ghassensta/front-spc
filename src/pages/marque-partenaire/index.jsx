@@ -1,10 +1,18 @@
+import { useLocation } from "react-router-dom";
 import MarquePartenairePage from "src/sections/marque-partenaire/marque-partenaire-page";
-import { Helmet } from 'react-helmet'
+import { Helmet } from 'react-helmet';
 import theImage from "src/assets/images/SPC-equipe-ce-1975x1318-1-768x513.jpg";
+
 export default function Page() {
+  const location = useLocation();
+
+  const canonicalUrl = `${window.location.origin}${location.pathname}`;
+
   const pageTitle = "Marques Partenaires - Spa & Prestige Collection";
-  const pageDescription = "Rejoignez le cercle des fournisseurs et marques partenaires de Spa & Prestige Collection. Gagnez en visibilité et développez vos collaborations stratégiques.";
-  const pageUrl = "https://spa-prestige-collection.com/marques-partenaires";
+  const pageDescription =
+    "Rejoignez le cercle des fournisseurs et marques partenaires de Spa & Prestige Collection. Gagnez en visibilité et développez vos collaborations stratégiques.";
+  const pageKeywords =
+    "marques partenaires, partenariat prestige, fournisseurs spa, collaboration bien-être, visibilité marque, réseau prestige";
   const imageUrl = theImage;
 
   const schemaData = {
@@ -12,7 +20,7 @@ export default function Page() {
     "@type": "WebPage",
     "name": pageTitle,
     "description": pageDescription,
-    "url": pageUrl,
+    "url": canonicalUrl,
     "image": imageUrl,
     "publisher": {
       "@type": "Organization",
@@ -23,7 +31,7 @@ export default function Page() {
       }
     },
     "mainEntity": {
-      "@type": "BuisinessOpportunity",
+      "@type": "BusinessOpportunity",
       "name": "Partenariat Marques - Spa & Prestige Collection",
       "description": "Opportunité de partenariat pour les marques et fournisseurs spécialisés dans le bien-être",
       "benefits": [
@@ -50,13 +58,13 @@ export default function Page() {
         "@type": "ListItem",
         "position": 1,
         "name": "Accueil",
-        "item": "https://spa-prestige-collection.com"
+        "item": window.location.origin
       },
       {
         "@type": "ListItem",
         "position": 2,
         "name": "Marques Partenaires",
-        "item": pageUrl
+        "item": canonicalUrl
       }
     ]
   };
@@ -158,44 +166,35 @@ export default function Page() {
 
   return (
     <>
-      <Helmet>
+      <Helmet htmlAttributes={{ lang: "fr" }}>
         <title>{pageTitle}</title>
         <meta name="description" content={pageDescription} />
-        <meta name="keywords" content="marques partenaires, partenariat prestige, fournisseurs spa, collaboration bien-être, visibilité marque, réseau prestige" />
-        
-        <link rel="canonical" href={pageUrl} />
-        
+        <meta name="keywords" content={pageKeywords} />
+        <meta name="author" content="Spa & Prestige Collection" />
+        <meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1" />
+
+        {/* Open Graph */}
         <meta property="og:type" content="website" />
         <meta property="og:title" content={pageTitle} />
         <meta property="og:description" content={pageDescription} />
         <meta property="og:image" content={imageUrl} />
-        <meta property="og:url" content={pageUrl} />
+        <meta property="og:url" content={canonicalUrl} />
         <meta property="og:site_name" content="Spa & Prestige Collection" />
-        
+
+        {/* Twitter Card */}
         <meta name="twitter:card" content="summary_large_image" />
         <meta name="twitter:title" content={pageTitle} />
         <meta name="twitter:description" content={pageDescription} />
         <meta name="twitter:image" content={imageUrl} />
-        
-        <script type="application/ld+json">
-          {JSON.stringify(schemaData)}
-        </script>
-        
-        <script type="application/ld+json">
-          {JSON.stringify(breadcrumbSchema)}
-        </script>
-        
-        <script type="application/ld+json">
-          {JSON.stringify(faqSchema)}
-        </script>
 
-        <script type="application/ld+json">
-          {JSON.stringify(howItWorksSchema)}
-        </script>
-        
-        <meta name="language" content="fr-FR" />
-        <meta name="author" content="Spa & Prestige Collection" />
-        <meta name="robots" content="index, follow" />
+        {/* Canonical dynamique */}
+        <link rel="canonical" href={canonicalUrl} />
+
+        {/* JSON-LD */}
+        <script type="application/ld+json">{JSON.stringify(schemaData)}</script>
+        <script type="application/ld+json">{JSON.stringify(breadcrumbSchema)}</script>
+        <script type="application/ld+json">{JSON.stringify(faqSchema)}</script>
+        <script type="application/ld+json">{JSON.stringify(howItWorksSchema)}</script>
       </Helmet>
 
       <MarquePartenairePage />

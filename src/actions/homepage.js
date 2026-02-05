@@ -21,7 +21,7 @@ export function useGetHomePage() {
             validating: isValidating
         }), [data]
     );
-
+   // console.log("useGetHomePage data:", data);
     return memoizedValue;
 }
 

@@ -1,11 +1,17 @@
 import SolutionsPageView from "src/sections/solutions/solutions-page-view";
-import { Helmet } from 'react-helmet'
+import { Helmet } from 'react-helmet';
 import theImage from "src/assets/images/SPC-Essence-1975x1318-02.jpg";
+import { useLocation } from "react-router-dom";
 
 export default function Page() {
+  const location = useLocation();
+
+  // ✅ Canonical dynamique (sans query params)
+  const canonicalUrl = `${window.location.origin}${location.pathname}`;
+
   const pageTitle = "Solutions CSE & Collectivités - Spa & Prestige Collection";
-  const pageDescription = "Offrez à vos salariés des expériences bien-être d'exception. Commandes groupées, cartes cadeaux personnalisées et tarifs préférentiels pour vos CSE et collectivités.";
-  const pageUrl = "https://spa-prestige-collection.com/solutions-cse";
+  const pageDescription =
+    "Offrez à vos salariés des expériences bien-être d'exception. Commandes groupées, cartes cadeaux personnalisées et tarifs préférentiels pour vos CSE et collectivités.";
   const imageUrl = theImage;
 
   const schemaData = {
@@ -13,7 +19,7 @@ export default function Page() {
     "@type": "LocalBusiness",
     "name": "Spa & Prestige Collection - Solutions CSE",
     "description": pageDescription,
-    "url": pageUrl,
+    "url": canonicalUrl,
     "image": imageUrl,
     "areaServed": ["FR", "BE", "CH"],
     "serviceType": ["Corporate Benefits", "Gift Cards", "Wellness Services"],
@@ -48,13 +54,13 @@ export default function Page() {
         "@type": "ListItem",
         "position": 1,
         "name": "Accueil",
-        "item": "https://spa-prestige-collection.com"
+        "item": window.location.origin
       },
       {
         "@type": "ListItem",
         "position": 2,
         "name": "Solutions CSE & Collectivités",
-        "item": pageUrl
+        "item": canonicalUrl
       }
     ]
   };
@@ -100,40 +106,34 @@ export default function Page() {
 
   return (
     <>
-      <Helmet>
+      <Helmet htmlAttributes={{ lang: "fr" }}>
         <title>{pageTitle}</title>
         <meta name="description" content={pageDescription} />
         <meta name="keywords" content="CSE, collectivités, cartes cadeaux, bien-être collaborateurs, avantages salariés, commandes groupées, spa prestige" />
-        
-        <link rel="canonical" href={pageUrl} />
-        
+        <meta name="author" content="Spa & Prestige Collection" />
+        <meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1" />
+
+        {/* Open Graph */}
         <meta property="og:type" content="website" />
         <meta property="og:title" content={pageTitle} />
         <meta property="og:description" content={pageDescription} />
         <meta property="og:image" content={imageUrl} />
-        <meta property="og:url" content={pageUrl} />
+        <meta property="og:url" content={canonicalUrl} />
         <meta property="og:site_name" content="Spa & Prestige Collection" />
-        
+
+        {/* Twitter Card */}
         <meta name="twitter:card" content="summary_large_image" />
         <meta name="twitter:title" content={pageTitle} />
         <meta name="twitter:description" content={pageDescription} />
         <meta name="twitter:image" content={imageUrl} />
-        
-        <script type="application/ld+json">
-          {JSON.stringify(schemaData)}
-        </script>
-        
-        <script type="application/ld+json">
-          {JSON.stringify(breadcrumbSchema)}
-        </script>
-        
-        <script type="application/ld+json">
-          {JSON.stringify(faqSchema)}
-        </script>
-        
-        <meta name="language" content="fr-FR" />
-        <meta name="author" content="Spa & Prestige Collection" />
-        <meta name="robots" content="index, follow" />
+
+        {/* Canonical URL */}
+        <link rel="canonical" href={canonicalUrl} />
+
+        {/* JSON-LD */}
+        <script type="application/ld+json">{JSON.stringify(schemaData)}</script>
+        <script type="application/ld+json">{JSON.stringify(breadcrumbSchema)}</script>
+        <script type="application/ld+json">{JSON.stringify(faqSchema)}</script>
       </Helmet>
 
       <SolutionsPageView />

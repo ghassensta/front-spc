@@ -21,17 +21,25 @@ export default function CarteCadeau() {
   const { cartes, loading } = useGetCarteCadeaux();
   const { t } = useTranslation();
 
-  const [amount, setAmount] = useState(null); // null | number
+  const [amount, setAmount] = useState(null);
   const [isCustom, setIsCustom] = useState(false);
-  const [receiver, setReceiver] = useState([{ fullName: "", email: "" }]);
+  const [receiver, setReceiver] = useState([
+      { fullName: "", email: "", date: new Date().toISOString().slice(0, 10) },
+    ]);
   const [submitting, setSubmitting] = useState(false);
 
   const addProductToCheckout = async () => {
     // Validation du montant
     if (!amount || isNaN(amount) || amount < 1 || amount > 1000) {
-      toast.error(t("Veuillez sélectionner ou entrer un montant valide entre 1 € et 1000 €."));
+      toast.error(
+        t(
+          "Veuillez sélectionner ou entrer un montant valide entre 1 € et 1000 €.",
+        ),
+      );
       return;
     }
+
+   
 
     // Validation des champs
     if (!receiver[0].fullName || !receiver[0].email) {
@@ -42,8 +50,6 @@ export default function CarteCadeau() {
       toast.error(t("Veuillez remplir votre nom et prénom."));
       return;
     }
-
-    setSubmitting(true);
 
     try {
       // Recherche d'une carte prédéfinie correspondant au montant
@@ -83,7 +89,8 @@ export default function CarteCadeau() {
       navigate(paths.checkout);
     } catch (error) {
       toast.error(
-        error.message || t("Une erreur est survenue lors de l'ajout au panier.")
+        error.message ||
+          t("Une erreur est survenue lors de l'ajout au panier."),
       );
     } finally {
       setSubmitting(false);
@@ -300,6 +307,24 @@ export default function CarteCadeau() {
                     onChange={(e) =>
                       setReceiver([{ ...receiver[0], email: e.target.value }])
                     }
+                  />
+                </div>
+                <div className="flex flex-col sm:flex-row gap-4 sm:gap-6 sm:items-center">
+                  <label className="sm:w-40 text-sm font-tahoma font-medium">
+                    <TranslatedText text="Date d'envoi" />
+                  </label>
+                  <input
+                    type="date"
+                    className="flex-1 border border-gray-300 rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-black"
+                    value={
+                      receiver[0].date || new Date().toISOString().slice(0, 10)
+                    }
+                    min={new Date().toISOString().slice(0, 10)}
+                    onChange={(e) => {
+                      const updatedReceiver = [...receiver];
+                      updatedReceiver[0].date = e.target.value;
+                      setReceiver(updatedReceiver);
+                    }}
                   />
                 </div>
               </div>

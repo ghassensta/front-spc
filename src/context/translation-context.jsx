@@ -12,7 +12,7 @@ export const TranslationProvider = ({ children }) => {
   });
 
   const [translations, setTranslations] = useState(new Map());
-  const [updateTrigger, setUpdateTrigger] = useState(0); // ← Nouveau : force re-render
+  const [translatingSet, setTranslatingSet] = useState(new Set()); // ← Éviter les traductions en double
 
   useEffect(() => {
     localStorage.setItem('preferredLanguage', currentLanguage);
@@ -21,7 +21,6 @@ export const TranslationProvider = ({ children }) => {
   const setLanguage = (lang) => {
     setCurrentLanguage(lang);
     setTranslations(new Map()); // on vide seulement l’état local
-    setUpdateTrigger(0);
   };
 
   const translate = async (text) => {
@@ -50,7 +49,6 @@ export const TranslationProvider = ({ children }) => {
 
       textCache.set(currentLanguage, translatedText);
       setTranslations(prev => new Map(prev).set(cacheKey, translatedText));
-      setUpdateTrigger(prev => prev + 1); // ← Déclenche le re-render global
 
       return translatedText;
     } catch (error) {
@@ -71,9 +69,39 @@ export const TranslationProvider = ({ children }) => {
       return translationCache.get(text).get(currentLanguage);
     }
 
-    // Pas encore traduit → on déclenche l’async en arrière-plan
-    translate(text);
-    return text; // on retourne l’original immédiatement
+    // Éviter les traductions en double et les boucles
+    if (translatingSet.has(cacheKey)) {
+      return text;
+    }
+
+    // Pas encore traduit → on déclenche l'async en arrière-plan SEULEMENT si pas déjà en cours
+    setTranslatingSet(prev => new Set(prev).add(cacheKey));
+    
+    // Utiliser requestIdleCallback pour éviter les setState pendant le render
+    if (window.requestIdleCallback) {
+      window.requestIdleCallback(() => {
+        translate(text).finally(() => {
+          setTranslatingSet(prev => {
+            const newSet = new Set(prev);
+            newSet.delete(cacheKey);
+            return newSet;
+          });
+        });
+      });
+    } else {
+      // Fallback pour les vieux navigateurs
+      setTimeout(() => {
+        translate(text).finally(() => {
+          setTranslatingSet(prev => {
+            const newSet = new Set(prev);
+            newSet.delete(cacheKey);
+            return newSet;
+          });
+        });
+      }, 0);
+    }
+    
+    return text; // on retourne l'original immédiatement
   };
 
   return (
@@ -82,7 +110,6 @@ export const TranslationProvider = ({ children }) => {
       setLanguage,
       translate,
       translateSync,
-      updateTrigger, // ← exposé pour forcer le re-render
     }}>
       {children}
     </TranslationContext.Provider>

@@ -7,6 +7,7 @@ import { Link } from "react-router-dom";
 import { paths } from "src/router/paths";
 import { TranslatedText } from "../translated-text/translated-text";
 import { useTranslation } from "react-i18next";
+import OfferFlashSVG from "../offre-flash/offer-flash-badge";
 
 export default function CardItem({
   nom,
@@ -28,15 +29,11 @@ export default function CardItem({
   const [images, setImages] = useState([]);
   const [currentSlide, setCurrentSlide] = useState(0);
   const [showFullDescription, setShowFullDescription] = useState(false);
-  const [remainingTime, setRemainingTime] = useState("");
 
   const timerRef = useRef(null);
   const dotsContainerRef = useRef(null);
 
   const hasMultipleImages = images.length > 1;
-
-  const isOfferActive =
-    offre_flash === 1 && date_fin && new Date(date_fin) > new Date();
 
   useEffect(() => {
     const allImages = [];
@@ -48,34 +45,6 @@ export default function CardItem({
 
     setImages(allImages);
   }, [image, gallery]);
-
-  useEffect(() => {
-    if (!isOfferActive) {
-      setRemainingTime("");
-      return;
-    }
-
-    const updateCountdown = () => {
-      const diffMs = new Date(date_fin) - new Date();
-
-      if (diffMs <= 0) {
-        setRemainingTime(t("Expiré"));
-        return;
-      }
-
-      const days = Math.floor(diffMs / 86400000);
-      const hours = Math.floor((diffMs / 3600000) % 24);
-      const minutes = Math.floor((diffMs / 60000) % 60);
-      const seconds = Math.floor((diffMs / 1000) % 60);
-
-      setRemainingTime(`${days}j ${hours}h ${minutes}m ${seconds}s`);
-    };
-
-    updateCountdown();
-    const interval = setInterval(updateCountdown, 1000);
-
-    return () => clearInterval(interval);
-  }, [date_fin, isOfferActive, t]);
 
   // ─── Auto slider ───────────────────────────────────────────
   useEffect(() => {
@@ -116,7 +85,10 @@ export default function CardItem({
   const getVisibleDots = (current, total, visibleCount = 5) => {
     let start = Math.max(0, current - Math.floor(visibleCount / 2));
     start = Math.min(start, total - visibleCount);
-    return Array.from({ length: Math.min(visibleCount, total) }, (_, i) => start + i);
+    return Array.from(
+      { length: Math.min(visibleCount, total) },
+      (_, i) => start + i,
+    );
   };
 
   const dotsStyle = `
@@ -124,12 +96,8 @@ export default function CardItem({
     .dots-container { -ms-overflow-style: none; scrollbar-width: none; }
   `;
 
-  // ───────────────────────────────────────────────────────────
-  //                   R E N D E R
-  // ───────────────────────────────────────────────────────────
   return (
     <motion.div className="flex flex-col gap-4 py-7 border-b border-gray-400 md:flex-row">
-      {/* ====================== IMAGES ====================== */}
       <div className="relative w-full md:w-[30%]">
         <div className="w-full h-[190px] rounded-md relative overflow-hidden">
           {images.map((src, index) => (
@@ -141,8 +109,8 @@ export default function CardItem({
                 currentSlide === index
                   ? "translate-x-0"
                   : index < currentSlide
-                  ? "-translate-x-full"
-                  : "translate-x-full"
+                    ? "-translate-x-full"
+                    : "translate-x-full"
               }`}
               loading="lazy"
             />
@@ -191,7 +159,6 @@ export default function CardItem({
         )}
       </div>
 
-      {/* ====================== CONTENT ====================== */}
       <div className="w-full md:w-[40%]">
         <h3 className="text-2xl text-left font-normal text-gray-900">{nom}</h3>
 
@@ -201,8 +168,8 @@ export default function CardItem({
               __html: showFullDescription
                 ? description || ""
                 : description?.length > 150
-                ? description.slice(0, 175) + "..."
-                : description || "",
+                  ? description.slice(0, 175) + "..."
+                  : description || "",
             }}
           />
 
@@ -216,12 +183,13 @@ export default function CardItem({
           )}
         </div>
 
-        <p className="text-left font-roboto text-base text-[#333] mt-2">
-          {access_spa}
-        </p>
+        {access_spa && (
+          <div className="mt-2 text-left font-roboto text-base text-gray-600 italic">
+            {access_spa}
+          </div>
+        )}
       </div>
 
-      {/* ====================== DESKTOP RIGHT SIDE ====================== */}
       <div className="hidden md:flex md:w-[30%] flex-col items-center justify-center gap-4">
         {/* Prix */}
         <div className="flex flex-col items-center font-tahoma gap-1">
@@ -248,30 +216,28 @@ export default function CardItem({
           )}
         </div>
 
-        {/* Exclusivité + Flash */}
-        <div className="flex flex-col items-center gap-3">
+        <div className="flex flex-col items-center gap-4">
           {exclusivite_image && (
             <img
               loading="lazy"
               src={`${CONFIG.serverUrl}/storage/${exclusivite_image}`}
               alt="Exclusivité"
-              className="w-auto h-auto my-2"
+              className="w-auto max-h-40 object-contain"
             />
           )}
 
-          {isOfferActive && (
-            <div className="flex flex-col items-center px-1 py-2 border-dashed rounded-lg border-2 font-tahoma w-full">
-              <span className="text-sm font-medium text-red-600">
-                <TranslatedText text="Offre flash" />
-              </span>
-              <div className="text-xs font-bold text-gray-800 mt-1">
-                {remainingTime}
-              </div>
-            </div>
-          )}
+          <div className="w-full flex justify-center right-1 rounded-3xl mt-1">
+            <OfferFlashSVG
+              width={140}
+              height={140}
+              tailledetime={30}
+              offre_flash={offre_flash}
+              date_debut={date_debut}
+              date_fin={date_fin}
+            />
+          </div>
         </div>
 
-        {/* Button */}
         {slug && (
           <Link to={paths.product(slug)} className="w-full mt-2">
             <button className="w-auto mx-auto px-4 py-3 bg-black leading-4 rounded-2xl text-white uppercase font-normal text-xs tracking-[3px] hover:bg-gray-800 transition font-tahoma flex items-center justify-center gap-2">
@@ -281,9 +247,7 @@ export default function CardItem({
         )}
       </div>
 
-      {/* ====================== MOBILE BOTTOM BAR ====================== */}
       <div className="flex md:hidden w-full items-center justify-between gap-3 mt-2">
-        {/* Prix mobile */}
         <div className="flex flex-col items-center font-tahoma">
           {prix_barre && Number(prix_barre) !== Number(prix) && (
             <span className="text-gray-500 line-through text-sm">
@@ -298,7 +262,6 @@ export default function CardItem({
           )}
         </div>
 
-        {/* Exclusivité + Flash mobile */}
         <div className="flex flex-col gap-2 items-center">
           {exclusivite_image && (
             <img
@@ -309,19 +272,18 @@ export default function CardItem({
             />
           )}
 
-          {isOfferActive && (
-            <div className="flex flex-col items-center px-2 py-1 border-dashed rounded-lg border-2 font-tahoma">
-              <span className="text-xs font-medium text-red-600">
-                <TranslatedText text="Offre flash" />
-              </span>
-              <div className="text-xs font-bold text-gray-800">
-                {remainingTime}
-              </div>
-            </div>
-          )}
+          {
+            <OfferFlashSVG
+              width={110}
+              height={110}
+              tailledetime={30}
+              offre_flash={offre_flash}
+              date_debut={date_debut}
+              date_fin={date_fin}
+            />
+          }
         </div>
 
-        {/* Button mobile */}
         {slug && (
           <Link to={paths.product(slug)}>
             <button className="px-4 py-3 bg-black leading-4 rounded-2xl text-white uppercase font-normal text-xs tracking-[3px] hover:bg-gray-800 transition font-tahoma whitespace-nowrap">

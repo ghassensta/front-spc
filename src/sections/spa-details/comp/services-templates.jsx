@@ -11,8 +11,6 @@ export default function ServicesTemplates({ data = {} }) {
   const equipements = data.type_equipement.map(
     (pivot) => pivot.service_equipement || []
   );
-   console.log("ServicesTemplates data:", produits);
-
   return (
     <div className="max-w-7xl mx-auto flex flex-col md:flex-row gap-6 items-start">
       <div className="w-full text-center">
