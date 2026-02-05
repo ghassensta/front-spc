@@ -79,6 +79,8 @@ export default function LayoutTheme({ children }) {
                     name={category.name}
                     icon={`${CONFIG.serverUrl}/storage/${category.image}`}
                     slug={category.slug}
+                    alt={category.name}
+                    title={category.name}
                   />
                 </div>
               ))}

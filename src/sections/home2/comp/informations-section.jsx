@@ -23,7 +23,7 @@ export default function InformationsSection() {
       link: paths.referentiel,
       title: "Référentiel de candidature",
       description:
-        "Les établissements souhaitant rejoindre Spa & Prestige Collection doivent fournir une documentation détaillant leur conformité aux critères.",
+        "Récompenses Spa & Prestige Collection Points fidélité Accumulez des points à chaque commande et échangez-les contre des bons d'achat de 10 € et 25 €.",
       image: theImage2,
     },
     {

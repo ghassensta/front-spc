@@ -58,7 +58,7 @@ export default function Header() {
             }`}
             style={{ backgroundImage: `url(${s.image})` }}
           >
-            <div className="absolute inset-0 bg-black/40" />
+            <div className="absolute inset-0 bg-black/20" />
           </div>
         ))}
 

@@ -12,6 +12,7 @@ import { useTranslation } from "react-i18next";
 
 export default function CheckoutView() {
   const checkout = useCheckoutContext();
+  console.log("Checkout data:", checkout);
   const { user } = useAuthContext();
   const [loyaltyOpen, setLoyaltyOpen] = useState(false);
   const router = useRouter();
