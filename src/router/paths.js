@@ -23,7 +23,7 @@ export const paths = {
   collection: "/collection-prestige" ,
   partenaire: "/devenir-partenaire" ,
   contact: "/assistance-contact" ,
-  solutions: "/solutions-ce" ,
+  solutions: "/solutions-ce",
   marque: "/marque-partenaire" ,
   glossaire: "/glossaire" ,
   checkoutDetails: "/checkout/details",
@@ -43,6 +43,13 @@ export const paths = {
     fidelite: "/dashboard/fidelite",
     bonAchats: "/dashboard/bon-achats",
   },
+  cagnotte: {
+    root: "/cagnotte",
+    create: "/cagnotte/create",
+    show: (slug) => `/cagnotte/${slug}`,
+    manage: (slug) => `/cagnotte/${slug}`,
+  },
+  
   auth: {
     root: "/auth",
     register: "/auth/register",

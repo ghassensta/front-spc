@@ -52,16 +52,14 @@ export default function CarteCadeau() {
     }
 
     try {
-      // Recherche d'une carte prédéfinie correspondant au montant
       let cardToUse = cartes.find((carte) => {
         const price =
           typeof carte.price === "string"
             ? parseFloat(carte.price)
             : carte.price;
-        return Math.abs(price - amount) < 0.001; // Tolérance pour les décimales flottantes
+        return Math.abs(price - amount) < 0.001; 
       });
 
-      // Si aucune carte prédéfinie → création via API
       if (!cardToUse) {
         const createdCard = await createPersonalizedCarteCadeaux(amount);
 
@@ -73,7 +71,6 @@ export default function CarteCadeau() {
         };
       }
 
-      // Ajout au panier
       const cartData = {
         id: cardToUse.id,
         name: cardToUse.name,

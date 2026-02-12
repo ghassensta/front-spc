@@ -98,8 +98,8 @@ export default function CardItem({
 
   return (
     <motion.div className="flex flex-col gap-4 py-7 border-b border-gray-400 md:flex-row">
-      <div className="relative w-full md:w-[30%]">
-        <div className="w-full h-[190px] rounded-md relative overflow-hidden">
+      <div className="relative w-full h-64 md:h-auto md:w-[30%]">
+        <div className="w-full h-full rounded-md relative overflow-hidden">
           {images.map((src, index) => (
             <img
               key={index}
@@ -135,7 +135,7 @@ export default function CardItem({
               <FaChevronRight size={20} />
             </button>
 
-            <style>{dotsStyle}</style>
+          {/*   <style>{dotsStyle}</style>
             <div
               ref={dotsContainerRef}
               className="dots-container absolute bottom-2 left-0 right-0 flex justify-center items-center h-6"
@@ -154,7 +154,7 @@ export default function CardItem({
                   />
                 ))}
               </div>
-            </div>
+            </div> */}
           </>
         )}
       </div>

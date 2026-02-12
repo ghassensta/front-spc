@@ -194,6 +194,12 @@ export const endpoints = {
 
   coupons:{
     validate:"/api/code-coupon/validate"
+  },
+
+  cagnottes:{
+    create:"/api/cagnottes ",
+    getBySlug:(slug) => `/api/cagnottes/${slug}`,
+    contribute:(id) => `/api/cagnottes/${id}/contributions`,
   }
   
 };

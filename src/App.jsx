@@ -6,9 +6,7 @@ import { useScrollToTop } from "./hooks/use-scroll-to-top";
 import { ToastContainer } from "react-toastify";
 import { AuthProvider } from "./auth/context/jwt/auth-provider";
 import { useEffect } from "react";
-import MailjetNewsletterIframe from "./components/mailjetpopIn/MailjetPopIn";
 import WelcomeModal from "./components/modals/WelcomeModal";
-
 function App() {
   useScrollToTop();
 

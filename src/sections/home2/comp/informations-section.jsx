@@ -21,9 +21,9 @@ export default function InformationsSection() {
     },
     {
       link: paths.referentiel,
-      title: "Référentiel de candidature",
+      title: "Points fidélité",
       description:
-        "Récompenses Spa & Prestige Collection Points fidélité Accumulez des points à chaque commande et échangez-les contre des bons d'achat de 10 € et 25 €.",
+        "Accumulez des points à chaque commande et échangez-les contre des bons d'achat de 10 € et 25 €.",
       image: theImage2,
     },
     {
@@ -108,7 +108,7 @@ export default function InformationsSection() {
             </div>
 
             <h2 className="text-3xl">
-              {translateSync("L’univers Spa & Prestige Collection.")}
+              {translateSync("Récompenses Spa & Prestige Collection")}
             </h2>
 
             <h3 className="text-[#B6B499] text-3xl mt-4">
