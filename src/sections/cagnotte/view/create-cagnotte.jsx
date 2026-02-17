@@ -1,6 +1,15 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { Calendar, Users, Mail, FileText, Sparkles, ArrowRight, Copy, Check } from "lucide-react";
+import {
+  Calendar,
+  Users,
+  Mail,
+  FileText,
+  Sparkles,
+  ArrowRight,
+  Copy,
+  Check,
+} from "lucide-react";
 import { toast } from "react-toastify";
 import { TranslatedText } from "src/components/translated-text/translated-text";
 import { useTranslation } from "react-i18next";
@@ -59,13 +68,19 @@ export default function CreerCagnotte() {
     if (!formData.destinataire_nom.trim()) {
       newErrors.destinataire_nom = t("Le nom du destinataire est requis");
     } else if (formData.destinataire_nom.trim().length < 3) {
-      newErrors.destinataire_nom = t("Le nom doit contenir au moins 3 caractères");
+      newErrors.destinataire_nom = t(
+        "Le nom doit contenir au moins 3 caractères",
+      );
     }
 
     if (!formData.destinataire_email.trim()) {
       newErrors.destinataire_email = t("L'email du destinataire est requis");
-    } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.destinataire_email)) {
-      newErrors.destinataire_email = t("L'email du destinataire n'est pas valide");
+    } else if (
+      !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.destinataire_email)
+    ) {
+      newErrors.destinataire_email = t(
+        "L'email du destinataire n'est pas valide",
+      );
     }
 
     if (!formData.email_founder.trim()) {
@@ -77,7 +92,9 @@ export default function CreerCagnotte() {
     if (!formData.description.trim()) {
       newErrors.description = t("La description est requise");
     } else if (formData.description.length < 20) {
-      newErrors.description = t("La description doit contenir au moins 20 caractères");
+      newErrors.description = t(
+        "La description doit contenir au moins 20 caractères",
+      );
     }
 
     if (!formData.date_limite) {
@@ -102,33 +119,32 @@ export default function CreerCagnotte() {
     return Object.keys(newErrors).length === 0;
   };
 
-const handleSubmit = async (e) => {
-  e.preventDefault();
+  const handleSubmit = async (e) => {
+    e.preventDefault();
 
-  if (!validateForm()) {
-    toast.error(t("Veuillez corriger les erreurs du formulaire"));
-    return;
-  }
+    if (!validateForm()) {
+      toast.error(t("Veuillez corriger les erreurs du formulaire"));
+      return;
+    }
 
-  setIsSubmitting(true);
+    setIsSubmitting(true);
 
-  try {
-    const data = await createCagnotte(formData);
+    try {
+      const data = await createCagnotte(formData);
+      console.log("Cagnotte créée:", data);
 
-    toast.success(t("Cagnotte créée avec succès !"));
+      toast.success(t("Cagnotte créée avec succès !"));
+      navigate(`/cagnotte/${data.slug}?token=${data.manage_token}`);
+    } catch (error) {
+      console.error("Erreur:", error);
 
-    navigate(`/cagnotte/${data.slug}/gerer?token=${data.manage_token}`);
-  } catch (error) {
-    console.error("Erreur:", error);
-
-    toast.error(
-      error?.message || t("Une erreur est survenue. Veuillez réessayer.")
-    );
-  } finally {
-    setIsSubmitting(false);
-  }
-};
-
+      toast.error(
+        error?.message || t("Une erreur est survenue. Veuillez réessayer."),
+      );
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
 
   const today = new Date().toISOString().split("T")[0];
   const sixMonthsLater = new Date();
@@ -220,7 +236,9 @@ const handleSubmit = async (e) => {
                   name="titre"
                   value={formData.titre}
                   onChange={handleChange}
-                  placeholder={t("Ex: Journée spa pour l'anniversaire de Marie")}
+                  placeholder={t(
+                    "Ex: Journée spa pour l'anniversaire de Marie",
+                  )}
                   className={`w-full border ${
                     errors.titre ? "border-red-500" : "border-gray-300"
                   } rounded-lg p-4 text-lg focus:outline-none focus:ring-2 focus:ring-[#B6B498]`}
@@ -253,12 +271,16 @@ const handleSubmit = async (e) => {
                       onChange={handleChange}
                       placeholder={t("Ex: Marie Dupont")}
                       className={`w-full border ${
-                        errors.destinataire_nom ? "border-red-500" : "border-gray-300"
+                        errors.destinataire_nom
+                          ? "border-red-500"
+                          : "border-gray-300"
                       } rounded-lg p-4 text-lg focus:outline-none focus:ring-2 focus:ring-[#B6B498]`}
                       maxLength="100"
                     />
                     {errors.destinataire_nom && (
-                      <p className="text-red-500 text-sm mt-2">{errors.destinataire_nom}</p>
+                      <p className="text-red-500 text-sm mt-2">
+                        {errors.destinataire_nom}
+                      </p>
                     )}
                   </div>
 
@@ -274,11 +296,15 @@ const handleSubmit = async (e) => {
                       onChange={handleChange}
                       placeholder={t("email@exemple.com")}
                       className={`w-full border ${
-                        errors.destinataire_email ? "border-red-500" : "border-gray-300"
+                        errors.destinataire_email
+                          ? "border-red-500"
+                          : "border-gray-300"
                       } rounded-lg p-4 text-lg focus:outline-none focus:ring-2 focus:ring-[#B6B498]`}
                     />
                     {errors.destinataire_email && (
-                      <p className="text-red-500 text-sm mt-2">{errors.destinataire_email}</p>
+                      <p className="text-red-500 text-sm mt-2">
+                        {errors.destinataire_email}
+                      </p>
                     )}
                     <p className="text-gray-600 text-sm mt-2 font-roboto">
                       <TranslatedText text="Pour notifier ou transférer les fonds" />
@@ -305,7 +331,9 @@ const handleSubmit = async (e) => {
                   } rounded-lg p-4 text-lg focus:outline-none focus:ring-2 focus:ring-[#B6B498]`}
                 />
                 {errors.email_founder && (
-                  <p className="text-red-500 text-sm mt-2">{errors.email_founder}</p>
+                  <p className="text-red-500 text-sm mt-2">
+                    {errors.email_founder}
+                  </p>
                 )}
                 <p className="text-gray-600 text-sm mt-2 font-roboto">
                   <TranslatedText text="Vous recevrez un lien pour gérer votre cagnotte" />
@@ -325,7 +353,7 @@ const handleSubmit = async (e) => {
                   onChange={handleChange}
                   rows={6}
                   placeholder={t(
-                    "Décrivez l'occasion et pourquoi cette personne mérite ce cadeau..."
+                    "Décrivez l'occasion et pourquoi cette personne mérite ce cadeau...",
                   )}
                   className={`w-full border ${
                     errors.description ? "border-red-500" : "border-gray-300"
@@ -333,7 +361,9 @@ const handleSubmit = async (e) => {
                   maxLength="1000"
                 />
                 {errors.description && (
-                  <p className="text-red-500 text-sm mt-2">{errors.description}</p>
+                  <p className="text-red-500 text-sm mt-2">
+                    {errors.description}
+                  </p>
                 )}
                 <p className="text-gray-500 text-sm mt-2 font-roboto">
                   {formData.description.length}/1000 caractères
@@ -359,7 +389,9 @@ const handleSubmit = async (e) => {
                   } rounded-lg p-4 text-lg focus:outline-none focus:ring-2 focus:ring-[#B6B498]`}
                 />
                 {errors.date_limite && (
-                  <p className="text-red-500 text-sm mt-2">{errors.date_limite}</p>
+                  <p className="text-red-500 text-sm mt-2">
+                    {errors.date_limite}
+                  </p>
                 )}
                 <p className="text-gray-600 text-sm mt-2 font-roboto">
                   <TranslatedText text="Maximum 6 mois" />
@@ -423,7 +455,9 @@ const handleSubmit = async (e) => {
                     <TranslatedText text="Aperçu de votre cagnotte" />
                   </h3>
                   <div className="bg-white p-6 rounded-lg">
-                    <h4 className="text-2xl font-bold mb-2">{formData.titre}</h4>
+                    <h4 className="text-2xl font-bold mb-2">
+                      {formData.titre}
+                    </h4>
                     {formData.destinataire_nom && (
                       <p className="text-lg font-medium text-[#B6B498] mb-4">
                         Pour {formData.destinataire_nom}
@@ -448,7 +482,9 @@ const handleSubmit = async (e) => {
                           <Calendar size={16} />
                           <span>
                             <TranslatedText text="Jusqu'au" />{" "}
-                            {new Date(formData.date_limite).toLocaleDateString("fr-FR")}
+                            {new Date(formData.date_limite).toLocaleDateString(
+                              "fr-FR",
+                            )}
                           </span>
                         </div>
                       )}

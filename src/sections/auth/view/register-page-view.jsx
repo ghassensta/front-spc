@@ -17,6 +17,7 @@ export default function RegisterPageView({ code }) {
     referral_code: code || "",
     password: "",
     password_confirmation: "",
+    newsletter: true,
   });
 
   const [errors, setErrors] = useState({});
@@ -33,11 +34,14 @@ export default function RegisterPageView({ code }) {
   }, [location]);
 
   const handleChange = (e) => {
+    const { name, type, value, checked } = e.target;
+
     setForm({
       ...form,
-      [e.target.name]: e.target.value,
+      [name]: type === "checkbox" ? checked : value,
     });
-    setErrors((prev) => ({ ...prev, [e.target.name]: null }));
+
+    setErrors((prev) => ({ ...prev, [name]: null }));
   };
 
   const handleSubmit = async (e) => {
@@ -176,7 +180,10 @@ export default function RegisterPageView({ code }) {
           </div>
 
           <div className="relative">
-            <label htmlFor="password_confirmation" className="text-sm text-gray-600">
+            <label
+              htmlFor="password_confirmation"
+              className="text-sm text-gray-600"
+            >
               <TranslatedText text="Confirmer le mot de passe *" />
             </label>
             <input
@@ -190,6 +197,27 @@ export default function RegisterPageView({ code }) {
             />
             {renderError("password_confirmation")}
           </div>
+        </div>
+        <div className="col-span-1 md:col-span-2">
+          <div className="flex items-center gap-3 mt-2">
+            <input
+              type="checkbox"
+              id="newsletter"
+              name="newsletter"
+              checked={form.newsletter}
+              onChange={handleChange}
+              className="h-4 w-4 rounded border-gray-300 text-black focus:ring-black"
+            />
+
+            <label
+              htmlFor="newsletter"
+              className="text-sm text-gray-600 cursor-pointer"
+            >
+              <TranslatedText text="Inscription à la newsletter" />
+            </label>
+          </div>
+
+          {renderError("newsletter")}
         </div>
 
         <button

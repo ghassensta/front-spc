@@ -1,7 +1,5 @@
-// src/sections/cagnotte/view/ShowCagnotte.jsx - Page d'affichage d'une cagnotte
-
-import React, { useState, useEffect } from "react";
-import { useParams, useNavigate } from "react-router-dom";
+import React, { useState, useEffect, useCallback, useMemo } from "react";
+import { useParams, useNavigate, useLocation } from "react-router-dom";
 import {
   Calendar,
   Users,
@@ -10,7 +8,7 @@ import {
   Copy,
   Check,
   Gift,
-  Sparkles,
+  Banknote,
   Euro,
   MessageCircle,
 } from "lucide-react";
@@ -22,16 +20,19 @@ import { getCagnotte, contribuerCagnotte } from "src/actions/cagnotte";
 export default function ShowCagnotte() {
   const { slug } = useParams();
   const navigate = useNavigate();
+  const location = useLocation();
   const { t } = useTranslation();
 
-  // États
+  const searchParams = new URLSearchParams(location.search);
+  const urlToken = searchParams.get("token");
+
   const [cagnotte, setCagnotte] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const [copied, setCopied] = useState(false);
+  const [copiedPublic, setCopiedPublic] = useState(false);
+  const [copiedManage, setCopiedManage] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  // Formulaire de contribution
   const [contributionData, setContributionData] = useState({
     nom: "",
     email: "",
@@ -41,7 +42,13 @@ export default function ShowCagnotte() {
 
   const [contributionErrors, setContributionErrors] = useState({});
 
-  // Charger la cagnotte
+  const cleanUrl = useMemo(() => `${window.location.origin}${window.location.pathname}`, []);
+
+  const manageUrl = useMemo(
+    () => (urlToken ? `${cleanUrl}?token=${urlToken}` : null),
+    [cleanUrl, urlToken]
+  );
+
   useEffect(() => {
     loadCagnotte();
   }, [slug]);
@@ -60,93 +67,80 @@ export default function ShowCagnotte() {
     }
   };
 
-  // Calculer les statistiques
-  const getMontantCollecte = () => {
+  const montantCollecte = useMemo(() => {
     if (!cagnotte?.contributions) return 0;
     return cagnotte.contributions.reduce((sum, c) => sum + parseFloat(c.montant), 0);
-  };
+  }, [cagnotte?.contributions]);
 
-  const getNombreContributeurs = () => {
-    return cagnotte?.contributions?.length || 0;
-  };
+  const nombreContributeurs = cagnotte?.contributions?.length || 0;
 
-  const getJoursRestants = () => {
+  const joursRestants = useMemo(() => {
     if (!cagnotte?.date_limite) return 0;
     const today = new Date();
     const deadline = new Date(cagnotte.date_limite);
-    const diffTime = deadline - today;
-    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+    const diffDays = Math.ceil((deadline - today) / (1000 * 60 * 60 * 24));
     return diffDays > 0 ? diffDays : 0;
-  };
+  }, [cagnotte?.date_limite]);
 
-  const isClosed = () => {
-    return cagnotte?.statut === "cloturee" || getJoursRestants() === 0;
-  };
+  const isClosed = cagnotte?.statut === "cloturee" || joursRestants === 0;
 
-  // Copier le lien
-  const handleCopyLink = () => {
-    const url = window.location.href;
-    navigator.clipboard.writeText(url);
-    setCopied(true);
-    toast.success(t("Lien copié dans le presse-papier !"));
-    setTimeout(() => setCopied(false), 3000);
-  };
+  const handleCopyPublic = useCallback(() => {
+    navigator.clipboard.writeText(cleanUrl);
+    setCopiedPublic(true);
+    toast.success(t("Lien public copié !"));
+    setTimeout(() => setCopiedPublic(false), 3000);
+  }, [cleanUrl, t]);
 
-  // Partager
-  const handleShare = async () => {
-    const url = window.location.href;
-    const text = `Participez à la cagnotte "${cagnotte.titre}" pour ${cagnotte.destinataire?.nom || "un cadeau spécial"}`;
+  const handleCopyManage = useCallback(() => {
+    if (!manageUrl) return;
+    navigator.clipboard.writeText(manageUrl);
+    setCopiedManage(true);
+    toast.success(t("Lien de gestion copié !"));
+    setTimeout(() => setCopiedManage(false), 3000);
+  }, [manageUrl, t]);
+
+  const handleShare = useCallback(async () => {
+    const shareText = t("Participez à la cagnotte \"{titre}\" pour {destinataire} !", {
+      titre: cagnotte.titre,
+      destinataire: cagnotte.destinataire?.nom || t("un cadeau spécial"),
+    });
 
     if (navigator.share) {
       try {
         await navigator.share({
           title: cagnotte.titre,
-          text: text,
-          url: url,
+          text: shareText,
+          url: cleanUrl,
         });
       } catch (err) {
         if (err.name !== "AbortError") {
-          handleCopyLink();
+          handleCopyPublic();
         }
       }
     } else {
-      handleCopyLink();
+      handleCopyPublic();
     }
-  };
+  }, [cagnotte, cleanUrl, handleCopyPublic, t]);
 
   const handleContributionChange = (e) => {
     const { name, value } = e.target;
-    setContributionData((prev) => ({
-      ...prev,
-      [name]: value,
-    }));
-
+    setContributionData((prev) => ({ ...prev, [name]: value }));
     if (contributionErrors[name]) {
-      setContributionErrors((prev) => ({
-        ...prev,
-        [name]: "",
-      }));
+      setContributionErrors((prev) => ({ ...prev, [name]: "" }));
     }
   };
 
   const validateContribution = () => {
     const errors = {};
 
-    if (!contributionData.nom.trim()) {
-      errors.nom = t("Le nom est requis");
-    }
-
-    if (!contributionData.email.trim()) {
-      errors.email = t("L'email est requis");
-    } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(contributionData.email)) {
+    if (!contributionData.nom.trim()) errors.nom = t("Le nom est requis");
+    if (!contributionData.email.trim()) errors.email = t("L'email est requis");
+    else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(contributionData.email))
       errors.email = t("L'email n'est pas valide");
-    }
 
-    if (!contributionData.montant) {
-      errors.montant = t("Le montant est requis");
-    } else if (parseFloat(contributionData.montant) < 5) {
+    if (!contributionData.montant) errors.montant = t("Le montant est requis");
+    else if (parseFloat(contributionData.montant) < 5)
       errors.montant = t("Le montant minimum est de 5€");
-    }
 
     setContributionErrors(errors);
     return Object.keys(errors).length === 0;
@@ -163,29 +157,25 @@ export default function ShowCagnotte() {
     setIsSubmitting(true);
 
     try {
-      await contribuerCagnotte(cagnotte.id, contributionData);
-      
-      toast.success(t("Merci pour votre contribution !"));
-      
-      // Recharger la cagnotte
-      await loadCagnotte();
-      
-      // Réinitialiser le formulaire
-      setContributionData({
-        nom: "",
-        email: "",
-        montant: "",
-        message: "",
+      const response = await contribuerCagnotte(cagnotte.id, {
+        nom: contributionData.nom,
+        email: contributionData.email,
+        montant: contributionData.montant,
+        description: contributionData.message || null,
       });
+
+      if (response && response.url) {
+        window.location.href = response.url;
+      } else {
+        throw new Error("URL de paiement manquante");
+      }
     } catch (err) {
-      console.error("Erreur contribution:", err);
-      toast.error(err?.message || t("Une erreur est survenue"));
-    } finally {
-      setIsSubmitting(false);
+      console.error("Erreur paiement :", err);
+      toast.error(err?.message || t("Une erreur est survenue lors du paiement"));
+      setIsSubmitting(false); 
     }
   };
 
-  // États de chargement et d'erreur
   if (loading) {
     return (
       <div className="flex items-center justify-center min-h-screen">
@@ -220,292 +210,251 @@ export default function ShowCagnotte() {
     );
   }
 
-  const montantCollecte = getMontantCollecte();
-  const nombreContributeurs = getNombreContributeurs();
-  const joursRestants = getJoursRestants();
-  const closed = isClosed();
+  const Header = () => (
+    <div className="bg-gradient-to-r from-[#B6B498] to-[#8B8970] w-screen relative left-[calc(-50vw+50%)] px-5 py-16">
+      <div className="max-w-6xl mx-auto text-center text-white">
+        <div className="flex items-center justify-center gap-3 mb-6">
+          <Gift size={36} />
+          {isClosed && (
+            <span className="bg-red-500 text-white px-4 py-1 rounded-full text-sm font-bold">
+              <TranslatedText text="Clôturée" />
+            </span>
+          )}
+          {!isClosed && joursRestants <= 7 && joursRestants > 0 && (
+            <span className="bg-orange-500 text-white px-4 py-1 rounded-full text-sm font-bold">
+              <TranslatedText text="Bientôt clôturée" />
+            </span>
+          )}
+        </div>
+        <h1 className="text-4xl md:text-6xl font-bold mb-4">{cagnotte.titre}</h1>
+        {cagnotte.destinataire?.nom && (
+          <p className="text-2xl opacity-90">
+            Pour {cagnotte.destinataire.nom}
+          </p>
+        )}
+      </div>
+    </div>
+  );
+
+  const StatsCards = () => (
+    <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+      {cagnotte.prix_is_public && (
+        <div className="bg-gradient-to-br from-[#B6B498] to-[#8B8970] text-white p-8 rounded-xl text-center">
+          <Euro className="mx-auto mb-3" size={36} />
+          <p className="text-4xl font-bold">{montantCollecte.toFixed(2)} €</p>
+          <p className="text-sm opacity-90 mt-1"><TranslatedText text="Collectés" /></p>
+        </div>
+      )}
+      <div className="bg-white border-2 border-[#B6B498] p-8 rounded-xl text-center">
+        <Users className="mx-auto mb-3 text-[#B6B498]" size={36} />
+        <p className="text-4xl font-bold">{nombreContributeurs}</p>
+        <p className="text-sm text-gray-600 mt-1"><TranslatedText text="Contributeurs" /></p>
+      </div>
+      <div className="bg-white border-2 border-[#B6B498] p-8 rounded-xl text-center">
+        <Calendar className="mx-auto mb-3 text-[#B6B498]" size={36} />
+        <p className="text-4xl font-bold">{joursRestants}</p>
+        <p className="text-sm text-gray-600 mt-1"><TranslatedText text="Jours restants" /></p>
+      </div>
+    </div>
+  );
+
+  const ContributionsList = () => (
+    cagnotte.contributions_is_public &&
+    nombreContributeurs > 0 && (
+      <div className="bg-white p-8 rounded-xl shadow-md">
+        <h2 className="text-2xl font-bold mb-6 flex items-center gap-3">
+          <MessageCircle className="text-[#B6B498]" size={28} />
+          <TranslatedText text="Contributions" />
+        </h2>
+        <div className="space-y-4 max-h-[600px] overflow-y-auto">
+          {cagnotte.contributions.map((contrib, i) => (
+            <div key={i} className="border border-gray-200 rounded-lg p-5 hover:bg-gray-50 transition">
+              <div className="flex items-start justify-between mb-3">
+                <div className="flex items-center gap-4">
+                  <div className="w-12 h-12 bg-[#B6B498]/20 rounded-full flex items-center justify-center">
+                    <Heart className="text-[#B6B498]" size={24} />
+                  </div>
+                  <div>
+                    <p className="font-bold text-lg">{contrib.nom}</p>
+                    <p className="text-sm text-gray-500">
+                      {new Date(contrib.created_at).toLocaleDateString("fr-FR")}
+                    </p>
+                  </div>
+                </div>
+                {cagnotte.prix_is_public && (
+                  <p className="font-bold text-[#B6B498] text-xl">
+                    {parseFloat(contrib.montant).toFixed(2)} €
+                  </p>
+                )}
+              </div>
+              {contrib.description && (
+                <p className="text-gray-700 italic pl-16 font-roboto">
+                  "{contrib.description}"
+                </p>
+              )}
+            </div>
+          ))}
+        </div>
+      </div>
+    )
+  );
+
+
+  const ShareButtons = () => (
+    <div className="mb-8 pb-8 border-b border-gray-200">
+      <h3 className="font-bold text-lg mb-4"><TranslatedText text="Partager cette cagnotte" /></h3>
+      <div className="flex gap-3">
+        <button
+          onClick={handleShare}
+          className="flex-1 flex items-center justify-center gap-2 bg-[#B6B498] text-white py-3 px-5 rounded-lg hover:opacity-90 transition font-bold"
+        >
+          <Share2 size={20} />
+          <TranslatedText text="Partager" />
+        </button>
+        <button
+          onClick={handleCopyPublic}
+          className="flex items-center justify-center gap-2 border-2 border-[#B6B498] text-[#B6B498] py-3 px-5 rounded-lg hover:bg-[#B6B498] hover:text-white transition font-bold"
+        >
+          {copiedPublic ? <Check size={20} /> : <Copy size={20} />}
+        </button>
+      </div>
+    </div>
+  );
+
+  const ContributeForm = () => (
+    !isClosed ? (
+      <form onSubmit={handleContribute} className="space-y-5">
+        <h3 className="font-bold text-2xl mb-5 flex items-center gap-3">
+          <Banknote  className="text-[#B6B498]" size={28} />
+          <TranslatedText text="Contribuer" />
+        </h3>
+
+        <div>
+          <label className="block text-sm font-medium mb-2">
+            <TranslatedText text="Votre nom" /> <span className="text-red-500">*</span>
+          </label>
+          <input
+            type="text"
+            name="nom"
+            value={contributionData.nom}
+            onChange={handleContributionChange}
+            placeholder={t("Ex: Jean Dupont")}
+            className={`w-full border ${contributionErrors.nom ? "border-red-500" : "border-gray-300"} rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-[#B6B498]`}
+          />
+          {contributionErrors.nom && <p className="text-red-500 text-sm mt-1">{contributionErrors.nom}</p>}
+        </div>
+
+        <div>
+          <label className="block text-sm font-medium mb-2">
+            <TranslatedText text="Votre email" /> <span className="text-red-500">*</span>
+          </label>
+          <input
+            type="email"
+            name="email"
+            value={contributionData.email}
+            onChange={handleContributionChange}
+            placeholder={t("email@exemple.com")}
+            className={`w-full border ${contributionErrors.email ? "border-red-500" : "border-gray-300"} rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-[#B6B498]`}
+          />
+          {contributionErrors.email && <p className="text-red-500 text-sm mt-1">{contributionErrors.email}</p>}
+        </div>
+
+        <div>
+          <label className="block text-sm font-medium mb-2">
+            <TranslatedText text="Montant" /> <span className="text-red-500">*</span>
+          </label>
+          <div className="flex items-center gap-3">
+            <input
+              type="number"
+              name="montant"
+              value={contributionData.montant}
+              onChange={handleContributionChange}
+              min="5"
+              step="0.01"
+              placeholder="50"
+              className={`flex-1 border ${contributionErrors.montant ? "border-red-500" : "border-gray-300"} rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-[#B6B498]`}
+            />
+            <span className="text-2xl font-bold">€</span>
+          </div>
+          {contributionErrors.montant && <p className="text-red-500 text-sm mt-1">{contributionErrors.montant}</p>}
+          <p className="text-gray-500 text-xs mt-1"><TranslatedText text="Minimum 5€" /></p>
+        </div>
+
+        <div>
+          <label className="block text-sm font-medium mb-2"><TranslatedText text="Message (optionnel)" /></label>
+          <textarea
+            name="message"
+            value={contributionData.message}
+            onChange={handleContributionChange}
+            rows={4}
+            maxLength={500}
+            placeholder={t("Laissez un message...")}
+            className="w-full border border-gray-300 rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-[#B6B498] resize-none font-roboto"
+          />
+        </div>
+
+        <button
+          type="submit"
+          disabled={isSubmitting}
+          className="w-full bg-gradient-to-r from-[#B6B498] to-[#8B8970] text-white py-4 rounded-lg font-bold hover:opacity-90 transition disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-3"
+        >
+          {isSubmitting ? (
+            <>
+              <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white"></div>
+              <TranslatedText text="Redirection vers Stripe..." />
+            </>
+          ) : (
+            <>
+              <Heart size={22} />
+              <TranslatedText text="Contribuer maintenant" />
+            </>
+          )}
+        </button>
+
+        <p className="text-xs text-gray-500 text-center font-roboto">
+          <TranslatedText text="Paiement 100% sécurisé par Stripe" />
+        </p>
+      </form>
+    ) : (
+      <div className="text-center py-12">
+        <div className="bg-gray-100 rounded-full w-24 h-24 flex items-center justify-center mx-auto mb-5">
+          <Calendar className="text-gray-400" size={48} />
+        </div>
+        <h3 className="font-bold text-2xl mb-3"><TranslatedText text="Cagnotte clôturée" /></h3>
+        <p className="text-gray-600 font-roboto"><TranslatedText text="Cette cagnotte n'accepte plus de contributions." /></p>
+      </div>
+    )
+  );
 
   return (
     <>
+      <Header />
 
-       {/* En-tête */}
-            <div className="bg-gradient-to-r from-[#B6B498] to-[#8B8970] w-screen relative left-[calc(-50vw+50%)] px-5 py-16">
-              <div className="max-w-4xl mx-auto text-center text-white">
-                  <div className="max-w-5xl mx-auto">
-            <div className="flex items-center gap-3 mb-4">
-              <Gift className="text-[#fcfcfc]" size={32} />
-              {closed && (
-                <span className="bg-red-500 text-white px-4 py-1 rounded-full text-sm font-bold">
-                  <TranslatedText text="Clôturée" />
-                </span>
-              )}
-              {!closed && joursRestants <= 7 && joursRestants > 0 && (
-                <span className="bg-orange-500 text-white px-4 py-1 rounded-full text-sm font-bold">
-                  <TranslatedText text="Bientôt clôturée" />
-                </span>
-              )}
-            </div>
-            <h1 className="text-4xl md:text-5xl font-bold mb-3">{cagnotte.titre}</h1>
-            {cagnotte.destinataire && (
-              <p className="text-xl md:text-2xl text-[#B6B498] font-medium">
-                Pour {cagnotte.destinataire.nom}
-              </p>
-            )}
-          </div>
-              </div>
-            </div>
-
-      {/* Contenu principal */}
-      <div className="max-w-5xl mx-auto py-12 px-4">
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-          {/* Colonne gauche - Informations */}
-          <div className="lg:col-span-2 space-y-8">
-            {/* Description */}
+      <div className="max-w-6xl mx-auto py-12 px-4">
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-10">
+          <div className="lg:col-span-2 space-y-10">
             <div className="bg-white p-8 rounded-xl shadow-md">
-              <h2 className="text-2xl font-bold mb-4 flex items-center gap-2">
+              <h2 className="text-2xl font-bold mb-5 flex items-center gap-3">
                 <Heart className="text-[#B6B498]" size={28} />
                 <TranslatedText text="À propos de cette cagnotte" />
               </h2>
-              <p className="font-roboto text-lg text-gray-700 whitespace-pre-line leading-relaxed">
+              <p className="text-lg text-gray-700 whitespace-pre-line leading-relaxed font-roboto">
                 {cagnotte.description}
               </p>
             </div>
 
-            {/* Statistiques */}
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-              {cagnotte.prix_is_public && (
-                <div className="bg-gradient-to-br from-[#B6B498] to-[#8B8970] text-white p-6 rounded-xl text-center">
-                  <Euro className="mx-auto mb-2" size={32} />
-                  <p className="text-3xl font-bold mb-1">
-                    {montantCollecte.toFixed(2)} €
-                  </p>
-                  <p className="text-sm opacity-90">
-                    <TranslatedText text="Collectés" />
-                  </p>
-                </div>
-              )}
-
-              <div className="bg-white border-2 border-[#B6B498] p-6 rounded-xl text-center">
-                <Users className="mx-auto mb-2 text-[#B6B498]" size={32} />
-                <p className="text-3xl font-bold mb-1">{nombreContributeurs}</p>
-                <p className="text-sm text-gray-600">
-                  <TranslatedText text="Contributeurs" />
-                </p>
-              </div>
-
-              <div className="bg-white border-2 border-[#B6B498] p-6 rounded-xl text-center">
-                <Calendar className="mx-auto mb-2 text-[#B6B498]" size={32} />
-                <p className="text-3xl font-bold mb-1">{joursRestants}</p>
-                <p className="text-sm text-gray-600">
-                  <TranslatedText text="Jours restants" />
-                </p>
-              </div>
-            </div>
-
-            {/* Liste des contributions */}
-            {cagnotte.contributions_is_public && nombreContributeurs > 0 && (
-              <div className="bg-white p-8 rounded-xl shadow-md">
-                <h2 className="text-2xl font-bold mb-6 flex items-center gap-2">
-                  <MessageCircle className="text-[#B6B498]" size={28} />
-                  <TranslatedText text="Contributions" />
-                </h2>
-                <div className="space-y-4 max-h-[500px] overflow-y-auto">
-                  {cagnotte.contributions.map((contribution, index) => (
-                    <div
-                      key={index}
-                      className="border border-gray-200 rounded-lg p-4 hover:bg-gray-50 transition"
-                    >
-                      <div className="flex items-start justify-between mb-2">
-                        <div className="flex items-center gap-3">
-                          <div className="w-10 h-10 bg-[#B6B498] bg-opacity-20 rounded-full flex items-center justify-center">
-                            <Heart className="text-[#B6B498]" size={20} />
-                          </div>
-                          <div>
-                            <p className="font-bold">{contribution.nom}</p>
-                            <p className="text-sm text-gray-500">
-                              {new Date(contribution.created_at).toLocaleDateString("fr-FR")}
-                            </p>
-                          </div>
-                        </div>
-                        {cagnotte.prix_is_public && (
-                          <p className="font-bold text-[#B6B498] text-lg">
-                            {parseFloat(contribution.montant).toFixed(2)} €
-                          </p>
-                        )}
-                      </div>
-                      {contribution.message && (
-                        <p className="text-gray-700 font-roboto italic mt-3 pl-13">
-                          "{contribution.message}"
-                        </p>
-                      )}
-                    </div>
-                  ))}
-                </div>
-              </div>
-            )}
+            <StatsCards />
+            <ContributionsList />
           </div>
 
-          {/* Colonne droite - Formulaire de contribution */}
           <div className="lg:col-span-1">
-            <div className="bg-white rounded-xl shadow-lg p-6 sticky top-4">
-              {/* Boutons de partage */}
-              <div className="mb-6 pb-6 border-b border-gray-200">
-                <h3 className="font-bold text-lg mb-3">
-                  <TranslatedText text="Partager cette cagnotte" />
-                </h3>
-                <div className="flex gap-2">
-                  <button
-                    onClick={handleShare}
-                    className="flex-1 flex items-center justify-center gap-2 bg-[#B6B498] text-white py-3 px-4 rounded-lg hover:opacity-90 transition font-bold"
-                  >
-                    <Share2 size={20} />
-                    <TranslatedText text="Partager" />
-                  </button>
-                  <button
-                    onClick={handleCopyLink}
-                    className="flex items-center justify-center gap-2 border-2 border-[#B6B498] text-[#B6B498] py-3 px-4 rounded-lg hover:bg-[#B6B498] hover:text-white transition font-bold"
-                  >
-                    {copied ? <Check size={20} /> : <Copy size={20} />}
-                  </button>
-                </div>
-              </div>
+            <div className="bg-white rounded-xl shadow-lg p-8 sticky top-6">
+              <ShareButtons />
+              <ContributeForm />
 
-              {/* Formulaire de contribution */}
-              {!closed ? (
-                <form onSubmit={handleContribute} className="space-y-4">
-                  <h3 className="font-bold text-xl mb-4 flex items-center gap-2">
-                    <Sparkles className="text-[#B6B498]" size={24} />
-                    <TranslatedText text="Contribuer" />
-                  </h3>
-
-                  {/* Nom */}
-                  <div>
-                    <label className="block text-sm font-medium mb-2">
-                      <TranslatedText text="Votre nom" />
-                      <span className="text-red-500">*</span>
-                    </label>
-                    <input
-                      type="text"
-                      name="nom"
-                      value={contributionData.nom}
-                      onChange={handleContributionChange}
-                      placeholder={t("Ex: Jean Dupont")}
-                      className={`w-full border ${
-                        contributionErrors.nom ? "border-red-500" : "border-gray-300"
-                      } rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-[#B6B498]`}
-                    />
-                    {contributionErrors.nom && (
-                      <p className="text-red-500 text-sm mt-1">{contributionErrors.nom}</p>
-                    )}
-                  </div>
-
-                  {/* Email */}
-                  <div>
-                    <label className="block text-sm font-medium mb-2">
-                      <TranslatedText text="Votre email" />
-                      <span className="text-red-500">*</span>
-                    </label>
-                    <input
-                      type="email"
-                      name="email"
-                      value={contributionData.email}
-                      onChange={handleContributionChange}
-                      placeholder={t("email@exemple.com")}
-                      className={`w-full border ${
-                        contributionErrors.email ? "border-red-500" : "border-gray-300"
-                      } rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-[#B6B498]`}
-                    />
-                    {contributionErrors.email && (
-                      <p className="text-red-500 text-sm mt-1">{contributionErrors.email}</p>
-                    )}
-                  </div>
-
-                  {/* Montant */}
-                  <div>
-                    <label className="block text-sm font-medium mb-2">
-                      <TranslatedText text="Montant" />
-                      <span className="text-red-500">*</span>
-                    </label>
-                    <div className="flex items-center gap-2">
-                      <input
-                        type="number"
-                        name="montant"
-                        value={contributionData.montant}
-                        onChange={handleContributionChange}
-                        placeholder="50"
-                        min="5"
-                        step="0.01"
-                        className={`flex-1 border ${
-                          contributionErrors.montant ? "border-red-500" : "border-gray-300"
-                        } rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-[#B6B498]`}
-                      />
-                      <span className="text-xl font-bold">€</span>
-                    </div>
-                    {contributionErrors.montant && (
-                      <p className="text-red-500 text-sm mt-1">{contributionErrors.montant}</p>
-                    )}
-                    <p className="text-gray-500 text-xs mt-1">
-                      <TranslatedText text="Minimum 5€" />
-                    </p>
-                  </div>
-
-                  {/* Message */}
-                  <div>
-                    <label className="block text-sm font-medium mb-2">
-                      <TranslatedText text="Message (optionnel)" />
-                    </label>
-                    <textarea
-                      name="message"
-                      value={contributionData.message}
-                      onChange={handleContributionChange}
-                      rows={3}
-                      placeholder={t("Laissez un message...")}
-                      className="w-full border border-gray-300 rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-[#B6B498] resize-none font-roboto"
-                      maxLength="500"
-                    />
-                  </div>
-
-                  {/* Bouton de soumission */}
-                  <button
-                    type="submit"
-                    disabled={isSubmitting}
-                    className="w-full bg-gradient-to-r from-[#B6B498] to-[#8B8970] text-white py-4 rounded-lg font-bold hover:opacity-90 transition disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
-                  >
-                    {isSubmitting ? (
-                      <>
-                        <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white"></div>
-                        <TranslatedText text="Traitement..." />
-                      </>
-                    ) : (
-                      <>
-                        <Heart size={20} />
-                        <TranslatedText text="Contribuer maintenant" />
-                      </>
-                    )}
-                  </button>
-
-                  <p className="text-xs text-gray-500 text-center font-roboto">
-                    <TranslatedText text="Paiement 100% sécurisé par Stripe" />
-                  </p>
-                </form>
-              ) : (
-                <div className="text-center py-8">
-                  <div className="bg-gray-100 rounded-full w-20 h-20 flex items-center justify-center mx-auto mb-4">
-                    <Calendar className="text-gray-400" size={40} />
-                  </div>
-                  <h3 className="font-bold text-xl mb-2">
-                    <TranslatedText text="Cagnotte clôturée" />
-                  </h3>
-                  <p className="text-gray-600 font-roboto">
-                    <TranslatedText text="Cette cagnotte n'accepte plus de contributions." />
-                  </p>
-                </div>
-              )}
-
-              {/* Date limite */}
-              <div className="mt-6 pt-6 border-t border-gray-200 text-center">
-                <p className="text-sm text-gray-600 font-roboto flex items-center justify-center gap-2">
-                  <Calendar size={16} />
+              <div className="mt-8 pt-8 border-t border-gray-200 text-center">
+                <p className="text-sm text-gray-600 flex items-center justify-center gap-2 font-roboto">
+                  <Calendar size={18} />
                   <TranslatedText text="Date limite :" />
                   <span className="font-bold">
                     {new Date(cagnotte.date_limite).toLocaleDateString("fr-FR", {

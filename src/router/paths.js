@@ -28,7 +28,7 @@ export const paths = {
   glossaire: "/glossaire" ,
   checkoutDetails: "/checkout/details",
   mentions: "/mentions-legales" ,
-  conditions: "/conditions" ,
+  conditions: "/conditions",
   dashboard: {
     root: "/dashboard",
     commandes: {
@@ -47,7 +47,6 @@ export const paths = {
     root: "/cagnotte",
     create: "/cagnotte/create",
     show: (slug) => `/cagnotte/${slug}`,
-    manage: (slug) => `/cagnotte/${slug}`,
   },
   
   auth: {

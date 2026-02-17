@@ -5,7 +5,7 @@ import { Users, Heart, Gift, Calendar, CheckCircle, Sparkles, ArrowRight } from 
 import { Link, useNavigate } from "react-router-dom";
 import { paths } from "src/router/paths";
 import { TranslatedText } from "src/components/translated-text/translated-text";
-
+import ImgCagnotte from "src/assets/images/cagnotte-spa-prestige-collection.png";
 export default function PageCagnotte() {
   const navigate = useNavigate();
 
@@ -19,10 +19,11 @@ export default function PageCagnotte() {
       <div className="relative w-screen left-[calc(-50vw+50%)] h-[500px] overflow-hidden">
         <img
           loading="lazy"
-          src="https://images.unsplash.com/photo-1549890762-1f0f14c95538?q=80&w=2070"
+          src={ImgCagnotte}
           alt="Cagnotte Spa & Prestige Collection"
           className="w-full h-full object-cover"
         />
+       
         <div className="absolute inset-0 bg-black bg-opacity-40 flex items-center justify-center">
           <div className="text-center text-white px-4">
             <h1 className="text-5xl md:text-6xl font-bold mb-4">

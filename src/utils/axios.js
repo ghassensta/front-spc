@@ -34,7 +34,6 @@ export const fetcher = async (args) => {
   try {
     const [url, config = {}] = Array.isArray(args) ? args : [args];
 
-    // Guard: bloquer les appels auth sans token
     if ((url.includes('/api/auth/') || url.includes('/api/wishlist')) && !localStorage.getItem(CONFIG.storageKey)) {
       return null;
     }
@@ -199,7 +198,8 @@ export const endpoints = {
   cagnottes:{
     create:"/api/cagnottes ",
     getBySlug:(slug) => `/api/cagnottes/${slug}`,
-    contribute:(id) => `/api/cagnottes/${id}/contributions`,
+    getBySlugManager:(slug, token) => `/api/cagnottes/${slug}/${token}/manager`,
+    contribute:(cagnotteId) => `/api/cagnottes/${cagnotteId}/contribute`
   }
   
 };
