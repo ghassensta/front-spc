@@ -28,7 +28,9 @@ export default function CheckoutView() {
   const [expediteurMessage, setExpediteurMessage] = useState(
     checkout.expediteur?.message || ""
   );
-
+  const [expediteurNewsletter, setExpediteurNewsletter] = useState(
+    checkout.expediteur?.newsletter || false
+  );
   const [couponCode, setCouponCode] = useState("");
   const [couponApplied, setCouponApplied] = useState(false);
   const [couponLoading, setCouponLoading] = useState(false);
@@ -426,6 +428,28 @@ export default function CheckoutView() {
                 <TranslatedText text="appliqué" />
               </div>
             )}
+            <div className="col-span-1 md:col-span-2">
+            <div className="flex items-center gap-3 mt-2">
+             <input
+                  type="checkbox"
+                  id="newsletter"
+                  checked={expediteurNewsletter}
+                  onChange={(e) => {
+                    setExpediteurNewsletter(e.target.checked);
+                    handleExpediteurChange("newsletter", e.target.checked);
+                  }}
+                  className="h-4 w-4 rounded border-gray-300 text-black focus:ring-black"
+                />
+
+              <label
+                htmlFor="newsletter"
+                className="text-sm text-gray-600 cursor-pointer"
+              >
+                <TranslatedText text="Inscription à la newsletter" />
+              </label>
+            </div>
+          </div>
+
           </div>
           {user ? (
             <div className="bg-white p-4 md:p-6 rounded-lg shadow-sm">

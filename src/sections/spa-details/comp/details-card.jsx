@@ -5,6 +5,7 @@ import { CONFIG } from "src/config-global";
 import defaultAvatar from "../../../assets/default-avatar.png";
 import { Link } from "react-router-dom";
 import { useTranslation } from "src/context/translation-context";
+import GlobalShare from "src/components/button-share/GlobalShare";
 
 export default function ServiceCard({
   details,
@@ -194,6 +195,7 @@ export default function ServiceCard({
                 : ""}
           </Link>
         )}</div>
+        <GlobalShare url={window.location.href} title={details?.nom} />
         </div>
       </div>
 

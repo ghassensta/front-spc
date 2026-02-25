@@ -19,6 +19,7 @@ import { paths } from "src/router/paths";
 import { useCheckoutContext } from "../checkout/context";
 import { useTranslation } from "src/context/translation-context";
 import OfferFlashSVG from "../../../src/components/offre-flash/offer-flash-badge";
+import GlobalShare from "src/components/button-share/GlobalShare";
 
 export default function ({
   product,
@@ -272,7 +273,7 @@ export default function ({
                 {translateSync(`${product.remise_produit}% de remise`)}
               </span>
             )}
-
+            <GlobalShare url={window.location.href} title={product?.nom} />
             <h1 className="text-4xl font-bold mb-4 text-[#333] my-2">
               {translateSync(product?.nom)}
             </h1>

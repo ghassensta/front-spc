@@ -4,9 +4,6 @@ import {
   Calendar,
   Users,
   Heart,
-  Share2,
-  Copy,
-  Check,
   Gift,
   Banknote,
   Euro,
@@ -16,6 +13,7 @@ import { toast } from "react-toastify";
 import { TranslatedText } from "src/components/translated-text/translated-text";
 import { useTranslation } from "react-i18next";
 import { getCagnotte, contribuerCagnotte } from "src/actions/cagnotte";
+import ShareButtons from "../components/show/ShareButtons";
 
 export default function ShowCagnotte() {
   const { slug } = useParams();
@@ -99,28 +97,7 @@ export default function ShowCagnotte() {
     setTimeout(() => setCopiedManage(false), 3000);
   }, [manageUrl, t]);
 
-  const handleShare = useCallback(async () => {
-    const shareText = t("Participez à la cagnotte \"{titre}\" pour {destinataire} !", {
-      titre: cagnotte.titre,
-      destinataire: cagnotte.destinataire?.nom || t("un cadeau spécial"),
-    });
 
-    if (navigator.share) {
-      try {
-        await navigator.share({
-          title: cagnotte.titre,
-          text: shareText,
-          url: cleanUrl,
-        });
-      } catch (err) {
-        if (err.name !== "AbortError") {
-          handleCopyPublic();
-        }
-      }
-    } else {
-      handleCopyPublic();
-    }
-  }, [cagnotte, cleanUrl, handleCopyPublic, t]);
 
   const handleContributionChange = (e) => {
     const { name, value } = e.target;
@@ -300,26 +277,7 @@ export default function ShowCagnotte() {
   );
 
 
-  const ShareButtons = () => (
-    <div className="mb-8 pb-8 border-b border-gray-200">
-      <h3 className="font-bold text-lg mb-4"><TranslatedText text="Partager cette cagnotte" /></h3>
-      <div className="flex gap-3">
-        <button
-          onClick={handleShare}
-          className="flex-1 flex items-center justify-center gap-2 bg-[#B6B498] text-white py-3 px-5 rounded-lg hover:opacity-90 transition font-bold"
-        >
-          <Share2 size={20} />
-          <TranslatedText text="Partager" />
-        </button>
-        <button
-          onClick={handleCopyPublic}
-          className="flex items-center justify-center gap-2 border-2 border-[#B6B498] text-[#B6B498] py-3 px-5 rounded-lg hover:bg-[#B6B498] hover:text-white transition font-bold"
-        >
-          {copiedPublic ? <Check size={20} /> : <Copy size={20} />}
-        </button>
-      </div>
-    </div>
-  );
+  
 
   const ContributeForm = () => (
     !isClosed ? (
@@ -449,7 +407,12 @@ export default function ShowCagnotte() {
 
           <div className="lg:col-span-1">
             <div className="bg-white rounded-xl shadow-lg p-8 sticky top-6">
-              <ShareButtons />
+              <ShareButtons
+              cagnotte={cagnotte}
+              cleanUrl={cleanUrl}
+              t={t}
+            />
+
               <ContributeForm />
 
               <div className="mt-8 pt-8 border-t border-gray-200 text-center">
