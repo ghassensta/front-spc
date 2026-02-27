@@ -28,9 +28,9 @@ export default function CheckoutView() {
   const [expediteurMessage, setExpediteurMessage] = useState(
     checkout.expediteur?.message || ""
   );
-  const [expediteurNewsletter, setExpediteurNewsletter] = useState(
-    checkout.expediteur?.newsletter || false
-  );
+const [expediteurNewsletter, setExpediteurNewsletter] = useState(
+  checkout.expediteur?.newsletter ?? true
+);
   const [couponCode, setCouponCode] = useState("");
   const [couponApplied, setCouponApplied] = useState(false);
   const [couponLoading, setCouponLoading] = useState(false);

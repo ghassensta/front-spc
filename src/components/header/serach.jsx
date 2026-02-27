@@ -1,6 +1,6 @@
 // src/components/header/search.jsx
-import React, { useState } from "react";
-import { MapPin, X, Loader2, Search as SearchIcon } from "lucide-react";
+import React, { useState, useEffect } from "react";
+import { MapPin, X, Loader2 } from "lucide-react";
 import {
   useLocationSearch,
   useServiceCategoriesSearch,
@@ -21,8 +21,6 @@ const Search = () => {
   } = useLocationSearch();
 
   const {
-    query: serviceQuery,
-    setQuery: setServiceQuery,
     suggestions: serviceSuggestions = [],
     loading: serviceLoading,
   } = useServiceCategoriesSearch();
@@ -36,7 +34,6 @@ const Search = () => {
   const handleClear = () => {
     setVilleQuery("");
     setSelectedService("");
-    setServiceQuery("");
   };
 
   const handleSelectVille = (label) => {
@@ -45,7 +42,6 @@ const Search = () => {
 
   const handleSelectCategory = (label) => {
     setSelectedService(label);
-    setServiceQuery(label);
     setShowServiceDropdown(false);
   };
 
@@ -174,20 +170,6 @@ const Search = () => {
 
             {showServiceDropdown && (
               <div className="absolute top-full left-0 right-0 mt-1 bg-white border border-gray-200 rounded-md shadow-lg z-50 max-h-60 overflow-y-auto">
-                <div className="p-2 border-b border-gray-100">
-                  <div className="relative">
-                    <SearchIcon className="absolute left-2 top-2.5 w-4 h-4 text-gray-400" />
-                    <input
-                      type="text"
-                      value={serviceQuery}
-                      onChange={(e) => setServiceQuery(e.target.value)}
-                      placeholder={translateSync("Rechercher un soin...")}
-                      className="w-full pl-8 pr-3 py-1.5 text-sm border border-gray-300 rounded"
-                      autoFocus
-                    />
-                  </div>
-                </div>
-
                 {serviceLoading && (
                   <div className="flex items-center justify-center p-3 text-sm text-gray-500">
                     <Loader2 className="w-4 h-4 animate-spin mr-2" />
@@ -195,25 +177,16 @@ const Search = () => {
                   </div>
                 )}
 
-                {serviceSuggestions.length > 0 ? (
-                  serviceSuggestions.map((item) => (
-                    <button
-                      key={item.key}
-                      type="button"
-                      onClick={() => handleSelectCategory(item.label)}
-                      className="w-full text-left p-3 hover:bg-gray-50 border-b border-gray-100 last:border-0"
-                    >
-                      {item.label}
-                    </button>
-                  ))
-                ) : (
-                  !serviceLoading &&
-                  serviceQuery.length >= 2 && (
-                    <div className="p-4 text-center text-sm text-gray-500">
-                      {translateSync("Aucun résultat")}
-                    </div>
-                  )
-                )}
+                {serviceSuggestions.map((item) => (
+                  <button
+                    key={item.key}
+                    type="button"
+                    onClick={() => handleSelectCategory(item.label)}
+                    className="w-full text-left p-3 hover:bg-gray-50 border-b border-gray-100 last:border-0"
+                  >
+                    {item.label}
+                  </button>
+                ))}
               </div>
             )}
           </div>
