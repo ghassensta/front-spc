@@ -200,6 +200,10 @@ export const endpoints = {
     getBySlug:(slug) => `/api/cagnottes/${slug}`,
     getBySlugManager:(slug, token) => `/api/cagnottes/${slug}/${token}/manager`,
     contribute:(cagnotteId) => `/api/cagnottes/${cagnotteId}/contribute`
-  }
+  },
+   pageseo: {
+    list: "/api/pages",
+    details: (slug) => `/api/pages/${slug}`,
+  },
   
 };

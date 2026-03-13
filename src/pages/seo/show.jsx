@@ -1,10 +1,10 @@
+import { useMemo } from "react";
 import { useParams, useLocation } from "react-router-dom";
 import { toast } from "react-toastify";
-import { useGetSpaByCategory } from "src/actions/categories";
-import { useGetFiltersEtablissements } from "src/actions/etablissements";
+import { useGetSeoPageDetail } from "src/actions/seo";
 import { useRouter } from "src/hooks";
 import { paths } from "src/router/paths";
-import CategoriesPageView from "src/sections/categories/view/categories-page-view";
+import PageSeoShow from "src/sections/pages-seo/page-seo-show-view";
 import { Helmet } from "react-helmet";
 
 export default function Page() {
@@ -12,28 +12,32 @@ export default function Page() {
   const location = useLocation();
   const router = useRouter();
 
+  // Redirection si aucun slug
   if (!slug) {
-    toast.info("Choisir une catégorie!");
+    toast.info("Choisir une catégorie !");
     router.push(paths.main);
     return null;
   }
 
-  const { spaList, catLoading, category } = useGetSpaByCategory(slug);
-  const { villes, types, services, formules, filtersLoading } =
-    useGetFiltersEtablissements();
+  // Hook SWR pour récupérer les détails de la page SEO
+  const { page, loading } = useGetSeoPageDetail(slug);
 
+  // Gestion du loading
+  if (loading) {
+    return <p>Chargement de la page...</p>;
+  }
+
+  // SEO dynamique
   const pageTitle =
-    category?.meta_title || `${category?.nom || "Catégorie"} - Nos SPAs`;
+    page?.meta_title || `${page?.titre_hero || "Catégorie"} - Nos SPAs`;
   const pageDescription =
-    category?.meta_description ||
-    `Découvrez les SPAs disponibles dans la catégorie ${
-      category?.nom || "inconnue"
-    }.`;
+    page?.meta_description ||
+    `Découvrez nos SPAs disponibles dans la catégorie ${page?.titre_hero || "inconnue"}.`;
   const pageKeywords =
-    category?.meta_keywords || `${category?.nom || ""}, SPA, bien-être`;
+    page?.meta_keywords || `${page?.titre_hero || ""}, SPA, bien-être`;
 
   const canonicalUrl = `${window.location.origin}${location.pathname}`;
-  //  console.log("category URL:", category);
+
   return (
     <>
       <Helmet htmlAttributes={{ lang: "fr" }}>
@@ -46,12 +50,14 @@ export default function Page() {
           content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1"
         />
 
+        {/* Open Graph */}
         <meta property="og:title" content={pageTitle} />
         <meta property="og:description" content={pageDescription} />
         <meta property="og:type" content="website" />
         <meta property="og:url" content={canonicalUrl} />
         <meta property="og:site_name" content="Spa & Prestige Collection" />
 
+        {/* Twitter Card */}
         <meta name="twitter:card" content="summary_large_image" />
         <meta name="twitter:title" content={pageTitle} />
         <meta name="twitter:description" content={pageDescription} />
@@ -59,18 +65,8 @@ export default function Page() {
         <link rel="canonical" href={canonicalUrl} />
       </Helmet>
 
-      <CategoriesPageView
-        nomcat={category?.nom}
-        slug_categorie={category?.slug}
-        description={category?.meta_description}
-        cardsByCategory={spaList}
-        villes={villes}
-        types={types}
-        services={services}
-        formules={formules}
-        filterLoading={filtersLoading}
-        loading={catLoading}
-      />
+      {/* Composant d'affichage du contenu */}
+      <PageSeoShow pageseo={page} pageseoLoading={loading} />
     </>
   );
 }

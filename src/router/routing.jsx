@@ -53,6 +53,9 @@ const Conditions = lazy(() => import("../pages/conditions"));
 const Cagnotte = lazy(() => import("../pages/cagnotte"));
 const AddCagbotte =lazy(() => import("../pages/cagnotte/create"));
 const ShowCagnotte = lazy(() => import("../pages/cagnotte/show"));
+const ListPageSeo=lazy(() => import("../pages/seo/index"));
+const ShowPageSeo=lazy(() => import("../pages/seo/show"));
+
 
 export const routes = [
   {
@@ -108,6 +111,9 @@ export const routes = [
       { element: <Cagnotte />, path: "cagnotte" },
       { element: <AddCagbotte />, path: "cagnotte/create" },
       { element: <ShowCagnotte />, path: "cagnotte/:slug" },
+      { element: <ListPageSeo />, path: "zones-dactivites" },
+      { element: <ShowPageSeo />, path: "zone-dactivite/:slug" },
+
 
 
       // === DANS LE TABLEAU `children` DE LA RACINE ===

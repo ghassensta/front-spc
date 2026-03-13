@@ -14,6 +14,7 @@ export default function CategoriesPageView({
   villes = [],
   types = [],
   services = [],
+  formules = [],
   loading,
   filterLoading,
   nomcat = "",
@@ -31,7 +32,7 @@ export default function CategoriesPageView({
   const [filters, setFilters] = useState({
     etablissement: null,
     region: null,
-    service: null,
+    formule: null,
     minPrice: null,
     maxPrice: null,
   });
@@ -40,8 +41,8 @@ export default function CategoriesPageView({
 
   const typeOptions = types.map((t) => ({ value: t.id, label: translateSync(t.name) }));
   const villeOptions = villes.map((v) => ({ value: v.id, label: translateSync(v.name) }));
-  const serviceOptions = services.map((s) => ({ value: s.id, label: translateSync(s.name) }));
-
+  const formulesOptions = formules.map((s) => ({ value: s.id, label: translateSync(s.name) }));
+  console.log("Options de type d'établissement:", types);
   const customStyles = {
     control: (provided) => ({
       ...provided,
@@ -99,16 +100,15 @@ export default function CategoriesPageView({
       const matchRegion = filters.region
         ? card.region_ids?.includes(parseInt(filters.region))
         : true;
-
-      const matchService = filters.service
-        ? card.type_equipement_ids?.includes(parseInt(filters.service))
+      const matchformule = filters.formule
+        ? card.formule_ids?.includes(parseInt(filters.formule))
         : true;
 
       const matchPrice =
         (filters.minPrice === null || card.prix >= filters.minPrice) &&
         (filters.maxPrice === null || card.prix <= filters.maxPrice);
 
-      return matchType && matchRegion && matchService && matchPrice;
+      return matchType && matchRegion && matchformule && matchPrice;
     });
   }, [cardsByCategory, filters]);
 
@@ -205,10 +205,10 @@ export default function CategoriesPageView({
           <Select
             instanceId="select-service"
             styles={customStyles}
-            placeholder={translateSync("Services et équipements")}
-            options={serviceOptions}
-            value={serviceOptions.find((opt) => opt.value === filters.service) || null}
-            onChange={handleChange("service")}
+            placeholder={translateSync("Type de soins")}
+            options={formulesOptions}
+            value={formulesOptions.find((opt) => opt.value === filters.formule) || null}
+            onChange={handleChange("formule")}
             isClearable
             isSearchable
             menuPortalTarget={document.body}

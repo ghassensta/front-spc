@@ -1,8 +1,10 @@
 // Updated aide-page-view.jsx (with added dependency to useEffect)
 import React, { useState, useEffect } from "react";
 import { toast } from "react-toastify";
-import { sendSupport, sendMessage, useGetMessage } from "src/actions/aide";
+import { useGetServices } from "src/actions/services";
+import { usePostConversation } from "src/actions/conversations";
 import { TranslatedText } from "src/components/translated-text/translated-text";
+import UniversalSpinner from "src/components/universal-spinner/universal-spinner";
 import { useTranslation } from "react-i18next";
 
 export default function AidePageView({
@@ -93,11 +95,6 @@ export default function AidePageView({
     }
   };
 
-  // Skeleton component
-  const Skeleton = ({ className }) => (
-    <div className={`animate-pulse bg-gray-200 rounded ${className}`} />
-  );
-
   return (
     <div className="p-6 grid grid-cols-1 md:grid-cols-2 gap-6">
       {}
@@ -112,12 +109,7 @@ export default function AidePageView({
         {servicesError ? (
           <p className="text-[#b6b499] text-sm"><TranslatedText text="Erreur lors du chargement des services. Veuillez réessayer plus tard." /></p>
         ) : servicesLoading || servicesValidating ? (
-          <div className="space-y-4">
-            <Skeleton className="h-10 w-full" />
-            <Skeleton className="h-10 w-full" />
-            <Skeleton className="h-32 w-full" />
-            <Skeleton className="h-10 w-32" />
-          </div>
+          <UniversalSpinner size="md" text="Chargement des services..." />
         ) : services.length === 0 ? (
           <p className="text-gray-500 text-sm"><TranslatedText text="Aucun service disponible pour le moment." /></p>
         ) : (
@@ -195,18 +187,7 @@ export default function AidePageView({
         {messagesError ? (
           <p className="text-[#b6b499] text-sm"><TranslatedText text="Erreur lors du chargement des demandes. Veuillez réessayer plus tard." /></p>
         ) : messagesLoading || messagesValidating ? (
-          <div className="space-y-4">
-            {[...Array(3)].map((_, i) => (
-              <div key={i} className="flex justify-between items-center border-b pb-3">
-                <div className="space-y-2">
-                  <Skeleton className="h-5 w-40" />
-                  <Skeleton className="h-4 w-32" />
-                  <Skeleton className="h-3 w-24" />
-                </div>
-                <Skeleton className="h-8 w-16" />
-              </div>
-            ))}
-          </div>
+          <UniversalSpinner size="md" text="Chargement des demandes..." />
         ) : allDemandes.length === 0 ? (
           <p className="text-sm text-gray-500"><TranslatedText text="Aucune demande trouvée." /></p>
         ) : (
@@ -253,11 +234,7 @@ export default function AidePageView({
               {convError ? (
                 <p className="text-red-500 text-sm text-center"><TranslatedText text="Erreur lors du chargement de la conversation. Veuillez réessayer." /></p>
               ) : convLoading || convValidating ? (
-                <div className="space-y-4">
-                  {[...Array(3)].map((_, i) => (
-                    <Skeleton key={i} className="h-20 w-full rounded-lg" />
-                  ))}
-                </div>
+                <UniversalSpinner size="md" text="Chargement de la conversation..." />
               ) : localConversation.length === 0 ? (
                 <p className="text-sm text-gray-500 text-center"><TranslatedText text="Aucun message dans cette conversation." /></p>
               ) : (

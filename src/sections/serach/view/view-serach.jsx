@@ -1,9 +1,9 @@
-// src/sections/search/view/search-page-view.jsx
 import React, { useState, useCallback } from "react";
 import { useParams } from "react-router-dom";
 import Card from "src/components/card/card";
 import Serach from "src/components/header/serach";
 import { useSearchProduits } from "src/actions/serach";
+import UniversalSpinner from "src/components/universal-spinner/universal-spinner";
 
 export default function SearchPageView() {
   const params = useParams();
@@ -57,7 +57,6 @@ export default function SearchPageView() {
 
   return (
     <div className="max-w-6xl mx-auto px-4 py-8">
-      {/* Barre de recherche + titre */}
       <div className="text-center mb-10">
         <Serach />
         <h1 className="text-3xl md:text-4xl font-bold mt-6 mb-3">{title}</h1>
@@ -68,22 +67,18 @@ export default function SearchPageView() {
         </p>
       </div>
 
-      {/* Erreur */}
       {error && (
         <div className="text-center py-10 text-red-600">
           <p>Une erreur est survenue : {error.message || "Veuillez réessayer plus tard"}</p>
         </div>
       )}
 
-      {/* Chargement initial */}
       {loading && page === 1 ? (
-        <div className="flex justify-center items-center py-20">
-          <div className="animate-spin rounded-full h-14 w-14 border-t-4 border-b-4 border-black"></div>
-        </div>
+        <UniversalSpinner size="lg" className="py-20" />
       ) : produits.length > 0 ? (
         <>
           {/* Grille des cartes */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 md:gap-8">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-3 gap-6 md:gap-8">
             {produits.map((p, index) => (
               <Card
                 key={`${p.id ?? p.produit_id}-${index}`}
@@ -121,7 +116,7 @@ export default function SearchPageView() {
               >
                 {loading ? (
                   <span className="flex items-center justify-center gap-3">
-                    <div className="animate-spin h-5 w-5 border-2 border-white border-t-transparent rounded-full"></div>
+                    <UniversalSpinner size="sm" />
                     Chargement...
                   </span>
                 ) : (
