@@ -23,7 +23,7 @@ const variants = {
 
 export default function ImageCarousel({ height, images = [] }) {
   const { translateSync } = useTranslation(); 
-  const [[index, direction], setIndex] = useState([0, 0]);
+  const [[page, direction], setPage] = useState([0, 0]);
   const [org, setOrg] = useState([]);
   const [visible, setVisible] = useState(false);
   const imgLength = images.length;
@@ -41,23 +41,12 @@ export default function ImageCarousel({ height, images = [] }) {
   useEffect(() => {
     if (imgLength === 0) return;
 
-    const timer = setInterval(() => {
-      setIndex(([prev]) => [(prev + 1) % imgLength, 1]);
+    timerRef.current = setInterval(() => {
+      setCurrentSlide((prev) => (prev + 1) % imgLength);
     }, 5000);
 
-    return () => clearInterval(timer);
-  }, [imgLength]);
-
-  useEffect(() => {
-    const startTimer = () => {
-      timerRef.current = setInterval(() => {
-        setCurrentSlide((prev) => (prev + 1) % images.length);
-      }, 5000);
-    };
-
-    startTimer();
     return () => clearInterval(timerRef.current);
-  }, [images.length]);
+  }, [imgLength]);
 
   const resetTimer = () => {
     clearInterval(timerRef.current);
@@ -67,12 +56,16 @@ export default function ImageCarousel({ height, images = [] }) {
   };
 
   const goToPrev = () => {
+    if (images.length === 0) return;
     setCurrentSlide((prev) => (prev - 1 + images.length) % images.length);
+    setPage([currentSlide - 1, -1]);
     resetTimer();
   };
 
   const goToNext = () => {
+    if (images.length === 0) return;
     setCurrentSlide((prev) => (prev + 1) % images.length);
+    setPage([currentSlide + 1, 1]);
     resetTimer();
   };
 
@@ -109,14 +102,14 @@ export default function ImageCarousel({ height, images = [] }) {
 
         <button
           onClick={goToPrev}
-          className="absolute top-1/2 left-3 -translate-y-1/2 text-white p-2 rounded-full z-10"
+          className="absolute top-1/2 left-3 -translate-y-1/2 text-white p-2 rounded-full z-10 bg-black/40 hover:bg-black/70 transition-colors duration-300"
           aria-label={translateSync("Image précédente")}
         >
           <FaChevronLeft size={20} />
         </button>
         <button
           onClick={goToNext}
-          className="absolute top-1/2 right-3 -translate-y-1/2 text-white p-2 rounded-full z-10"
+          className="absolute top-1/2 right-3 -translate-y-1/2 text-white p-2 rounded-full z-10 bg-black/40 hover:bg-black/70 transition-colors duration-300"
           aria-label={translateSync("Image suivante")}
         >
           <FaChevronRight size={20} />

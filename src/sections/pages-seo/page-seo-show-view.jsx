@@ -20,7 +20,10 @@ function FaqItem({ question, answer }) {
         onClick={() => setOpen(!open)}
         className="w-full flex items-center justify-between py-5 text-left"
       >
-        <span className="text-base font-semibold pr-8" style={{ color: "#1a1a1a" }}>
+        <span
+          className="text-base font-semibold pr-8"
+          style={{ color: "#1a1a1a" }}
+        >
           {translateSync(question)}
         </span>
         <span
@@ -35,7 +38,10 @@ function FaqItem({ question, answer }) {
       </button>
       {open && (
         <div className="pb-5 pr-10">
-          <p className="font-tahoma text-sm leading-relaxed" style={{ color: "#555" }}>
+          <p
+            className="font-tahoma text-sm leading-relaxed"
+            style={{ color: "#555" }}
+          >
             {translateSync(answer)}
           </p>
         </div>
@@ -76,7 +82,6 @@ export default function PageSeoShow({ pageseo, pageseoLoading }) {
 
   return (
     <div className="min-h-screen bg-white">
-
       {/* ── HERO ── */}
       <div className="bg-[#FBF6EC] w-screen relative left-[calc(-50vw+50%)] mb-4">
         <div className="relative max-w-6xl mx-auto px-4 py-10">
@@ -90,7 +95,10 @@ export default function PageSeoShow({ pageseo, pageseoLoading }) {
           </button>
 
           <div className="text-center w-full md:w-3/5 mx-auto flex flex-col gap-4">
-            <p className="text-4xl uppercase tracking-widest font-semibold" style={{ color: "#C7B892" }}>
+            <p
+              className="text-4xl uppercase tracking-widest font-semibold"
+              style={{ color: "#C7B892" }}
+            >
               {translateSync("Spa & Prestige Collection")}
             </p>
             <h1 className="text-4xl font-bold" style={{ color: "#1a1a1a" }}>
@@ -101,10 +109,12 @@ export default function PageSeoShow({ pageseo, pageseoLoading }) {
       </div>
 
       <div className="max-w-5xl mx-auto px-4 py-8 space-y-10">
-
         {/* ── IMAGE D'OUVERTURE ── */}
         {image_ouverture && (
-          <div className="overflow-hidden" style={{ border: "1px solid #e0d8cc" }}>
+          <div
+            className="overflow-hidden"
+            style={{ border: "1px solid #e0d8cc" }}
+          >
             <img
               src={`${CONFIG.serverUrl}/storage/${image_ouverture}`}
               alt={translateSync(titre_hero)}
@@ -126,24 +136,38 @@ export default function PageSeoShow({ pageseo, pageseoLoading }) {
             />
 
             {section.button_label && section.button_url && (
-              <a
-                href={section.button_url}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="inline-flex items-center gap-2 text-sm font-semibold transition-all duration-300"
-                style={{ color: "#C7B892", textDecoration: "none" }}
-              >
-                • {translateSync(section.button_label)} →
-              </a>
+              <div className="flex justify-center mt-6">
+                <a
+                  href={section.button_url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="px-7 py-3 text-base font-semibold rounded-full transition-all duration-300 hover:scale-105"
+                  style={{
+                    backgroundColor: "#C7B892",
+                    color: "#fff",
+                    textDecoration: "none",
+                  }}
+                  onMouseEnter={(e) =>
+                    (e.target.style.backgroundColor = "#b5a480")
+                  }
+                  onMouseLeave={(e) =>
+                    (e.target.style.backgroundColor = "#C7B892")
+                  }
+                >
+                  {translateSync(section.button_label)}
+                </a>
+              </div>
             )}
 
             {index < sections.length - 1 && (
-              <div className="mt-10" style={{ borderBottom: "1px solid #e0d8cc" }} />
+              <div
+                className="mt-10"
+                style={{ borderBottom: "1px solid #e0d8cc" }}
+              />
             )}
           </div>
         ))}
 
-        {/* ── FAQ ── */}
         {faq_json && faq_json.length > 0 && (
           <div>
             <div className="bg-[#FBF6EC] w-screen relative left-[calc(-50vw+50%)] px-4 py-10 mb-4">
@@ -151,7 +175,10 @@ export default function PageSeoShow({ pageseo, pageseoLoading }) {
                 <h2 className="text-4xl font-bold mb-2 text-center">
                   {translateSync("Questions fréquentes")}
                 </h2>
-                <p className="font-tahoma text-center mb-8" style={{ color: "#555" }}>
+                <p
+                  className="font-tahoma text-center mb-8"
+                  style={{ color: "#555" }}
+                >
                   {translateSync("FAQ")}
                 </p>
                 <div
@@ -159,14 +186,17 @@ export default function PageSeoShow({ pageseo, pageseoLoading }) {
                   style={{ border: "1px solid #e0d8cc", padding: "0 2rem" }}
                 >
                   {faq_json.map((item, i) => (
-                    <FaqItem key={i} question={item.question} answer={item.answer} />
+                    <FaqItem
+                      key={i}
+                      question={item.question}
+                      answer={item.answer}
+                    />
                   ))}
                 </div>
               </div>
             </div>
           </div>
         )}
-
       </div>
 
       {/* ── FOOTER CTA BANNER ── */}
@@ -189,8 +219,8 @@ export default function PageSeoShow({ pageseo, pageseoLoading }) {
               className="flex items-center gap-2 text-lg font-semibold transition-all hover:gap-3"
               style={{ color: "#C7B892", textDecoration: "none" }}
             >
-                <FaLink size={14} />
-               {translateSync(cta_final_label)}
+              <FaLink size={14} />
+              {translateSync(cta_final_label)}
             </a>
             <Link
               to={paths.cadeau}
@@ -211,7 +241,6 @@ export default function PageSeoShow({ pageseo, pageseoLoading }) {
           link={paths.spa.list}
         />
       </div>
-
     </div>
   );
 }

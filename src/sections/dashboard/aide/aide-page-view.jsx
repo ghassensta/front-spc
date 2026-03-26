@@ -1,8 +1,7 @@
 // Updated aide-page-view.jsx (with added dependency to useEffect)
 import React, { useState, useEffect } from "react";
 import { toast } from "react-toastify";
-import { useGetServices } from "src/actions/services";
-import { usePostConversation } from "src/actions/conversations";
+import { useGetServices } from "src/actions/aide";
 import { TranslatedText } from "src/components/translated-text/translated-text";
 import UniversalSpinner from "src/components/universal-spinner/universal-spinner";
 import { useTranslation } from "react-i18next";

@@ -112,7 +112,7 @@ export const routes = [
       { element: <AddCagbotte />, path: "cagnotte/create" },
       { element: <ShowCagnotte />, path: "cagnotte/:slug" },
       { element: <ListPageSeo />, path: "zones-dactivites" },
-      { element: <ShowPageSeo />, path: "zone-dactivite/:slug" },
+      { element: <ShowPageSeo />, path: ":slug" },
 
 
 

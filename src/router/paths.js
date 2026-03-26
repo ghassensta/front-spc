@@ -50,7 +50,7 @@ export const paths = {
   },
   pageseo: {
     root: "/zones-dactivites",
-    show: (slug) => `/zone-dactivite/${slug}`,
+    show: (slug) => `/${slug}`,
   },
   auth: {
     root: "/auth",
