@@ -1,4 +1,4 @@
-import React from "react";
+import React, { lazy, Suspense } from "react";
 import Header from "./comp/header";
 
 import ButtonIcon from "../../components/button-icon/button-icon";
@@ -17,6 +17,10 @@ import { TranslatedText } from "src/components/translated-text/translated-text";
 import { useTranslation } from "react-i18next";
 import theImage from "src/assets/images/Piscine2.jpg";
 import theImageHeader from "src/assets/images/SPC-Essence-1975x1318-02.jpg";
+import OptimizedImage from "../../components/optimized-image";
+
+// Lazy loading des composants lourds
+const InfiniteScroll = lazy(() => import("./comp/infinite"));
 
 export default function HomeView() {
   const { etablissements } = useGetEtablissements();

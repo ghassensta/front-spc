@@ -188,6 +188,7 @@ export default function ProfileDetails() {
             className="border rounded p-1"
             value={formData.current_password}
             onChange={handleChange}
+            autoComplete="off"
           />
         </div>
 
@@ -202,6 +203,7 @@ export default function ProfileDetails() {
             className="border rounded p-1"
             value={formData.new_password}
             onChange={handleChange}
+            autoComplete="off"
           />
         </div>
 
@@ -216,6 +218,7 @@ export default function ProfileDetails() {
             className="border rounded p-1"
             value={formData.new_password_confirmation}
             onChange={handleChange}
+            autoComplete="off"
           />
         </div>
       </div>

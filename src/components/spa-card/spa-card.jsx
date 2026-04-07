@@ -42,6 +42,14 @@ export default function SpaCard({
         }
         alt={title || "Établissement"}
         className="w-full rounded-3xl object-cover overflow-hidden max-h-[242px]"
+        width="400"
+        height="242"
+        srcset={
+          image
+            ? `${CONFIG.serverUrl}/storage/${image} 400w, ${CONFIG.serverUrl}/storage/${image} 800w`
+            : undefined
+        }
+        sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 33vw"
       />
 
       {renderRemisePer()}

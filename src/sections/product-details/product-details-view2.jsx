@@ -20,6 +20,8 @@ import { useCheckoutContext } from "../checkout/context";
 import { useTranslation } from "src/context/translation-context";
 import OfferFlashSVG from "../../../src/components/offre-flash/offer-flash-badge";
 import GlobalShare from "src/components/button-share/GlobalShare";
+import SpaConseil from "../spa-details/comp/SpaConseil";
+import logoSpc from "../../assets/logo-small.png";
 
 export default function ({
   product,
@@ -29,6 +31,7 @@ export default function ({
   loading,
   servicesEquipements = [],
 }) {
+  console.log("etablissement", etablissement);
   const gallery = [
     ...(etablissement?.image_avant ? [etablissement.image_avant] : []),
     ...(etablissement?.gallerie?.length > 0
@@ -56,6 +59,7 @@ export default function ({
       date: new Date().toISOString().slice(0, 10),
     },
   ]);
+  const [showPersonalize, setShowPersonalize] = useState(false);
 
   const isFlashOfferActive =
     product?.offre_flash === 1 &&
@@ -69,6 +73,8 @@ export default function ({
     telephone: etablissement?.telephone,
     horaires_ouverture: etablissement?.horaires_ouverture,
     email: etablissement?.email,
+    image_conseil: etablissement?.image_conseil,
+    text_conseil: etablissement?.text_conseil,
   };
 
   useEffect(() => {
@@ -317,7 +323,7 @@ export default function ({
 
             <Link
               to={paths.spa.details(etablissement?.slug)}
-              className="w-max rounded-md mx-auto mt-10 px-5 py-3 bg-black leading-4 text-white uppercase font-normal text-xs tracking-[3px] hover:bg-gray-800 transition font-tahoma flex items-center justify-center gap-2"
+              className="w-max rounded-md mx-auto mt-10 px-5 py-3 bg-[#e2dfba] leading-4 text-black uppercase font-normal text-xs tracking-[3px] hover:bg-black transition hover:text-white font-tahoma flex items-center justify-center gap-2"
             >
               {translateSync("Voir l'établissement")}
             </Link>
@@ -330,7 +336,38 @@ export default function ({
                 {translateSync("Ajouter au panier")}
               </button>
             </div>
+              {product?.privileges?.length > 0 && (
+            <div className="mt-6">
+              {/* Titre de la section */}
+              <h2 className="text-2xl font-bold mb-4 text-[#333] my-2">
+                {translateSync("Ce que comprend cette expérience d’exception")}
+              </h2>
+
+              <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-3 gap-2">
+                {product?.privileges
+                  ?.slice()
+                  .sort((a, b) => a.sort_order - b.sort_order)
+                  .map((privilege) => (
+                    <div
+                      key={privilege.id}
+                      className="flex items-center gap-2 px-2 py-1"
+                    >
+                      <img
+                        src={`${CONFIG.serverUrl}/storage/${privilege.icon_path}`}
+                        alt={privilege.name}
+                        className="w-7 h-7 object-contain"
+                      />
+
+                      <span className="text-xs text-gray-700 font-medium font-tahoma">
+                        {translateSync(privilege.name)}
+                      </span>
+                    </div>
+                  ))}
+              </div>
+            </div>
+          )}
           </div>
+
 
           <div className="bg-[beige] px-8 py-4 col-span-2 lg:col-span-1 rounded-2xl">
             <div>
@@ -352,118 +389,172 @@ export default function ({
                   {translateSync(`Au lieu de ${product.prix_au_lieu_de}€`)}
                 </span>
               )}
-                <div className="flex row">
-              {/* Image exclusivité */}
-              {product?.type_exclusivite?.image_path && (
-                <img
-                  loading="lazy"
-                  src={`${CONFIG.serverUrl}/storage/${product.type_exclusivite.image_path}`}
-                  alt="Exclusivité"
-                  className="w-auto h-auto my-2"
-                />
-              )}
-
-              {/* Offre Flash */}
-              {isFlashOfferActive && (
-                <div className="flex items-center gap-3 mt-2 rounded-xl px-3 py-2">
-                  <OfferFlashSVG
-                    width={135}
-                    height={135}
-                    tailledetime={30}
-                    offre_flash={product.offre_flash}
-                    date_debut={product.date_debut}
-                    date_fin={product.date_fin}
+              <div className="flex row">
+                {/* Image exclusivité */}
+                {product?.type_exclusivite?.image_path && (
+                  <img
+                    loading="lazy"
+                    src={`${CONFIG.serverUrl}/storage/${product.type_exclusivite.image_path}`}
+                    alt="Exclusivité"
+                    className="w-auto h-auto my-2"
                   />
-                </div>
-              )}
+                )}
+
+                {/* Offre Flash */}
+                {isFlashOfferActive && (
+                  <div className="flex items-center gap-3 mt-2 rounded-xl px-3 py-2">
+                    <OfferFlashSVG
+                      width={135}
+                      height={135}
+                      tailledetime={30}
+                      offre_flash={product.offre_flash}
+                      date_debut={product.date_debut}
+                      date_fin={product.date_fin}
+                    />
+                  </div>
+                )}
               </div>
             </div>
-
             <div className="mt-4 font-tahoma">
-              <span className="text-xl font-semibold mb-4">
-                {translateSync(`Destinataire : ${recipients.length}`)}
-              </span>
-              {recipients.map((recipient, index) => (
-                <div key={index} className="mb-4">
-                  <div className="flex justify-between items-center mb-2">
-                    <span className="text-sm font-normal">
-                      {translateSync(`Destinataire ${index + 1}`)}
-                    </span>
-                    {recipients.length > 1 && (
-                      <button
-                        onClick={() => handleRemoveRecipient(index)}
-                        className="mt-2 text-xs text-red-500 hover:text-red-700"
-                      >
-                        {translateSync("Supprimer ce destinataire")}
-                      </button>
+              {/* Switch toggle */}
+              <div className="flex items-center justify-between border border-gray-200 rounded-xl px-4 py-3 mb-4">
+                <div>
+                  <p className="text-sm font-semibold text-[#333]">
+                    {translateSync("Personnaliser ma carte cadeau")}
+                  </p>
+                  <p className="text-xs text-gray-400 mt-0.5">
+                    {translateSync(
+                      "Ajoutez un message, une date d'envoi et un destinataire",
                     )}
-                  </div>
-                  <div className="space-y-4">
-                    <input
-                      type="text"
-                      className="w-full border border-gray-300 p-2"
-                      placeholder={translateSync("Nom et prénom (optionnel)")}
-                      value={recipient.fullName}
-                      onChange={(e) =>
-                        handleRecipientChange(index, "fullName", e.target.value)
-                      }
-                    />
-                    <input
-                      type="email"
-                      className="w-full border border-gray-300 p-2"
-                      placeholder={translateSync(
-                        "Email du destinataire (optionnel)",
-                      )}
-                      value={recipient.email}
-                      onChange={(e) =>
-                        handleRecipientChange(index, "email", e.target.value)
-                      }
-                    />
-                    <textarea
-                      className="w-full border border-gray-300 p-2 mt-2"
-                      placeholder={translateSync("Votre message (optionnel)")}
-                      value={recipient.message || ""}
-                      onChange={(e) =>
-                        handleRecipientChange(index, "message", e.target.value)
-                      }
-                      rows={3}
-                    />
-                    <p className="text-sm text-gray-600 mt-2">
-                      {translateSync(
-                        "Choisissez la date d'envoi (la carte cadeau sera envoyée à 7h du matin le jour J)",
-                      )}
-                    </p>
-                    <input
-                      type="date"
-                      className="w-full border border-gray-300 p-2 mt-1"
-                      value={
-                        recipient.date || new Date().toISOString().slice(0, 10)
-                      }
-                      min={new Date().toISOString().slice(0, 10)}
-                      onChange={(e) =>
-                        handleRecipientChange(index, "date", e.target.value)
-                      }
-                    />
-                  </div>
+                  </p>
                 </div>
-              ))}
-              <button
-                onClick={handleAddRecipient}
-                className="px-4 py-2 bg-gray-200 text-black text-sm rounded-full hover:bg-gray-300 transition mb-4"
-              >
-                {translateSync("Ajouter un autre destinataire")}
-              </button>
-
-              <div className="flex">
                 <button
-                  onClick={addProductToCheckout}
-                  className="w-max px-5 py-3 bg-black leading-4 rounded-full text-white uppercase font-normal text-xs tracking-[3px] hover:bg-gray-800 transition font-tahoma flex items-center justify-center gap-2"
+                  onClick={() => setShowPersonalize((prev) => !prev)}
+                  className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors duration-300 focus:outline-none ${
+                    showPersonalize ? "bg-black" : "bg-gray-300"
+                  }`}
                 >
-                  {translateSync("Ajouter au panier")}
+                  <span
+                    className={`inline-block h-4 w-4 transform rounded-full bg-white shadow transition-transform duration-300 ${
+                      showPersonalize ? "translate-x-6" : "translate-x-1"
+                    }`}
+                  />
                 </button>
               </div>
-            </div>
 
+              {/* Formulaire destinataires — affiché uniquement si toggle ON */}
+              {showPersonalize && (
+                <div className="border border-gray-200 rounded-xl p-4 space-y-4">
+                  <span className="text-sm font-semibold text-[#333]">
+                    {translateSync(`Destinataire : ${recipients.length}`)}
+                  </span>
+
+                  {recipients.map((recipient, index) => (
+                    <div key={index} className="mb-4">
+                      <div className="flex justify-between items-center mb-2">
+                        <span className="text-sm font-normal text-gray-500">
+                          {translateSync(`Destinataire ${index + 1}`)}
+                        </span>
+                        {recipients.length > 1 && (
+                          <button
+                            onClick={() => handleRemoveRecipient(index)}
+                            className="text-xs text-red-500 hover:text-red-700"
+                          >
+                            {translateSync("Supprimer")}
+                          </button>
+                        )}
+                      </div>
+
+                      <div className="space-y-3">
+                        <input
+                          type="text"
+                          className="w-full border border-gray-300 rounded-lg p-2 text-sm"
+                          placeholder={translateSync(
+                            "Nom et prénom (optionnel)",
+                          )}
+                          value={recipient.fullName}
+                          onChange={(e) =>
+                            handleRecipientChange(
+                              index,
+                              "fullName",
+                              e.target.value,
+                            )
+                          }
+                        />
+                        <input
+                          type="email"
+                          className="w-full border border-gray-300 rounded-lg p-2 text-sm"
+                          placeholder={translateSync(
+                            "Email du destinataire (optionnel)",
+                          )}
+                          value={recipient.email}
+                          onChange={(e) =>
+                            handleRecipientChange(
+                              index,
+                              "email",
+                              e.target.value,
+                            )
+                          }
+                        />
+                        <textarea
+                          className="w-full border border-gray-300 rounded-lg p-2 text-sm"
+                          placeholder={translateSync(
+                            "Votre message (optionnel)",
+                          )}
+                          value={recipient.message || ""}
+                          onChange={(e) =>
+                            handleRecipientChange(
+                              index,
+                              "message",
+                              e.target.value,
+                            )
+                          }
+                          rows={3}
+                        />
+                        <div>
+                          <p className="text-xs text-gray-400 mb-1">
+                            {translateSync(
+                              "La carte sera envoyée à 7h du matin le jour J",
+                            )}
+                          </p>
+                          <input
+                            type="date"
+                            className="w-full border border-gray-300 rounded-lg p-2 text-sm"
+                            value={
+                              recipient.date ||
+                              new Date().toISOString().slice(0, 10)
+                            }
+                            min={new Date().toISOString().slice(0, 10)}
+                            onChange={(e) =>
+                              handleRecipientChange(
+                                index,
+                                "date",
+                                e.target.value,
+                              )
+                            }
+                          />
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+
+                  <button
+                    onClick={handleAddRecipient}
+                    className="px-4 py-2 bg-gray-100 text-black text-xs rounded-full hover:bg-gray-200 transition border border-gray-300"
+                  >
+                    + {translateSync("Ajouter un autre destinataire")}
+                  </button>
+                </div>
+              )}
+            </div>
+            <div className="flex">
+              <button
+                onClick={addProductToCheckout}
+                className="w-max px-5 py-3 bg-black leading-4 rounded-full text-white uppercase font-normal text-xs tracking-[3px] hover:bg-gray-800 transition font-tahoma flex items-center justify-center gap-2"
+              >
+                {translateSync("Ajouter au panier")}
+              </button>
+            </div>
             <div className="border-b border-black my-4 font-tahoma">
               <div className="py-3 gap-2">
                 <FaHeart className="inline-block mr-1" />
@@ -478,7 +569,7 @@ export default function ({
             <LocationSection data={spaData} />
           </div>
 
-          <div
+          {/*  <div
             id="avis"
             className="mt-10 bg-[beige] p-4 font-tahoma rounded-xl shadow-sm"
           >
@@ -640,8 +731,14 @@ export default function ({
                 )}
               </AnimatePresence>
             </div>
-          </div>
+          </div> */}
         </div>
+        <SpaConseil
+          image={`${CONFIG.serverUrl}/storage/${spaData?.image_conseil}`}
+          text={spaData?.text_conseil}
+          logo={logoSpc}
+          translate={translateSync}
+        />
       </div>
       <Section3 />
     </div>

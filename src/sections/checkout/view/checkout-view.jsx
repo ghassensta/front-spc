@@ -23,14 +23,14 @@ export default function CheckoutView() {
 
   const TAX_RATE = 0.2;
   const [expediteurFullName, setExpediteurFullName] = useState(
-    checkout.expediteur?.fullName || ""
+    checkout.expediteur?.fullName || "",
   );
   const [expediteurMessage, setExpediteurMessage] = useState(
-    checkout.expediteur?.message || ""
+    checkout.expediteur?.message || "",
   );
-const [expediteurNewsletter, setExpediteurNewsletter] = useState(
-  checkout.expediteur?.newsletter ?? true
-);
+  const [expediteurNewsletter, setExpediteurNewsletter] = useState(
+    checkout.expediteur?.newsletter ?? true,
+  );
   const [couponCode, setCouponCode] = useState("");
   const [couponApplied, setCouponApplied] = useState(false);
   const [couponLoading, setCouponLoading] = useState(false);
@@ -38,7 +38,7 @@ const [expediteurNewsletter, setExpediteurNewsletter] = useState(
 
   useEffect(() => {
     const hasDiscount = checkout.items?.some(
-      (item) => (item.discount || 0) > 0
+      (item) => (item.discount || 0) > 0,
     );
     const hasCoupon = !!checkout.couponId;
     if (hasDiscount || hasCoupon) {
@@ -83,7 +83,7 @@ const [expediteurNewsletter, setExpediteurNewsletter] = useState(
 
   const subtotalTTC = itemsFiltered.reduce(
     (acc, item) => acc + Number(item.price || 0) * item.quantity,
-    0
+    0,
   );
 
   const totalDiscount =
@@ -104,7 +104,7 @@ const [expediteurNewsletter, setExpediteurNewsletter] = useState(
   const applyDiscountToItems = (items, totalDiscountAmount) => {
     const totalCart = items.reduce(
       (acc, i) => acc + Number(i.price || 0) * Number(i.quantity || 0),
-      0
+      0,
     );
     if (totalCart === 0) return items;
     const updatedItems = items.map((item) => {
@@ -239,14 +239,14 @@ const [expediteurNewsletter, setExpediteurNewsletter] = useState(
                                 {dest.fullName && dest.email
                                   ? `${dest.fullName} — ${dest.email}`
                                   : t(
-                                      "Pas de destinataire défini → l'expéditeur recevra lui-même"
+                                      "Pas de destinataire défini → l'expéditeur recevra lui-même",
                                     )}
                               </li>
                             ))}
                           </ul>
                         ) : (
                           t(
-                            "Pas de destinataire défini → l'expéditeur recevra lui-même"
+                            "Pas de destinataire défini → l'expéditeur recevra lui-même",
                           )
                         )}
                       </td>
@@ -276,7 +276,7 @@ const [expediteurNewsletter, setExpediteurNewsletter] = useState(
                                 const updatedItems = checkout.items.map((it) =>
                                   it.id === item.id
                                     ? { ...it, quantity: qty }
-                                    : it
+                                    : it,
                                 );
                                 checkout.onUpdateField("items", updatedItems);
 
@@ -284,8 +284,8 @@ const [expediteurNewsletter, setExpediteurNewsletter] = useState(
                                   handleRemoveCoupon();
                                   toast.info(
                                     t(
-                                      "Le coupon a été retiré car la quantité a changé"
-                                    )
+                                      "Le coupon a été retiré car la quantité a changé",
+                                    ),
                                   );
                                 }
                               }
@@ -356,6 +356,127 @@ const [expediteurNewsletter, setExpediteurNewsletter] = useState(
               <TranslatedText text="Total TTC" /> : {grandTotal.toFixed(2)} €
             </div>
           </div>
+          <div className="w-full grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6">
+            {/* Colonne gauche — Code Promo + Newsletter */}
+            <div className="bg-white rounded-md p-4 md:p-6 shadow">
+              <h2 className="text-base font-semibold mb-3 md:mb-4">
+                <TranslatedText text="Code Promo" />
+              </h2>
+              <div className="flex flex-col sm:flex-row gap-2">
+                <input
+                  type="text"
+                  className="flex-1 border rounded-md p-2 w-full"
+                  placeholder={t("Entrez votre code coupon")}
+                  value={couponCode}
+                  onChange={(e) => setCouponCode(e.target.value.toUpperCase())}
+                  disabled={couponApplied || couponLoading}
+                />
+                {couponApplied ? (
+                  <button
+                    onClick={handleRemoveCoupon}
+                    className="w-full sm:w-auto px-4 py-2 bg-gray-600 text-white rounded-md hover:bg-gray-700 transition"
+                  >
+                    <TranslatedText text="Supprimer" />
+                  </button>
+                ) : (
+                  <button
+                    onClick={handleApplyCoupon}
+                    disabled={couponLoading || !couponCode}
+                    className="w-full sm:w-auto px-4 py-2 bg-black text-white rounded-md hover:bg-gray-900 disabled:opacity-50 disabled:cursor-not-allowed transition"
+                  >
+                    {couponLoading ? (
+                      t("Validation...")
+                    ) : (
+                      <TranslatedText text="Appliquer" />
+                    )}
+                  </button>
+                )}
+              </div>
+
+              {couponApplied && couponData && (
+                <div className="mt-3 p-2 bg-green-50 border border-green-200 rounded text-sm text-green-700">
+                  ✓ <TranslatedText text="Code" />{" "}
+                  <strong>{couponData.code}</strong>{" "}
+                  <TranslatedText text="appliqué" />
+                </div>
+              )}
+
+              <div className="flex items-center gap-3 mt-4">
+                <input
+                  type="checkbox"
+                  id="newsletter"
+                  checked={expediteurNewsletter}
+                  onChange={(e) => {
+                    setExpediteurNewsletter(e.target.checked);
+                    handleExpediteurChange("newsletter", e.target.checked);
+                  }}
+                  className="h-4 w-4 rounded border-gray-300 text-black focus:ring-black"
+                />
+                <label
+                  htmlFor="newsletter"
+                  className="text-sm text-gray-600 cursor-pointer"
+                >
+                  <TranslatedText text="Inscription à la newsletter" />
+                </label>
+              </div>
+            </div>
+
+            {/* Colonne droite — Expéditeur ou Connexion */}
+            {user ? (
+              <div className="bg-white rounded-md p-4 md:p-6 shadow
+              ">
+                <div>
+                  <h4 className="text-xl font-semibold mb-3 md:mb-4">
+                    <TranslatedText text="Expéditeur" />
+                  </h4>
+                  <div className="flex flex-col gap-3 md:gap-4">
+                    <input
+                      type="text"
+                      className="w-full border border-gray-300 rounded-lg p-2"
+                      placeholder={t("Nom et prénom")}
+                      value={expediteurFullName}
+                      onChange={(e) => {
+                        setExpediteurFullName(e.target.value);
+                        handleExpediteurChange("fullName", e.target.value);
+                      }}
+                    />
+                    <textarea
+                      rows={4}
+                      className="w-full border border-gray-300 rounded-lg p-2"
+                      placeholder={t("Message (optionnel)")}
+                      value={expediteurMessage}
+                      onChange={(e) => {
+                        setExpediteurMessage(e.target.value);
+                        handleExpediteurChange("message", e.target.value);
+                      }}
+                    />
+                  </div>
+                </div>
+                <button
+                  onClick={gotCheckout}
+                  className="w-full mt-4 inline-flex justify-center items-center rounded-full gap-2 uppercase font-normal tracking-widest transition-all duration-300 px-6 py-3 text-sm bg-[#B6B499] hover:bg-black text-white"
+                >
+                  <TranslatedText text="Payer" />
+                </button>
+              </div>
+            ) : (
+              <div className="bg-white p-4 rounded-lg shadow-sm flex flex-col gap-3">
+                <p>
+                  <TranslatedText text="Vous devez vous identifier pour commander" />
+                </p>
+                <button
+                  onClick={() =>
+                    router.push(
+                      `${paths.auth.root}?returnTo=${encodeURIComponent("/checkout")}`,
+                    )
+                  }
+                  className="w-full inline-flex justify-center items-center gap-2 uppercase font-normal tracking-widest transition-all duration-300 px-6 py-3 text-sm bg-[#B6B499] hover:bg-black text-white rounded-full"
+                >
+                  <TranslatedText text="Se connecter" />
+                </button>
+              </div>
+            )}
+          </div>
           <div className="bg-white rounded-lg shadow-md border mt-6 w-full">
             <button
               type="button"
@@ -384,126 +505,6 @@ const [expediteurNewsletter, setExpediteurNewsletter] = useState(
               </div>
             )}
           </div>
-        </div>
-        <div className="w-full lg:w-80 flex flex-col gap-4 md:gap-6">
-          {}
-          <div className="bg-white rounded-md p-4 md:p-6 shadow">
-            <h2 className="text-base font-semibold mb-3 md:mb-4">
-              <TranslatedText text="Code Promo" />
-            </h2>
-            <div className="flex flex-col sm:flex-row gap-2">
-              <input
-                type="text"
-                className="flex-1 border rounded-md p-2 w-full"
-                placeholder={t("Entrez votre code coupon")}
-                value={couponCode}
-                onChange={(e) => setCouponCode(e.target.value.toUpperCase())}
-                disabled={couponApplied || couponLoading}
-              />
-              {couponApplied ? (
-                <button
-                  onClick={handleRemoveCoupon}
-                  className="w-full sm:w-auto px-4 py-2 bg-gray-600 text-white rounded-md hover:bg-gray-700 transition"
-                >
-                  <TranslatedText text="Supprimer" />
-                </button>
-              ) : (
-                <button
-                  onClick={handleApplyCoupon}
-                  disabled={couponLoading || !couponCode}
-                  className="w-full sm:w-auto px-4 py-2 bg-black text-white rounded-md hover:bg-gray-900 disabled:opacity-50 disabled:cursor-not-allowed transition"
-                >
-                  {couponLoading ? (
-                    t("Validation...")
-                  ) : (
-                    <TranslatedText text="Appliquer" />
-                  )}
-                </button>
-              )}
-            </div>
-            {couponApplied && couponData && (
-              <div className="mt-3 p-2 bg-green-50 border border-green-200 rounded text-sm text-green-700">
-                ✓ <TranslatedText text="Code" />{" "}
-                <strong>{couponData.code}</strong>{" "}
-                <TranslatedText text="appliqué" />
-              </div>
-            )}
-            <div className="col-span-1 md:col-span-2">
-            <div className="flex items-center gap-3 mt-2">
-             <input
-                  type="checkbox"
-                  id="newsletter"
-                  checked={expediteurNewsletter}
-                  onChange={(e) => {
-                    setExpediteurNewsletter(e.target.checked);
-                    handleExpediteurChange("newsletter", e.target.checked);
-                  }}
-                  className="h-4 w-4 rounded border-gray-300 text-black focus:ring-black"
-                />
-
-              <label
-                htmlFor="newsletter"
-                className="text-sm text-gray-600 cursor-pointer"
-              >
-                <TranslatedText text="Inscription à la newsletter" />
-              </label>
-            </div>
-          </div>
-
-          </div>
-          {user ? (
-            <div className="bg-white p-4 md:p-6 rounded-lg shadow-sm">
-              <h4 className="text-xl font-semibold mb-3 md:mb-4">
-                <TranslatedText text="Expéditeur" />
-              </h4>
-              <div className="flex flex-col gap-3 md:gap-4">
-                <input
-                  type="text"
-                  className="w-full border border-gray-300 rounded-lg p-2"
-                  placeholder={t("Nom et prénom")}
-                  value={expediteurFullName}
-                  onChange={(e) => {
-                    setExpediteurFullName(e.target.value);
-                    handleExpediteurChange("fullName", e.target.value);
-                  }}
-                />
-                <textarea
-                  rows={4}
-                  className="w-full border border-gray-300 rounded-lg p-2"
-                  placeholder={t("Message (optionnel)")}
-                  value={expediteurMessage}
-                  onChange={(e) => {
-                    setExpediteurMessage(e.target.value);
-                    handleExpediteurChange("message", e.target.value);
-                  }}
-                />
-              </div>
-              <button
-                onClick={gotCheckout}
-                className="w-full mt-4 inline-flex justify-center items-center rounded-full gap-2 uppercase font-normal tracking-widest transition-all duration-300 px-6 py-3 text-sm bg-[#B6B499] hover:bg-black text-white"
-              >
-                <TranslatedText text="Commander" />
-              </button>
-            </div>
-          ) : (
-            <div className="bg-white p-4 rounded-lg shadow-sm flex flex-col gap-3">
-              <p>
-                <TranslatedText text="Vous devez vous identifier pour commander" />
-              </p>
-              <button
-                onClick={() =>
-                  router.push(
-                    `${paths.auth.root}?returnTo=${encodeURIComponent(
-                      "/checkout"
-                    )}`
-                  )
-                }
-                className="w-full inline-flex justify-center items-center gap-2 uppercase font-normal tracking-widest transition-all duration-300 px-6 py-3 text-sm bg-[#B6B499] hover:bg-black text-white rounded-full"
-              >
-                <TranslatedText text="Se connecter" />
-              </button>
-            </div>
-          )}
         </div>
       </div>
     </div>

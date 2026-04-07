@@ -9,7 +9,7 @@ export default function ServicesTemplates({ data = {} }) {
   const produits = data.type_produit || [];
 
   const equipements = data.type_equipement.map(
-    (pivot) => pivot.service_equipement || []
+    (pivot) => pivot.service_equipement || [],
   );
   return (
     <div className="max-w-7xl mx-auto flex flex-col md:flex-row gap-6 items-start">
@@ -24,21 +24,33 @@ export default function ServicesTemplates({ data = {} }) {
 
           {equipements.length > 0 && (
             <div className="flex flex-wrap gap-4 mx-auto items-center justify-center mb-4 mt-4">
-              {equipements.map((equip) => (
-                <div className="flex items-center gap-1" key={equip.id}>
-                  <div className="rounded-full w-8 h-8">
-                    <img
-                      lazyload="lazy"
-                      src={CONFIG.serverUrl + "/storage/" + equip.image}
-                      alt={equip.name}
-                      className="object-contain"
-                    />
+              {equipements.map((equip) => {
+                const imageUrl = equip?.image
+                  ? CONFIG.serverUrl + "/storage/" + equip.image
+                  : null;
+
+                return (
+                  <div className="flex items-center gap-2" key={equip?.id}>
+                    {imageUrl && (
+                      <div className="rounded-full w-8 h-8 overflow-hidden flex items-center justify-center">
+                        <img
+                          src={imageUrl}
+                          alt={equip?.name}
+                          className="object-contain w-full h-full"
+                          loading="lazy"
+                          onError={(e) => {
+                            e.target.style.display = "none";
+                          }}
+                        />
+                      </div>
+                    )}
+
+                    <span className="text-secondary text-base font-tahoma uppercase">
+                      {translateSync(equip?.name)}
+                    </span>
                   </div>
-                  <span className="text-secondary text-base font-tahoma uppercase">
-                    {translateSync(equip.name)}
-                  </span>
-                </div>
-              ))}
+                );
+              })}
             </div>
           )}
         </div>
@@ -59,7 +71,9 @@ export default function ServicesTemplates({ data = {} }) {
                 exclusivite_image={prod?.type_exclusivite?.image_path || null}
                 date_fin={prod.date_fin}
                 type_id={prod.type_id}
-                conditions_utilisation={translateSync(prod.conditions_utilisation)}
+                conditions_utilisation={translateSync(
+                  prod.conditions_utilisation,
+                )}
                 offre_flash={prod.offre_flash}
                 date_debut={prod.date_debut}
                 prix_barre={prod.prix_barre}

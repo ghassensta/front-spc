@@ -18,6 +18,7 @@ import { paths } from "src/router/paths";
 import { useAuthContext } from "src/auth/hooks/use-auth-context";
 import { motion, AnimatePresence } from "framer-motion";
 import { useTranslation } from "src/context/translation-context";
+import SpaConseil from "./comp/SpaConseil";
 
 const criteria = [
   "Practicien(ne)",
@@ -66,7 +67,9 @@ function SpaDetailsView({
 
   const validateForm = () => {
     if (!name || !email) {
-      toast.error(translateSync("Veuillez remplir tous les champs (nom, email) !"));
+      toast.error(
+        translateSync("Veuillez remplir tous les champs (nom, email) !"),
+      );
       return false;
     }
 
@@ -96,7 +99,7 @@ function SpaDetailsView({
           pending: translateSync("Envoi de votre avis..."),
           success: translateSync("Avis envoyé avec succès !"),
           error: translateSync("Erreur lors de l'envoi de l'avis."),
-        }
+        },
       )
       .then(() => {
         setRatings(initialRatings);
@@ -129,7 +132,7 @@ function SpaDetailsView({
       </div>
       <Services data={types} />
 
-      <div id="avis" className="mt-10 rounded-xl max-w-7xl mx-auto bg-[#f9f7ed] p-4 font-tahoma shadow-sm">
+      {/*   <div id="avis" className="mt-10 rounded-xl max-w-7xl mx-auto bg-[#f9f7ed] p-4 font-tahoma shadow-sm">
         <div className="flex gap-4 border-b border-gray-200 ">
           <button
             className={`px-4 py-2 font-semibold ${activeTab === "reviews"
@@ -284,33 +287,16 @@ function SpaDetailsView({
             )}
           </AnimatePresence>
         </div>
-      </div>
+      </div> */}
+      <SpaConseil
+        image={`${CONFIG.serverUrl}/storage/${spaData?.image_conseil}`}
+        text={spaData?.text_conseil}
+        logo={logoSpc}
+        translate={translateSync}
+      />
 
+    
       <CarteCadeau />
-      <div
-        style={{
-          backgroundImage: `url('${CONFIG.serverUrl}/storage/${spaData?.image_conseil}')`,
-          backgroundRepeat: "no-repeat",
-          backgroundSize: "cover",
-        }}
-        className="bg-white w-screen relative left-[calc(-50vw+50%)] mb-8 py-24 overflow-hidden bg-center"
-      >
-        <div className="flex flex-col items-center p-5 pb-4 pt-10 text-center bg-white/80 mx-[4%] md:mx-[20%]">
-          <img
-            loading="lazy"
-            src={logoSpc}
-            alt={translateSync("Logo Spa & Prestige Collection")}
-            className="w-36 mb-4"
-          />
-          <span className="text-3xl font-bold mb-4">
-            {translateSync("– Le conseil Spa & Prestige Collection –")}
-          </span>
-          <p className="text-lg font-normal font-tahoma">
-            {translateSync(spaData?.text_conseil)}
-          </p>
-        </div>
-      </div>
-
       <LocationSection data={spaData} />
       <TestimonialsSection testimonials={simlairesEtablissment} />
 

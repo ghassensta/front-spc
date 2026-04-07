@@ -12,6 +12,7 @@ import {
   Gift,
   HelpCircle,
   ChevronDown,
+  BadgePercent 
 } from "lucide-react";
 import { useAuthContext } from "src/auth/hooks/use-auth-context";
 import { signOut } from "src/actions/auth";
@@ -329,6 +330,8 @@ export default function DashboardLayout({ children }) {
     { label: "Commandes", to: paths.dashboard.commandes.root, icon: ShoppingCart },
     { label: "Wishlists", to: paths.dashboard.wishlist, icon: Heart },
     { label: "Détails du compte", to: paths.dashboard.details, icon: User },
+    { label: "Fidélité", to: paths.dashboard.fidelite,icon: BadgePercent  },
+
     {
       label: "Avantage",
       icon: Gift,
@@ -336,7 +339,6 @@ export default function DashboardLayout({ children }) {
         {label: "Bon d'achat", to: paths.dashboard.bonAchats },
         { label: "Cadeau d'anniversaire", to: paths.dashboard.cadeau },
         { label: "Parrainage", to: paths.dashboard.parrainage },
-        { label: "Fidélité", to: paths.dashboard.fidelite },
       ],
     },
     { label: "Aide", to: paths.dashboard.aide, icon: HelpCircle },

@@ -38,8 +38,11 @@ export default defineConfig({
         manualChunks: {
           vendor: ['react', 'react-dom', 'react-router-dom'],
           swiper: ['swiper'],
-          ui: ['framer-motion', 'lucide-react', 'react-icons'],
+          ui: ['lucide-react', 'react-icons'],
           utils: ['axios', 'lodash', 'date-fns'],
+          motion: ['framer-motion', 'react-hot-toast'],
+          i18n: ['react-i18next', 'i18next', 'i18next-browser-languagedetector'],
+          query: ['@tanstack/react-query', 'swr'],
         },
         // Optimisation des noms de fichiers pour le cache
         chunkFileNames: 'assets/js/[name]-[hash].js',

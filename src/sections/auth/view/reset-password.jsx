@@ -7,6 +7,7 @@ import { useRouter } from "src/hooks";
 import { paths } from "src/router/paths";
 import { TranslatedText } from "src/components/translated-text/translated-text";
 import { useTranslation } from "react-i18next";
+import PasswordInput from "src/components/password-input/password-input";
 
 export default function ResetPassword() {
   const [password, setPassword] = useState("");
@@ -72,15 +73,15 @@ export default function ResetPassword() {
             <label htmlFor="password" className="text-sm text-gray-600 block mb-1">
               <TranslatedText text="Nouveau mot de passe" />
             </label>
-            <input
-              type="password"
+            <PasswordInput
               id="password"
-              className="w-full border rounded p-2 focus:outline-none focus:ring-2 focus:ring-[#B6B499]"
-              required
+              name="password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               placeholder={t("Entrez votre nouveau mot de passe")}
               disabled={isSubmitting}
+              required
+              className="focus:outline-none focus:ring-2 focus:ring-[#B6B499]"
             />
             <p className="text-xs text-gray-500 mt-1"><TranslatedText text="Minimum 8 caractères" /></p>
           </div>
@@ -89,15 +90,15 @@ export default function ResetPassword() {
             <label htmlFor="confirmPassword" className="text-sm text-gray-600 block mb-1">
               <TranslatedText text="Confirmez le mot de passe" />
             </label>
-            <input
-              type="password"
+            <PasswordInput
               id="confirmPassword"
-              className="w-full border rounded p-2 focus:outline-none focus:ring-2 focus:ring-[#B6B499]"
-              required
+              name="confirmPassword"
               value={confirmPassword}
               onChange={(e) => setConfirmPassword(e.target.value)}
               placeholder={t("Confirmez votre mot de passe")}
               disabled={isSubmitting}
+              required
+              className="focus:outline-none focus:ring-2 focus:ring-[#B6B499]"
             />
           </div>
         </div>

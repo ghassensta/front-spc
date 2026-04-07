@@ -15,6 +15,12 @@ export default function Header() {
 
   const [currentSlide, setCurrentSlide] = useState(0);
   const [isAutoPlaying, setIsAutoPlaying] = useState(true);
+  const [imageErrors, setImageErrors] = useState({});
+
+  // Gérer les erreurs de chargement d'images
+  const handleImageError = (index) => {
+    setImageErrors(prev => ({ ...prev, [index]: true }));
+  };
 
   // Auto-play slider
   useEffect(() => {
@@ -47,24 +53,37 @@ export default function Header() {
   const current = etablissements[currentSlide];
 
   return (
-    <div className="relative w-screen left-[calc(-50vw+50%)] h-full overflow-hidden">
+    <div className="relative w-screen left-[calc(-50vw+50%)] h-full overflow-hidden min-h-[500px]">
       {etablissements.map((s, index) => (
         <div
           key={index}
-          className={`absolute inset-0 transition-opacity duration-700 ease-in-out ${index === currentSlide ? "opacity-100" : "opacity-0"
+          className={`absolute inset-0 transition-opacity duration-700 ease-in-out z-10 ${index === currentSlide ? "opacity-100 z-20" : "opacity-0"
             }`}
-         style={{
-        backgroundImage: `url(${CONFIG.serverUrl}/storage/${s.image})`,
-        backgroundSize: "cover",
-        backgroundPosition: "center",
-      }}
         >
-          <div className="absolute inset-0 bg-black/20" />
+          <img
+            src={`${CONFIG.serverUrl}/storage/${s.image}`}
+            alt={`Slide ${index + 1}`}
+            className="w-full h-full object-cover"
+            loading={index === 0 ? "eager" : "lazy"}
+            fetchpriority={index === 0 ? "high" : "low"}
+            onError={() => handleImageError(index)}
+            style={{
+              position: 'absolute',
+              top: 0,
+              left: 0,
+              width: '100%',
+              height: '100%',
+              objectFit: 'cover',
+            }}
+          />
+          {!imageErrors[index] && (
+            <div className="absolute inset-0 bg-black/20 z-10" />
+          )}
         </div>
       ))}
 
       {!!current && (
-        <div className="absolute bottom-24 md:bottom-8 left-4 md:left-12 z-20 text-gray-900 rounded-md shadow-lg w-[90%] max-w-md backdrop-blur-sm">
+        <div className="absolute bottom-24 md:bottom-8 left-4 md:left-12 z-40 text-gray-900 rounded-md shadow-lg w-[90%] max-w-md backdrop-blur-sm">
           <Link
             to={paths.spa.details(current.slug)}
             className="block relative z-10 p-6 no-underline hover:no-underline"
@@ -118,16 +137,24 @@ export default function Header() {
 
       {/* Slider controls */}
       {etablissements.length > 0 && (
-        <div className="absolute font-tahoma bottom-6 right-8 z-30 flex items-center gap-3 bg-white shadow px-4 py-2">
-          <button onClick={prevSlide} className="text-lg font-semibold">
+        <div className="absolute font-tahoma bottom-6 right-8 z-20 flex items-center gap-3 bg-white shadow-lg px-4 py-2 rounded-lg border border-gray-200">
+          <button 
+            onClick={prevSlide} 
+            className="text-lg font-semibold hover:bg-gray-100 p-1 rounded transition-colors"
+            aria-label="Slide précédent"
+          >
             ←
           </button>
 
-          <span className="text-xs font-semibold">
+          <span className="text-xs font-semibold text-gray-700">
             {currentSlide + 1}/{etablissements.length}
           </span>
 
-          <button onClick={nextSlide} className="text-lg font-semibold">
+          <button 
+            onClick={nextSlide} 
+            className="text-lg font-semibold hover:bg-gray-100 p-1 rounded transition-colors"
+            aria-label="Slide suivant"
+          >
             →
           </button>
 
@@ -136,8 +163,9 @@ export default function Header() {
               <button
                 key={index}
                 onClick={() => goToSlide(index)}
-                className={`w-2.5 h-2.5 rounded-full ${index === currentSlide ? "bg-gray-900" : "bg-gray-300"
+                className={`w-2.5 h-2.5 rounded-full transition-colors ${index === currentSlide ? "bg-gray-900" : "bg-gray-300"
                   }`}
+                aria-label={`Aller au slide ${index + 1}`}
               />
             ))}
           </div>
