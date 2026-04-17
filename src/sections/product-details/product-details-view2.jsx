@@ -284,7 +284,7 @@ export default function ({
               {translateSync(product?.nom)}
             </h1>
 
-            <div className="flex font-tahoma items-center gap-1 mb-2">
+            {/*  <div className="flex font-tahoma items-center gap-1 mb-2">
               {[1, 2, 3, 4, 5].map((i) => (
                 <Star
                   key={i}
@@ -304,7 +304,7 @@ export default function ({
                 ({stars.toFixed(1)} {translateSync("avis")}){" "}
                 <a href="#avis">{translateSync("Déposer un avis")}</a>
               </span>
-            </div>
+            </div> */}
 
             <div className="font-normal text-[#333] text-lg font-tahoma mb-2">
               {product?.prix
@@ -320,54 +320,45 @@ export default function ({
                   : translateSync("Aucune description disponible."),
               }}
             />
+            {product?.privileges?.length > 0 && (
+              <div className="mt-6">
+                {/* Titre de la section */}
+                <h2 className="text-2xl font-bold mb-4 text-[#333] my-2">
+                  {translateSync(
+                    "Ce que comprend cette expérience d’exception",
+                  )}
+                </h2>
 
+                <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-3 gap-2">
+                  {product?.privileges
+                    ?.slice()
+                    .sort((a, b) => a.sort_order - b.sort_order)
+                    .map((privilege) => (
+                      <div
+                        key={privilege.id}
+                        className="flex items-center gap-2 px-2 py-1"
+                      >
+                        <img
+                          src={`${CONFIG.serverUrl}/storage/${privilege.icon_path}`}
+                          alt={privilege.name}
+                          className="w-7 h-7 object-contain"
+                        />
+
+                        <span className="text-xs text-gray-700 font-medium font-tahoma">
+                          {translateSync(privilege.name)}
+                        </span>
+                      </div>
+                    ))}
+                </div>
+              </div>
+            )}
             <Link
               to={paths.spa.details(etablissement?.slug)}
               className="w-max rounded-md mx-auto mt-10 px-5 py-3 bg-[#e2dfba] leading-4 text-black uppercase font-normal text-xs tracking-[3px] hover:bg-black transition hover:text-white font-tahoma flex items-center justify-center gap-2"
             >
               {translateSync("Voir l'établissement")}
             </Link>
-
-            <div className="flex flex-col items-center gap-4 mt-10">
-              <button
-                onClick={addProductToCheckout}
-                className="w-max rounded-full px-5 py-3 bg-black text-white uppercase font-normal text-xs tracking-[3px] hover:bg-gray-800 transition font-tahoma flex items-center justify-center gap-2"
-              >
-                {translateSync("Ajouter au panier")}
-              </button>
-            </div>
-              {product?.privileges?.length > 0 && (
-            <div className="mt-6">
-              {/* Titre de la section */}
-              <h2 className="text-2xl font-bold mb-4 text-[#333] my-2">
-                {translateSync("Ce que comprend cette expérience d’exception")}
-              </h2>
-
-              <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-3 gap-2">
-                {product?.privileges
-                  ?.slice()
-                  .sort((a, b) => a.sort_order - b.sort_order)
-                  .map((privilege) => (
-                    <div
-                      key={privilege.id}
-                      className="flex items-center gap-2 px-2 py-1"
-                    >
-                      <img
-                        src={`${CONFIG.serverUrl}/storage/${privilege.icon_path}`}
-                        alt={privilege.name}
-                        className="w-7 h-7 object-contain"
-                      />
-
-                      <span className="text-xs text-gray-700 font-medium font-tahoma">
-                        {translateSync(privilege.name)}
-                      </span>
-                    </div>
-                  ))}
-              </div>
-            </div>
-          )}
           </div>
-
 
           <div className="bg-[beige] px-8 py-4 col-span-2 lg:col-span-1 rounded-2xl">
             <div>
@@ -443,6 +434,7 @@ export default function ({
               </div>
 
               {/* Formulaire destinataires — affiché uniquement si toggle ON */}
+              {/* Formulaire destinataires */}
               {showPersonalize && (
                 <div className="border border-gray-200 rounded-xl p-4 space-y-4">
                   <span className="text-sm font-semibold text-[#333]">
@@ -450,10 +442,14 @@ export default function ({
                   </span>
 
                   {recipients.map((recipient, index) => (
-                    <div key={index} className="mb-4">
+                    <div
+                      key={index}
+                      className="mb-4 border border-gray-100 rounded-xl p-3 bg-gray-50"
+                    >
                       <div className="flex justify-between items-center mb-2">
-                        <span className="text-sm font-normal text-gray-500">
-                          {translateSync(`Destinataire ${index + 1}`)}
+                        {/* ✅ Renommé : "Destinataire X" → "Offert à" */}
+                        <span className="text-sm font-semibold text-[#333]">
+                          {translateSync("Offert à")}
                         </span>
                         {recipients.length > 1 && (
                           <button
@@ -534,6 +530,41 @@ export default function ({
                             }
                           />
                         </div>
+
+                        {/* ✅ Ajout : Rappel de l'offre */}
+                        {(recipient.fullName ||
+                          recipient.email ||
+                          recipient.message) && (
+                          <div className="mt-2 p-2 bg-white border border-gray-200 rounded-lg text-xs text-gray-500 space-y-1">
+                            <p className="font-semibold text-gray-600 mb-1">
+                              {translateSync("Rappel de l'offre")}
+                            </p>
+                            {recipient.fullName && (
+                              <p>
+                                <span className="font-medium">
+                                  {translateSync("Offert à")} :
+                                </span>{" "}
+                                {recipient.fullName}
+                              </p>
+                            )}
+                            {recipient.email && (
+                              <p>
+                                <span className="font-medium">Email :</span>{" "}
+                                {recipient.email}
+                              </p>
+                            )}
+                            {recipient.date && (
+                              <p>
+                                <span className="font-medium">
+                                  {translateSync("Envoi le")} :
+                                </span>{" "}
+                                {new Date(recipient.date).toLocaleDateString(
+                                  "fr-FR",
+                                )}
+                              </p>
+                            )}
+                          </div>
+                        )}
                       </div>
                     </div>
                   ))}

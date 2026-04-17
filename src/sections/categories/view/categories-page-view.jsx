@@ -55,7 +55,7 @@ export default function CategoriesPageView({
 }) {
   const { translateSync } = useTranslation();
 
-  const priceMin = priceRange.min ?? 0;
+  const priceMin = 50;
   const priceMax = priceRange.max ?? 1000;
 
   const displayMin = filters.min_price ?? priceMin;

@@ -18,7 +18,6 @@ export default function Page() {
     return null;
   }
 
-  // Toute la logique pagination/filtres dans le hook
   const categoryData = useCategoryProducts(slug);
   const { villes, types, services, formules, filtersLoading } = useGetFiltersEtablissements();
 
@@ -43,7 +42,7 @@ export default function Page() {
       </Helmet>
 
       <CategoriesPageView
-        {...categoryData}   // spaList, pagination, priceRange, catLoading, isFiltering, filters, page, handlers
+        {...categoryData}   
         slug_categorie={slug}
         villes={villes}
         types={types}

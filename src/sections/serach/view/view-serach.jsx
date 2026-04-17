@@ -4,7 +4,7 @@ import Card from "src/components/card/card";
 import Serach from "src/components/header/serach";
 import { useSearchProduits } from "src/actions/serach";
 import UniversalSpinner from "src/components/universal-spinner/universal-spinner";
-
+import LoadMoreButton from "src/components/load-button/LoadMoreButton";
 export default function SearchPageView() {
   const params = useParams();
   let { catSlug, villeSlug } = params;
@@ -28,7 +28,7 @@ export default function SearchPageView() {
       if (page === 1) {
         setAllProduits(data.results);
       } else {
-        setAllProduits(prev => [...prev, ...data.results]);
+        setAllProduits((prev) => [...prev, ...data.results]);
       }
     }
   }, [data, page]);
@@ -44,8 +44,8 @@ export default function SearchPageView() {
   const title = categorie
     ? `${categorie.name} à ${ville || ""} ${codePostal ? `(${codePostal})` : ""}`.trim()
     : ville || codePostal
-    ? `Résultats à ${ville || ""} ${codePostal ? `(${codePostal})` : ""}`.trim()
-    : "Recherche de soins";
+      ? `Résultats à ${ville || ""} ${codePostal ? `(${codePostal})` : ""}`.trim()
+      : "Recherche de soins";
 
   const hasMore = currentPage < lastPage;
 
@@ -69,7 +69,10 @@ export default function SearchPageView() {
 
       {error && (
         <div className="text-center py-10 text-red-600">
-          <p>Une erreur est survenue : {error.message || "Veuillez réessayer plus tard"}</p>
+          <p>
+            Une erreur est survenue :{" "}
+            {error.message || "Veuillez réessayer plus tard"}
+          </p>
         </div>
       )}
 
@@ -101,40 +104,20 @@ export default function SearchPageView() {
           </div>
 
           {/* Bouton Charger plus */}
-          <div className="text-center mt-12 mb-8">
-            {hasMore ? (
-              <button
-                onClick={handleLoadMore}
-                disabled={loading}
-                className={`
-                  px-10 py-4 bg-black text-white font-medium rounded-full
-                  transition-all duration-300 shadow-md
-                  hover:bg-gray-800 hover:shadow-lg
-                  focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2
-                  disabled:opacity-50 disabled:cursor-not-allowed
-                `}
-              >
-                {loading ? (
-                  <span className="flex items-center justify-center gap-3">
-                    <UniversalSpinner size="sm" />
-                    Chargement...
-                  </span>
-                ) : (
-                  "Charger plus d'offres"
-                )}
-              </button>
-            ) : (
-              <p className="text-gray-500 text-lg font-medium">
-                Toutes les offres ont été chargées
-              </p>
-            )}
-          </div>
+          <LoadMoreButton
+            hasMore={hasMore}
+            loading={loading}
+            onLoadMore={handleLoadMore}
+          />
         </>
       ) : (
         <div className="text-center py-20">
-          <p className="text-xl text-gray-600 mb-6">Aucun soin ne correspond à votre recherche.</p>
+          <p className="text-xl text-gray-600 mb-6">
+            Aucun soin ne correspond à votre recherche.
+          </p>
           <p className="text-gray-500">
-            Essayez d'autres mots-clés, une autre catégorie ou une autre localisation.
+            Essayez d'autres mots-clés, une autre catégorie ou une autre
+            localisation.
           </p>
         </div>
       )}

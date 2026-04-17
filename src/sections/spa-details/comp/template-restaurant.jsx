@@ -4,16 +4,19 @@ import ImageCarousel from "./image-carousel";
 import CardItem from "../../../components/card-item/card-item";
 import { useTranslation } from "src/context/translation-context";
 
-export default function TemplateRestaurant({ data = [] }) {
+export default function TemplateRestaurant({ data = {} }) {
   const { translateSync } = useTranslation();
-   //console.log("ServicesTemplates datassss:", data);
-
   const imagesCarousel = data.type_media?.map((media) => `${media.path}`) || [];
   const [expanded, setExpanded] = useState(false);
 
   const toggleText = () => setExpanded(!expanded);
 
+  const maxLength = 800;
   const hasExtraDescription = data?.extra_description && data.extra_description.trim() !== "";
+  const description = data.description || "Description du restaurant. Un lieu d'exception pour vos repas.";
+
+  const shouldTruncate = !expanded && description.length > maxLength;
+  const textToShow = shouldTruncate ? description.slice(0, maxLength) + "…" : description;
 
   return (
     <>
@@ -25,14 +28,21 @@ export default function TemplateRestaurant({ data = [] }) {
         )}
 
         <div className="w-full">
-          <span className="text-lg md:text-xl font-bold text-gray-900 mb-2">
+          <span className="text-lg md:text-xl font-bold text-gray-900 mb-2 block">
             {translateSync(data.title || "Nom du Restaurant")}
           </span>
 
           <p className="text-base font-normal font-tahoma text-gray-800 mt-1">
-            {translateSync(
-              data.description ||
-              "Description du restaurant. Un lieu d'exception pour vos repas."
+            {translateSync(textToShow)}
+            {description.length > maxLength && (
+              <span
+                className="font-semibold font-tahoma text-black cursor-pointer hover:underline"
+                onClick={toggleText}
+              >
+                {expanded
+                  ? `(${translateSync("Voir moins")})`
+                  : `(${translateSync("Lire la suite")})`}
+              </span>
             )}
           </p>
 
@@ -44,7 +54,7 @@ export default function TemplateRestaurant({ data = [] }) {
                 animate={{ height: "auto", opacity: 1 }}
                 exit={{ height: 0, opacity: 0 }}
                 transition={{ duration: 0.4, ease: "easeInOut" }}
-                className="overflow-hidden"
+                className="overflow-hidden mt-2"
               >
                 <p className="text-base font-normal font-tahoma text-gray-800 mt-1">
                   {translateSync(data.extra_description)}
@@ -52,22 +62,11 @@ export default function TemplateRestaurant({ data = [] }) {
               </motion.div>
             )}
           </AnimatePresence>
-
-          {hasExtraDescription && (
-            <button
-              onClick={toggleText}
-              className="mt-4 text-sm font-tahoma font-normal text-blue-600 hover:underline"
-              aria-expanded={expanded}
-              aria-controls="expanded-text"
-            >
-              {expanded ? translateSync("FERMER") : translateSync("LIRE PLUS")}
-            </button>
-          )}
         </div>
       </div>
 
       {data.type_produit?.length > 0 && (
-        <div className="bg-[#f9f7ed] p-6 grid-cols-1 md:grid-cols-1 gap-6 mt-6 rounded-xl">
+        <div className="bg-[#f9f7ed] p-6 grid grid-cols-1 md:grid-cols-1 gap-6 mt-6 rounded-xl">
           {data.type_produit.map((prod) => (
             <CardItem
               key={prod.id}

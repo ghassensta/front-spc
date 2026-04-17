@@ -155,7 +155,7 @@ export default function ServiceCard({
         )}
         <div>
           <h1 className="font-black text-5xl">{translateSync(details?.nom)}</h1>
-          <div className="flex items-center gap-1 mt-1">
+       {/*    <div className="flex items-center gap-1 mt-1">
             {[1, 2, 3, 4, 5].map((i) => (
               <Star
                 key={i}
@@ -174,7 +174,7 @@ export default function ServiceCard({
               ({avisTotals} {translateSync("avis")})
             </a>
             
-          </div>
+          </div> */}
           <div className="mt-4">{(details?.remise_offres > 0 || details?.prix_offres) && (
           <Link
             to="#etab-services"
