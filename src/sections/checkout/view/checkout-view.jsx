@@ -476,6 +476,8 @@ export default function CheckoutView() {
                 </button>
               </div>
             )}
+
+            
           </div>
           <div className="bg-white rounded-lg shadow-md border mt-6 w-full">
             <button

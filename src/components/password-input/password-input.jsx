@@ -10,6 +10,7 @@ export default function PasswordInput({
   disabled = false,
   className = "",
   error = null,
+  autoComplete = "current-password", // Par défaut pour login
 }) {
   const [showPassword, setShowPassword] = useState(false);
 
@@ -28,6 +29,7 @@ export default function PasswordInput({
         placeholder={placeholder}
         required={required}
         disabled={disabled}
+        autoComplete={autoComplete}
         className={`w-full border rounded p-2 pr-10 ${className}`}
       />
       

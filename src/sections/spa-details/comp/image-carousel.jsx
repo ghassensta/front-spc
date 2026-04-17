@@ -81,7 +81,10 @@ export default function ImageCarousel({ images = [] }) {
                   ? "-translate-x-full"
                   : "translate-x-full"
               }`}
-              loading="lazy"
+              loading={index === 0 ? "eager" : "lazy"}
+              fetchpriority={index === 0 ? "high" : "low"}
+              width="800"
+              height="600"
             />
           ))}
         </div>

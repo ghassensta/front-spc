@@ -56,6 +56,7 @@ export default function LoginPageView() {
             required
             value={email}
             onChange={(e) => setEmail(e.target.value)}
+            autoComplete="username"
           />
         </div>
 
@@ -69,6 +70,7 @@ export default function LoginPageView() {
             value={password}
             onChange={(e) => setPassword(e.target.value)}
             required
+            autoComplete="current-password"
           />
         <Link className="text-xs text-gray-400" to={paths.auth.forget}><TranslatedText text="Mot de passe oublié?" /></Link>
         </div>

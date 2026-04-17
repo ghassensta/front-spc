@@ -36,7 +36,7 @@ export default function HomeView() {
       <div className="max-w-6xl mx-auto">
         <h2 className="text-4xl font-bold text-center">
           <TranslatedText text="Des Moments Sélectionnés pour Vous." />{" "}
-          <div className="text-[#B6B499] text-2xl">
+          <div className="text-[#7A7863] text-2xl">
             <TranslatedText
               text="Une collection choisie avec soin, pour celles et ceux en quête
             d’exceptions."
@@ -111,7 +111,7 @@ export default function HomeView() {
         <div className="max-w-6xl mx-auto py-4">
           <h2 className="text-4xl font-bold text-center">
             <TranslatedText text="Moments de détente / Eclat & Soin de soi" />
-            <div className="text-[#B6B499] mt-2">
+            <div className="text-[#7A7863] mt-2">
               <TranslatedText text="Découvrez nos offres séjour pour une détente absolue." />
             </div>
           </h2>
@@ -164,7 +164,7 @@ export default function HomeView() {
         <div className="max-w-6xl mx-auto py-4">
           <h2 className="text-4xl font-bold text-center">
             <TranslatedText text="Escapades Bien-Être (Offres Séjour)" />
-            <div className="text-[#B6B499] mt-2">
+            <div className="text-[#7A7863] mt-2">
               <TranslatedText text="Savourez des moments gourmands et relaxants." />
             </div>
           </h2>
@@ -202,7 +202,7 @@ export default function HomeView() {
         <div className="max-w-6xl mx-auto py-4">
           <h2 className="text-4xl font-bold text-center">
             <TranslatedText text="Plaisirs & Saveurs" />
-            <div className="text-[#B6B499] mt-2">
+            <div className="text-[#7A7863] mt-2">
               <TranslatedText text="Boostez votre énergie avec nos activités dynamiques." />
             </div>
           </h2>
@@ -239,7 +239,7 @@ export default function HomeView() {
         <div className="max-w-6xl mx-auto py-4">
           <h2 className="text-4xl font-bold text-center">
             <TranslatedText text="Vitalité & Mouvement" />
-            <div className="text-[#B6B499] mt-2">
+            <div className="text-[#7A7863] mt-2">
               <TranslatedText text="Découvrez nos offres à venir." />
             </div>
           </h2>
@@ -280,7 +280,7 @@ export default function HomeView() {
         <div className="max-w-6xl mx-auto py-4">
           <h2 className="text-4xl font-bold text-center">
             {prochainement?.title || <TranslatedText text="L'univers Spa & Prestige Collection." />}
-            <div className="text-[#B6B499] mt-2">
+            <div className="text-[#7A7863] mt-2">
               {prochainement?.description ||
                 <TranslatedText text="Un réseau confidentiel dédié aux lieux d'exception." />}
             </div>
@@ -308,7 +308,7 @@ export default function HomeView() {
         <div className="max-w-6xl mx-auto py-4">
           <h2 className="text-4xl font-bold text-center">
             <TranslatedText text="L'univers Spa & Prestige Collection." />{" "}
-            <div className="text-[#B6B499]">
+            <div className="text-[#7A7863]">
               <TranslatedText text="Un réseau confidentiel dédié aux lieux d'exception." />
             </div>
           </h2>
@@ -338,7 +338,7 @@ export default function HomeView() {
           <div className="max-w-6xl mx-auto py-4">
             <h2 className="text-4xl font-bold text-center">
               <TranslatedText text="Actualités" />
-              <div className="text-[#B6B499]">
+              <div className="text-[#7A7863]">
                 <TranslatedText text="Nos derniers articles" />
               </div>
             </h2>

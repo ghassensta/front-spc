@@ -31,14 +31,16 @@ export default function MailjetNewsletterIframe() {
   }, []);
 
   return (
-    <iframe
-      ref={iframeRef}
-      src="https://srm3t.mjt.lu/wgt/srm3t/00si/form?c=b365bf47"
-      title="Inscription newsletter"
-      style={{ width: "100%", height: 520, border: 0 }}
-      loading="lazy"
-      referrerPolicy="no-referrer-when-downgrade"
-      allow="clipboard-write"
-    />
+    <div style={{ minHeight: '520px', position: 'relative' }}>
+      <iframe
+        ref={iframeRef}
+        src="https://srm3t.mjt.lu/wgt/srm3t/00si/form?c=b365bf47"
+        title="Formulaire d'inscription newsletter"
+        style={{ width: "100%", height: 520, border: 0, position: 'absolute', top: 0, left: 0 }}
+        loading="lazy"
+        referrerPolicy="no-referrer-when-downgrade"
+        allow="clipboard-write"
+      />
+    </div>
   );
 }

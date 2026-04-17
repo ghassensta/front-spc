@@ -41,7 +41,7 @@ export default function Partenaires({ section }) {
           modules={[Autoplay]}
           spaceBetween={40}
           slidesPerView={2}
-          loop={logos.length >= 2}
+          loop={logos.length > 4}
           autoplay={{ delay: 3000, disableOnInteraction: false }}
           breakpoints={{
             425: { slidesPerView: 2 },
