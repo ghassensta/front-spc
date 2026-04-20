@@ -5,8 +5,9 @@ import { sendEntreprise } from "src/actions/forms";
 import { paths } from "src/router/paths";
 import theImage from "src/assets/SPC-solution-entreprise-1975x1318-03.jpg";
 import theImage2 from "src/assets/SPC-solution-entreprise-1975x1318-04.jpg";
-import { TranslatedText } from "src/components/translated-text/translated-text";
 import { useTranslation } from "src/context/translation-context";
+import { TranslatedText } from "src/components/translated-text/translated-text";
+import UniversalSpinner from "src/components/universal-spinner/universal-spinner";
 import { useGetHomePage } from "src/actions/homepage";
 import Partenaires from "../home2/comp/partenaires";
 
@@ -104,10 +105,7 @@ export default function SolutionsPageView() {
   if (!sections || !Array.isArray(sections) || sections.length === 0) {
     return (
       <div className="min-h-[60vh] flex items-center justify-center">
-        <div className="text-center">
-          <p className="text-xl text-gray-600">Chargement des données...</p>
-          {/* Tu peux ajouter un spinner ici si tu veux */}
-        </div>
+        <UniversalSpinner size="lg" text="Chargement des données..." />
       </div>
     );
   }

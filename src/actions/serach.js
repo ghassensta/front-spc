@@ -99,7 +99,8 @@ export const useServiceCategoriesSearch = () => {
   return { query, setQuery, suggestions, loading };
 };
 
-export const useSearchProduits = (catSlug, villeSlug) => {
+export const useSearchProduits = (catSlug, villeSlug, options = {}) => {
+  const { page = 1, per_page = 12 } = options;
   const [data, setData] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -107,28 +108,35 @@ export const useSearchProduits = (catSlug, villeSlug) => {
   useEffect(() => {
     const load = async () => {
       if (!catSlug && !villeSlug) {
-        setData({ results: [], total: 0 });
+        setData({ results: [], total: 0, current_page: 1, last_page: 1 });
         setLoading(false);
         return;
       }
 
       setLoading(true);
       try {
-        // Construire l'URL sans doubles slashes
+        // Construire l'URL avec les paramètres de pagination
         let url = endpoints.search.produits;
         if (catSlug) url += `/${catSlug}`;
         if (villeSlug) url += `/${villeSlug}`;
-        const res = await fetcher(url);
+        
+        // Ajouter les paramètres de pagination
+        const params = new URLSearchParams({
+          page: page.toString(),
+          per_page: per_page.toString()
+        });
+        
+        const res = await fetcher(`${url}?${params.toString()}`);
         setData(res);
       } catch (err) {
         setError(err.message || "Erreur de chargement");
-        setData({ results: [], total: 0 });
+        setData({ results: [], total: 0, current_page: 1, last_page: 1 });
       } finally {
         setLoading(false);
       }
     };
     load();
-  }, [catSlug, villeSlug]);
+  }, [catSlug, villeSlug, page, per_page]);
 
   return { data, loading, error };
 };

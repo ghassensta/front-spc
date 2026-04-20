@@ -6,6 +6,7 @@ import "flag-icons/css/flag-icons.min.css";
 import App from "./App.jsx";
 import { BrowserRouter } from "react-router-dom";
 import { TranslationProvider } from "./context/translation-context";
+import "./i18n"; // Initialiser i18n
 
 // Éviter les appels multiples à createRoot en développement
 const rootElement = document.getElementById("root");

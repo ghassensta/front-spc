@@ -26,6 +26,31 @@ const SwiperContent = ({ slidesPerView = 3, data = [] }) => {
     }
   }, [data.length]);
 
+  // S'assurer que les refs sont correctement attachées après l'initialisation de Swiper
+  useEffect(() => {
+    if (Swiper && swiperRef.current && swiperRef.current.swiper && prevRef.current && nextRef.current) {
+      const swiper = swiperRef.current.swiper;
+      if (swiper.params.navigation && typeof swiper.params.navigation !== "boolean") {
+        swiper.params.navigation.prevEl = prevRef.current;
+        swiper.params.navigation.nextEl = nextRef.current;
+        swiper.navigation.update();
+      }
+    }
+  }, [Swiper, data.length]);
+
+  // Handlers manuels pour les boutons
+  const handlePrev = () => {
+    if (swiperRef.current && swiperRef.current.swiper) {
+      swiperRef.current.swiper.slidePrev();
+    }
+  };
+
+  const handleNext = () => {
+    if (swiperRef.current && swiperRef.current.swiper) {
+      swiperRef.current.swiper.slideNext();
+    }
+  };
+
   const shouldLoop = data.length > slidesPerView;
 
   const breakpoints = useMemo(
@@ -104,19 +129,7 @@ const SwiperContent = ({ slidesPerView = 3, data = [] }) => {
         centeredSlides={data.length <= 2}
         breakpoints={breakpoints}
         modules={[Swiper.Navigation]}
-        navigation={{
-          prevEl: prevRef.current,
-          nextEl: nextRef.current,
-        }}
-        onBeforeInit={(swiper) => {
-          if (
-            swiper.params.navigation &&
-            typeof swiper.params.navigation !== "boolean"
-          ) {
-            swiper.params.navigation.prevEl = prevRef.current;
-            swiper.params.navigation.nextEl = nextRef.current;
-          }
-        }}
+        navigation={true}
         preventClicksPropagation={false}
         preventInteractionOnTransition={true}
       >
@@ -159,6 +172,7 @@ const SwiperContent = ({ slidesPerView = 3, data = [] }) => {
         <>
           <button
             ref={prevRef}
+            onClick={handlePrev}
             aria-label={translateSync("Précédent")}
             className="absolute left-0 top-[35%] -translate-y-1/2 bg-[#B6B499] hover:bg-[#9a977d] rounded-full w-8 h-8 z-10 cursor-pointer flex items-center justify-center transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-[#B6B499] focus:ring-opacity-50"
           >
@@ -167,6 +181,7 @@ const SwiperContent = ({ slidesPerView = 3, data = [] }) => {
 
           <button
             ref={nextRef}
+            onClick={handleNext}
             aria-label={translateSync("Suivant")}
             className="absolute right-0 top-[35%] -translate-y-1/2 bg-[#B6B499] hover:bg-[#9a977d] rounded-full w-8 h-8 z-10 cursor-pointer flex items-center justify-center transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-[#B6B499] focus:ring-opacity-50"
           >

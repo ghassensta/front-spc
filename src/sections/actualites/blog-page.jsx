@@ -14,19 +14,16 @@ export default function BlogPage({ categories, articles, loading }) {
 
   if (loading) return <PageSkeleton />;
 
-  // Filter articles based on search term
   const filteredArticles = articles.filter(
     (article) =>
       article.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      article.summary.toLowerCase().includes(searchTerm.toLowerCase()),
+      article.summary.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
-  // Sort filtered articles by view_count descending
   const sortedArticles = [...filteredArticles].sort(
-    (a, b) => b.view_count - a.view_count,
+    (a, b) => new Date(b.created_at) - new Date(a.created_at)
   );
 
-  // Recent articles (sorted by date, top 8)
   const recentArticles = [...articles]
     .sort((a, b) => new Date(b.created_at) - new Date(a.created_at))
     .slice(0, 8);
@@ -38,7 +35,7 @@ export default function BlogPage({ categories, articles, loading }) {
   const paginatedArticles = usePagination
     ? sortedArticles.slice(
         (currentPage - 1) * itemsPerPage,
-        currentPage * itemsPerPage,
+        currentPage * itemsPerPage
       )
     : sortedArticles;
 
@@ -55,8 +52,7 @@ export default function BlogPage({ categories, articles, loading }) {
     let l;
 
     for (let i = 1; i <= totalPages; i++) {
-      if (i === 1 || i === totalPages || (i >= left && i < right))
-        range.push(i);
+      if (i === 1 || i === totalPages || (i >= left && i < right)) range.push(i);
     }
 
     for (let i of range) {
@@ -84,13 +80,14 @@ export default function BlogPage({ categories, articles, loading }) {
           </h1>
           <h2 className="text-white text-xl mt-2">
             {translateSync(
-              "Découvrez toutes les dernières nouvelles et événements",
+              "Découvrez toutes les dernières nouvelles et événements"
             )}
           </h2>
         </div>
       </div>
 
       <div className="max-w-6xl mx-auto py-10 px-4 grid grid-cols-1 md:grid-cols-3 gap-8">
+        {/* Articles */}
         <div className="md:col-span-2">
           {paginatedArticles.length === 0 ? (
             <div className="text-center text-gray-700 font-bold text-xl">
@@ -131,6 +128,7 @@ export default function BlogPage({ categories, articles, loading }) {
               ))}
             </div>
           )}
+
           {totalPages > 1 && (
             <div className="flex justify-center mt-6 space-x-2">
               <button
@@ -157,7 +155,7 @@ export default function BlogPage({ categories, articles, loading }) {
                   >
                     {page}
                   </button>
-                ),
+                )
               )}
               <button
                 onClick={() => handlePageChange(currentPage + 1)}
@@ -183,32 +181,31 @@ export default function BlogPage({ categories, articles, loading }) {
               }}
             />
           </div>
+
           <h3 className="font-bold text-2xl mb-4">
             {translateSync("Catégories Articles")}
           </h3>
           <ul className="space-y-3 text-base font-roboto">
             {categories.map((item, i) => (
               <li key={i} className="hover:underline cursor-pointer">
-                <Link to={`/actualites/categories/${item.slug}`}>
-                  {item.name}
-                </Link>
+                <Link to={`/actualites/categories/${item.slug}`}>{item.name}</Link>
               </li>
             ))}
           </ul>
+
           <h3 className="font-bold text-2xl mb-4 mt-8">
             {translateSync("Articles récents")}
           </h3>
           <ul className="space-y-3 text-base font-roboto">
             {recentArticles.map((item, i) => (
               <li key={i} className="hover:underline cursor-pointer">
-                <Link to={paths.actualitesDetails(item.slug)}>
-                  {item.title}
-                </Link>
+                <Link to={paths.actualitesDetails(item.slug)}>{item.title}</Link>
               </li>
             ))}
           </ul>
         </div>
       </div>
+
       <div className="flex items-center justify-center mb-8 mt-4">
         <Link
           to={"/assistance-contact"}

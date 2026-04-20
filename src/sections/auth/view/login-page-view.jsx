@@ -7,6 +7,7 @@ import { useRouter } from "src/hooks";
 import { paths } from "src/router/paths";
 import { TranslatedText } from "src/components/translated-text/translated-text";
 import { useTranslation } from "react-i18next";
+import PasswordInput from "src/components/password-input/password-input";
 
 export default function LoginPageView() {
   const [email, setEmail] = useState("");
@@ -55,6 +56,7 @@ export default function LoginPageView() {
             required
             value={email}
             onChange={(e) => setEmail(e.target.value)}
+            autoComplete="username"
           />
         </div>
 
@@ -62,13 +64,13 @@ export default function LoginPageView() {
           <label htmlFor="password" className="text-sm text-gray-600">
             <TranslatedText text="Mot de passe" />
           </label>
-          <input
-            type="password"
+          <PasswordInput
             id="password"
-            className="w-full border rounded p-2"
-            required
+            name="password"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
+            required
+            autoComplete="current-password"
           />
         <Link className="text-xs text-gray-400" to={paths.auth.forget}><TranslatedText text="Mot de passe oublié?" /></Link>
         </div>

@@ -1,8 +1,7 @@
 import {
   useGetAllEtablissements,
   useGetEtablissements,
-  useGetFiltersEtablissements,
-} from "src/actions/etablissements";
+  useGetFiltersEtablissements,} from "src/actions/etablissements";
 import CategoriesPageView from "src/sections/spa-liste/views";
 import { Helmet } from "react-helmet";
 import theImage from "src/assets/images/SPA-images-1975x1318-Qui-Sommes-Nous-02.jpg";
@@ -15,7 +14,6 @@ export default function Page() {
 
   const location = useLocation();
 
-  // ✅ Canonical SEO dynamique (sans query params)
   const pageUrl = `${window.location.origin}${location.pathname}`;
 
   const pageTitle =

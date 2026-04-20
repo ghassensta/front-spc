@@ -143,6 +143,7 @@ export default function Card({
         {id !== undefined && id !== null && (
           <button
             onClick={toggleFav}
+            aria-label={isFav ? t("Retirer des favoris") : t("Ajouter aux favoris")}
             className="absolute z-10 text-red-500 top-12 right-3 text-xl bg-white/70 rounded-full p-1"
           >
             {isFav ? <FaHeart /> : <FaRegHeart />}

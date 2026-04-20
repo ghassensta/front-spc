@@ -7,6 +7,7 @@ import { useRouter } from "src/hooks";
 import { paths } from "src/router/paths";
 import { TranslatedText } from "src/components/translated-text/translated-text";
 import { useTranslation } from "react-i18next";
+import PasswordInput from "src/components/password-input/password-input";
 
 export default function RegisterPageView({ code }) {
   const [form, setForm] = useState({
@@ -17,6 +18,7 @@ export default function RegisterPageView({ code }) {
     referral_code: code || "",
     password: "",
     password_confirmation: "",
+    newsletter: true,
   });
 
   const [errors, setErrors] = useState({});
@@ -33,11 +35,14 @@ export default function RegisterPageView({ code }) {
   }, [location]);
 
   const handleChange = (e) => {
+    const { name, type, value, checked } = e.target;
+
     setForm({
       ...form,
-      [e.target.name]: e.target.value,
+      [name]: type === "checkbox" ? checked : value,
     });
-    setErrors((prev) => ({ ...prev, [e.target.name]: null }));
+
+    setErrors((prev) => ({ ...prev, [name]: null }));
   };
 
   const handleSubmit = async (e) => {
@@ -163,33 +168,53 @@ export default function RegisterPageView({ code }) {
             <label htmlFor="password" className="text-sm text-gray-600">
               <TranslatedText text="Mot de passe *" />
             </label>
-            <input
-              type="password"
+            <PasswordInput
               id="password"
               name="password"
-              className="w-full border rounded p-2"
-              required
               value={form.password}
               onChange={handleChange}
+              required
+              error={errors.password ? errors.password[0] : null}
             />
-            {renderError("password")}
           </div>
 
           <div className="relative">
-            <label htmlFor="password_confirmation" className="text-sm text-gray-600">
+            <label
+              htmlFor="password_confirmation"
+              className="text-sm text-gray-600"
+            >
               <TranslatedText text="Confirmer le mot de passe *" />
             </label>
-            <input
-              type="password"
+            <PasswordInput
               id="password_confirmation"
               name="password_confirmation"
-              className="w-full border rounded p-2"
-              required
               value={form.password_confirmation}
               onChange={handleChange}
+              required
+              error={errors.password_confirmation ? errors.password_confirmation[0] : null}
             />
-            {renderError("password_confirmation")}
           </div>
+        </div>
+        <div className="col-span-1 md:col-span-2">
+          <div className="flex items-center gap-3 mt-2">
+            <input
+              type="checkbox"
+              id="newsletter"
+              name="newsletter"
+              checked={form.newsletter}
+              onChange={handleChange}
+              className="h-4 w-4 rounded border-gray-300 text-black focus:ring-black"
+            />
+
+            <label
+              htmlFor="newsletter"
+              className="text-sm text-gray-600 cursor-pointer"
+            >
+              <TranslatedText text="Inscription à la newsletter" />
+            </label>
+          </div>
+
+          {renderError("newsletter")}
         </div>
 
         <button

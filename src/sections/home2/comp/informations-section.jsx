@@ -13,6 +13,7 @@ export default function InformationsSection() {
 
   const data = [
     {
+      header:"L'Essence de Spa & Prestige Collection",
       link: paths.who,
       title: "Qui sommes-nous ?",
       description:
@@ -20,17 +21,18 @@ export default function InformationsSection() {
       image: theImage3,
     },
     {
+      header:"Récompenses Spa & Prestige Collection",
       link: paths.referentiel,
-      title: "Référentiel de candidature",
+      title: "Points fidélité",
       description:
-        "Récompenses Spa & Prestige Collection Points fidélité Accumulez des points à chaque commande et échangez-les contre des bons d'achat de 10 € et 25 €.",
+        "Accumulez des points à chaque commande et échangez-les contre des bons d'achat de 10 € et 25 €.",
       image: theImage2,
     },
     {
+      header:"Carte Cadeau",
       link: paths.collection,
-      title: "Collection Prestige",
-      description:
-        "Bientôt disponible, Collection Prestige revient avec une nouvelle édition dédiée aux plus belles adresses bien-être.",
+      title: "Un cadeau qui fait la différence",
+      description:"Offrez un moment de sérénité immédiate, sans attente ni contrainte, grâce à des prestations variées pour toutes les occasions.",
       image: theImage,
     },
   ];
@@ -108,7 +110,8 @@ export default function InformationsSection() {
             </div>
 
             <h2 className="text-3xl">
-              {translateSync("L’univers Spa & Prestige Collection.")}
+              
+               {translateSync(data[currentIndex].header)}
             </h2>
 
             <h3 className="text-[#B6B499] text-3xl mt-4">

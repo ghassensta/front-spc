@@ -2,24 +2,31 @@ import React, { useState, useEffect } from "react";
 import ButtonIcon from "../../../components/button-icon/button-icon";
 import { paths } from "src/router/paths";
 import { CONFIG } from "src/config-global";
-import theImage from "src/assets/images/Piscine2.jpg";
-import theImage2 from "src/assets/images/SPC-Essence-1975x1318-02.jpg";
 
 export default function Header() {
   const slides = [
     {
-      image: theImage,
+      image: "/src/assets/images/Piscine2.jpg",
+      fallback: `${CONFIG.serverUrl}/storage/uploads/products/vsh20tkZbTBA0YuocmFb2TgIEmFaCamZibo0cmSY.jpg`,
     },
     {
-      image: theImage2,
+      image: "/src/assets/images/SPC-Essence-1975x1318-02.jpg",
+      fallback: `${CONFIG.serverUrl}/storage/uploads/products/vsh20tkZbTBA0YuocmFb2TgIEmFaCamZibo0cmSY.jpg`,
     },
     {
       image: `${CONFIG.serverUrl}/storage/uploads/products/vsh20tkZbTBA0YuocmFb2TgIEmFaCamZibo0cmSY.jpg`,
+      fallback: `${CONFIG.serverUrl}/storage/uploads/products/vsh20tkZbTBA0YuocmFb2TgIEmFaCamZibo0cmSY.jpg`,
     },
   ];
 
   const [currentSlide, setCurrentSlide] = useState(0);
   const [isAutoPlaying, setIsAutoPlaying] = useState(true);
+  const [imageErrors, setImageErrors] = useState({});
+
+  // Gérer les erreurs de chargement d'images
+  const handleImageError = (index) => {
+    setImageErrors(prev => ({ ...prev, [index]: true }));
+  };
 
   useEffect(() => {
     if (!isAutoPlaying) return;
@@ -47,7 +54,7 @@ export default function Header() {
   };
 
   return (
-    <div className="relative w-screen left-[calc(-50vw+50%)] overflow-hidden h-96 md:h-[500px]">
+    <div className="relative w-screen left-[calc(-50vw+50%)] overflow-hidden h-96 md:h-[500px] z-[9999]">
       <div className="relative w-full h-full">
         {}
         {slides.map((s, index) => (
@@ -56,9 +63,18 @@ export default function Header() {
             className={`absolute top-0 left-0 w-full h-full transition-transform duration-500 ease-in-out transform bg-cover bg-center ${
               index === currentSlide ? 'translate-x-0' : index < currentSlide ? '-translate-x-full' : 'translate-x-full'
             }`}
-            style={{ backgroundImage: `url(${s.image})` }}
           >
-            <div className="absolute inset-0 bg-black/20" />
+            <img
+              src={imageErrors[index] && s.fallback ? s.fallback : s.image}
+              alt={`Slide ${index + 1}`}
+              className="w-full h-full object-cover"
+              loading={index === 0 ? "eager" : "lazy"}
+              fetchpriority={index === 0 ? "high" : "low"}
+              width="1920"
+              height="1080"
+              onError={() => handleImageError(index)}
+            />
+            <div className="absolute inset-0 bg-black/20 z-5" />
           </div>
         ))}
 

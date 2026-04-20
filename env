@@ -1,2 +1,2 @@
-SERVER_URL =
-STORAGE_KEY = 
+SERVER_URL = https://admin.spa-prestige-collection.com
+STORAGE_KEY = spc_access_token

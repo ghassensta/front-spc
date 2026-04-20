@@ -36,16 +36,6 @@ export default function RecompensePageView() {
         </div>
       </div>
 
-      {/* Intro */}
-     {/*  <div className="my-8 font-tahoma text-base">
-        <p className="font-bold text-center">
-          <TranslatedText text="Le programme n'est pas encore disponible," />
-        </p>
-        <p className="text-center">
-          <TranslatedText text="mais nous incitons les utilisateurs à s'inscrire à la newsletter pour être informés de son lancement." />
-        </p>
-      </div> */}
-
       {/* Récompenses */}
       <div className="bg-[#FBF6EC] w-screen relative left-[calc(-50vw+50%)] mb-4">
         <div className="flex flex-col md:flex-row gap-4 max-w-6xl mx-auto px-4 py-6">

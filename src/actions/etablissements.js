@@ -86,6 +86,7 @@ export function useGetFiltersEtablissements() {
             villes: data?.region_villes || [],
             types: data?.types_etablissements || [],
             services: data?.services_equipements || [],
+            formules: data?.formules || [],
             filtersLoading: isLoading
         }),
         [data]

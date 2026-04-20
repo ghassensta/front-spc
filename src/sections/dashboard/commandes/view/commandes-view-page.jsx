@@ -1,5 +1,6 @@
 import React from "react";
 import { Eye } from "lucide-react";
+import UniversalSpinner from "src/components/universal-spinner/universal-spinner";
 
 export default function CommandesViewPage({ order, loading }) {
   const formatPrice = (value) => (value ? Number(value).toFixed(2) : "0.00");
@@ -7,43 +8,8 @@ export default function CommandesViewPage({ order, loading }) {
   // === LOADING SKELETON ===
   if (loading) {
     return (
-      <div className="mt-4 grid grid-cols-1 gap-4 lg:grid-cols-3">
-        <div className="border p-4 col-span-3 overflow-x-auto animate-pulse">
-          <h4 className="mt-4 font-semibold text-xl bg-gray-200 h-6 w-1/3 rounded"></h4>
-          <table className="w-full mt-2 min-w-[600px] border-collapse">
-            <thead>
-              <tr>
-                {["Produit", "Destinataire", "Quantité", "Prix Unitaire TTC", "Total TTC", "Carte Cadeau"].map((text, idx) => (
-                  <th key={idx} className="border p-2 text-left text-sm bg-gray-200 h-4 rounded"></th>
-                ))}
-              </tr>
-            </thead>
-            <tbody>
-              {[...Array(5)].map((_, i) => (
-                <tr key={i} className="border-t">
-                  {[...Array(6)].map((_, j) => (
-                    <td key={j} className="border p-2">
-                      <div className="bg-gray-200 h-4 rounded w-full"></div>
-                    </td>
-                  ))}
-                </tr>
-              ))}
-            </tbody>
-          </table>
-
-          <div className="mt-4 border-t pt-2 space-y-1">
-            {[...Array(5)].map((_, i) => (
-              <div key={i} className="flex justify-between">
-                <div className="bg-gray-200 h-4 w-1/4 rounded"></div>
-                <div className="bg-gray-200 h-4 w-1/6 rounded"></div>
-              </div>
-            ))}
-          </div>
-
-          <div className="mt-6">
-            <div className="bg-gray-200 h-6 w-1/4 rounded"></div>
-          </div>
-        </div>
+      <div className="flex justify-center items-center min-h-screen">
+        <UniversalSpinner size="lg" text="Chargement des commandes..." />
       </div>
     );
   }

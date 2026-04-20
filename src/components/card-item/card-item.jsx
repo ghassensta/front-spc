@@ -1,7 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import { motion } from "framer-motion";
 import { FaChevronLeft, FaChevronRight } from "react-icons/fa";
-import exclusiveImg from "../../assets/exclusive.png";
 import { CONFIG } from "src/config-global";
 import { Link } from "react-router-dom";
 import { paths } from "src/router/paths";
@@ -31,10 +30,10 @@ export default function CardItem({
   const [showFullDescription, setShowFullDescription] = useState(false);
 
   const timerRef = useRef(null);
-  const dotsContainerRef = useRef(null);
 
   const hasMultipleImages = images.length > 1;
 
+  // Prepare images array
   useEffect(() => {
     const allImages = [];
 
@@ -46,7 +45,7 @@ export default function CardItem({
     setImages(allImages);
   }, [image, gallery]);
 
-  // ─── Auto slider ───────────────────────────────────────────
+  // Auto-slider
   useEffect(() => {
     if (!hasMultipleImages) return;
 
@@ -57,7 +56,7 @@ export default function CardItem({
     return () => clearInterval(timerRef.current);
   }, [hasMultipleImages, images.length]);
 
-  // ─── Slider controls ───────────────────────────────────────
+  // Slider controls
   const resetTimer = () => {
     if (!hasMultipleImages) return;
     clearInterval(timerRef.current);
@@ -81,25 +80,21 @@ export default function CardItem({
     resetTimer();
   };
 
-  // ─── Dots visible range ────────────────────────────────────
-  const getVisibleDots = (current, total, visibleCount = 5) => {
-    let start = Math.max(0, current - Math.floor(visibleCount / 2));
-    start = Math.min(start, total - visibleCount);
-    return Array.from(
-      { length: Math.min(visibleCount, total) },
-      (_, i) => start + i,
-    );
-  };
+  // ─── Flash offer logic ─────────────────────────────────────
+  const isFlashOfferActive =
+    offre_flash === 1 && // or sometimes it's "1" string → adapt if needed
+    date_fin &&
+    new Date(date_fin) > new Date();
 
-  const dotsStyle = `
-    .dots-container::-webkit-scrollbar { display: none; }
-    .dots-container { -ms-overflow-style: none; scrollbar-width: none; }
-  `;
+  // Optional: also check start date (uncomment if needed)
+  // const hasStarted = date_debut ? new Date(date_debut) <= new Date() : true;
+  // const isFlashOfferActive = offre_flash === 1 && hasStarted && new Date(date_fin) > new Date();
 
   return (
     <motion.div className="flex flex-col gap-4 py-7 border-b border-gray-400 md:flex-row">
-      <div className="relative w-full md:w-[30%]">
-        <div className="w-full h-[190px] rounded-md relative overflow-hidden">
+      {/* Image slider */}
+      <div className="relative w-full h-64 md:h-auto md:w-[30%]">
+        <div className="w-full h-full rounded-md relative overflow-hidden">
           {images.map((src, index) => (
             <img
               key={index}
@@ -109,8 +104,8 @@ export default function CardItem({
                 currentSlide === index
                   ? "translate-x-0"
                   : index < currentSlide
-                    ? "-translate-x-full"
-                    : "translate-x-full"
+                  ? "-translate-x-full"
+                  : "translate-x-full"
               }`}
               loading="lazy"
             />
@@ -121,7 +116,7 @@ export default function CardItem({
           <>
             <button
               onClick={goToPrev}
-              className="absolute top-1/2 left-4 transform -translate-y-1/2 text-white p-2 rounded-full transition-colors duration-300"
+              className="absolute top-1/2 left-4 transform -translate-y-1/2 text-white p-2 rounded-full transition-colors duration-300 hover:bg-black/30"
               aria-label={t("Previous slide")}
             >
               <FaChevronLeft size={20} />
@@ -129,36 +124,16 @@ export default function CardItem({
 
             <button
               onClick={goToNext}
-              className="absolute top-1/2 right-4 transform -translate-y-1/2 text-white p-2 rounded-full transition-colors duration-300"
+              className="absolute top-1/2 right-4 transform -translate-y-1/2 text-white p-2 rounded-full transition-colors duration-300 hover:bg-black/30"
               aria-label={t("Next slide")}
             >
               <FaChevronRight size={20} />
             </button>
-
-            <style>{dotsStyle}</style>
-            <div
-              ref={dotsContainerRef}
-              className="dots-container absolute bottom-2 left-0 right-0 flex justify-center items-center h-6"
-            >
-              <div className="flex items-center gap-2">
-                {getVisibleDots(currentSlide, images.length).map((index) => (
-                  <button
-                    key={index}
-                    onClick={() => goToSlide(index)}
-                    className={`flex-shrink-0 rounded-full transition-all duration-300 ${
-                      currentSlide === index
-                        ? "w-3 h-3 bg-black"
-                        : "w-2 h-2 bg-gray-400 hover:bg-gray-500"
-                    }`}
-                    aria-label={t(`Go to slide ${index + 1}`)}
-                  />
-                ))}
-              </div>
-            </div>
           </>
         )}
       </div>
 
+      {/* Middle - Name + Description */}
       <div className="w-full md:w-[40%]">
         <h3 className="text-2xl text-left font-normal text-gray-900">{nom}</h3>
 
@@ -168,14 +143,14 @@ export default function CardItem({
               __html: showFullDescription
                 ? description || ""
                 : description?.length > 150
-                  ? description.slice(0, 175) + "..."
-                  : description || "",
+                ? description.slice(0, 175) + "..."
+                : description || "",
             }}
           />
 
           {description?.length > 150 && (
             <span
-              className="font-semibold font-tahoma text-black cursor-pointer"
+              className="font-semibold font-tahoma text-black cursor-pointer hover:underline"
               onClick={() => setShowFullDescription(!showFullDescription)}
             >
               {showFullDescription ? t(" (Voir moins)") : t(" (Lire la suite)")}
@@ -190,8 +165,9 @@ export default function CardItem({
         )}
       </div>
 
+      {/* Desktop - Right column (price + badges + button) */}
       <div className="hidden md:flex md:w-[30%] flex-col items-center justify-center gap-4">
-        {/* Prix */}
+        {/* Price block */}
         <div className="flex flex-col items-center font-tahoma gap-1">
           {prix_barre && Number(prix_barre) !== Number(prix) && (
             <span className="text-gray-500 line-through text-base">
@@ -216,6 +192,7 @@ export default function CardItem({
           )}
         </div>
 
+        {/* Badges */}
         <div className="flex flex-col items-center gap-4">
           {exclusivite_image && (
             <img
@@ -226,16 +203,18 @@ export default function CardItem({
             />
           )}
 
-          <div className="w-full flex justify-center right-1 rounded-3xl mt-1">
-            <OfferFlashSVG
-              width={140}
-              height={140}
-              tailledetime={30}
-              offre_flash={offre_flash}
-              date_debut={date_debut}
-              date_fin={date_fin}
-            />
-          </div>
+          {isFlashOfferActive && (
+            <div className="w-full flex justify-center right-1 rounded-3xl mt-1">
+              <OfferFlashSVG
+                width={140}
+                height={140}
+                tailledetime={30}
+                offre_flash={offre_flash}
+                date_debut={date_debut}
+                date_fin={date_fin}
+              />
+            </div>
+          )}
         </div>
 
         {slug && (
@@ -247,6 +226,7 @@ export default function CardItem({
         )}
       </div>
 
+      {/* Mobile bottom bar */}
       <div className="flex md:hidden w-full items-center justify-between gap-3 mt-2">
         <div className="flex flex-col items-center font-tahoma">
           {prix_barre && Number(prix_barre) !== Number(prix) && (
@@ -272,7 +252,7 @@ export default function CardItem({
             />
           )}
 
-          {
+          {isFlashOfferActive && (
             <OfferFlashSVG
               width={110}
               height={110}
@@ -281,7 +261,7 @@ export default function CardItem({
               date_debut={date_debut}
               date_fin={date_fin}
             />
-          }
+          )}
         </div>
 
         {slug && (

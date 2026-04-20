@@ -2,7 +2,7 @@ import React, { useRef, useState } from "react";
 import { motion } from "framer-motion";
 import { MdOutlineNavigateBefore, MdOutlineNavigateNext } from "react-icons/md";
 import theImage from "src/assets/images/SPC-Essence-1975x1318-02.jpg";
-import theImage2 from "src/assets/images/SPC-slider-1975x1318-03.jpg";
+import theImage2 from "src/assets/images/SPC-coeur-1975x1318-01.jpg";
 
 // Reuse this miniCard component
 const MiniCard = ({ title, img }) => (

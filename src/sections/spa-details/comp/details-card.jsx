@@ -5,6 +5,7 @@ import { CONFIG } from "src/config-global";
 import defaultAvatar from "../../../assets/default-avatar.png";
 import { Link } from "react-router-dom";
 import { useTranslation } from "src/context/translation-context";
+import GlobalShare from "src/components/button-share/GlobalShare";
 
 export default function ServiceCard({
   details,
@@ -154,7 +155,7 @@ export default function ServiceCard({
         )}
         <div>
           <h1 className="font-black text-5xl">{translateSync(details?.nom)}</h1>
-          <div className="flex items-center gap-1 mt-1">
+       {/*    <div className="flex items-center gap-1 mt-1">
             {[1, 2, 3, 4, 5].map((i) => (
               <Star
                 key={i}
@@ -173,7 +174,7 @@ export default function ServiceCard({
               ({avisTotals} {translateSync("avis")})
             </a>
             
-          </div>
+          </div> */}
           <div className="mt-4">{(details?.remise_offres > 0 || details?.prix_offres) && (
           <Link
             to="#etab-services"
@@ -194,6 +195,7 @@ export default function ServiceCard({
                 : ""}
           </Link>
         )}</div>
+        <GlobalShare url={window.location.href} title={details?.nom} />
         </div>
       </div>
 

@@ -47,11 +47,13 @@ export default function ProductCarousel({ gallery = [], image = "" }) {
   };
 
   const goToPrev = () => {
+    if (totalImages === 0) return;
     setCurrentSlide((prev) => (prev - 1 + totalImages) % totalImages);
     resetTimer();
   };
 
   const goToNext = () => {
+    if (totalImages === 0) return;
     setCurrentSlide((prev) => (prev + 1) % totalImages);
     resetTimer();
   };

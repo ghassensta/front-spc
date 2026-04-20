@@ -50,6 +50,12 @@ const Marques = lazy(() => import("../pages/marque-partenaire"));
 const Glossaire = lazy(() => import("../pages/glossaire"));
 const Mentions = lazy(() => import("../pages/mentions"));
 const Conditions = lazy(() => import("../pages/conditions"));
+const Cagnotte = lazy(() => import("../pages/cagnotte"));
+const AddCagbotte =lazy(() => import("../pages/cagnotte/create"));
+const ShowCagnotte = lazy(() => import("../pages/cagnotte/show"));
+const ListPageSeo=lazy(() => import("../pages/seo/index"));
+const ShowPageSeo=lazy(() => import("../pages/seo/show"));
+
 
 export const routes = [
   {
@@ -102,6 +108,13 @@ export const routes = [
       { element: <Contact />, path: "assistance-contact" },
       { element: <Mentions />, path: "mentions-legales" },
       { element: <Conditions />, path: "conditions" },
+      { element: <Cagnotte />, path: "cagnotte" },
+      { element: <AddCagbotte />, path: "cagnotte/create" },
+      { element: <ShowCagnotte />, path: "cagnotte/:slug" },
+      { element: <ListPageSeo />, path: "zones-dactivites" },
+      { element: <ShowPageSeo />, path: ":slug" },
+
+
 
       // === DANS LE TABLEAU `children` DE LA RACINE ===
       {
