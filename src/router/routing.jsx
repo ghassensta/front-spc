@@ -78,9 +78,7 @@ export const routes = [
       { element: <Chekckout />, path: "checkout" },
       {
         element: (
-          <AuthGuard>
             <ChekckoutPayement />
-          </AuthGuard>
         ),
         path: "payment",
       },

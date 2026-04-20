@@ -1,27 +1,35 @@
-import React, { useEffect, useState } from "react";
-import { useCheckoutContext } from "../context/use-checkout-context";
-import { Link } from "react-router-dom";
-import { paths } from "../../../router/paths";
-import { FaRegTrashAlt, FaChevronDown, FaChevronUp } from "react-icons/fa";
-import { useAuthContext } from "src/auth/hooks/use-auth-context";
+import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
-import { useRouter } from "src/hooks";
-import { useValidateCoupon } from "src/actions/coupon";
-import { TranslatedText } from "src/components/translated-text/translated-text";
 import { useTranslation } from "react-i18next";
 
+import { useCheckoutContext } from "../context/use-checkout-context";
+import { useAuthContext } from "src/auth/hooks/use-auth-context";
+import { useRouter } from "src/hooks";
+import { useValidateCoupon } from "src/actions/coupon";
+import { paths } from "src/router/paths";
+import { TranslatedText } from "src/components/translated-text/translated-text";
+
+import CartTable from "./components/CartTable";
+import OrderSummary from "./components/OrderSummary";
+import CouponSection from "./components/CouponSection";
+import SenderForm from "./components/SenderForm";
+import LoyaltyBanner from "./components/LoyaltyBanner";
+
+// ─── Constants ────────────────────────────────────────────────────────────────
+const TAX_RATE = 0.2;
+
+// ─── Main Component ───────────────────────────────────────────────────────────
 export default function CheckoutView() {
+  const { t } = useTranslation();
   const checkout = useCheckoutContext();
-  console.log("Checkout data:", checkout);
   const { user } = useAuthContext();
-  const [loyaltyOpen, setLoyaltyOpen] = useState(false);
   const router = useRouter();
   const validateCoupon = useValidateCoupon();
-  const { t } = useTranslation();
-  const itemsFiltered =
-    checkout.items?.filter((item) => item.quantity > 0) || [];
 
-  const TAX_RATE = 0.2;
+  // ── Derived data ─────────────────────────────────────────────────────────
+  const itemsFiltered = checkout.items?.filter((item) => item.quantity > 0) || [];
+
+  // ── Sender state ─────────────────────────────────────────────────────────
   const [expediteurFullName, setExpediteurFullName] = useState(
     checkout.expediteur?.fullName || "",
   );
@@ -31,92 +39,79 @@ export default function CheckoutView() {
   const [expediteurNewsletter, setExpediteurNewsletter] = useState(
     checkout.expediteur?.newsletter ?? true,
   );
+
+  // ── Coupon state ──────────────────────────────────────────────────────────
   const [couponCode, setCouponCode] = useState("");
   const [couponApplied, setCouponApplied] = useState(false);
   const [couponLoading, setCouponLoading] = useState(false);
   const [couponData, setCouponData] = useState(null);
 
+  // ── Price calculations ────────────────────────────────────────────────────
+  const subtotalTTC = itemsFiltered.reduce(
+    (acc, item) => acc + Number(item.price || 0) * item.quantity,
+    0,
+  );
+  const totalDiscount = couponApplied && couponData ? Number(couponData.amount || 0) : 0;
+  const subtotalHT = subtotalTTC / (1 + TAX_RATE);
+  const tax = subtotalTTC - subtotalHT;
+  const grandTotal = subtotalTTC - totalDiscount;
+
+  // ── Effects ───────────────────────────────────────────────────────────────
+  // Reset discounts on mount
   useEffect(() => {
-    const hasDiscount = checkout.items?.some(
-      (item) => (item.discount || 0) > 0,
-    );
-    const hasCoupon = !!checkout.couponId;
-    if (hasDiscount || hasCoupon) {
+    const hasDiscount = checkout.items?.some((item) => (item.discount || 0) > 0);
+    if (hasDiscount || checkout.couponId) {
       checkout.onApplyCouponId(null);
-      const resetItems = checkout.items.map((item) => ({
-        ...item,
-        discount: 0,
-      }));
-      checkout.onUpdateField("items", resetItems);
-      setCouponCode("");
-      setCouponApplied(false);
-      setCouponData(null);
+      checkout.onUpdateField(
+        "items",
+        checkout.items.map((item) => ({ ...item, discount: 0 })),
+      );
+      resetCoupon();
       toast.info(t("Les réductions et coupons ont été réinitialisés."));
     }
   }, []);
 
+  // Auto-fill sender name from user profile
   useEffect(() => {
     if (user) setExpediteurFullName(user.name);
   }, [user]);
 
-  const handleExpediteurChange = (field, value) => {
-    checkout.onCreateExpediteur({ ...checkout.expediteur, [field]: value });
-  };
-
-  const hasValidDestinataire = (item) => {
-    if (!item.destinataires || item.destinataires.length === 0) {
-      return false;
-    }
-
-    return item.destinataires.some((dest) => {
-      const name = (dest.fullName || "").trim();
-      const email = (dest.email || "").trim();
-      return name !== "" || email !== "";
-    });
-  };
-  const handleDelete = (productId) => {
-    checkout.onDeleteCart(productId);
+  // ── Helpers ───────────────────────────────────────────────────────────────
+  const resetCoupon = () => {
     setCouponCode("");
     setCouponApplied(false);
     setCouponData(null);
   };
 
-  const subtotalTTC = itemsFiltered.reduce(
-    (acc, item) => acc + Number(item.price || 0) * item.quantity,
-    0,
-  );
-
-  const totalDiscount =
-    couponApplied && couponData ? Number(couponData.amount || 0) : 0;
-
-  const subtotalHT = subtotalTTC / (1 + TAX_RATE);
-  const tax = subtotalTTC - subtotalHT;
-
-  const grandTotal = subtotalTTC - totalDiscount;
-
-  const isCartEmpty = itemsFiltered.length === 0;
-
-  const getDisplayDiscountForItem = (itemTotal) => {
-    if (!couponApplied || !couponData || subtotalTTC === 0) return 0;
-    return (itemTotal / subtotalTTC) * totalDiscount;
+  const updateExpediteur = (field, value) => {
+    checkout.onCreateExpediteur({ ...checkout.expediteur, [field]: value });
   };
 
-  const applyDiscountToItems = (items, totalDiscountAmount) => {
+  const applyDiscountToItems = (items, discountAmount) => {
     const totalCart = items.reduce(
       (acc, i) => acc + Number(i.price || 0) * Number(i.quantity || 0),
       0,
     );
-    if (totalCart === 0) return items;
+    if (totalCart === 0) return;
+
     const updatedItems = items.map((item) => {
       const itemTotal = Number(item.price || 0) * Number(item.quantity || 0);
-      const itemDiscount = totalDiscountAmount * (itemTotal / totalCart);
-      return {
-        ...item,
-        discount: itemDiscount,
-      };
+      return { ...item, discount: discountAmount * (itemTotal / totalCart) };
     });
     checkout.onUpdateField("items", updatedItems);
-    return updatedItems;
+  };
+
+  // ── Handlers ──────────────────────────────────────────────────────────────
+  const handleDelete = (productId) => {
+    checkout.onDeleteCart(productId);
+    resetCoupon();
+  };
+
+  const handleUpdateQuantity = (itemId, qty) => {
+    const updatedItems = checkout.items.map((it) =>
+      it.id === itemId ? { ...it, quantity: qty } : it,
+    );
+    checkout.onUpdateField("items", updatedItems);
   };
 
   const handleApplyCoupon = async () => {
@@ -125,35 +120,38 @@ export default function CheckoutView() {
     try {
       const res = await validateCoupon(couponCode, subtotalTTC, itemsFiltered);
       if (res.success) {
-        const { discount, coupon_id, type } = res;
-        const discountNumber = Number(discount) || 0;
+        const discountNumber = Number(res.discount) || 0;
         setCouponApplied(true);
-        setCouponData({
-          id: coupon_id,
-          code: couponCode,
-          type,
-          amount: discountNumber,
-        });
+        setCouponData({ id: res.coupon_id, code: couponCode, type: res.type, amount: discountNumber });
         toast.success(t("Le coupon a été appliqué avec succès"));
       } else {
         toast.error(t("Erreur lors de la validation du coupon"));
       }
-    } catch (error) {
+    } catch {
       toast.error(t("Erreur lors de la validation du coupon"));
     } finally {
       setCouponLoading(false);
     }
   };
 
-  const handleRemoveCoupon = () => {
-    setCouponCode("");
-    setCouponApplied(false);
-    setCouponData(null);
+  const handleNewsletterChange = (checked) => {
+    setExpediteurNewsletter(checked);
+    updateExpediteur("newsletter", checked);
   };
 
-  const gotCheckout = () => {
-    if (isCartEmpty) return toast.error(t("Panier est vide"));
-    if (!expediteurFullName) return toast.error(t("Remplir nom d'expéditeur"));
+  const handleFullNameChange = (value) => {
+    setExpediteurFullName(value);
+    updateExpediteur("fullName", value);
+  };
+
+  const handleMessageChange = (value) => {
+    setExpediteurMessage(value);
+    updateExpediteur("message", value);
+  };
+
+  const handleCheckout = () => {
+    if (itemsFiltered.length === 0) return toast.error(t("Panier est vide"));
+   // if (!expediteurFullName) return toast.error(t("Remplir nom d'expéditeur"));
 
     checkout.onCreateExpediteur({
       ...checkout.expediteur,
@@ -171,342 +169,58 @@ export default function CheckoutView() {
     router.push(paths.payment);
   };
 
+  // ── Render ────────────────────────────────────────────────────────────────
   return (
     <div className="container mx-auto p-4 font-tahoma">
       <div className="flex flex-col lg:flex-row gap-6">
-        {}
-        <div className="flex-1 bg-white p-4 rounded-lg shadow-sm overflow-x-auto">
+        <div className="flex-1 bg-white p-4 rounded-lg shadow-sm">
+
           <h4 className="text-xl font-semibold mb-4">
             <TranslatedText text="Panier" />
           </h4>
-          <table className="table-auto w-full text-sm text-left min-w-[700px] lg:min-w-full">
-            <thead className="uppercase text-gray-700 bg-gray-50 border-b text-xs tracking-wide">
-              <tr>
-                <th className="py-4 px-3">
-                  <TranslatedText text="Produit" />
-                </th>
-                <th className="py-4 px-3">
-                  <TranslatedText text="Destinataires" />
-                </th>
-                <th className="py-4 px-3">
-                  <TranslatedText text="Prix TTC" />
-                </th>
-                <th className="py-4 px-3">
-                  <TranslatedText text="QTE" />
-                </th>
-                <th className="py-4 px-3">
-                  <TranslatedText text="Total TTC" />
-                </th>
-                <th className="py-4 px-3">
-                  <TranslatedText text="Réduction" />
-                </th>
-                <th className="py-4 px-3">
-                  <TranslatedText text="Actions" />
-                </th>
-              </tr>
-            </thead>
-            <tbody>
-              {itemsFiltered.length > 0 ? (
-                itemsFiltered.map((item) => {
-                  const itemTotal = Number(item.price || 0) * item.quantity;
-                  const displayDiscount = getDisplayDiscountForItem(itemTotal);
-                  const itemAfterDiscount = itemTotal - displayDiscount;
-                  return (
-                    <tr key={item.id} className="border-b">
-                      <td className="py-3 flex gap-2 items-start">
-                        <img
-                          loading="lazy"
-                          src={item.image}
-                          alt={item.name}
-                          className="w-16 h-16 object-cover rounded"
-                        />
-                        <Link
-                          to={
-                            item.slug
-                              ? paths.product(item.slug)
-                              : "/carte-cadeau"
-                          }
-                          className="hover:underline"
-                        >
-                          {item.name}
-                        </Link>
-                      </td>
-                      <td className="py-3">
-                        {item.destinataires?.length > 0 ? (
-                          <ul className="list-disc pl-4">
-                            {item.destinataires.map((dest, index) => (
-                              <li key={index}>
-                                {dest.fullName && dest.email
-                                  ? `${dest.fullName} — ${dest.email}`
-                                  : t(
-                                      "Pas de destinataire défini → l'expéditeur recevra lui-même",
-                                    )}
-                              </li>
-                            ))}
-                          </ul>
-                        ) : (
-                          t(
-                            "Pas de destinataire défini → l'expéditeur recevra lui-même",
-                          )
-                        )}
-                      </td>
-                      <td className="py-3">
-                        {Number(item.price || 0).toFixed(2)} €
-                      </td>
-                      <td className="py-3 px-2 text-center">
-                        {hasValidDestinataire(item) ? (
-                          <input
-                            type="number"
-                            readOnly
-                            value={item.quantity}
-                            className="w-16 text-center border border-gray-300 rounded-md bg-gray-100 cursor-not-allowed text-gray-600"
-                          />
-                        ) : (
-                          <input
-                            type="number"
-                            min="1"
-                            value={item.quantity}
-                            onChange={(e) => {
-                              const val = e.target.value.trim();
-                              if (val === "") return;
 
-                              const qty = parseInt(val, 10);
-                              if (!isNaN(qty) && qty >= 1) {
-                                // Mise à jour de la quantité
-                                const updatedItems = checkout.items.map((it) =>
-                                  it.id === item.id
-                                    ? { ...it, quantity: qty }
-                                    : it,
-                                );
-                                checkout.onUpdateField("items", updatedItems);
+          <CartTable
+            items={itemsFiltered}
+            couponApplied={couponApplied}
+            subtotalTTC={subtotalTTC}
+            totalDiscount={totalDiscount}
+            onDelete={handleDelete}
+            onUpdateQuantity={handleUpdateQuantity}
+            onRemoveCoupon={resetCoupon}
+          />
 
-                                if (couponApplied) {
-                                  handleRemoveCoupon();
-                                  toast.info(
-                                    t(
-                                      "Le coupon a été retiré car la quantité a changé",
-                                    ),
-                                  );
-                                }
-                              }
-                            }}
-                            className="w-16 text-center border border-gray-400 rounded-md focus:border-black focus:ring-1 focus:ring-black"
-                          />
-                        )}
-                      </td>
-                      <td className="py-3">
-                        <div className="flex flex-col">
-                          <span
-                            className={
-                              displayDiscount > 0
-                                ? "line-through text-gray-400 text-xs"
-                                : ""
-                            }
-                          >
-                            {itemTotal.toFixed(2)} €
-                          </span>
-                          {displayDiscount > 0 && (
-                            <span className="text-green-600 font-semibold">
-                              {itemAfterDiscount.toFixed(2)} €
-                            </span>
-                          )}
-                        </div>
-                      </td>
-                      <td className="py-3 text-green-600 font-medium">
-                        {displayDiscount > 0
-                          ? `-${displayDiscount.toFixed(2)} €`
-                          : "-"}
-                      </td>
-                      <td className="py-3">
-                        <button
-                          onClick={() => handleDelete(item.id)}
-                          className="bg-red-500 hover:bg-red-700 text-white p-2 rounded-sm duration-150"
-                        >
-                          <FaRegTrashAlt />
-                        </button>
-                      </td>
-                    </tr>
-                  );
-                })
-              ) : (
-                <tr>
-                  <td colSpan={7} className="py-6 text-center text-gray-400">
-                    <TranslatedText text="Votre panier est vide." />
-                  </td>
-                </tr>
-              )}
-            </tbody>
-          </table>
-          {}
-          <div className="flex flex-col items-end mt-6 space-y-1 text-sm font-medium">
-            <div>
-              <TranslatedText text="Sous-total HT" /> : {subtotalHT.toFixed(2)}{" "}
-              €
-            </div>
-            <div>
-              <TranslatedText text="Taxe 20 %" /> : {tax.toFixed(2)} €
-            </div>
-            {totalDiscount > 0 && (
-              <div className="text-green-600 font-semibold">
-                <TranslatedText text="Réduction" /> : -
-                {totalDiscount.toFixed(2)} €
-              </div>
-            )}
-            <div className="text-base font-bold border-t pt-2 mt-2 w-48">
-              <TranslatedText text="Total TTC" /> : {grandTotal.toFixed(2)} €
-            </div>
+          <OrderSummary
+            subtotalHT={subtotalHT}
+            tax={tax}
+            totalDiscount={totalDiscount}
+            grandTotal={grandTotal}
+          />
+
+          <div className="w-full grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6 mt-6">
+            <CouponSection
+              couponCode={couponCode}
+              couponApplied={couponApplied}
+              couponLoading={couponLoading}
+              couponData={couponData}
+              expediteurNewsletter={expediteurNewsletter}
+              onCodeChange={setCouponCode}
+              onApply={handleApplyCoupon}
+              onRemove={resetCoupon}
+              onNewsletterChange={handleNewsletterChange}
+            />
+
+            <SenderForm
+              user={user}
+              expediteurFullName={expediteurFullName}
+              expediteurMessage={expediteurMessage}
+              onFullNameChange={handleFullNameChange}
+              onMessageChange={handleMessageChange}
+              onCheckout={handleCheckout}
+            />
           </div>
-          <div className="w-full grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6">
-            {/* Colonne gauche — Code Promo + Newsletter */}
-            <div className="bg-white rounded-md p-4 md:p-6 shadow">
-              <h2 className="text-base font-semibold mb-3 md:mb-4">
-                <TranslatedText text="Code Promo" />
-              </h2>
-              <div className="flex flex-col sm:flex-row gap-2">
-                <input
-                  type="text"
-                  className="flex-1 border rounded-md p-2 w-full"
-                  placeholder={t("Entrez votre code coupon")}
-                  value={couponCode}
-                  onChange={(e) => setCouponCode(e.target.value.toUpperCase())}
-                  disabled={couponApplied || couponLoading}
-                />
-                {couponApplied ? (
-                  <button
-                    onClick={handleRemoveCoupon}
-                    className="w-full sm:w-auto px-4 py-2 bg-gray-600 text-white rounded-md hover:bg-gray-700 transition"
-                  >
-                    <TranslatedText text="Supprimer" />
-                  </button>
-                ) : (
-                  <button
-                    onClick={handleApplyCoupon}
-                    disabled={couponLoading || !couponCode}
-                    className="w-full sm:w-auto px-4 py-2 bg-black text-white rounded-md hover:bg-gray-900 disabled:opacity-50 disabled:cursor-not-allowed transition"
-                  >
-                    {couponLoading ? (
-                      t("Validation...")
-                    ) : (
-                      <TranslatedText text="Appliquer" />
-                    )}
-                  </button>
-                )}
-              </div>
 
-              {couponApplied && couponData && (
-                <div className="mt-3 p-2 bg-green-50 border border-green-200 rounded text-sm text-green-700">
-                  ✓ <TranslatedText text="Code" />{" "}
-                  <strong>{couponData.code}</strong>{" "}
-                  <TranslatedText text="appliqué" />
-                </div>
-              )}
+          <LoyaltyBanner points={grandTotal.toFixed(0)} />
 
-              <div className="flex items-center gap-3 mt-4">
-                <input
-                  type="checkbox"
-                  id="newsletter"
-                  checked={expediteurNewsletter}
-                  onChange={(e) => {
-                    setExpediteurNewsletter(e.target.checked);
-                    handleExpediteurChange("newsletter", e.target.checked);
-                  }}
-                  className="h-4 w-4 rounded border-gray-300 text-black focus:ring-black"
-                />
-                <label
-                  htmlFor="newsletter"
-                  className="text-sm text-gray-600 cursor-pointer"
-                >
-                  <TranslatedText text="Inscription à la newsletter" />
-                </label>
-              </div>
-            </div>
-
-            {/* Colonne droite — Expéditeur ou Connexion */}
-            {user ? (
-              <div className="bg-white rounded-md p-4 md:p-6 shadow
-              ">
-                <div>
-                  <h4 className="text-xl font-semibold mb-3 md:mb-4">
-                    <TranslatedText text="Expéditeur" />
-                  </h4>
-                  <div className="flex flex-col gap-3 md:gap-4">
-                    <input
-                      type="text"
-                      className="w-full border border-gray-300 rounded-lg p-2"
-                      placeholder={t("Nom et prénom")}
-                      value={expediteurFullName}
-                      onChange={(e) => {
-                        setExpediteurFullName(e.target.value);
-                        handleExpediteurChange("fullName", e.target.value);
-                      }}
-                    />
-                    <textarea
-                      rows={4}
-                      className="w-full border border-gray-300 rounded-lg p-2"
-                      placeholder={t("Message (optionnel)")}
-                      value={expediteurMessage}
-                      onChange={(e) => {
-                        setExpediteurMessage(e.target.value);
-                        handleExpediteurChange("message", e.target.value);
-                      }}
-                    />
-                  </div>
-                </div>
-                <button
-                  onClick={gotCheckout}
-                  className="w-full mt-4 inline-flex justify-center items-center rounded-full gap-2 uppercase font-normal tracking-widest transition-all duration-300 px-6 py-3 text-sm bg-[#B6B499] hover:bg-black text-white"
-                >
-                  <TranslatedText text="Payer" />
-                </button>
-              </div>
-            ) : (
-              <div className="bg-white p-4 rounded-lg shadow-sm flex flex-col gap-3">
-                <p>
-                  <TranslatedText text="Vous devez vous identifier pour commander" />
-                </p>
-                <button
-                  onClick={() =>
-                    router.push(
-                      `${paths.auth.root}?returnTo=${encodeURIComponent("/checkout")}`,
-                    )
-                  }
-                  className="w-full inline-flex justify-center items-center gap-2 uppercase font-normal tracking-widest transition-all duration-300 px-6 py-3 text-sm bg-[#B6B499] hover:bg-black text-white rounded-full"
-                >
-                  <TranslatedText text="Se connecter" />
-                </button>
-              </div>
-            )}
-
-            
-          </div>
-          <div className="bg-white rounded-lg shadow-md border mt-6 w-full">
-            <button
-              type="button"
-              onClick={() => setLoyaltyOpen((s) => !s)}
-              className="w-full flex items-center justify-between p-4 hover:bg-gray-50 transition"
-            >
-              <div className="flex items-center gap-3 text-left">
-                <h5 className="text-base font-semibold leading-snug">
-                  <TranslatedText text="Validez cette commande et gagnez jusqu'à" />{" "}
-                  <span className="text-yellow-600 font-bold">
-                    {grandTotal.toFixed(0)} points
-                  </span>
-                </h5>
-              </div>
-              <div className="text-gray-600">
-                {loyaltyOpen ? (
-                  <FaChevronUp size={18} />
-                ) : (
-                  <FaChevronDown size={18} />
-                )}
-              </div>
-            </button>
-            {loyaltyOpen && (
-              <div className="px-4 pb-4 text-sm text-gray-600">
-                <TranslatedText text="Les points de fidélité vous permettent d'obtenir des récompenses lors de vos futurs achats. Le nombre final peut varier selon les remises." />
-              </div>
-            )}
-          </div>
         </div>
       </div>
     </div>

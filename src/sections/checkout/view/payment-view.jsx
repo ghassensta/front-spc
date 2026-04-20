@@ -23,6 +23,8 @@ export default function PaymentView() {
   const { user } = useAuthContext();
   const { credits = [], loading: creditsLoading } = useGetCreditsPanier();
   const { t } = useTranslation();
+  const [guestEmail, setGuestEmail] = useState("");
+  const [createAccount, setCreateAccount] = useState(false);
 
   useEffect(() => {
     if (checkout.couponId && checkout.couponTimestamp) {
@@ -96,6 +98,9 @@ export default function PaymentView() {
     if (!city || city.trim() === "") newErrors.city = t("La ville est requise.");
     if (!postalCode || postalCode.trim() === "")
       newErrors.postalCode = t("Le code postal est requis.");
+    if (!user && !guestEmail) {
+      newErrors.guestEmail = t("L'email est requis.");
+    }
     if (!country || country.trim() === "")
       newErrors.country = t("Le pays est requis.");
     if (Object.keys(newErrors).length > 0) {
@@ -136,7 +141,11 @@ export default function PaymentView() {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          expediteur: checkout.expediteur,
+          expediteur: {
+            ...checkout.expediteur,
+            email: user?.email || guestEmail,
+          },
+
           items: checkout.items,
           subtotal: totalHT,
           tax: tvaAmount,
@@ -145,6 +154,8 @@ export default function PaymentView() {
           coupon_id: checkout.couponId || null,
           credit_ids: [...parrainageIds, ...normauxIds],
           payment_method: totalAPayer > 0 ? "stripe" : "credits_only",
+
+          create_account: !user ? createAccount : false,
         }),
       });
       const data = await res.json();
@@ -160,6 +171,7 @@ export default function PaymentView() {
           }
         );
         const sessionData = await sessionRes.json();
+
         if (sessionData?.url) {
           window.location.href = sessionData.url;
         } else {
@@ -200,25 +212,50 @@ export default function PaymentView() {
   };
 
   useEffect(() => {
-    if (user?.email && !checkout.expediteur?.email) {
+    if (user?.email && !checkout?.expediteur?.email) {
       const updated = {
-        ...checkout.expediteur,
+        ...(checkout.expediteur || {}),
         email: user.email,
         fullName: user.name || user.displayName || "",
       };
+
       setExpediteurEmail(user.email);
       checkout.onCreateExpediteur(updated);
     }
-  }, [user, checkout.expediteur]);
+  }, [user]);
 
   return (
     <div className="container font-tahoma mx-auto p-6 grid grid-cols-1 md:grid-cols-3 gap-6">
       <div className="col-span-2 space-y-6">
         <div className="bg-white rounded-md p-6 shadow">
           <h2 className="text-base font-semibold mb-4"><TranslatedText text="Coordonnées" /></h2>
-          <div className="space-y-2">
-            <label className="block text-sm font-medium"><TranslatedText text="Adresse e-mail" /></label>
-            {user.email}
+          <div className="space-y-3">
+            <label className="block text-sm font-medium">
+              <TranslatedText text="Adresse e-mail" />
+            </label>
+
+            {user?.email ? (
+              <p className="text-sm">{user.email}</p>
+            ) : (
+              <div className="space-y-2">
+                <input
+                  type="email"
+                  className="w-full border p-2 rounded-md"
+                  value={guestEmail}
+                  onChange={(e) => setGuestEmail(e.target.value)}
+                  placeholder="email@exemple.com"
+                />
+
+              {/*   <label className="flex items-center gap-2 text-sm">
+                  <input
+                    type="checkbox"
+                    checked={createAccount}
+                    onChange={(e) => setCreateAccount(e.target.checked)}
+                  />
+                  Créer un compte avec cet email
+                </label> */}
+              </div>
+            )}
           </div>
         </div>
         {creditsParrainage.length > 0 && (
@@ -286,11 +323,10 @@ export default function PaymentView() {
                   type="text"
                   autoComplete="off"
                   name="expediteur_fullName"
-                  className={`w-full border rounded-md p-2 focus:outline-none focus:ring-2 ${
-                    errors.fullName
-                      ? "border-red-500 focus:ring-red-500"
-                      : "border-gray-300 focus:ring-blue-400"
-                  }`}
+                  className={`w-full border rounded-md p-2 focus:outline-none focus:ring-2 ${errors.fullName
+                    ? "border-red-500 focus:ring-red-500"
+                    : "border-gray-300 focus:ring-blue-400"
+                    }`}
                   value={checkout.expediteur?.fullName || ""}
                   onChange={(e) =>
                     handleExpediteurChange("fullName", e.target.value)
@@ -309,11 +345,10 @@ export default function PaymentView() {
                 <input
                   type="text"
                   name="expediteur_address"
-                  className={`w-full border rounded-md p-2 focus:outline-none focus:ring-2 ${
-                    errors.address
-                      ? "border-red-500 focus:ring-red-500"
-                      : "border-gray-300 focus:ring-blue-400"
-                  }`}
+                  className={`w-full border rounded-md p-2 focus:outline-none focus:ring-2 ${errors.address
+                    ? "border-red-500 focus:ring-red-500"
+                    : "border-gray-300 focus:ring-blue-400"
+                    }`}
                   value={checkout.expediteur?.address || ""}
                   onChange={(e) =>
                     handleExpediteurChange("address", e.target.value)
@@ -347,11 +382,10 @@ export default function PaymentView() {
                   <input
                     type="text"
                     name="expediteur_city"
-                    className={`w-full border rounded-md p-2 focus:outline-none focus:ring-2 ${
-                      errors.city
-                        ? "border-red-500 focus:ring-red-500"
-                        : "border-gray-300 focus:ring-blue-400"
-                    }`}
+                    className={`w-full border rounded-md p-2 focus:outline-none focus:ring-2 ${errors.city
+                      ? "border-red-500 focus:ring-red-500"
+                      : "border-gray-300 focus:ring-blue-400"
+                      }`}
                     value={checkout.expediteur?.city || ""}
                     onChange={(e) =>
                       handleExpediteurChange("city", e.target.value)
@@ -385,11 +419,10 @@ export default function PaymentView() {
                   <input
                     type="text"
                     name="expediteur_postalCode"
-                    className={`w-full border rounded-md p-2 focus:outline-none focus:ring-2 ${
-                      errors.postalCode
-                        ? "border-red-500 focus:ring-red-500"
-                        : "border-gray-300 focus:ring-blue-400"
-                    }`}
+                    className={`w-full border rounded-md p-2 focus:outline-none focus:ring-2 ${errors.postalCode
+                      ? "border-red-500 focus:ring-red-500"
+                      : "border-gray-300 focus:ring-blue-400"
+                      }`}
                     value={checkout.expediteur?.postalCode || ""}
                     onChange={(e) =>
                       handleExpediteurChange("postalCode", e.target.value)
@@ -410,11 +443,10 @@ export default function PaymentView() {
                   <input
                     type="text"
                     name="expediteur_country"
-                    className={`w-full border rounded-md p-2 focus:outline-none focus:ring-2 ${
-                      errors.country
-                        ? "border-red-500 focus:ring-red-500"
-                        : "border-gray-300 focus:ring-blue-400"
-                    }`}
+                    className={`w-full border rounded-md p-2 focus:outline-none focus:ring-2 ${errors.country
+                      ? "border-red-500 focus:ring-red-500"
+                      : "border-gray-300 focus:ring-blue-400"
+                      }`}
                     value={checkout.expediteur?.country || t("")}
                     onChange={(e) =>
                       handleExpediteurChange("country", e.target.value)
@@ -447,7 +479,7 @@ export default function PaymentView() {
           )}
         </div>
         <div className="bg-white rounded-md p-6 shadow">
-          {}
+          { }
           <h2 className="text-base font-semibold mb-2"><TranslatedText text="Points" /></h2>
           <p className="text-sm text-gray-700 mb-6">
             <TranslatedText text="Vous allez gagner" />{" "}
@@ -474,7 +506,7 @@ export default function PaymentView() {
             )}
           </p>
         </div>
-        {}
+        { }
         <div className="mt-8">
           <button
             onClick={handleSubmit}
@@ -485,7 +517,7 @@ export default function PaymentView() {
           </button>
         </div>
       </div>
-      {}
+      { }
       <div>
         <div className="bg-white rounded-md p-6 shadow space-y-4">
           <h2 className="text-base font-semibold mb-4">
