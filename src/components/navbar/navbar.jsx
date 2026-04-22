@@ -13,7 +13,6 @@ import { TranslatedText } from "src/components/translated-text/translated-text";
 import { useTranslation } from "src/context/translation-context";
 
 import { useGetWishlist } from "src/actions/wishlists";
-import GiftCardIcon from "../../assets/spa-icons/SPC-picto-menu-carte-cadeau.svg";
 
 export default function Navbar() {
   const [showMenu, setShowMenu] = useState(false);
@@ -75,13 +74,7 @@ export default function Navbar() {
           </div>
 
           <div className="hidden md:flex items-center gap-2">
-            <Link to={paths.cadeau} className="hover:opacity-70 transition">
-              <img
-                src={GiftCardIcon}
-                alt={translateSync("Carte cadeau")}
-                className="w-6 h-6"
-              />
-            </Link>
+            
 
             <Link
               to={user ? paths.dashboard.wishlist : paths.auth.root}
@@ -126,7 +119,7 @@ export default function Navbar() {
       />
       </div>
 
-      <div className="h-[80px] md:h-[64px]" />
+      <div className="h-[96px] md:h-[96px]" />
 
      
     </>

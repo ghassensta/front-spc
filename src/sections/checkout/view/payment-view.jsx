@@ -40,7 +40,7 @@ export default function PaymentView() {
     return (
       checkout.items?.reduce(
         (acc, item) => acc + Number(item.price || 0) * item.quantity,
-        0
+        0,
       ) || 0
     );
   }, [checkout.items]);
@@ -49,7 +49,7 @@ export default function PaymentView() {
     return (
       checkout.items?.reduce(
         (acc, item) => acc + (Number(item.discount) || 0),
-        0
+        0,
       ) || 0
     );
   }, [checkout.items]);
@@ -58,7 +58,7 @@ export default function PaymentView() {
   const totalHT = Number((totalTTC / (1 + TAX_RATE)).toFixed(2));
   const tvaAmount = Number((totalTTC - totalHT).toFixed(2));
   const totalBeforeHT = Number(
-    (totalBeforeDiscount / (1 + TAX_RATE)).toFixed(2)
+    (totalBeforeDiscount / (1 + TAX_RATE)).toFixed(2),
   );
   const tvaBefore = Number((totalBeforeDiscount - totalBeforeHT).toFixed(2));
 
@@ -93,9 +93,11 @@ export default function PaymentView() {
     const newErrors = {};
     if (!fullName || fullName.trim() === "")
       newErrors.fullName = t("Le nom complet est requis.");
+
     if (!address || address.trim() === "")
       newErrors.address = t("L'adresse est requise.");
-    if (!city || city.trim() === "") newErrors.city = t("La ville est requise.");
+    if (!city || city.trim() === "")
+      newErrors.city = t("La ville est requise.");
     if (!postalCode || postalCode.trim() === "")
       newErrors.postalCode = t("Le code postal est requis.");
     if (!user && !guestEmail) {
@@ -106,9 +108,8 @@ export default function PaymentView() {
     if (Object.keys(newErrors).length > 0) {
       setErrors(newErrors);
       setHasValidationError(true);
-      setIsEditingAddress(true); // Open the address section to show errors
+      setIsEditingAddress(true);
       toast.error(t("Veuillez remplir tous les champs requis de l'adresse."));
-      // Scroll to first error and focus
       setTimeout(() => {
         const firstKey = Object.keys(newErrors)[0];
         const el = document.querySelector(`[name=expediteur_${firstKey}]`);
@@ -125,7 +126,7 @@ export default function PaymentView() {
       checkout.items.length === 0
     ) {
       toast.error(
-        t("Veuillez remplir toutes les informations et ajouter des articles.")
+        t("Veuillez remplir toutes les informations et ajouter des articles."),
       );
       return;
     }
@@ -168,7 +169,7 @@ export default function PaymentView() {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({ commandes_ids: commandesIds }),
-          }
+          },
         );
         const sessionData = await sessionRes.json();
 
@@ -185,7 +186,7 @@ export default function PaymentView() {
       }
     } catch (error) {
       toast.error(
-        error?.message || t("Une erreur est survenue lors du paiement.")
+        error?.message || t("Une erreur est survenue lors du paiement."),
       );
     } finally {
       setLoading(false);
@@ -228,10 +229,13 @@ export default function PaymentView() {
     <div className="container font-tahoma mx-auto p-6 grid grid-cols-1 md:grid-cols-3 gap-6">
       <div className="col-span-2 space-y-6">
         <div className="bg-white rounded-md p-6 shadow">
-          <h2 className="text-base font-semibold mb-4"><TranslatedText text="Coordonnées" /></h2>
+          <h2 className="text-base font-semibold mb-4">
+            <TranslatedText text="Coordonnées" />
+          </h2>
           <div className="space-y-3">
             <label className="block text-sm font-medium">
               <TranslatedText text="Adresse e-mail" />
+              <span className="text-red-500">*</span>
             </label>
 
             {user?.email ? (
@@ -240,13 +244,34 @@ export default function PaymentView() {
               <div className="space-y-2">
                 <input
                   type="email"
-                  className="w-full border p-2 rounded-md"
+                  className={`w-full border p-2 rounded-md focus:outline-none focus:ring-2 ${
+                    errors.guestEmail
+                      ? "border-red-500 focus:ring-red-500"
+                      : "border-gray-300 focus:ring-blue-400"
+                  }`}
                   value={guestEmail}
-                  onChange={(e) => setGuestEmail(e.target.value)}
+                  onChange={(e) => {
+                    setGuestEmail(e.target.value);
+
+                    // clear error when typing
+                    if (errors.guestEmail) {
+                      setErrors((prev) => {
+                        const copy = { ...prev };
+                        delete copy.guestEmail;
+                        return copy;
+                      });
+                    }
+                  }}
                   placeholder="email@exemple.com"
                 />
 
-              {/*   <label className="flex items-center gap-2 text-sm">
+                {errors.guestEmail && (
+                  <p className="text-red-600 text-sm mt-1">
+                    {errors.guestEmail}
+                  </p>
+                )}
+
+                {/*   <label className="flex items-center gap-2 text-sm">
                   <input
                     type="checkbox"
                     checked={createAccount}
@@ -287,7 +312,9 @@ export default function PaymentView() {
         )}
         <div className="bg-white rounded-md p-6 shadow">
           <div className="flex justify-between items-center mb-4">
-            <h2 className="text-base font-semibold"><TranslatedText text="Adresse de facturation" /></h2>
+            <h2 className="text-base font-semibold">
+              <TranslatedText text="Adresse de facturation" />
+            </h2>
             <button onClick={() => setIsEditingAddress(!isEditingAddress)}>
               <ButtonIcon
                 size="sm"
@@ -310,23 +337,28 @@ export default function PaymentView() {
               </p>
               <p>{checkout.expediteur?.country || t("France")}</p>
               {checkout.expediteur?.phone && (
-                <p><TranslatedText text="Téléphone" /> : {checkout.expediteur.phone}</p>
+                <p>
+                  <TranslatedText text="Téléphone" /> :{" "}
+                  {checkout.expediteur.phone}
+                </p>
               )}
             </div>
           ) : (
             <div className="space-y-4 mt-4">
               <div>
                 <label className="block text-sm font-medium mb-1">
-                  <TranslatedText text="Nom complet" /> <span className="text-red-500">*</span>
+                  <TranslatedText text="Nom complet" />{" "}
+                  <span className="text-red-500">*</span>
                 </label>
                 <input
                   type="text"
                   autoComplete="off"
                   name="expediteur_fullName"
-                  className={`w-full border rounded-md p-2 focus:outline-none focus:ring-2 ${errors.fullName
-                    ? "border-red-500 focus:ring-red-500"
-                    : "border-gray-300 focus:ring-blue-400"
-                    }`}
+                  className={`w-full border rounded-md p-2 focus:outline-none focus:ring-2 ${
+                    errors.fullName
+                      ? "border-red-500 focus:ring-red-500"
+                      : "border-gray-300 focus:ring-blue-400"
+                  }`}
                   value={checkout.expediteur?.fullName || ""}
                   onChange={(e) =>
                     handleExpediteurChange("fullName", e.target.value)
@@ -340,15 +372,17 @@ export default function PaymentView() {
               </div>
               <div>
                 <label className="block text-sm font-medium mb-1">
-                  <TranslatedText text="Adresse" /> <span className="text-red-500">*</span>
+                  <TranslatedText text="Adresse" />{" "}
+                  <span className="text-red-500">*</span>
                 </label>
                 <input
                   type="text"
                   name="expediteur_address"
-                  className={`w-full border rounded-md p-2 focus:outline-none focus:ring-2 ${errors.address
-                    ? "border-red-500 focus:ring-red-500"
-                    : "border-gray-300 focus:ring-blue-400"
-                    }`}
+                  className={`w-full border rounded-md p-2 focus:outline-none focus:ring-2 ${
+                    errors.address
+                      ? "border-red-500 focus:ring-red-500"
+                      : "border-gray-300 focus:ring-blue-400"
+                  }`}
                   value={checkout.expediteur?.address || ""}
                   onChange={(e) =>
                     handleExpediteurChange("address", e.target.value)
@@ -377,15 +411,17 @@ export default function PaymentView() {
               <div className="grid grid-cols-2 gap-4">
                 <div>
                   <label className="block text-sm font-medium mb-1">
-                    <TranslatedText text="Ville" /> <span className="text-red-500">*</span>
+                    <TranslatedText text="Ville" />{" "}
+                    <span className="text-red-500">*</span>
                   </label>
                   <input
                     type="text"
                     name="expediteur_city"
-                    className={`w-full border rounded-md p-2 focus:outline-none focus:ring-2 ${errors.city
-                      ? "border-red-500 focus:ring-red-500"
-                      : "border-gray-300 focus:ring-blue-400"
-                      }`}
+                    className={`w-full border rounded-md p-2 focus:outline-none focus:ring-2 ${
+                      errors.city
+                        ? "border-red-500 focus:ring-red-500"
+                        : "border-gray-300 focus:ring-blue-400"
+                    }`}
                     value={checkout.expediteur?.city || ""}
                     onChange={(e) =>
                       handleExpediteurChange("city", e.target.value)
@@ -414,15 +450,17 @@ export default function PaymentView() {
               <div className="grid grid-cols-2 gap-4">
                 <div>
                   <label className="block text-sm font-medium mb-1">
-                    <TranslatedText text="Code postal" /> <span className="text-red-500">*</span>
+                    <TranslatedText text="Code postal" />{" "}
+                    <span className="text-red-500">*</span>
                   </label>
                   <input
                     type="text"
                     name="expediteur_postalCode"
-                    className={`w-full border rounded-md p-2 focus:outline-none focus:ring-2 ${errors.postalCode
-                      ? "border-red-500 focus:ring-red-500"
-                      : "border-gray-300 focus:ring-blue-400"
-                      }`}
+                    className={`w-full border rounded-md p-2 focus:outline-none focus:ring-2 ${
+                      errors.postalCode
+                        ? "border-red-500 focus:ring-red-500"
+                        : "border-gray-300 focus:ring-blue-400"
+                    }`}
                     value={checkout.expediteur?.postalCode || ""}
                     onChange={(e) =>
                       handleExpediteurChange("postalCode", e.target.value)
@@ -438,15 +476,17 @@ export default function PaymentView() {
                 </div>
                 <div>
                   <label className="block text-sm font-medium mb-1">
-                    <TranslatedText text="Pays" /> <span className="text-red-500">*</span>
+                    <TranslatedText text="Pays" />{" "}
+                    <span className="text-red-500">*</span>
                   </label>
                   <input
                     type="text"
                     name="expediteur_country"
-                    className={`w-full border rounded-md p-2 focus:outline-none focus:ring-2 ${errors.country
-                      ? "border-red-500 focus:ring-red-500"
-                      : "border-gray-300 focus:ring-blue-400"
-                      }`}
+                    className={`w-full border rounded-md p-2 focus:outline-none focus:ring-2 ${
+                      errors.country
+                        ? "border-red-500 focus:ring-red-500"
+                        : "border-gray-300 focus:ring-blue-400"
+                    }`}
                     value={checkout.expediteur?.country || t("")}
                     onChange={(e) =>
                       handleExpediteurChange("country", e.target.value)
@@ -479,17 +519,26 @@ export default function PaymentView() {
           )}
         </div>
         <div className="bg-white rounded-md p-6 shadow">
-          { }
-          <h2 className="text-base font-semibold mb-2"><TranslatedText text="Points" /></h2>
-          <p className="text-sm text-gray-700 mb-6">
-            <TranslatedText text="Vous allez gagner" />{" "}
-            <span className="font-semibold text-yellow-600">
-              {totalAPayer.toFixed(0)}
-            </span>{" "}
-            <TranslatedText text="points avec cette commande." />
-          </p>
+          {user && (
+            <div className="mb-6">
+              <h2 className="text-base font-semibold mb-2">
+                <TranslatedText text="Points fidélité" />
+              </h2>
+
+              <p className="text-sm text-gray-700">
+                <TranslatedText text="Vous allez gagner" />{" "}
+                <span className="font-semibold text-yellow-600">
+                  {Math.floor(totalAPayer)}
+                </span>{" "}
+                <TranslatedText text="points avec cette commande." />
+              </p>
+            </div>
+            
+          )}
           <div className="border-t my-4"></div>
-          <h2 className="text-base font-semibold mb-2"><TranslatedText text="Paiement" /></h2>
+          <h2 className="text-base font-semibold mb-2">
+            <TranslatedText text="Paiement" />
+          </h2>
           <p className="text-sm text-gray-700">
             {totalAPayer > 0 ? (
               <>
@@ -506,18 +555,22 @@ export default function PaymentView() {
             )}
           </p>
         </div>
-        { }
+
         <div className="mt-8">
           <button
             onClick={handleSubmit}
             disabled={loading || creditsLoading || creditsDepassent}
             className="w-full md:w-auto inline-flex justify-center font-tahoma rounded-sm items-center uppercase tracking-widest px-8 py-4 text-sm bg-black text-white disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-900 transition"
           >
-            {loading ? t("Envoi en cours...") : <TranslatedText text="Commander" />}
+            {loading ? (
+              t("Envoi en cours...")
+            ) : (
+              <TranslatedText text="Commander" />
+            )}
           </button>
         </div>
       </div>
-      { }
+      {}
       <div>
         <div className="bg-white rounded-md p-6 shadow space-y-4">
           <h2 className="text-base font-semibold mb-4">
@@ -536,7 +589,9 @@ export default function PaymentView() {
               />
               <div className="flex-1">
                 <p className="font-medium">{item.name}</p>
-                <p className="text-sm text-gray-500"><TranslatedText text="Qté" /> : {item.quantity}</p>
+                <p className="text-sm text-gray-500">
+                  <TranslatedText text="Qté" /> : {item.quantity}
+                </p>
                 {item.discount > 0 && (
                   <p className="text-sm text-green-600">
                     - {Number(item.discount).toFixed(2)} €
@@ -554,37 +609,51 @@ export default function PaymentView() {
           ))}
           <div className="border-t pt-4 space-y-2">
             <div className="flex justify-between text-sm">
-              <span><TranslatedText text="Sous-total HT" /></span>
+              <span>
+                <TranslatedText text="Sous-total HT" />
+              </span>
               <span>{totalBeforeHT.toFixed(2)} €</span>
             </div>
             <div className="flex justify-between text-sm">
-              <span><TranslatedText text="TVA 20%" /></span>
+              <span>
+                <TranslatedText text="TVA 20%" />
+              </span>
               <span>{tvaBefore.toFixed(2)} €</span>
             </div>
             <div className="flex justify-between font-bold">
-              <span><TranslatedText text="Total TTC" /></span>
+              <span>
+                <TranslatedText text="Total TTC" />
+              </span>
               <span>{totalBeforeDiscount.toFixed(2)} €</span>
             </div>
             {totalDiscount > 0 && (
               <div className="flex justify-between text-green-600 font-semibold">
-                <span><TranslatedText text="Remise totale" /></span>
+                <span>
+                  <TranslatedText text="Remise totale" />
+                </span>
                 <span>- {totalDiscount.toFixed(2)} €</span>
               </div>
             )}
             {appliedParrainage > 0 && (
               <div className="flex justify-between text-green-600 font-medium">
-                <span><TranslatedText text="Crédit parrainage" /></span>
+                <span>
+                  <TranslatedText text="Crédit parrainage" />
+                </span>
                 <span>- {appliedParrainage.toFixed(2)} €</span>
               </div>
             )}
             {appliedNormaux > 0 && (
               <div className="flex justify-between text-green-600 font-medium">
-                <span><TranslatedText text="Crédits fidélité & cadeaux" /></span>
+                <span>
+                  <TranslatedText text="Crédits fidélité & cadeaux" />
+                </span>
                 <span>- {appliedNormaux.toFixed(2)} €</span>
               </div>
             )}
             <div className="flex justify-between font-bold text-xl border-t pt-4 mt-4">
-              <span><TranslatedText text="Montant à payer" /></span>
+              <span>
+                <TranslatedText text="Montant à payer" />
+              </span>
               <span className={totalAPayer === 0 ? "text-green-600" : ""}>
                 {totalAPayer.toFixed(2)} €
               </span>

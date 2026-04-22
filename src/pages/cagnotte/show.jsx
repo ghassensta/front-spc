@@ -20,7 +20,7 @@ export default function Page() {
       <Helmet htmlAttributes={{ lang: "fr" }}>
         <title>{pageTitle}</title>
         <meta name="description" content={pageDescription} />
-        <meta name="robots" content="noindex, nofollow" />
+        <meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1" />
 
         {/* Canonical */}
         <link rel="canonical" href={canonicalUrl} />

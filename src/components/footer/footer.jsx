@@ -162,10 +162,12 @@ export default function Footer() {
 
       <div className="bg-[#B6B498] text-base text-black">
         <div className="max-w-6xl mx-auto p-6 flex flex-col md:flex-row items-center justify-between">
+          <a href="https://www.ecom-design.fr/" target="_blank" rel="noopener noreferrer" className="hover:underline">
           <p>
             &copy; 2025 - 2026 – {translateSync("Réalisation")}{" "}
             <span className="font-semibold">éCOM Design</span>
           </p>
+          </a>
           <div className="flex gap-4 items-center">
             <a href={paths.mentions} className="hover:underline">
               {translateSync("Mentions légales")}

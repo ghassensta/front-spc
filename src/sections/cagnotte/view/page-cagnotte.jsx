@@ -5,7 +5,8 @@ import { Users, Heart, Gift, Calendar, CheckCircle, Sparkles, ArrowRight } from 
 import { Link, useNavigate } from "react-router-dom";
 import { paths } from "src/router/paths";
 import { TranslatedText } from "src/components/translated-text/translated-text";
-import ImgCagnotte from "src/assets/images/cagnotte-spa-prestige-collection.png";
+import ImgCagnotte from "src/assets/images/SPC-cagnotte-1.jpg";
+import ImgCagnotteCollectif  from "src/assets/images/SPC-cagnotte-2.jpg";
 export default function PageCagnotte() {
   const navigate = useNavigate();
 
@@ -62,7 +63,7 @@ export default function PageCagnotte() {
             <div className="md:w-1/2">
               <img
                 loading="lazy"
-                src="https://images.unsplash.com/photo-1522542550221-31fd19575a2d?q=80&w=2070"
+                src={ImgCagnotteCollectif}
                 alt="Groupe d'amis célébrant ensemble"
                 className="w-full h-auto object-cover rounded-xl shadow-xl"
               />
@@ -333,7 +334,7 @@ export default function PageCagnotte() {
           </Link>
 
           <Link
-            to={paths.cartesCadeaux || "/cartes-cadeaux"}
+            to={paths.cadeau || "/carte-cadeau"}
             className="group bg-white p-8 rounded-xl shadow-md hover:shadow-xl transition-all border border-gray-200"
           >
             <div className="flex items-center justify-between mb-4">

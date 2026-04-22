@@ -17,9 +17,6 @@ export default function SenderForm({
     if (!user) {
         return (
             <div className="bg-white p-4 rounded-lg shadow-sm flex flex-col gap-3">
-                <p>
-                    <TranslatedText text="Vous devez vous identifier pour commander" />
-                </p>
                 <button
                     onClick={() =>
                         router.push(`${paths.auth.register}?returnTo=${encodeURIComponent("/checkout")}`)
@@ -28,12 +25,12 @@ export default function SenderForm({
                 >
                     <TranslatedText text="Continuer" />
                 </button>
-              {/*   <button
+                 <button
                     onClick={onCheckout}
                     className="w-full inline-flex justify-center items-center gap-2 uppercase font-normal tracking-widest transition-all duration-300 px-6 py-3 text-sm bg-black hover:bg-gray-900 text-white rounded-full"
                 >
                     <TranslatedText text="Continuer en tant qu'invité" />
-                </button> */}
+                </button> 
             </div>
         );
     }

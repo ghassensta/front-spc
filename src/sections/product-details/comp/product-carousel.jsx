@@ -79,8 +79,8 @@ export default function ProductCarousel({ gallery = [], image = "" }) {
               currentSlide === index
                 ? "translate-x-0"
                 : index < currentSlide
-                ? "-translate-x-full"
-                : "translate-x-full"
+                  ? "-translate-x-full"
+                  : "translate-x-full"
             }`}
             loading="lazy"
           />
@@ -108,21 +108,46 @@ export default function ProductCarousel({ gallery = [], image = "" }) {
         </>
       )}
 
-      {/* Points de navigation : uniquement si + d'une image */}
+      {/* Points de navigation (max 6 visibles) */}
       {hasMultipleImages && (
         <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2 flex space-x-2">
-          {images.map((_, index) => (
-            <button
-              key={index}
-              onClick={() => goToSlide(index)}
-              className={`w-2.5 h-2.5 rounded-full transition-all duration-300 ${
-                currentSlide === index
-                  ? "bg-white scale-125"
-                  : "bg-white/60 hover:bg-white/90"
-              }`}
-              aria-label={`Aller à la slide ${index + 1}`}
-            />
-          ))}
+          {(() => {
+            const maxDots = 6;
+
+            if (totalImages <= maxDots) {
+              return images.map((_, index) => (
+                <button
+                  key={index}
+                  onClick={() => goToSlide(index)}
+                  className={`w-2.5 h-2.5 rounded-full transition-all duration-300 ${
+                    currentSlide === index
+                      ? "bg-white scale-125"
+                      : "bg-white/60 hover:bg-white/90"
+                  }`}
+                />
+              ));
+            }
+
+            let start = Math.max(0, currentSlide - 2);
+            start = Math.min(start, totalImages - maxDots);
+            const visible = images.slice(start, start + maxDots);
+
+            return visible.map((_, i) => {
+              const realIndex = start + i;
+
+              return (
+                <button
+                  key={realIndex}
+                  onClick={() => goToSlide(realIndex)}
+                  className={`w-2.5 h-2.5 rounded-full transition-all duration-300 ${
+                    currentSlide === realIndex
+                      ? "bg-white scale-125"
+                      : "bg-white/60 hover:bg-white/90"
+                  }`}
+                />
+              );
+            });
+          })()}
         </div>
       )}
     </div>
