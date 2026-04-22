@@ -5,7 +5,6 @@ import { Link } from "react-router-dom";
 import { useAuthContext } from "src/auth/hooks/use-auth-context";
 import { useTranslation } from "src/context/translation-context";
 import { paths } from "src/router/paths";
-import GiftCardIcon from "../../assets/spa-icons/SPC-picto-menu-carte-cadeau.svg";
 
 const languages = [
   { code: "fr", flag: "🇫🇷", label: "Français" },
@@ -54,18 +53,7 @@ export default function LanguageNav({ cartCount = 0, wishlistCount = 0 }) {
         </button>
       </div>
       <div className="flex items-center gap-1 md:hidden relative">
-        {/* Carte cadeau */}
-        <Link
-          to={paths.cadeau}
-          className="relative w-7 h-7 flex items-center justify-center"
-        >
-          <img
-            src={GiftCardIcon}
-            alt="Carte cadeau"
-            className="w-full h-full"
-          />
-          {/* Optionnel : badge si nécessaire */}
-        </Link>
+        
 
         {/* Wishlist */}
         <Link

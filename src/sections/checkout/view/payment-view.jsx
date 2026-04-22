@@ -88,28 +88,37 @@ export default function PaymentView() {
   const creditsDepassent = totalCreditsApplied > totalTTC;
 
   const handleSubmit = async () => {
-    const { fullName, address, city, postalCode, country } =
+    const { fullName, address, city, postalCode, country, phone } =
       checkout.expediteur || {};
     const newErrors = {};
-    if (!fullName || fullName.trim() === "")
-      newErrors.fullName = t("Le nom complet est requis.");
 
-    if (!address || address.trim() === "")
-      newErrors.address = t("L'adresse est requise.");
-    if (!city || city.trim() === "")
-      newErrors.city = t("La ville est requise.");
-    if (!postalCode || postalCode.trim() === "")
-      newErrors.postalCode = t("Le code postal est requis.");
-    if (!user && !guestEmail) {
-      newErrors.guestEmail = t("L'email est requis.");
+    if (user) {
+      // ── Utilisateur connecté : validation complète ──
+      if (!fullName || fullName.trim() === "")
+        newErrors.fullName = t("Le nom complet est requis.");
+      if (!address || address.trim() === "")
+        newErrors.address = t("L'adresse est requise.");
+      if (!city || city.trim() === "")
+        newErrors.city = t("La ville est requise.");
+      if (!postalCode || postalCode.trim() === "")
+        newErrors.postalCode = t("Le code postal est requis.");
+      if (!country || country.trim() === "")
+        newErrors.country = t("Le pays est requis.");
+    } else {
+      // ── Mode guest : seulement email, nom complet et téléphone requis ──
+      if (!guestEmail || guestEmail.trim() === "")
+        newErrors.guestEmail = t("L'email est requis.");
+      if (!fullName || fullName.trim() === "")
+        newErrors.fullName = t("Le nom complet est requis.");
+      if (!phone || phone.trim() === "")
+        newErrors.phone = t("Le téléphone est requis.");
     }
-    if (!country || country.trim() === "")
-      newErrors.country = t("Le pays est requis.");
+
     if (Object.keys(newErrors).length > 0) {
       setErrors(newErrors);
       setHasValidationError(true);
       setIsEditingAddress(true);
-      toast.error(t("Veuillez remplir tous les champs requis de l'adresse."));
+      toast.error(t("Veuillez remplir tous les champs requis."));
       setTimeout(() => {
         const firstKey = Object.keys(newErrors)[0];
         const el = document.querySelector(`[name=expediteur_${firstKey}]`);
@@ -120,6 +129,7 @@ export default function PaymentView() {
       }, 100);
       return;
     }
+
     if (
       !checkout.expediteur ||
       !checkout.items ||
@@ -146,7 +156,6 @@ export default function PaymentView() {
             ...checkout.expediteur,
             email: user?.email || guestEmail,
           },
-
           items: checkout.items,
           subtotal: totalHT,
           tax: tvaAmount,
@@ -155,7 +164,6 @@ export default function PaymentView() {
           coupon_id: checkout.couponId || null,
           credit_ids: [...parrainageIds, ...normauxIds],
           payment_method: totalAPayer > 0 ? "stripe" : "credits_only",
-
           create_account: !user ? createAccount : false,
         }),
       });
@@ -244,6 +252,7 @@ export default function PaymentView() {
               <div className="space-y-2">
                 <input
                   type="email"
+                  name="expediteur_guestEmail"
                   className={`w-full border p-2 rounded-md focus:outline-none focus:ring-2 ${
                     errors.guestEmail
                       ? "border-red-500 focus:ring-red-500"
@@ -252,8 +261,6 @@ export default function PaymentView() {
                   value={guestEmail}
                   onChange={(e) => {
                     setGuestEmail(e.target.value);
-
-                    // clear error when typing
                     if (errors.guestEmail) {
                       setErrors((prev) => {
                         const copy = { ...prev };
@@ -264,21 +271,11 @@ export default function PaymentView() {
                   }}
                   placeholder="email@exemple.com"
                 />
-
                 {errors.guestEmail && (
                   <p className="text-red-600 text-sm mt-1">
                     {errors.guestEmail}
                   </p>
                 )}
-
-                {/*   <label className="flex items-center gap-2 text-sm">
-                  <input
-                    type="checkbox"
-                    checked={createAccount}
-                    onChange={(e) => setCreateAccount(e.target.checked)}
-                  />
-                  Créer un compte avec cet email
-                </label> */}
               </div>
             )}
           </div>
@@ -370,150 +367,159 @@ export default function PaymentView() {
                   <p className="text-red-600 text-sm mt-1">{errors.fullName}</p>
                 )}
               </div>
+              {user && (
+                <>
+                  <div>
+                    <label className="block text-sm font-medium mb-1">
+                      <TranslatedText text="Adresse" />{" "}
+                      <span className="text-red-500">*</span>
+                    </label>
+                    <input
+                      type="text"
+                      name="expediteur_address"
+                      className={`w-full border rounded-md p-2 focus:outline-none focus:ring-2 ${
+                        errors.address
+                          ? "border-red-500 focus:ring-red-500"
+                          : "border-gray-300 focus:ring-blue-400"
+                      }`}
+                      value={checkout.expediteur?.address || ""}
+                      onChange={(e) =>
+                        handleExpediteurChange("address", e.target.value)
+                      }
+                      placeholder={t("15 rue Jean Maridor")}
+                    />
+                    {errors.address && (
+                      <p className="text-red-600 text-sm mt-1">{errors.address}</p>
+                    )}
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium mb-1">
+                      <TranslatedText text="Complément d'adresse" />
+                    </label>
+                    <input
+                      type="text"
+                      className="w-full border border-gray-300 rounded-md p-2 focus:outline-none focus:ring-2 focus:ring-blue-400"
+                      value={checkout.expediteur?.address2 || ""}
+                      onChange={(e) =>
+                        handleExpediteurChange("address2", e.target.value)
+                      }
+                      placeholder={t("Appartement, étage...")}
+                    />
+                  </div>
+                  <div className="grid grid-cols-2 gap-4">
+                    <div>
+                      <label className="block text-sm font-medium mb-1">
+                        <TranslatedText text="Ville" />{" "}
+                        <span className="text-red-500">*</span>
+                      </label>
+                      <input
+                        type="text"
+                        name="expediteur_city"
+                        className={`w-full border rounded-md p-2 focus:outline-none focus:ring-2 ${
+                          errors.city
+                            ? "border-red-500 focus:ring-red-500"
+                            : "border-gray-300 focus:ring-blue-400"
+                        }`}
+                        value={checkout.expediteur?.city || ""}
+                        onChange={(e) =>
+                          handleExpediteurChange("city", e.target.value)
+                        }
+                        placeholder={t("Paris")}
+                      />
+                      {errors.city && (
+                        <p className="text-red-600 text-sm mt-1">{errors.city}</p>
+                      )}
+                    </div>
+                    <div>
+                      <label className="block text-sm font-medium mb-1">
+                        <TranslatedText text="État / Région" />
+                      </label>
+                      <input
+                        type="text"
+                        className="w-full border border-gray-300 rounded-md p-2 focus:outline-none focus:ring-2 focus:ring-blue-400"
+                        value={checkout.expediteur?.state || ""}
+                        onChange={(e) =>
+                          handleExpediteurChange("state", e.target.value)
+                        }
+                      />
+                    </div>
+                  </div>
+                  <div className="grid grid-cols-2 gap-4">
+                    <div>
+                      <label className="block text-sm font-medium mb-1">
+                        <TranslatedText text="Code postal" />{" "}
+                        <span className="text-red-500">*</span>
+                      </label>
+                      <input
+                        type="text"
+                        name="expediteur_postalCode"
+                        className={`w-full border rounded-md p-2 focus:outline-none focus:ring-2 ${
+                          errors.postalCode
+                            ? "border-red-500 focus:ring-red-500"
+                            : "border-gray-300 focus:ring-blue-400"
+                        }`}
+                        value={checkout.expediteur?.postalCode || ""}
+                        onChange={(e) =>
+                          handleExpediteurChange("postalCode", e.target.value)
+                        }
+                        placeholder={t("75015")}
+                      />
+                      {errors.postalCode && (
+                        <p className="text-red-600 text-sm mt-1">
+                          {errors.postalCode}
+                        </p>
+                      )}
+                    </div>
+                    <div>
+                      <label className="block text-sm font-medium mb-1">
+                        <TranslatedText text="Pays" />{" "}
+                        <span className="text-red-500">*</span>
+                      </label>
+                      <input
+                        type="text"
+                        name="expediteur_country"
+                        className={`w-full border rounded-md p-2 focus:outline-none focus:ring-2 ${
+                          errors.country
+                            ? "border-red-500 focus:ring-red-500"
+                            : "border-gray-300 focus:ring-blue-400"
+                        }`}
+                        value={checkout.expediteur?.country || t("")}
+                        onChange={(e) =>
+                          handleExpediteurChange("country", e.target.value)
+                        }
+                        placeholder={t("France")}
+                      />
+                      {errors.country && (
+                        <p className="text-red-600 text-sm mt-1">
+                          {errors.country}
+                        </p>
+                      )}
+                    </div>
+                  </div>
+                </>
+              )}
               <div>
                 <label className="block text-sm font-medium mb-1">
-                  <TranslatedText text="Adresse" />{" "}
-                  <span className="text-red-500">*</span>
-                </label>
-                <input
-                  type="text"
-                  name="expediteur_address"
-                  className={`w-full border rounded-md p-2 focus:outline-none focus:ring-2 ${
-                    errors.address
-                      ? "border-red-500 focus:ring-red-500"
-                      : "border-gray-300 focus:ring-blue-400"
-                  }`}
-                  value={checkout.expediteur?.address || ""}
-                  onChange={(e) =>
-                    handleExpediteurChange("address", e.target.value)
-                  }
-                  placeholder={t("15 rue Jean Maridor")}
-                  required
-                />
-                {errors.address && (
-                  <p className="text-red-600 text-sm mt-1">{errors.address}</p>
-                )}
-              </div>
-              <div>
-                <label className="block text-sm font-medium mb-1">
-                  <TranslatedText text="Complément d'adresse" />
-                </label>
-                <input
-                  type="text"
-                  className="w-full border border-gray-300 rounded-md p-2 focus:outline-none focus:ring-2 focus:ring-blue-400"
-                  value={checkout.expediteur?.address2 || ""}
-                  onChange={(e) =>
-                    handleExpediteurChange("address2", e.target.value)
-                  }
-                  placeholder={t("Appartement, étage...")}
-                />
-              </div>
-              <div className="grid grid-cols-2 gap-4">
-                <div>
-                  <label className="block text-sm font-medium mb-1">
-                    <TranslatedText text="Ville" />{" "}
-                    <span className="text-red-500">*</span>
-                  </label>
-                  <input
-                    type="text"
-                    name="expediteur_city"
-                    className={`w-full border rounded-md p-2 focus:outline-none focus:ring-2 ${
-                      errors.city
-                        ? "border-red-500 focus:ring-red-500"
-                        : "border-gray-300 focus:ring-blue-400"
-                    }`}
-                    value={checkout.expediteur?.city || ""}
-                    onChange={(e) =>
-                      handleExpediteurChange("city", e.target.value)
-                    }
-                    placeholder={t("Paris")}
-                    required
-                  />
-                  {errors.city && (
-                    <p className="text-red-600 text-sm mt-1">{errors.city}</p>
-                  )}
-                </div>
-                <div>
-                  <label className="block text-sm font-medium mb-1">
-                    <TranslatedText text="État / Région" />
-                  </label>
-                  <input
-                    type="text"
-                    className="w-full border border-gray-300 rounded-md p-2 focus:outline-none focus:ring-2 focus:ring-blue-400"
-                    value={checkout.expediteur?.state || ""}
-                    onChange={(e) =>
-                      handleExpediteurChange("state", e.target.value)
-                    }
-                  />
-                </div>
-              </div>
-              <div className="grid grid-cols-2 gap-4">
-                <div>
-                  <label className="block text-sm font-medium mb-1">
-                    <TranslatedText text="Code postal" />{" "}
-                    <span className="text-red-500">*</span>
-                  </label>
-                  <input
-                    type="text"
-                    name="expediteur_postalCode"
-                    className={`w-full border rounded-md p-2 focus:outline-none focus:ring-2 ${
-                      errors.postalCode
-                        ? "border-red-500 focus:ring-red-500"
-                        : "border-gray-300 focus:ring-blue-400"
-                    }`}
-                    value={checkout.expediteur?.postalCode || ""}
-                    onChange={(e) =>
-                      handleExpediteurChange("postalCode", e.target.value)
-                    }
-                    placeholder={t("75015")}
-                    required
-                  />
-                  {errors.postalCode && (
-                    <p className="text-red-600 text-sm mt-1">
-                      {errors.postalCode}
-                    </p>
-                  )}
-                </div>
-                <div>
-                  <label className="block text-sm font-medium mb-1">
-                    <TranslatedText text="Pays" />{" "}
-                    <span className="text-red-500">*</span>
-                  </label>
-                  <input
-                    type="text"
-                    name="expediteur_country"
-                    className={`w-full border rounded-md p-2 focus:outline-none focus:ring-2 ${
-                      errors.country
-                        ? "border-red-500 focus:ring-red-500"
-                        : "border-gray-300 focus:ring-blue-400"
-                    }`}
-                    value={checkout.expediteur?.country || t("")}
-                    onChange={(e) =>
-                      handleExpediteurChange("country", e.target.value)
-                    }
-                    placeholder={t("France")}
-                    required
-                  />
-                  {errors.country && (
-                    <p className="text-red-600 text-sm mt-1">
-                      {errors.country}
-                    </p>
-                  )}
-                </div>
-              </div>
-              <div>
-                <label className="block text-sm font-medium mb-1">
-                  <TranslatedText text="Téléphone" />
+                  <TranslatedText text="Téléphone" />{" "}
+                  {!user && <span className="text-red-500">*</span>}
                 </label>
                 <input
                   type="tel"
-                  className="w-full border border-gray-300 rounded-md p-2 focus:outline-none focus:ring-2 focus:ring-blue-400"
+                  name="expediteur_phone"
+                  className={`w-full border rounded-md p-2 focus:outline-none focus:ring-2 ${
+                    errors.phone
+                      ? "border-red-500 focus:ring-red-500"
+                      : "border-gray-300 focus:ring-blue-400"
+                  }`}
                   value={checkout.expediteur?.phone || ""}
                   onChange={(e) =>
                     handleExpediteurChange("phone", e.target.value)
                   }
                   placeholder={t("+33 6 12 34 56 78")}
                 />
+                {errors.phone && (
+                  <p className="text-red-600 text-sm mt-1">{errors.phone}</p>
+                )}
               </div>
             </div>
           )}
@@ -524,7 +530,6 @@ export default function PaymentView() {
               <h2 className="text-base font-semibold mb-2">
                 <TranslatedText text="Points fidélité" />
               </h2>
-
               <p className="text-sm text-gray-700">
                 <TranslatedText text="Vous allez gagner" />{" "}
                 <span className="font-semibold text-yellow-600">
@@ -533,7 +538,6 @@ export default function PaymentView() {
                 <TranslatedText text="points avec cette commande." />
               </p>
             </div>
-            
           )}
           <div className="border-t my-4"></div>
           <h2 className="text-base font-semibold mb-2">

@@ -146,13 +146,13 @@ export default function ({
       newRecipients.length > 0
         ? newRecipients
         : [
-            {
-              fullName: "",
-              email: "",
-              message: "",
-              date: new Date().toISOString().slice(0, 10),
-            },
-          ],
+          {
+            fullName: "",
+            email: "",
+            message: "",
+            date: new Date().toISOString().slice(0, 10),
+          },
+        ],
     );
   };
 
@@ -322,10 +322,9 @@ export default function ({
             />
             {product?.privileges?.length > 0 && (
               <div className="mt-6">
-                {/* Titre de la section */}
                 <h2 className="text-2xl font-bold mb-4 text-[#333] my-2">
                   {translateSync(
-                    "Ce que comprend cette expérience d’exception",
+                    "Ce que comprend cette expérience d'exception",
                   )}
                 </h2>
 
@@ -336,15 +335,15 @@ export default function ({
                     .map((privilege) => (
                       <div
                         key={privilege.id}
-                        className="flex items-center gap-2 px-2 py-1"
+                        className="flex items-center gap-3 px-2 py-1"
                       >
                         <img
                           src={`${CONFIG.serverUrl}/storage/${privilege.icon_path}`}
                           alt={privilege.name}
-                          className="w-7 h-7 object-contain"
+                          className="w-[42px] h-[42px] object-contain"
                         />
 
-                        <span className="text-xs text-gray-700 font-medium font-tahoma">
+                        <span className="text-sm text-gray-700 font-medium font-tahoma">
                           {translateSync(privilege.name)}
                         </span>
                       </div>
@@ -352,6 +351,7 @@ export default function ({
                 </div>
               </div>
             )}
+
             <Link
               to={paths.spa.details(etablissement?.slug)}
               className="w-max rounded-md mx-auto mt-10 px-5 py-3 bg-[#e2dfba] leading-4 text-black uppercase font-normal text-xs tracking-[3px] hover:bg-black transition hover:text-white font-tahoma flex items-center justify-center gap-2"
@@ -421,14 +421,12 @@ export default function ({
                 </div>
                 <button
                   onClick={() => setShowPersonalize((prev) => !prev)}
-                  className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors duration-300 focus:outline-none ${
-                    showPersonalize ? "bg-black" : "bg-gray-300"
-                  }`}
+                  className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors duration-300 focus:outline-none ${showPersonalize ? "bg-black" : "bg-gray-300"
+                    }`}
                 >
                   <span
-                    className={`inline-block h-4 w-4 transform rounded-full bg-white shadow transition-transform duration-300 ${
-                      showPersonalize ? "translate-x-6" : "translate-x-1"
-                    }`}
+                    className={`inline-block h-4 w-4 transform rounded-full bg-white shadow transition-transform duration-300 ${showPersonalize ? "translate-x-6" : "translate-x-1"
+                      }`}
                   />
                 </button>
               </div>
@@ -535,36 +533,36 @@ export default function ({
                         {(recipient.fullName ||
                           recipient.email ||
                           recipient.message) && (
-                          <div className="mt-2 p-2 bg-white border border-gray-200 rounded-lg text-xs text-gray-500 space-y-1">
-                            <p className="font-semibold text-gray-600 mb-1">
-                              {translateSync("Rappel de l'offre")}
-                            </p>
-                            {recipient.fullName && (
-                              <p>
-                                <span className="font-medium">
-                                  {translateSync("Offert à")} :
-                                </span>{" "}
-                                {recipient.fullName}
+                            <div className="mt-2 p-2 bg-white border border-gray-200 rounded-lg text-xs text-gray-500 space-y-1">
+                              <p className="font-semibold text-gray-600 mb-1">
+                                {translateSync("Rappel de l'offre")}
                               </p>
-                            )}
-                            {recipient.email && (
-                              <p>
-                                <span className="font-medium">Email :</span>{" "}
-                                {recipient.email}
-                              </p>
-                            )}
-                            {recipient.date && (
-                              <p>
-                                <span className="font-medium">
-                                  {translateSync("Envoi le")} :
-                                </span>{" "}
-                                {new Date(recipient.date).toLocaleDateString(
-                                  "fr-FR",
-                                )}
-                              </p>
-                            )}
-                          </div>
-                        )}
+                              {recipient.fullName && (
+                                <p>
+                                  <span className="font-medium">
+                                    {translateSync("Offert à")} :
+                                  </span>{" "}
+                                  {recipient.fullName}
+                                </p>
+                              )}
+                              {recipient.email && (
+                                <p>
+                                  <span className="font-medium">Email :</span>{" "}
+                                  {recipient.email}
+                                </p>
+                              )}
+                              {recipient.date && (
+                                <p>
+                                  <span className="font-medium">
+                                    {translateSync("Envoi le")} :
+                                  </span>{" "}
+                                  {new Date(recipient.date).toLocaleDateString(
+                                    "fr-FR",
+                                  )}
+                                </p>
+                              )}
+                            </div>
+                          )}
                       </div>
                     </div>
                   ))}
