@@ -30,7 +30,7 @@ export default function PageCagnotte() {
             <h1 className="text-5xl md:text-6xl font-bold mb-4">
               <TranslatedText text="La Cagnotte Bien-Être" />
             </h1>
-            <p className="text-xl md:text-2xl font-roboto max-w-2xl mx-auto mb-10">
+            <p className="text-xl md:text-2xl font-tahoma max-w-2xl mx-auto mb-10">
               <TranslatedText text="Offrez ensemble un moment d'exception à vos proches" />
             </p>
             {/* CTA dans le hero pour une conversion rapide */}
@@ -52,7 +52,7 @@ export default function PageCagnotte() {
               <h2 className="text-4xl font-bold mb-6">
                 <TranslatedText text="Un cadeau collectif qui crée des souvenirs" />
               </h2>
-              <p className="font-roboto text-lg text-[#5E5E5E] leading-relaxed">
+              <p className="font-tahoma text-lg text-[#5E5E5E] leading-relaxed">
                 <TranslatedText text="La cagnotte Spa & Prestige Collection permet à plusieurs personnes de participer ensemble à l'achat d'un moment de bien-être exceptionnel." />
                 <br /><br />
                 <TranslatedText text="Que ce soit pour un anniversaire, un mariage, une naissance, un départ à la retraite ou simplement pour faire plaisir, la cagnotte est le moyen idéal de rassembler vos contributions pour offrir une expérience inoubliable." />
@@ -85,7 +85,7 @@ export default function PageCagnotte() {
             <h3 className="text-2xl font-bold mb-3">
               <TranslatedText text="Participatif et solidaire" />
             </h3>
-            <p className="font-roboto text-gray-700">
+            <p className="font-tahoma text-gray-700">
               <TranslatedText text="Chacun contribue selon ses moyens pour créer ensemble un cadeau d'exception." />
             </p>
           </div>
@@ -97,7 +97,7 @@ export default function PageCagnotte() {
             <h3 className="text-2xl font-bold mb-3">
               <TranslatedText text="Personnalisé et touchant" />
             </h3>
-            <p className="font-roboto text-gray-700">
+            <p className="font-tahoma text-gray-700">
               <TranslatedText text="Ajoutez un message personnel et laissez chaque contributeur exprimer ses vœux." />
             </p>
           </div>
@@ -109,7 +109,7 @@ export default function PageCagnotte() {
             <h3 className="text-2xl font-bold mb-3">
               <TranslatedText text="Simple et sécurisé" />
             </h3>
-            <p className="font-roboto text-gray-700">
+            <p className="font-tahoma text-gray-700">
               <TranslatedText text="Créez votre cagnotte en quelques clics et partagez-la facilement. Paiements 100% sécurisés." />
             </p>
           </div>
@@ -122,7 +122,7 @@ export default function PageCagnotte() {
           <h2 className="text-4xl font-bold text-center mb-4">
             <TranslatedText text="Comment ça marche ?" />
           </h2>
-          <p className="text-center font-roboto text-xl text-gray-600 mb-12 max-w-3xl mx-auto">
+          <p className="text-center font-tahoma text-xl text-gray-600 mb-12 max-w-3xl mx-auto">
             <TranslatedText text="En 4 étapes simples, créez votre cagnotte et offrez un cadeau mémorable" />
           </p>
 
@@ -137,7 +137,7 @@ export default function PageCagnotte() {
                   <Gift size={28} className="text-[#B6B498]" />
                   <TranslatedText text="Créez votre cagnotte" />
                 </h3>
-                <p className="font-roboto text-gray-700 leading-relaxed">
+                <p className="font-tahoma text-gray-700 leading-relaxed">
                   <TranslatedText text="Donnez un titre évocateur, décrivez l'occasion et personnalisez votre message. Définissez éventuellement une date limite et un objectif de collecte." />
                 </p>
               </div>
@@ -153,7 +153,7 @@ export default function PageCagnotte() {
                   <Users size={28} className="text-[#B6B498]" />
                   <TranslatedText text="Partagez avec vos proches" />
                 </h3>
-                <p className="font-roboto text-gray-700 leading-relaxed">
+                <p className="font-tahoma text-gray-700 leading-relaxed">
                   <TranslatedText text="Partagez le lien unique de votre cagnotte par email, SMS ou réseaux sociaux. Vos proches peuvent contribuer en toute simplicité et laisser un message." />
                 </p>
               </div>
@@ -169,7 +169,7 @@ export default function PageCagnotte() {
                   <Calendar size={28} className="text-[#B6B498]" />
                   <TranslatedText text="Suivez les contributions" />
                 </h3>
-                <p className="font-roboto text-gray-700 leading-relaxed">
+                <p className="font-tahoma text-gray-700 leading-relaxed">
                   <TranslatedText text="Suivez en temps réel l'évolution de votre cagnotte grâce à votre tableau de bord personnel. Consultez les messages et le montant collecté." />
                 </p>
               </div>
@@ -185,7 +185,7 @@ export default function PageCagnotte() {
                   <Sparkles size={28} className="text-[#B6B498]" />
                   <TranslatedText text="Offrez l'expérience" />
                 </h3>
-                <p className="font-roboto text-gray-700 leading-relaxed">
+                <p className="font-tahoma text-gray-700 leading-relaxed">
                   <TranslatedText text="Une fois la cagnotte clôturée, le bénéficiaire reçoit une carte cadeau du montant collecté, valable dans tous nos établissements partenaires pendant 1 an." />
                 </p>
               </div>
@@ -199,7 +199,7 @@ export default function PageCagnotte() {
         <h2 className="text-4xl font-bold text-center mb-6">
           <TranslatedText text="Pour toutes les occasions" />
         </h2>
-        <p className="text-center font-roboto text-lg text-gray-600 mb-12 max-w-2xl mx-auto">
+        <p className="text-center font-tahoma text-lg text-gray-600 mb-12 max-w-2xl mx-auto">
           <TranslatedText text="La cagnotte bien-être s'adapte à tous vos événements spéciaux" />
         </p>
 
@@ -272,7 +272,7 @@ export default function PageCagnotte() {
             <h3 className="font-bold text-xl mb-3">
               <TranslatedText text="Combien coûte la création d'une cagnotte ?" />
             </h3>
-            <p className="font-roboto text-gray-700">
+            <p className="font-tahoma text-gray-700">
               <TranslatedText text="La création d'une cagnotte est entièrement gratuite. Aucun frais n'est prélevé sur les contributions de vos proches." />
             </p>
           </div>
@@ -281,7 +281,7 @@ export default function PageCagnotte() {
             <h3 className="font-bold text-xl mb-3">
               <TranslatedText text="Y a-t-il un montant minimum ou maximum ?" />
             </h3>
-            <p className="font-roboto text-gray-700">
+            <p className="font-tahoma text-gray-700">
               <TranslatedText text="Chaque personne peut contribuer librement à partir de 5€. Il n'y a pas de montant maximum pour la cagnotte totale." />
             </p>
           </div>
@@ -290,7 +290,7 @@ export default function PageCagnotte() {
             <h3 className="font-bold text-xl mb-3">
               <TranslatedText text="Combien de temps reste ouverte une cagnotte ?" />
             </h3>
-            <p className="font-roboto text-gray-700">
+            <p className="font-tahoma text-gray-700">
               <TranslatedText text="Vous définissez vous-même la date de clôture lors de la création. Une cagnotte peut rester ouverte jusqu'à 6 mois maximum." />
             </p>
           </div>
@@ -299,7 +299,7 @@ export default function PageCagnotte() {
             <h3 className="font-bold text-xl mb-3">
               <TranslatedText text="Comment le bénéficiaire reçoit-il son cadeau ?" />
             </h3>
-            <p className="font-roboto text-gray-700">
+            <p className="font-tahoma text-gray-700">
               <TranslatedText text="À la clôture de la cagnotte, le bénéficiaire reçoit automatiquement par email une carte cadeau du montant total collecté, valable 1 an dans tous nos établissements partenaires." />
             </p>
           </div>
@@ -308,7 +308,7 @@ export default function PageCagnotte() {
             <h3 className="font-bold text-xl mb-3">
               <TranslatedText text="Les paiements sont-ils sécurisés ?" />
             </h3>
-            <p className="font-roboto text-gray-700">
+            <p className="font-tahoma text-gray-700">
               <TranslatedText text="Oui, tous les paiements sont traités par Stripe, leader mondial du paiement en ligne sécurisé. Aucune donnée bancaire n'est stockée sur nos serveurs." />
             </p>
           </div>
@@ -328,7 +328,7 @@ export default function PageCagnotte() {
               </h3>
               <ArrowRight className="text-[#B6B498] group-hover:translate-x-2 transition-transform" size={28} />
             </div>
-            <p className="font-roboto text-gray-600">
+            <p className="font-tahoma text-gray-600">
               <TranslatedText text="Explorez notre sélection d'établissements partenaires de prestige" />
             </p>
           </Link>
@@ -343,20 +343,20 @@ export default function PageCagnotte() {
               </h3>
               <ArrowRight className="text-[#B6B498] group-hover:translate-x-2 transition-transform" size={28} />
             </div>
-            <p className="font-roboto text-gray-600">
+            <p className="font-tahoma text-gray-600">
               <TranslatedText text="Offrez une carte cadeau individuelle pour un moment de bien-être" />
             </p>
           </Link>
         </div>
       </div>
 
-      {/* Section CTA finale (placée à la fin pour une cohérence logique) */}
+      {/* Section CTA finale */}
       <div className="bg-gradient-to-r from-[#B6B498] to-[#8B8970] w-screen relative left-[calc(-50vw+50%)] px-5 py-20">
         <div className="max-w-4xl mx-auto text-center text-white">
           <h2 className="text-5xl font-bold mb-6">
             <TranslatedText text="Prêt à créer votre cagnotte ?" />
           </h2>
-          <p className="text-xl font-roboto mb-10 opacity-95">
+          <p className="text-xl font-tahoma mb-10 opacity-95">
             <TranslatedText text="Quelques clics suffisent pour offrir ensemble un moment d'exception" />
           </p>
           <Link to={paths.cagnotte.create}

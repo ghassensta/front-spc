@@ -104,7 +104,7 @@ export default function DevenirPartnerView() {
     <>
       {/* Header Image */}
       <div
-        className="w-screen relative left-[calc(-50vw+50%)] h-96 bg-black bg-center bg-cover bg-fixed overflow-hidden hidden md:block"
+        className="w-full h-96 bg-black bg-center bg-cover relative"
         style={{ backgroundImage: `url(${theImage})` }}
       >
         <div className="absolute inset-0 bg-black bg-opacity-40" />

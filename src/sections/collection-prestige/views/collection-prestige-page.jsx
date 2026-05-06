@@ -12,7 +12,7 @@ export default function CollectionPrestigePage() {
     <>
       {}
       <div
-        className="w-screen relative left-[calc(-50vw+50%)] h-96 bg-black bg-center bg-cover bg-fixed overflow-hidden hidden md:block"
+        className="w-full h-96 bg-black bg-center bg-cover relative"
         style={{
           backgroundImage: `url(${theImage})`,
         }}

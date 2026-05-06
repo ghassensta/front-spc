@@ -1,7 +1,7 @@
 import { paths } from "./router/paths";
 
 export const CONFIG = {
-  appName: "SPC",
+  appName: "Spa-Prestige-Collection",
   storageKey: import.meta.env.STORAGE_KEY || "spc_access_token",
   serverUrl: import.meta.env.SERVER_URL || "http://127.0.0.1:8000",
   frontUrl: import.meta.env.FRONT_URL || "http://localhost:5173",

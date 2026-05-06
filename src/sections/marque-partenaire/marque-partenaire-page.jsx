@@ -8,6 +8,15 @@ import { TranslatedText } from "src/components/translated-text/translated-text";
 import { useTranslation } from "src/context/translation-context";
 import { useGetHomePage } from "src/actions/homepage";
 import Partenaires from "src/sections/home2/comp/partenaires";
+import Select from "react-select";
+import {
+  FaBullseye,
+  FaVideo,
+  FaBook,
+  FaCalendarAlt,
+  FaUserCheck,
+  FaChartLine,
+} from "react-icons/fa";
 
 export default function MarquePartenairePage() {
   const { translateSync } = useTranslation();
@@ -29,6 +38,49 @@ export default function MarquePartenairePage() {
     fichier: null,
   });
 
+  const selectStyles = {
+    control: (base, state) => ({
+      ...base,
+      borderColor: state.isFocused ? "#c4c0a1" : "#d1d5db",
+      boxShadow: state.isFocused ? "0 0 0 2px #c4c0a1" : "none",
+      borderRadius: "6px",
+      minHeight: "42px",
+      "&:hover": {
+        borderColor: "#c4c0a1",
+      },
+    }),
+    option: (base, state) => ({
+      ...base,
+      backgroundColor: state.isSelected
+        ? "#c4c0a1"
+        : state.isFocused
+          ? "#f3ebdd"
+          : "white",
+      color: "#333",
+      cursor: "pointer",
+    }),
+    singleValue: (base) => ({
+      ...base,
+      color: "#374151",
+    }),
+  };
+  const paysOptions = [
+    { value: "France", label: "France" },
+    { value: "Belgique", label: "Belgique" },
+    { value: "Suisse", label: "Suisse" },
+    { value: "Autre", label: "Autre" },
+  ];
+
+  const secteurOptions = [
+    { value: "Hôtel", label: "Hôtel" },
+    { value: "Spa", label: "Spa" },
+    { value: "Centre de beauté", label: "Centre de beauté" },
+    { value: "Restaurant", label: "Restaurant" },
+    { value: "Autre", label: "Autre" },
+  ];
+
+  const fileInputRefPhotos = useRef(null);
+  const [fileName, setFileName] = useState("");
   const fileInputRef = useRef(null);
 
   // ── Gestion du chargement des données ───────────────────────────────
@@ -56,6 +108,10 @@ export default function MarquePartenairePage() {
       }
     }
 
+    if (files && files[0]) {
+      setFileName(files[0].name);
+    }
+
     setFormData((prev) => ({
       ...prev,
       [name]: files ? files[0] : processedValue,
@@ -70,7 +126,7 @@ export default function MarquePartenairePage() {
     }
 
     if (!formData.marque.trim()) {
-      errors.push(translateSync("Le champ Nom de la marque est requis."));
+      errors.push(translateSync("Le champ Nom de l'établissement est requis."));
     }
 
     if (!formData.email.trim()) {
@@ -79,13 +135,20 @@ export default function MarquePartenairePage() {
       errors.push(translateSync("L'adresse e-mail n'est pas valide."));
     }
 
+    if (!formData.secteur.trim()) {
+      errors.push(translateSync("Le champ Secteur d'activité est requis."));
+    }
+
     if (formData.telephone && !/^\+?[0-9\s-]{6,15}$/.test(formData.telephone)) {
       errors.push(translateSync("Le numéro de téléphone n'est pas valide."));
     }
 
-    if (formData.siteweb && !validator.isURL(formData.siteweb, { require_protocol: false })) {
+    if (
+      formData.siteweb &&
+      !validator.isURL(formData.siteweb, { require_protocol: false })
+    ) {
       errors.push(
-        translateSync("L'URL du site web doit être valide (ex: exemple.com)")
+        translateSync("L'URL du site web doit être valide (ex: exemple.com)"),
       );
     }
 
@@ -128,6 +191,7 @@ export default function MarquePartenairePage() {
         fichier: null,
       });
 
+      setFileName("");
       if (fileInputRef.current) {
         fileInputRef.current.value = "";
       }
@@ -136,52 +200,131 @@ export default function MarquePartenairePage() {
     }
   };
 
+  const FONT = "Calibri, 'Segoe UI', sans-serif";
+  const FONT_LIGHT =
+    "'Calibri Light', 'Segoe UI Light', 'Segoe UI', sans-serif";
+
+  const inputClass =
+    "border border-gray-300 py-2 pl-9 pr-3 rounded focus:outline-none focus:ring-2 focus:ring-[#c4c0a1] text-gray-700 w-full";
+
   return (
     <>
-      {/* Hero Section */}
       <div
-        className="w-screen relative left-[calc(-50vw+50%)] h-96 bg-black bg-center bg-cover bg-fixed overflow-hidden hidden md:block"
+        className="w-full h-96 bg-black bg-center bg-cover relative"
         style={{ backgroundImage: `url(${theImage})` }}
       >
-        <div className="absolute inset-0 bg-black bg-opacity-40" />
-        <div className="absolute inset-0 flex items-center justify-center px-4">
-          <h1 className="text-white text-4xl md:text-5xl max-w-5xl mx-auto text-center font-bold leading-snug">
-            <TranslatedText text="OFFREZ A VOTRE MARQUE UNE VISIBILITÉ INÉGALÉE AVEC SPA & PRESTIGE COLLECTION" />
-          </h1>
+        <div className="absolute inset-0 bg-black bg-opacity-40 flex items-center justify-center">
+          <div className="max-w-6xl mx-auto w-full px-6 text-white text-center">
+            <div className="max-w-2xl mx-auto">
+              <h1 className="text-4xl font-bold mb-4 uppercase">
+                {translateSync("OFFREZ À VOTRE MARQUE UNE VISIBILITÉ CIBLÉE")}
+              </h1>
+            </div>
+          </div>
         </div>
       </div>
+      {/*   */}
 
       {/* Pourquoi nous rejoindre */}
       <section className="max-w-6xl mx-auto px-4 py-16">
-        <h2 className="text-4xl md:text-5xl italic text-center mb-12 font-serif">
-          <TranslatedText text="Pourquoi nous rejoindre ?" />
-        </h2>
+        <div className="text-center mb-10">
+          <p
+            className="text-xs uppercase tracking-widest mb-3"
+            style={{ color: "#C7B892", letterSpacing: "0.2em" }}
+          >
+            {translateSync("Nos avantages")}
+          </p>
+
+          <h2 className="text-3xl md:text-4xl font-bold">
+            {translateSync("Pourquoi nous rejoindre ?")}
+          </h2>
+
+          <div
+            className="mx-auto mt-4"
+            style={{
+              width: "60px",
+              height: "2px",
+              background: "#C7B892",
+            }}
+          />
+        </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-10 items-center">
-          <ul className="space-y-5 text-justify font-bricolage text-base list-disc pl-6">
-            <li>
-              <strong><TranslatedText text="Visibilité Ciblée :" /></strong>{" "}
-              <TranslatedText text="Profitez d’une newsletter exclusive, de publications personnalisées sur nos réseaux sociaux et d’une mise en avant optimale sur notre site." />
+          <ul className="space-y-5 text-justify text-base">
+            <li className="flex items-start gap-3">
+              <div className="w-14 h-14 flex items-center justify-center rounded-full bg-[#F3EBDD] shrink-0 mt-1">
+                <FaBullseye className="text-[#C7B892] text-3xl" />
+              </div>
+              <div>
+                <strong>
+                  <TranslatedText text="Visibilité ciblée :" />
+                </strong>{" "}
+                <TranslatedText text="Newsletter, réseaux sociaux et mise en avant sur notre site avec votre logo et redirection." />
+              </div>
             </li>
-            <li>
-              <strong><TranslatedText text="Accompagnement Digital et Direct :" /></strong>{" "}
-              <TranslatedText text="Participez à des visio-conférences régulières et aux réunions régionales pour échanger directement avec le réseau." />
+
+            <li className="flex items-start gap-3">
+              <div className="w-14 h-14 flex items-center justify-center rounded-full bg-[#F3EBDD] shrink-0 mt-1">
+                <FaVideo className="text-[#C7B892] text-3xl" />
+              </div>
+              <div>
+                <strong>
+                  <TranslatedText text="Accompagnement digital et direct :" />
+                </strong>{" "}
+                <TranslatedText text="Visioconférences régulières, échanges avec le réseau et transmission des demandes professionnelles." />
+              </div>
             </li>
-            <li>
-              <strong><TranslatedText text="Événements Stratégiques :" /></strong>{" "}
-              <TranslatedText text="Assurez votre présence lors des salons et événements majeurs pour accroître votre visibilité." />
+
+            <li className="flex items-start gap-3">
+              <div className="w-14 h-14 flex items-center justify-center rounded-full bg-[#F3EBDD] shrink-0 mt-1">
+                <FaBook className="text-[#C7B892] text-3xl" />
+              </div>
+              <div>
+                <strong>
+                  <TranslatedText text="Présence sur des supports clés :" />
+                </strong>{" "}
+                <TranslatedText text="Guide annuel (édition avril 2027) et mise en avant lors de nos temps forts." />
+              </div>
             </li>
-            <li>
-              <strong><TranslatedText text="Accompagnement personnalisé :" /></strong>{" "}
-              <TranslatedText text="Bénéficiez d’un suivi sur mesure adapté à vos objectifs." />
+
+            <li className="flex items-start gap-3">
+              <div className="w-14 h-14 flex items-center justify-center rounded-full bg-[#F3EBDD] shrink-0 mt-1">
+                <FaCalendarAlt className="text-[#C7B892] text-3xl" />
+              </div>
+              <div>
+                <strong>
+                  <TranslatedText text="Événements stratégiques :" />
+                </strong>{" "}
+                <TranslatedText text="Participation à des salons, événements majeurs et opérations comme le calendrier de l'Avent ou le Championnat de France de Massage." />
+              </div>
             </li>
-            <li>
-              <strong><TranslatedText text="Soutien Marketing et Développement Commercial :" /></strong>{" "}
-              <TranslatedText text="Outils marketing exclusifs et partenariats stratégiques." />
+
+            <li className="flex items-start gap-3">
+              <div className="w-14 h-14 flex items-center justify-center rounded-full bg-[#F3EBDD] shrink-0 mt-1">
+                <FaUserCheck className="text-[#C7B892] text-3xl" />
+              </div>
+              <div>
+                <strong>
+                  <TranslatedText text="Accompagnement personnalisé :" />
+                </strong>{" "}
+                <TranslatedText text="Un suivi adapté à vos objectifs." />
+              </div>
+            </li>
+
+            <li className="flex items-start gap-3">
+              <div className="w-14 h-14 flex items-center justify-center rounded-full bg-[#F3EBDD] shrink-0 mt-1">
+                <FaChartLine className="text-[#C7B892] text-3xl" />
+              </div>
+              <div>
+                <strong>
+                  <TranslatedText text="Soutien marketing & développement :" />
+                </strong>{" "}
+                <TranslatedText text="Outils dédiés, collaborations et visibilité auprès de nos établissements adhérents." />
+              </div>
             </li>
           </ul>
 
-          <div>
+          <div className="hidden md:block">
             <img
               loading="lazy"
               src={theImage2}
@@ -190,37 +333,67 @@ export default function MarquePartenairePage() {
             />
           </div>
         </div>
-
-        <div className="mt-12">
-          <Partenaires section={section6} />
-        </div>
       </section>
 
       {/* Formulaire */}
       <div className="bg-[#FBF6EC] w-screen relative left-[calc(-50vw+50%)] py-12">
         <section className="max-w-6xl mx-auto px-4">
-          <h2 className="text-2xl md:text-3xl italic text-center mb-6 font-serif">
-            <TranslatedText text="Rejoignez le Cercle des Fournisseurs de Spa & Prestige Collection" />
-          </h2>
+          <div className="text-center mb-10">
+            {/* Petit label */}
+            <p
+              className="text-xs uppercase tracking-widest mb-3"
+              style={{ color: "#C7B892", letterSpacing: "0.2em" }}
+            >
+              <TranslatedText text="Devenir partenaire" />
+            </p>
 
-          <p className="text-center text-lg mb-6 max-w-3xl mx-auto">
-            <TranslatedText text="Rejoignez un réseau sélectif en pleine expansion et donnez à votre marque l’opportunité de se propulser vers de nouveaux horizons." />
-          </p>
+            {/* Titre principal */}
+            <h2 className="text-3xl md:text-4xl font-bold">
+              <TranslatedText text="Nous rejoindre" />
+            </h2>
 
-          <p className="text-center font-bold text-xl md:text-2xl mb-6 italic">
-            <TranslatedText text="Vous souhaitez devenir une marque partenaire ?" />
-          </p>
+            {/* Ligne décorative */}
+            <div
+              className="mx-auto mt-4 mb-6"
+              style={{
+                width: "60px",
+                height: "2px",
+                background: "#C7B892",
+              }}
+            />
 
-          <p className="text-center text-base mb-2">
-            <TranslatedText text="Veuillez remplir ce formulaire, et nous vous recontacterons dans les plus brefs délais !" />
-          </p>
-          <p className="text-center text-sm text-gray-600 mb-10">
-            <TranslatedText text="* Champs obligatoires" />
-          </p>
+            {/* Texte */}
+            <p className="text-center text-base mb-1 font-bricolage">
+              <TranslatedText text="Veuillez remplir ce formulaire, et nous vous contacterons dans les plus brefs délais." />
+            </p>
 
-          <form onSubmit={handleSubmit} className="grid grid-cols-1 md:grid-cols-2 gap-5 md:gap-6">
+            <p className="text-center text-sm text-gray-500 italic">
+              <TranslatedText text="* Champs obligatoires" />
+            </p>
+          </div>
+
+          <form
+            onSubmit={handleSubmit}
+            className="grid grid-cols-1 md:grid-cols-2 gap-5 md:gap-6"
+          >
+            {/* Nom de l'établissement */}
+            <label className="flex flex-col gap-1 md:col-span-2">
+              <span className="font-semibold">
+                <TranslatedText text="Nom de l'établissement*" />
+              </span>
+              <input
+                type="text"
+                name="marque"
+                value={formData.marque}
+                onChange={handleChange}
+                className={inputClass}
+                required
+              />
+            </label>
+
+            {/* Nom */}
             <label className="flex flex-col gap-1">
-              <span className="font-medium">
+              <span className="font-semibold">
                 <TranslatedText text="Nom*" />
               </span>
               <input
@@ -228,13 +401,14 @@ export default function MarquePartenairePage() {
                 name="nom"
                 value={formData.nom}
                 onChange={handleChange}
-                className="border border-gray-300 py-2 px-3 rounded focus:outline-none focus:ring-2 focus:ring-[#c4c0a1]"
+                className={inputClass}
                 required
               />
             </label>
 
+            {/* Prénom */}
             <label className="flex flex-col gap-1">
-              <span className="font-medium">
+              <span className="font-semibold">
                 <TranslatedText text="Prénom" />
               </span>
               <input
@@ -242,43 +416,61 @@ export default function MarquePartenairePage() {
                 name="prenom"
                 value={formData.prenom}
                 onChange={handleChange}
-                className="border border-gray-300 py-2 px-3 rounded focus:outline-none focus:ring-2 focus:ring-[#c4c0a1]"
+                className={inputClass}
               />
             </label>
 
+            {/* Téléphone */}
             <label className="flex flex-col gap-1">
-              <span className="font-medium">
-                <TranslatedText text="Nom de la marque*" />
+              <span className="font-semibold">
+                <TranslatedText text="Téléphone" />
               </span>
               <input
-                type="text"
-                name="marque"
-                value={formData.marque}
+                type="tel"
+                name="telephone"
+                value={formData.telephone}
                 onChange={handleChange}
-                className="border border-gray-300 py-2 px-3 rounded focus:outline-none focus:ring-2 focus:ring-[#c4c0a1]"
+                className={inputClass}
+              />
+            </label>
+
+            {/* Email */}
+            <label className="flex flex-col gap-1">
+              <span className="font-semibold">
+                <TranslatedText text="E-mail*" />
+              </span>
+              <input
+                type="email"
+                name="email"
+                value={formData.email}
+                onChange={handleChange}
+                className={inputClass}
                 required
               />
             </label>
 
+            {/* Pays */}
             <label className="flex flex-col gap-1">
-              <span className="font-medium">
+              <span className="font-semibold">
                 <TranslatedText text="Pays" />
               </span>
-              <select
-                name="pays"
-                value={formData.pays}
-                onChange={handleChange}
-                className="border border-gray-300 py-2 px-3 rounded focus:outline-none focus:ring-2 focus:ring-[#c4c0a1]"
-              >
-                <option value="France">France</option>
-                <option value="Belgique">Belgique</option>
-                <option value="Suisse">Suisse</option>
-                <option value="Autre">Autre</option>
-              </select>
+              <Select
+                options={paysOptions}
+                value={paysOptions.find((opt) => opt.value === formData.pays)}
+                onChange={(selected) =>
+                  setFormData((prev) => ({
+                    ...prev,
+                    pays: selected.value,
+                  }))
+                }
+                styles={selectStyles}
+                placeholder="Sélectionner un pays"
+              />
             </label>
 
-            <label className="flex flex-col gap-1 md:col-span-2">
-              <span className="font-medium">
+            {/* Adresse */}
+            <label className="flex flex-col gap-1">
+              <span className="font-semibold">
                 <TranslatedText text="Adresse complète" />
               </span>
               <input
@@ -286,12 +478,13 @@ export default function MarquePartenairePage() {
                 name="adresse"
                 value={formData.adresse}
                 onChange={handleChange}
-                className="border border-gray-300 py-2 px-3 rounded focus:outline-none focus:ring-2 focus:ring-[#c4c0a1]"
+                className={inputClass}
               />
             </label>
 
+            {/* Site web */}
             <label className="flex flex-col gap-1">
-              <span className="font-medium">
+              <span className="font-semibold">
                 <TranslatedText text="Site web" />
               </span>
               <input
@@ -300,70 +493,48 @@ export default function MarquePartenairePage() {
                 value={formData.siteweb}
                 onChange={handleChange}
                 placeholder="ex: exemple.com"
-                className="border border-gray-300 py-2 px-3 rounded focus:outline-none focus:ring-2 focus:ring-[#c4c0a1]"
+                className={inputClass}
               />
             </label>
 
+            {/* Rôle */}
             <label className="flex flex-col gap-1">
-              <span className="font-medium">
-                <TranslatedText text="E-mail*" />
-              </span>
-              <input
-                type="email"
-                name="email"
-                value={formData.email}
-                onChange={handleChange}
-                className="border border-gray-300 py-2 px-3 rounded focus:outline-none focus:ring-2 focus:ring-[#c4c0a1]"
-                required
-              />
-            </label>
-
-            <label className="flex flex-col gap-1">
-              <span className="font-medium">
-                <TranslatedText text="Téléphone" />
-              </span>
-              <input
-                type="tel"
-                name="telephone"
-                value={formData.telephone}
-                onChange={handleChange}
-                className="border border-gray-300 py-2 px-3 rounded focus:outline-none focus:ring-2 focus:ring-[#c4c0a1]"
-              />
-            </label>
-
-            <label className="flex flex-col gap-1">
-              <span className="font-medium">
-                <TranslatedText text="Secteur d’activité" />
-              </span>
-              <select
-                name="secteur"
-                value={formData.secteur}
-                onChange={handleChange}
-                className="border border-gray-300 py-2 px-3 rounded focus:outline-none focus:ring-2 focus:ring-[#c4c0a1]"
-              >
-                <option value="Hôtel">{translateSync("Hôtel")}</option>
-                <option value="Spa">{translateSync("Spa")}</option>
-                <option value="Centre de beauté">{translateSync("Centre de beauté")}</option>
-                <option value="Restaurant">{translateSync("Restaurant")}</option>
-                <option value="Autre">{translateSync("Autre")}</option>
-              </select>
-            </label>
-
-            <label className="flex flex-col gap-1">
-              <span className="font-medium">
-                <TranslatedText text="Rôle de la personne" />
+              <span className="font-semibold">
+                <TranslatedText text="Rôle de la personne qui nous contacte" />
               </span>
               <input
                 type="text"
                 name="role"
                 value={formData.role}
                 onChange={handleChange}
-                className="border border-gray-300 py-2 px-3 rounded focus:outline-none focus:ring-2 focus:ring-[#c4c0a1]"
+                className={inputClass}
               />
             </label>
 
+            {/* Secteur */}
             <label className="flex flex-col gap-1">
-              <span className="font-medium">
+              <span className="font-semibold">
+                <TranslatedText text="Secteur d'activité*" />
+              </span>
+              <Select
+                options={secteurOptions}
+                value={secteurOptions.find(
+                  (opt) => opt.value === formData.secteur,
+                )}
+                onChange={(selected) =>
+                  setFormData((prev) => ({
+                    ...prev,
+                    secteur: selected.value,
+                  }))
+                }
+                styles={selectStyles}
+                placeholder="Sélectionner un secteur"
+              />
+            </label>
+
+            {/* Connaissance */}
+            <label className="flex flex-col gap-1 md:col-span-2">
+              <span className="font-semibold">
                 <TranslatedText text="Comment avez-vous connu Spa & Prestige Collection ?" />
               </span>
               <input
@@ -371,12 +542,13 @@ export default function MarquePartenairePage() {
                 name="connaissance"
                 value={formData.connaissance}
                 onChange={handleChange}
-                className="border border-gray-300 py-2 px-3 rounded focus:outline-none focus:ring-2 focus:ring-[#c4c0a1]"
+                className={inputClass}
               />
             </label>
 
+            {/* Message */}
             <label className="flex flex-col gap-1 md:col-span-2">
-              <span className="font-medium">
+              <span className="font-semibold">
                 <TranslatedText text="Message*" />
               </span>
               <textarea
@@ -385,33 +557,74 @@ export default function MarquePartenairePage() {
                 onChange={handleChange}
                 required
                 rows={5}
-                className="border border-gray-300 py-2 px-3 rounded focus:outline-none focus:ring-2 focus:ring-[#c4c0a1] min-h-[120px]"
+                placeholder={translateSync(
+                  "Décrivez votre établissement, vos atouts et vos attentes",
+                )}
+                className="border border-gray-300 py-2 px-3 rounded focus:outline-none focus:ring-2 focus:ring-[#c4c0a1] min-h-[120px] text-gray-700 w-full"
               />
             </label>
 
+            {/* Upload photos */}
             <label className="flex flex-col gap-1 md:col-span-2">
-              <span className="font-medium">
-                <TranslatedText text="Joindre un fichier (facultatif)" />
+              <span className="font-semibold">
+                <TranslatedText text="Ajouter des photos (JPEG, PNG, PDF – 5 Mo maximum)" />
               </span>
-              <input
-                type="file"
-                name="fichier"
-                onChange={handleChange}
-                ref={fileInputRef}
-                className="border border-gray-300 py-2 px-3 rounded w-full file:mr-4 file:py-2 file:px-4 file:rounded file:border-0 file:text-sm file:font-medium file:bg-[#f5f0e6] file:text-gray-700 hover:file:bg-[#e6ded1] cursor-pointer"
-              />
-            </label>
 
+              <label
+                htmlFor="photos-upload"
+                className="flex items-center gap-3 border border-dashed border-[#c8a96e] bg-white rounded px-4 py-4 cursor-pointer hover:bg-[#fdf9f2] transition-colors"
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="24"
+                  height="24"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="#c8a96e"
+                  strokeWidth="1.5"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    d="M12 16.5V9.75m0 0l3 3m-3-3l-3 3M6.75 19.5a4.5 4.5 0 01-1.41-8.775 5.25 5.25 0 0110.338-2.32 5.25 5.25 0 011.233 10.59"
+                  />
+                </svg>
+
+                <span className="text-sm text-gray-500">
+                  {formData.photos
+                    ? formData.photos.name
+                    : translateSync(
+                        "Cliquez pour ajouter des fichiers ou glissez-déposez ici",
+                      )}
+                </span>
+
+                <input
+                  id="photos-upload"
+                  type="file"
+                  name="photos"
+                  accept="image/jpeg,image/png,application/pdf"
+                  onChange={handleChange}
+                  className="hidden"
+                />
+              </label>
+            </label>
+            {/* Submit */}
             <div className="md:col-span-2 flex justify-center mt-8">
               <button
                 type="submit"
-                className="bg-[#c4c0a1] text-white px-10 py-3 rounded-full hover:bg-[#b09456] transition-colors font-medium shadow-md"
+                className="bg-black text-white px-10 py-3 rounded-full hover:bg-[#b09456] transition-colors font-semibold shadow-md"
+                style={{ letterSpacing: "0.05em" }}
               >
-                <TranslatedText text="Envoyer ma demande" />
+                <TranslatedText text="ENVOYER MA DEMANDE" />
               </button>
             </div>
           </form>
         </section>
+
+        {/* Nos marques partenaires */}
+        <div className="mt-12">
+          <Partenaires section={section6} />
+        </div>
       </div>
     </>
   );

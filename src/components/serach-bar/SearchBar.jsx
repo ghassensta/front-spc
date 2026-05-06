@@ -7,20 +7,48 @@ export default function SearchBar({ className = "" }) {
     const [query, setQuery] = useState("");
     const [dropdownOpen, setDropdownOpen] = useState(false);
     const [mobileOpen, setMobileOpen] = useState(false);
+    const [activeIndex, setActiveIndex] = useState(-1);
 
     const desktopRef = useRef(null);
     const mobileInputRef = useRef(null);
+    const debounceRef = useRef(null);
+
     const navigate = useNavigate();
 
-    const { suggestions, loading, setQuery: setApiQuery } =
+    const { suggestions = [], loading, setQuery: setApiQuery } =
         useSearchProduitsEtablissements();
-
-    const filtered = suggestions;
 
     const handleChange = (val) => {
         setQuery(val);
-        setApiQuery(val);
+        setActiveIndex(-1);
+
+        clearTimeout(debounceRef.current);
+        debounceRef.current = setTimeout(() => {
+            setApiQuery(val);
+        }, 300);
+
         setDropdownOpen(val.length > 0);
+    };
+
+    const handleKeyDown = (e) => {
+        if (!dropdownOpen) return;
+
+        if (e.key === "ArrowDown") {
+            setActiveIndex((prev) =>
+                prev < suggestions.length - 1 ? prev + 1 : prev
+            );
+        }
+
+        if (e.key === "ArrowUp") {
+            setActiveIndex((prev) => (prev > 0 ? prev - 1 : 0));
+        }
+
+        if (e.key === "Enter") {
+            e.preventDefault();
+            if (activeIndex >= 0) {
+                goToSearch(suggestions[activeIndex]);
+            }
+        }
     };
 
     useEffect(() => {
@@ -30,35 +58,29 @@ export default function SearchBar({ className = "" }) {
         } else {
             document.body.style.overflow = "";
         }
-        return () => { document.body.style.overflow = ""; };
+        return () => (document.body.style.overflow = "");
     }, [mobileOpen]);
 
+    // fermer si click outside
     useEffect(() => {
         const handler = (e) => {
-            if (desktopRef.current && !desktopRef.current.contains(e.target))
+            if (desktopRef.current && !desktopRef.current.contains(e.target)) {
                 setDropdownOpen(false);
+            }
         };
         document.addEventListener("mousedown", handler);
         return () => document.removeEventListener("mousedown", handler);
-    }, []);
-
-    useEffect(() => {
-        const handler = (e) => {
-            if (e.key === "Escape") closeMobile();
-        };
-        document.addEventListener("keydown", handler);
-        return () => document.removeEventListener("keydown", handler);
     }, []);
 
     const goToSearch = (item) => {
         setDropdownOpen(false);
         closeMobile();
 
-        //  uniquement si objet avec slug
-        if (item && typeof item === "object" && item.slug) {
-            navigate(`/produit/${item.slug}`);
+        if (item && item.slug) {
+            navigate(`/spa/${item.slug}`);
         }
     };
+
     const closeMobile = () => {
         setMobileOpen(false);
         setQuery("");
@@ -68,15 +90,36 @@ export default function SearchBar({ className = "" }) {
 
     const SuggestionList = ({ onSelect }) => (
         <ul className="py-1">
-            {filtered.map((s, i) => (
-                <li key={s.key || i}>
+            {suggestions.map((s, i) => (
+                <li key={s.id || i}>
                     <button
                         type="button"
                         onClick={() => onSelect(s)}
-                        className="w-full flex items-center gap-3 px-4 py-3 text-left text-sm text-gray-700 hover:bg-gray-50"
+                        className={`w-full flex items-center gap-3 px-4 py-3 text-left text-sm transition
+                            ${i === activeIndex ? "bg-gray-100" : "hover:bg-gray-50"}
+                        `}
                     >
-                        <IoSearchOutline size={13} className="text-gray-300" />
-                        <span>{s.label}</span>
+                        {/* IMAGE */}
+                        {s.image ? (
+                            <img
+                                src={s.image}
+                                alt={s.label}
+                                className="w-10 h-10 object-cover rounded-lg"
+                                loading="lazy"
+                            />
+                        ) : (
+                            <div className="w-10 h-10 bg-gray-200 rounded-lg" />
+                        )}
+
+                        {/* TEXT */}
+                        <div className="flex flex-col">
+                            <span className="text-gray-800">{s.label}</span>
+                            {s.ville && (
+                                <span className="text-xs text-gray-400">
+                                    {s.ville}
+                                </span>
+                            )}
+                        </div>
                     </button>
                 </li>
             ))}
@@ -87,25 +130,20 @@ export default function SearchBar({ className = "" }) {
         <>
             {/* DESKTOP */}
             <div ref={desktopRef} className={`hidden md:block relative ${className}`}>
-                <form onSubmit={(e) => { e.preventDefault(); goToSearch(query); }}>
+                <form onSubmit={(e) => e.preventDefault()}>
                     <div className="relative flex items-center">
-                        <IoSearchOutline
-                            size={15}
-                            className="absolute left-3 text-gray-400"
-                        />
+                        <IoSearchOutline size={15} className="absolute left-3 text-gray-400" />
+
                         <input
                             type="text"
                             value={query}
                             onChange={(e) => handleChange(e.target.value)}
-                            onFocus={() => query.length > 0 && setDropdownOpen(true)}
-                            placeholder="Rechercher un service, produit, ville…"
-                            className="
-                w-full pl-8 pr-7 py-[7px]
-                text-sm bg-gray-100 rounded-full
-                focus:bg-white focus:ring-1
-                outline-none
-              "
+                            onKeyDown={handleKeyDown}
+                            onFocus={() => query && setDropdownOpen(true)}
+                            placeholder="Rechercher un établissement..."
+                            className="w-full pl-8 pr-7 py-[7px] text-sm bg-gray-100 rounded-full focus:bg-white focus:ring-1 outline-none"
                         />
+
                         {query && (
                             <button
                                 type="button"
@@ -120,23 +158,18 @@ export default function SearchBar({ className = "" }) {
 
                 {/* DROPDOWN */}
                 {dropdownOpen && (
-                    <div className="absolute top-full right-0 mt-2 w-72 bg-white shadow-lg rounded-xl border z-50">
+                    <div className="absolute top-full right-0 mt-2 w-80 bg-white shadow-lg rounded-xl border z-50">
                         <div className="px-4 py-2 border-b text-xs text-gray-400">
-                            Suggestions
+                            Établissements
                         </div>
 
                         {loading ? (
                             <div className="p-4 text-sm text-gray-400">Chargement...</div>
+                        ) : suggestions.length === 0 ? (
+                            <div className="p-4 text-sm text-gray-400">Aucun résultat</div>
                         ) : (
                             <SuggestionList onSelect={goToSearch} />
                         )}
-
-                        <button
-                            onClick={() => goToSearch(query)}
-                            className="w-full px-4 py-2 text-sm text-gray-500 hover:bg-gray-50"
-                        >
-                            Voir tous les résultats
-                        </button>
                     </div>
                 )}
             </div>
@@ -153,7 +186,6 @@ export default function SearchBar({ className = "" }) {
             {/* MOBILE */}
             {mobileOpen && (
                 <div className="fixed inset-0 z-[100] bg-white flex flex-col">
-                    {/* top */}
                     <div className="flex items-center gap-3 px-3 py-3 border-b">
                         <button onClick={closeMobile}>
                             <IoArrowBack size={22} />
@@ -168,11 +200,10 @@ export default function SearchBar({ className = "" }) {
                         />
                     </div>
 
-                    {/* body */}
                     <div className="flex-1 overflow-y-auto">
                         {loading ? (
                             <div className="p-4 text-gray-400">Chargement...</div>
-                        ) : filtered.length === 0 ? (
+                        ) : suggestions.length === 0 ? (
                             <div className="p-6 text-gray-400 text-center">
                                 Aucun résultat
                             </div>

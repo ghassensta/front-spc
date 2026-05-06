@@ -6,7 +6,6 @@ import { useLocation } from "react-router-dom";
 export default function Page() {
   const location = useLocation();
 
-  // ✅ Canonical dynamique (sans query params)
   const canonicalUrl = `${window.location.origin}${location.pathname}`;
 
   const pageTitle = "Solutions CSE & Collectivités - Spa & Prestige Collection";
