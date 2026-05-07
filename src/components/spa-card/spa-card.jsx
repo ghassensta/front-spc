@@ -67,7 +67,7 @@ export default function SpaCard({
         : '';
 
     return (
-      <span className="bg-[#B6B499] w-max text-black font-bold font-roboto px-2 py-1 absolute -bottom-1 left-1/2 -translate-x-1/2 rounded-3xl">
+      <span className="bg-[#b8955a] w-max text-white font-bold font-roboto px-2 py-1 absolute -bottom-1 left-1/2 -translate-x-1/2 rounded-3xl">
         <TranslatedText text={texteAAfficher} />
       </span>
     );
@@ -117,7 +117,7 @@ export default function SpaCard({
         {renderDescription()}
         {renderOffres()}
         <div className="mt-2 w-full flex justify-center items-center">
-          <button className="inline-flex mx-auto font-tahoma rounded-full items-center gap-2 uppercase font-normal tracking-widest transition-all duration-300 bg-[#B6B499] hover:bg-black text-white px-6 py-3 text-sm">
+          <button className="inline-flex mx-auto font-tahoma rounded-full items-center gap-2 uppercase font-normal tracking-widest transition-all duration-300 bg-[#b8955a] hover:bg-black text-white px-6 py-3 text-sm">
             <TranslatedText text="Offrir une expérience" />
           </button>
         </div>

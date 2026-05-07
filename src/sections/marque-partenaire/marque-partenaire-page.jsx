@@ -9,6 +9,8 @@ import { useTranslation } from "src/context/translation-context";
 import { useGetHomePage } from "src/actions/homepage";
 import Partenaires from "src/sections/home2/comp/partenaires";
 import Select from "react-select";
+import SectionHeader from "src/components/section-header/SectionHeader";
+import HeroImage from "src/components/hero-image/HeroImage";
 import {
   FaBullseye,
   FaVideo,
@@ -79,7 +81,6 @@ export default function MarquePartenairePage() {
     { value: "Autre", label: "Autre" },
   ];
 
-  const fileInputRefPhotos = useRef(null);
   const [fileName, setFileName] = useState("");
   const fileInputRef = useRef(null);
 
@@ -209,51 +210,24 @@ export default function MarquePartenairePage() {
 
   return (
     <>
-      <div
-        className="w-full h-96 bg-black bg-center bg-cover relative"
-        style={{ backgroundImage: `url(${theImage})` }}
-      >
-        <div className="absolute inset-0 bg-black bg-opacity-40 flex items-center justify-center">
-          <div className="max-w-6xl mx-auto w-full px-6 text-white text-center">
-            <div className="max-w-2xl mx-auto">
-              <h1 className="text-4xl font-bold mb-4 uppercase">
-                {translateSync("OFFREZ À VOTRE MARQUE UNE VISIBILITÉ CIBLÉE")}
-              </h1>
-            </div>
-          </div>
-        </div>
-      </div>
-      {/*   */}
+      <HeroImage
+        image={theImage}
+        label="Spa & Prestige Collection"
+        title="Offrez à votre marque une visibilité ciblée"
+      />
 
       {/* Pourquoi nous rejoindre */}
       <section className="max-w-6xl mx-auto px-4 py-16">
-        <div className="text-center mb-10">
-          <p
-            className="text-xs uppercase tracking-widest mb-3"
-            style={{ color: "#C7B892", letterSpacing: "0.2em" }}
-          >
-            {translateSync("Nos avantages")}
-          </p>
-
-          <h2 className="text-3xl md:text-4xl font-bold">
-            {translateSync("Pourquoi nous rejoindre ?")}
-          </h2>
-
-          <div
-            className="mx-auto mt-4"
-            style={{
-              width: "60px",
-              height: "2px",
-              background: "#C7B892",
-            }}
-          />
-        </div>
+        <SectionHeader
+          label="Nos avantages"
+          title="Pourquoi nous rejoindre ?"
+        />
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-10 items-center">
           <ul className="space-y-5 text-justify text-base">
             <li className="flex items-start gap-3">
               <div className="w-14 h-14 flex items-center justify-center rounded-full bg-[#F3EBDD] shrink-0 mt-1">
-                <FaBullseye className="text-[#C7B892] text-3xl" />
+                <FaBullseye className="text-[#b8955a] text-3xl" />
               </div>
               <div>
                 <strong>
@@ -265,7 +239,7 @@ export default function MarquePartenairePage() {
 
             <li className="flex items-start gap-3">
               <div className="w-14 h-14 flex items-center justify-center rounded-full bg-[#F3EBDD] shrink-0 mt-1">
-                <FaVideo className="text-[#C7B892] text-3xl" />
+                <FaVideo className="text-[#b8955a] text-3xl" />
               </div>
               <div>
                 <strong>
@@ -277,7 +251,7 @@ export default function MarquePartenairePage() {
 
             <li className="flex items-start gap-3">
               <div className="w-14 h-14 flex items-center justify-center rounded-full bg-[#F3EBDD] shrink-0 mt-1">
-                <FaBook className="text-[#C7B892] text-3xl" />
+                <FaBook className="text-[#b8955a] text-3xl" />
               </div>
               <div>
                 <strong>
@@ -289,7 +263,7 @@ export default function MarquePartenairePage() {
 
             <li className="flex items-start gap-3">
               <div className="w-14 h-14 flex items-center justify-center rounded-full bg-[#F3EBDD] shrink-0 mt-1">
-                <FaCalendarAlt className="text-[#C7B892] text-3xl" />
+                <FaCalendarAlt className="text-[#b8955a] text-3xl" />
               </div>
               <div>
                 <strong>
@@ -301,7 +275,7 @@ export default function MarquePartenairePage() {
 
             <li className="flex items-start gap-3">
               <div className="w-14 h-14 flex items-center justify-center rounded-full bg-[#F3EBDD] shrink-0 mt-1">
-                <FaUserCheck className="text-[#C7B892] text-3xl" />
+                <FaUserCheck className="text-[#b8955a] text-3xl" />
               </div>
               <div>
                 <strong>
@@ -313,7 +287,7 @@ export default function MarquePartenairePage() {
 
             <li className="flex items-start gap-3">
               <div className="w-14 h-14 flex items-center justify-center rounded-full bg-[#F3EBDD] shrink-0 mt-1">
-                <FaChartLine className="text-[#C7B892] text-3xl" />
+                <FaChartLine className="text-[#b8955a] text-3xl" />
               </div>
               <div>
                 <strong>
@@ -336,41 +310,17 @@ export default function MarquePartenairePage() {
       </section>
 
       {/* Formulaire */}
-      <div className="bg-[#FBF6EC] w-screen relative left-[calc(-50vw+50%)] py-12">
-        <section className="max-w-6xl mx-auto px-4">
-          <div className="text-center mb-10">
-            {/* Petit label */}
-            <p
-              className="text-xs uppercase tracking-widest mb-3"
-              style={{ color: "#C7B892", letterSpacing: "0.2em" }}
-            >
-              <TranslatedText text="Devenir partenaire" />
-            </p>
+      <div className="bg-[#FBF6EC] w-screen relative left-[calc(-50vw+50%)]">
+        <section className="max-w-6xl mx-auto px-4 py-10">
+          <SectionHeader label="Devenir partenaire" title="Nous rejoindre" />
 
-            {/* Titre principal */}
-            <h2 className="text-3xl md:text-4xl font-bold">
-              <TranslatedText text="Nous rejoindre" />
-            </h2>
+          <p className="text-center text-base mb-1 font-bricolage">
+            <TranslatedText text="Veuillez remplir ce formulaire, et nous vous contacterons dans les plus brefs délais." />
+          </p>
 
-            {/* Ligne décorative */}
-            <div
-              className="mx-auto mt-4 mb-6"
-              style={{
-                width: "60px",
-                height: "2px",
-                background: "#C7B892",
-              }}
-            />
-
-            {/* Texte */}
-            <p className="text-center text-base mb-1 font-bricolage">
-              <TranslatedText text="Veuillez remplir ce formulaire, et nous vous contacterons dans les plus brefs délais." />
-            </p>
-
-            <p className="text-center text-sm text-gray-500 italic">
-              <TranslatedText text="* Champs obligatoires" />
-            </p>
-          </div>
+          <p className="text-center text-sm text-gray-500 italic">
+            <TranslatedText text="* Champs obligatoires" />
+          </p>
 
           <form
             onSubmit={handleSubmit}
@@ -622,9 +572,7 @@ export default function MarquePartenairePage() {
         </section>
 
         {/* Nos marques partenaires */}
-        <div className="mt-12">
-          <Partenaires section={section6} />
-        </div>
+        <Partenaires section={section6} />
       </div>
     </>
   );

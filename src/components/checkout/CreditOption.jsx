@@ -85,7 +85,7 @@ const CreditOption = ({
   const isParrainage = theme === "parrainage";
   const accentColor = isParrainage
     ? "bg-purple-600 ring-purple-500"
-    : "bg-[#B6B499] ring-[#B6B499]";
+    : "bg-[#b8955a] ring-[#b8955a]";
 
   return (
     <div className="bg-white rounded-md p-6 shadow border border-gray-200 space-y-5">
@@ -139,12 +139,12 @@ const CreditOption = ({
       </div>
 
       {selectedIds.size > 0 && (
-        <div className={`rounded-md p-4 border ${depassement ? "bg-red-50 border-red-200" : "bg-[#B6B499]/5 border-[#B6B499]/20"}`}>
+        <div className={`rounded-md p-4 border ${depassement ? "bg-red-50 border-red-200" : "bg-[#b8955a]/5 border-[#b8955a]/20"}`}>
           <div className="flex justify-between items-center">
             <span className="text-sm font-medium text-gray-700">
               {selectedIds.size} {t("crédit")}{selectedIds.size > 1 && !forceSingleUse ? "s" : ""} {t("appliqué")}{selectedIds.size > 1 && !forceSingleUse ? "s" : ""}
             </span>
-            <span className={`text-xl font-bold ${depassement ? "text-red-600" : isParrainage ? "text-purple-600" : "text-[#B6B499]"}`}>
+            <span className={`text-xl font-bold ${depassement ? "text-red-600" : isParrainage ? "text-purple-600" : "text-[#b8955a]"}`}>
               - {totalSelected.toFixed(2)} €
             </span>
           </div>

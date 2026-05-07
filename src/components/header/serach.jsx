@@ -75,7 +75,7 @@ const Search = () => {
           {translateSync(section.title)}
         </h1>
 
-        <h2 className="mb-8 font-light text-2xl md:text-3xl text-[#B6B499]">
+        <h2 className="mb-8 font-light text-2xl md:text-3xl text-[#b8955a]">
           {translateSync(section.description)}
         </h2>
 

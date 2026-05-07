@@ -174,7 +174,7 @@ const SwiperContent = ({ slidesPerView = 3, data = [] }) => {
             ref={prevRef}
             onClick={handlePrev}
             aria-label={translateSync("Précédent")}
-            className="absolute left-0 top-[35%] -translate-y-1/2 bg-[#B6B499] hover:bg-[#9a977d] rounded-full w-8 h-8 z-10 cursor-pointer flex items-center justify-center transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-[#B6B499] focus:ring-opacity-50"
+            className="absolute left-0 top-[35%] -translate-y-1/2 bg-[#b8955a] hover:bg-[#9a977d] rounded-full w-8 h-8 z-10 cursor-pointer flex items-center justify-center transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-[#b8955a] text-white focus:ring-opacity-50"
           >
             ←
           </button>
@@ -183,7 +183,7 @@ const SwiperContent = ({ slidesPerView = 3, data = [] }) => {
             ref={nextRef}
             onClick={handleNext}
             aria-label={translateSync("Suivant")}
-            className="absolute right-0 top-[35%] -translate-y-1/2 bg-[#B6B499] hover:bg-[#9a977d] rounded-full w-8 h-8 z-10 cursor-pointer flex items-center justify-center transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-[#B6B499] focus:ring-opacity-50"
+            className="absolute right-0 top-[35%] -translate-y-1/2 bg-[#b8955a] hover:bg-[#9a977d] rounded-full w-8 h-8 z-10 cursor-pointer flex items-center justify-center transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-[#b8955a] text-white focus:ring-opacity-50"
           >
             →
           </button>

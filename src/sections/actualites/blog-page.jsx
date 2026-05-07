@@ -5,6 +5,7 @@ import { paths } from "src/router/paths";
 import PageSkeleton from "./page-skeleton";
 import theImage from "src/assets/images/SPC-Essence-1975x1318-02.jpg";
 import { useTranslation } from "src/context/translation-context";
+import HeroImage from "src/components/hero-image/HeroImage";
 
 export default function BlogPage({ categories, articles, loading }) {
   const { translateSync } = useTranslation();
@@ -17,11 +18,11 @@ export default function BlogPage({ categories, articles, loading }) {
   const filteredArticles = articles.filter(
     (article) =>
       article.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      article.summary.toLowerCase().includes(searchTerm.toLowerCase())
+      article.summary.toLowerCase().includes(searchTerm.toLowerCase()),
   );
 
   const sortedArticles = [...filteredArticles].sort(
-    (a, b) => new Date(b.created_at) - new Date(a.created_at)
+    (a, b) => new Date(b.created_at) - new Date(a.created_at),
   );
 
   const recentArticles = [...articles]
@@ -35,7 +36,7 @@ export default function BlogPage({ categories, articles, loading }) {
   const paginatedArticles = usePagination
     ? sortedArticles.slice(
         (currentPage - 1) * itemsPerPage,
-        currentPage * itemsPerPage
+        currentPage * itemsPerPage,
       )
     : sortedArticles;
 
@@ -52,7 +53,8 @@ export default function BlogPage({ categories, articles, loading }) {
     let l;
 
     for (let i = 1; i <= totalPages; i++) {
-      if (i === 1 || i === totalPages || (i >= left && i < right)) range.push(i);
+      if (i === 1 || i === totalPages || (i >= left && i < right))
+        range.push(i);
     }
 
     for (let i of range) {
@@ -69,22 +71,13 @@ export default function BlogPage({ categories, articles, loading }) {
 
   return (
     <>
-      <div
-        className="w-screen relative left-[calc(-50vw+50%)] h-96 bg-black bg-center bg-cover bg-fixed overflow-hidden hidden md:block"
-        style={{ backgroundImage: `url(${theImage})` }}
-      >
-        <div className="absolute inset-0 bg-black bg-opacity-40" />
-        <div className="absolute inset-0 flex flex-col items-center justify-center text-center">
-          <h1 className="text-white text-4xl font-bold">
-            {translateSync("Actualités")}
-          </h1>
-          <h2 className="text-white text-xl mt-2">
-            {translateSync(
-              "Découvrez toutes les dernières nouvelles et événements"
-            )}
-          </h2>
-        </div>
-      </div>
+      <HeroImage
+        image={theImage}
+        label="Spa & Prestige Collection"
+        title="Actualités"
+        description="Découvrez toutes les dernières nouvelles et événements"
+        opacity={40}
+      />
 
       <div className="max-w-6xl mx-auto py-10 px-4 grid grid-cols-1 md:grid-cols-3 gap-8">
         {/* Articles */}
@@ -119,7 +112,7 @@ export default function BlogPage({ categories, articles, loading }) {
                     </p>
                     <Link
                       to={paths.actualitesDetails(article.slug)}
-                      className="inline-block w-max mt-4 bg-[#B6B498] text-white py-2 px-4 rounded hover:bg-black duration-300"
+                      className="inline-block w-max mt-4 bg-[#b8955a] text-white py-2 px-4 rounded hover:bg-black duration-300"
                     >
                       {translateSync("Lire plus")}
                     </Link>
@@ -134,7 +127,7 @@ export default function BlogPage({ categories, articles, loading }) {
               <button
                 onClick={() => handlePageChange(currentPage - 1)}
                 disabled={currentPage === 1}
-                className="bg-[#B6B498] text-white py-2 px-4 rounded hover:bg-black duration-300 disabled:opacity-50"
+                className="bg-[#b8955a] text-white py-2 px-4 rounded hover:bg-black duration-300 disabled:opacity-50"
               >
                 {translateSync("Précédent")}
               </button>
@@ -150,17 +143,17 @@ export default function BlogPage({ categories, articles, loading }) {
                     className={`py-2 px-4 rounded ${
                       currentPage === page
                         ? "bg-black text-white"
-                        : "bg-[#B6B498] text-white hover:bg-black duration-300"
+                        : "bg-[#b8955a] text-white hover:bg-black duration-300"
                     }`}
                   >
                     {page}
                   </button>
-                )
+                ),
               )}
               <button
                 onClick={() => handlePageChange(currentPage + 1)}
                 disabled={currentPage === totalPages}
-                className="bg-[#B6B498] text-white py-2 px-4 rounded hover:bg-black duration-300 disabled:opacity-50"
+                className="bg-[#b8955a] text-white py-2 px-4 rounded hover:bg-black duration-300 disabled:opacity-50"
               >
                 {translateSync("Suivant")}
               </button>
@@ -188,7 +181,9 @@ export default function BlogPage({ categories, articles, loading }) {
           <ul className="space-y-3 text-base font-roboto">
             {categories.map((item, i) => (
               <li key={i} className="hover:underline cursor-pointer">
-                <Link to={`/actualites/categories/${item.slug}`}>{item.name}</Link>
+                <Link to={`/actualites/categories/${item.slug}`}>
+                  {item.name}
+                </Link>
               </li>
             ))}
           </ul>
@@ -199,7 +194,9 @@ export default function BlogPage({ categories, articles, loading }) {
           <ul className="space-y-3 text-base font-roboto">
             {recentArticles.map((item, i) => (
               <li key={i} className="hover:underline cursor-pointer">
-                <Link to={paths.actualitesDetails(item.slug)}>{item.title}</Link>
+                <Link to={paths.actualitesDetails(item.slug)}>
+                  {item.title}
+                </Link>
               </li>
             ))}
           </ul>
@@ -209,7 +206,7 @@ export default function BlogPage({ categories, articles, loading }) {
       <div className="flex items-center justify-center mb-8 mt-4">
         <Link
           to={"/assistance-contact"}
-          className="font-bricolage bg-[#B6B498] py-2 px-4 rounded-full text-white hover:bg-black duration-300"
+          className="font-bricolage bg-[#b8955a] py-2 px-4 rounded-full text-white hover:bg-black duration-300"
         >
           {translateSync("NOUS CONTACTER")}
         </Link>

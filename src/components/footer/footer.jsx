@@ -218,7 +218,7 @@ export default function Footer() {
       </div>
 
       {/* ── Barre du bas ── */}
-      <div className="text-sm text-black" style={{ backgroundColor: "#B6B498" }}>
+      <div className="text-sm text-black" style={{ backgroundColor: "#b8955a" }}>
         <div className="max-w-6xl mx-auto px-6 py-4 flex flex-col md:flex-row items-center justify-between gap-2">
           <a href="https://www.ecom-design.fr/" target="_blank" rel="noopener noreferrer" className="hover:underline">
             &copy; 2025 - 2026 – {translateSync("Réalisation")}{" "}

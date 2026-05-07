@@ -1,121 +1,284 @@
 import React, { useEffect } from "react";
-import { FaExchangeAlt, FaShoppingCart, FaTrophy } from "react-icons/fa";
+import {
+  FaShoppingCart,
+  FaTrophy,
+  FaExchangeAlt,
+  FaRobot,
+  FaStar,
+  FaGift,
+  FaUsers,
+  FaCoins,
+} from "react-icons/fa";
 import { paths } from "src/router/paths";
 import { TranslatedText } from "src/components/translated-text/translated-text";
 import { useTranslation } from "src/context/translation-context";
 import theImage from "src/assets/images/SPC-images-1975x1318-Programme-Parrainage-01-1024x683.jpg";
 import theImageContent from "src/assets/SPC-Fidelisation-1975x1318-01.jpg";
 import { Link } from "react-router-dom";
+import SectionHeader from "src/components/section-header/SectionHeader";
+import HeroImage from "src/components/hero-image/HeroImage";
+
+const GOLD = "#b8955a";
+const FONT = "Calibri, 'Segoe UI', sans-serif";
+const FONT_LIGHT = "'Calibri Light', 'Segoe UI Light', 'Segoe UI', sans-serif";
 
 export default function RecompensePageView() {
-  const { t } = useTranslation();
+  const { translateSync } = useTranslation();
 
   useEffect(() => {
     const script = document.createElement("script");
     script.src = "https://app.mailjet.com/pas-nc-embedded-v1.js";
     script.async = true;
     document.body.appendChild(script);
-
     return () => {
       document.body.removeChild(script);
     };
   }, []);
 
-  return (
-    <>
-      {/* Bannière */}
-      <div
-        className="w-screen relative left-[calc(-50vw+50%)] h-96 bg-black bg-center bg-cover bg-fixed overflow-hidden hidden md:block"
-        style={{ backgroundImage: `url(${theImageContent})` }}
-      >
-        <div className="absolute inset-0 bg-black bg-opacity-40" />
-        <div className="absolute inset-0 flex items-center justify-center">
-          <h1 className="text-white text-4xl font-bold">
-            <TranslatedText text="Programme de fidélité" />
-          </h1>
-        </div>
-      </div>
+  const recompenses = [
+    { icon: <FaCoins />, text: "1 € dépensé = 1 point" },
+    { icon: <FaGift />, text: "Échange possible dès 10 €" },
+    { icon: <FaStar />, text: "Cartes cadeaux de 10 € et 25 €" },
+  ];
 
-      {/* Récompenses */}
-      <div className="bg-[#FBF6EC] w-screen relative left-[calc(-50vw+50%)] mb-4">
-        <div className="flex flex-col md:flex-row gap-4 max-w-6xl mx-auto px-4 py-6">
-          <img
-            loading="lazy"
-            src={theImage}
-            alt="Récompenses Spa & Prestige Collection"
-            className="md:w-1/2 rounded"
-          />
-          <div>
-            <h2 className="text-4xl mb-4 font-bold">
+  const steps = [
+    {
+      icon: <FaShoppingCart />,
+      num: 1,
+      title: "Commandez",
+      desc: "Connectez-vous à votre compte et passez commande.",
+    },
+    {
+      icon: <FaTrophy />,
+      num: 2,
+      title: "Gagnez",
+      desc: "Vos points s'ajoutent automatiquement à chaque achat.",
+    },
+    {
+      icon: <FaExchangeAlt />,
+      num: 3,
+      title: "Échangez",
+      desc: "Utilisez vos points contre vos récompenses.",
+    },
+  ];
+
+  const badges = [
+    {
+      icon: <FaRobot />,
+      title: "Simple & automatique",
+      desc: "Vos points sont ajoutés automatiquement",
+    },
+    {
+      icon: <FaStar />,
+      title: "Avantages exclusifs",
+      desc: "Profitez d'offres réservées à nos membres",
+    },
+    {
+      icon: <FaGift />,
+      title: "Récompenses variées",
+      desc: "Des cartes cadeaux de 10 € et 25 €",
+    },
+    {
+      icon: <FaUsers />,
+      title: "Accessible à tous",
+      desc: "Le programme est gratuit et sans engagement",
+    },
+  ];
+
+  return (
+    <div style={{ fontFamily: FONT }}>
+      <HeroImage
+        image={theImageContent}
+        label="Spa & Prestige Collection"
+        title="Programme de fidélité"
+        description="Cumulez 1 point par euro dépensé et échangez vos points contre des cartes cadeaux de 10 € et 25 €."
+        opacity={50}
+      >
+        {/* Desktop — bordure blanche */}
+        <Link
+          to={paths.auth.register}
+          className="hidden md:inline-block bg-transparent border border-white text-center text-white px-8 py-3 font-semibold rounded-md hover:bg-white hover:text-black transition"
+        >
+          {translateSync("Se connecter / Créer un compte")}
+        </Link>
+
+        {/* Mobile — fond noir */}
+        <Link
+          to={paths.auth.register}
+          className="md:hidden inline-block bg-black text-center text-white px-8 py-3 font-semibold rounded-md hover:bg-[#b8955a] transition"
+        >
+          {translateSync("Se connecter / Créer un compte")}
+        </Link>
+      </HeroImage>
+
+      {/* ══════════════════════════
+          RÉCOMPENSES
+          ══════════════════════════ */}
+      <div
+        className="w-screen relative left-[calc(-50vw+50%)]"
+        style={{ backgroundColor: "#FBF6EC" }}
+      >
+        <div className="max-w-6xl mx-auto px-4 py-10 flex flex-col md:flex-row gap-8 items-center">
+          {/* Image */}
+          <div className="md:w-1/2">
+            <img
+              loading="lazy"
+              src={theImage}
+              alt="Récompenses Spa & Prestige Collection"
+              className="w-full rounded-xl shadow-md object-cover"
+              style={{ maxHeight: "320px" }}
+            />
+          </div>
+
+          {/* Texte */}
+          <div className="md:w-1/2">
+            <p
+              className="text-xs uppercase tracking-widest mb-2"
+              style={{ color: GOLD, letterSpacing: "0.18em", fontFamily: FONT }}
+            >
+              {translateSync("Programme de récompenses")}
+            </p>
+            <h2
+              className="text-gray-900 mb-2 leading-tight"
+              style={{
+                fontFamily: FONT_LIGHT,
+                fontWeight: 300,
+                fontSize: "clamp(1.4rem, 2.5vw, 2rem)",
+              }}
+            >
               <TranslatedText text="Récompenses Spa & Prestige Collection" />
             </h2>
+            <div
+              className="w-10 h-0.5 mb-4"
+              style={{ backgroundColor: GOLD }}
+            />
 
-            <p className="mb-3">
-              <TranslatedText text="Accumulez des points à chaque commande et échangez-les contre des bons d'achat de 10 € et 25 €." />
+            <p
+              className="text-sm text-gray-600 mb-4 leading-relaxed"
+              style={{ fontFamily: FONT }}
+            >
+              <TranslatedText text="Cumulez des points à chaque commande et transformez-les en récompenses." />
             </p>
 
-            <p>
-              <TranslatedText text="Rejoignez" />{" "}
-              <strong>Spa & Prestige Collection Rewards</strong>{" "}
-              <TranslatedText text="et bénéficiez de nombreux avantages !" />
+            {/* Liste avantages */}
+            <ul className="space-y-3 mb-4">
+              {recompenses.map((item, i) => (
+                <li
+                  key={i}
+                  className="flex items-center gap-3 text-sm text-gray-700"
+                  style={{ fontFamily: FONT }}
+                >
+                  <div
+                    className="w-8 h-8 rounded-full flex items-center justify-center shrink-0"
+                    style={{ backgroundColor: "#F3EBDD" }}
+                  >
+                    <span style={{ color: GOLD }}>{item.icon}</span>
+                  </div>
+                  <span>{translateSync(item.text)}</span>
+                </li>
+              ))}
+            </ul>
+
+            <p
+              className="text-sm text-gray-500 italic"
+              style={{ fontFamily: FONT }}
+            >
+              <TranslatedText text="Le programme est simple, automatique et accessible depuis votre compte." />
             </p>
           </div>
         </div>
       </div>
 
-      {/* Points */}
-      <div className="max-w-6xl mx-auto text-center">
-        <h2 className="text-4xl mb-4 font-bold">
-          <TranslatedText text="Gagnez des points à chaque commande." />
-        </h2>
-        <p className="text-lg mb-4">
-          <TranslatedText text="1 € dépensé = 1 point gagné automatiquement." />
+      {/* ══════════════════════════
+          POINTS
+          ══════════════════════════ */}
+      <div className="max-w-6xl mx-auto px-4 py-10 text-center">
+        <SectionHeader
+          label="Fidélité récompensée"
+          title="Gagnez des points à chaque commande."
+        />
+        <p className="text-gray-600 mb-6 text-sm" style={{ fontFamily: FONT }}>
+          <TranslatedText text="Vos points sont ajoutés automatiquement." />
         </p>
-        <div className="text-3xl font-bold">1 € = 1 point</div>
-        <div className="text-lg text-[#b6b499] mb-6">Dépensé = gagné</div>
+        <div
+          className="inline-flex items-center gap-3 px-8 py-4 rounded-full"
+          style={{ backgroundColor: "#F3EBDD" }}
+        >
+          <FaCoins className="text-2xl" style={{ color: GOLD }} />
+          <span
+            className="text-2xl font-bold text-gray-900"
+            style={{ fontFamily: FONT_LIGHT }}
+          >
+            1 € = 1 point
+          </span>
+        </div>
       </div>
 
-      {/* Comment ça marche */}
-      <div className="bg-[#FBF6EC] w-screen relative left-[calc(-50vw+50%)] px-4 py-8 mb-4">
-        <h2 className="text-4xl font-bold text-center mb-8">
-          <TranslatedText text="Comment ça marche ?" />
-        </h2>
+      {/* ══════════════════════════
+          COMMENT ÇA MARCHE
+          ══════════════════════════ */}
+      <div
+        className="w-screen relative left-[calc(-50vw+50%)]"
+        style={{ backgroundColor: "#FBF6EC" }}
+      >
+        <div className="max-w-6xl mx-auto px-4 py-10">
+          <SectionHeader label="En 3 étapes" title="Comment ça marche ?" />
 
-        <div className="grid grid-cols-1 md:grid-cols-3 max-w-6xl mx-auto gap-6">
-          <div className="text-center">
-            <FaShoppingCart className="text-6xl mx-auto text-[#C7B892]" />
-            <h3 className="text-2xl font-bold mt-3">Commandez</h3>
-            <p>
-              <TranslatedText text="Passez vos commandes en étant connecté à votre compte." />
-            </p>
-          </div>
-
-          <div className="text-center">
-            <FaTrophy className="text-6xl mx-auto text-[#C7B892]" />
-            <h3 className="text-2xl font-bold mt-3">Gagnez</h3>
-            <p>
-              <TranslatedText text="Cumulez des points à chaque paiement." />
-            </p>
-          </div>
-
-          <div className="text-center">
-            <FaExchangeAlt className="text-6xl mx-auto text-[#C7B892]" />
-            <h3 className="text-2xl font-bold mt-3">Échangez</h3>
-            <p>
-              <TranslatedText text="Utilisez vos points pour obtenir des bons de réduction." />
-            </p>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+            {steps.map((step) => (
+              <div
+                key={step.num}
+                className="flex flex-col items-center text-center gap-3"
+              >
+                {/* Icône cercle doré */}
+                <div className="relative">
+                  <div
+                    className="w-16 h-16 rounded-full flex items-center justify-center"
+                    style={{ backgroundColor: "#F3EBDD" }}
+                  >
+                    <span className="text-2xl" style={{ color: GOLD }}>
+                      {step.icon}
+                    </span>
+                  </div>
+                  {/* Numéro cerclé */}
+                  <span
+                    className="absolute -top-1 -right-1 w-6 h-6 rounded-full flex items-center justify-center text-xs font-bold text-white"
+                    style={{ backgroundColor: GOLD }}
+                  >
+                    {step.num}
+                  </span>
+                </div>
+                <h3
+                  className="text-lg font-semibold text-gray-800"
+                  style={{ fontFamily: FONT }}
+                >
+                  {translateSync(step.title)}
+                </h3>
+                <p
+                  className="text-sm text-gray-600 leading-relaxed"
+                  style={{ fontFamily: FONT }}
+                >
+                  {translateSync(step.desc)}
+                </p>
+              </div>
+            ))}
           </div>
         </div>
       </div>
 
-      {/* Newsletter Mailjet */}
-      <div className="w-screen relative left-[calc(-50vw+50%)] py-8 px-4">
-        <h2 className="text-4xl font-bold text-center mb-4">
-          <TranslatedText text="Soyez les premiers informés" />
-        </h2>
-
-        <p className="text-center mb-6">
-          <TranslatedText text="Inscrivez-vous à notre newsletter." />
+      {/* ══════════════════════════
+          NEWSLETTER
+          ══════════════════════════ */}
+      <div className="w-screen relative left-[calc(-50vw+50%)] py-10 px-4">
+        <SectionHeader
+          label="Restez informé(e)"
+          title="Restez informé(e) de nos nouveautés et avantages"
+        />
+        <p
+          className="text-center text-sm text-gray-500 mb-6 -mt-6"
+          style={{ fontFamily: FONT }}
+        >
+          <TranslatedText text="Inscrivez-vous à notre newsletter et recevez 10 € offerts sur votre première commande." />
         </p>
 
         <div className="max-w-xl mx-auto">
@@ -132,15 +295,60 @@ export default function RecompensePageView() {
           />
         </div>
 
-        <div className="text-center mt-8">
+        {/* Bouton accueil */}
+        <div className="flex justify-center mt-8">
           <Link
             to={paths.main}
-            className="bg-[#b6b499] text-white px-8 py-2 rounded-full uppercase inline-block"
+            className="px-8 py-2.5 rounded-full text-sm font-semibold uppercase text-white transition-colors"
+            style={{
+              backgroundColor: GOLD,
+              fontFamily: FONT,
+              letterSpacing: "0.08em",
+            }}
+            onMouseEnter={(e) =>
+              (e.currentTarget.style.backgroundColor = "#a07a45")
+            }
+            onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = GOLD)}
           >
             <TranslatedText text="Accueil" />
           </Link>
         </div>
       </div>
-    </>
+
+      {/* ══════════════════════════
+          BADGES DU BAS
+          ══════════════════════════ */}
+      <div
+        className="w-screen relative left-[calc(-50vw+50%)] py-6 px-4"
+        style={{ backgroundColor: "#FBF6EC" }}
+      >
+        <div className="max-w-6xl mx-auto grid grid-cols-2 md:grid-cols-4 gap-6">
+          {badges.map((badge, i) => (
+            <div key={i} className="flex items-start gap-3">
+              <div
+                className="w-10 h-10 rounded-full flex items-center justify-center shrink-0"
+                style={{ backgroundColor: "#F3EBDD" }}
+              >
+                <span style={{ color: GOLD }}>{badge.icon}</span>
+              </div>
+              <div>
+                <p
+                  className="text-sm font-semibold text-gray-800"
+                  style={{ fontFamily: FONT }}
+                >
+                  {translateSync(badge.title)}
+                </p>
+                <p
+                  className="text-xs text-gray-500 leading-tight"
+                  style={{ fontFamily: FONT }}
+                >
+                  {translateSync(badge.desc)}
+                </p>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+    </div>
   );
 }

@@ -5174,7 +5174,7 @@
                 "width": 348,
                 "height": 96
               },
-              "snippet": "<h2 class=\"mb-8 font-light text-2xl md:text-3xl text-[#B6B499]\">",
+              "snippet": "<h2 class=\"mb-8 font-light text-2xl md:text-3xl text-[#b8955a]\">",
               "nodeLabel": "Une collection choisie avec soin, pour celles et ceux en quête d’exceptions.",
               "explanation": "Fix any of the following:\n  Element has insufficient color contrast of 2.1 (foreground color: #b6b499, background color: #ffffff, font size: 18.0pt (24px), font weight: normal). Expected contrast ratio of 3:1"
             },
@@ -5207,7 +5207,7 @@
               "type": "node",
               "lhId": "1-39-DIV",
               "path": "1,HTML,1,BODY,0,DIV,3,DIV,0,DIV,1,DIV,0,DIV,2,DIV,0,DIV,0,DIV,0,DIV,0,H2,1,DIV",
-              "selector": "div.relative > div.max-w-6xl > h2.text-4xl > div.text-[#B6B499]",
+              "selector": "div.relative > div.max-w-6xl > h2.text-4xl > div.text-[#b8955a]",
               "boundingRect": {
                 "top": 1969,
                 "bottom": 2077,
@@ -5216,7 +5216,7 @@
                 "width": 412,
                 "height": 108
               },
-              "snippet": "<div class=\"text-[#B6B499] text-3xl mt-2\">",
+              "snippet": "<div class=\"text-[#b8955a] text-3xl mt-2\">",
               "nodeLabel": "Plongez dans un univers de détente et profitez librement de nos espaces bien-êt…",
               "explanation": "Fix any of the following:\n  Element has insufficient color contrast of 2.1 (foreground color: #b6b499, background color: #ffffff, font size: 22.5pt (30px), font weight: bold). Expected contrast ratio of 3:1"
             },
@@ -5249,7 +5249,7 @@
               "type": "node",
               "lhId": "1-41-DIV",
               "path": "1,HTML,1,BODY,0,DIV,3,DIV,0,DIV,1,DIV,0,DIV,2,DIV,1,DIV,0,DIV,0,DIV,0,H2,1,DIV",
-              "selector": "div.relative > div.max-w-6xl > h2.text-4xl > div.text-[#B6B499]",
+              "selector": "div.relative > div.max-w-6xl > h2.text-4xl > div.text-[#b8955a]",
               "boundingRect": {
                 "top": 2681,
                 "bottom": 2789,
@@ -5258,7 +5258,7 @@
                 "width": 412,
                 "height": 108
               },
-              "snippet": "<div class=\"text-[#B6B499] text-3xl mt-2\">",
+              "snippet": "<div class=\"text-[#b8955a] text-3xl mt-2\">",
               "nodeLabel": "Sublimez votre peau et révélez votre éclat grâce à nos soins experts.",
               "explanation": "Fix any of the following:\n  Element has insufficient color contrast of 1.91 (foreground color: #b6b499, background color: #f6f5e9, font size: 22.5pt (30px), font weight: bold). Expected contrast ratio of 3:1"
             },
@@ -5291,7 +5291,7 @@
               "type": "node",
               "lhId": "1-43-DIV",
               "path": "1,HTML,1,BODY,0,DIV,3,DIV,0,DIV,1,DIV,0,DIV,2,DIV,2,DIV,0,DIV,0,DIV,0,H2,1,DIV",
-              "selector": "div.relative > div.max-w-6xl > h2.text-4xl > div.text-[#B6B499]",
+              "selector": "div.relative > div.max-w-6xl > h2.text-4xl > div.text-[#b8955a]",
               "boundingRect": {
                 "top": 3393,
                 "bottom": 3501,
@@ -5300,7 +5300,7 @@
                 "width": 412,
                 "height": 108
               },
-              "snippet": "<div class=\"text-[#B6B499] text-3xl mt-2\">",
+              "snippet": "<div class=\"text-[#b8955a] text-3xl mt-2\">",
               "nodeLabel": "Offrez-vous une parenthèse de sérénité et un voyage sensoriel unique.",
               "explanation": "Fix any of the following:\n  Element has insufficient color contrast of 2.1 (foreground color: #b6b499, background color: #ffffff, font size: 22.5pt (30px), font weight: bold). Expected contrast ratio of 3:1"
             },
@@ -5333,7 +5333,7 @@
               "type": "node",
               "lhId": "1-45-DIV",
               "path": "1,HTML,1,BODY,0,DIV,3,DIV,0,DIV,1,DIV,0,DIV,2,DIV,3,DIV,0,DIV,0,DIV,0,H2,1,DIV",
-              "selector": "div.relative > div.max-w-6xl > h2.text-4xl > div.text-[#B6B499]",
+              "selector": "div.relative > div.max-w-6xl > h2.text-4xl > div.text-[#b8955a]",
               "boundingRect": {
                 "top": 4077,
                 "bottom": 4149,
@@ -5342,7 +5342,7 @@
                 "width": 412,
                 "height": 72
               },
-              "snippet": "<div class=\"text-[#B6B499] text-3xl mt-2\">",
+              "snippet": "<div class=\"text-[#b8955a] text-3xl mt-2\">",
               "nodeLabel": "Offrez-vous un massage ou un rituel pour un bien-être global.",
               "explanation": "Fix any of the following:\n  Element has insufficient color contrast of 1.91 (foreground color: #b6b499, background color: #f6f5e9, font size: 22.5pt (30px), font weight: bold). Expected contrast ratio of 3:1"
             },
@@ -5375,7 +5375,7 @@
               "type": "node",
               "lhId": "1-47-DIV",
               "path": "1,HTML,1,BODY,0,DIV,3,DIV,0,DIV,1,DIV,0,DIV,2,DIV,4,DIV,0,DIV,0,DIV,0,H2,1,DIV",
-              "selector": "div.relative > div.max-w-6xl > h2.text-4xl > div.text-[#B6B499]",
+              "selector": "div.relative > div.max-w-6xl > h2.text-4xl > div.text-[#b8955a]",
               "boundingRect": {
                 "top": 4753,
                 "bottom": 4861,
@@ -5384,7 +5384,7 @@
                 "width": 412,
                 "height": 108
               },
-              "snippet": "<div class=\"text-[#B6B499] text-3xl mt-2\">",
+              "snippet": "<div class=\"text-[#b8955a] text-3xl mt-2\">",
               "nodeLabel": "Prolongez l’expérience le temps d’une nuit ou d’un week-end inoubliable.",
               "explanation": "Fix any of the following:\n  Element has insufficient color contrast of 2.1 (foreground color: #b6b499, background color: #ffffff, font size: 22.5pt (30px), font weight: bold). Expected contrast ratio of 3:1"
             },
@@ -5417,7 +5417,7 @@
               "type": "node",
               "lhId": "1-49-DIV",
               "path": "1,HTML,1,BODY,0,DIV,3,DIV,0,DIV,1,DIV,0,DIV,2,DIV,5,DIV,0,DIV,0,DIV,0,H2,1,DIV",
-              "selector": "div.relative > div.max-w-6xl > h2.text-4xl > div.text-[#B6B499]",
+              "selector": "div.relative > div.max-w-6xl > h2.text-4xl > div.text-[#b8955a]",
               "boundingRect": {
                 "top": 5465,
                 "bottom": 5537,
@@ -5426,7 +5426,7 @@
                 "width": 412,
                 "height": 72
               },
-              "snippet": "<div class=\"text-[#B6B499] text-3xl mt-2\">",
+              "snippet": "<div class=\"text-[#b8955a] text-3xl mt-2\">",
               "nodeLabel": "Éveillez vos sens avec des instants gourmands et raffinés.",
               "explanation": "Fix any of the following:\n  Element has insufficient color contrast of 1.91 (foreground color: #b6b499, background color: #f6f5e9, font size: 22.5pt (30px), font weight: bold). Expected contrast ratio of 3:1"
             },
@@ -5459,7 +5459,7 @@
               "type": "node",
               "lhId": "1-51-H3",
               "path": "1,HTML,1,BODY,0,DIV,3,DIV,0,DIV,1,DIV,0,DIV,3,DIV,0,DIV,0,DIV,0,DIV,1,H3",
-              "selector": "div.max-w-6xl > div.flex > div.w-full > h3.text-[#B6B499]",
+              "selector": "div.max-w-6xl > div.flex > div.w-full > h3.text-[#b8955a]",
               "boundingRect": {
                 "top": 6161,
                 "bottom": 6225,
@@ -5468,7 +5468,7 @@
                 "width": 364,
                 "height": 64
               },
-              "snippet": "<h3 class=\"text-[#B6B499] text-2xl mb-4\">",
+              "snippet": "<h3 class=\"text-[#b8955a] text-2xl mb-4\">",
               "nodeLabel": "Une parenthèse de quiétude au cœur d’un écrin de verdure...",
               "explanation": "Fix any of the following:\n  Element has insufficient color contrast of 2.1 (foreground color: #b6b499, background color: #ffffff, font size: 18.0pt (24px), font weight: normal). Expected contrast ratio of 3:1"
             },
@@ -5510,7 +5510,7 @@
                 "width": 388,
                 "height": 44
               },
-              "snippet": "<div class=\"absolute w-full bg-[#B6B499] left-0 bottom-0 text-center px-4 py-2 text-lg…\">",
+              "snippet": "<div class=\"absolute w-full bg-[#b8955a] left-0 bottom-0 text-center px-4 py-2 text-lg…\">",
               "nodeLabel": "Domaine Spalazen Nature",
               "explanation": "Fix any of the following:\n  Element has insufficient color contrast of 2.1 (foreground color: #ffffff, background color: #b6b499, font size: 13.5pt (18px), font weight: bold). Expected contrast ratio of 4.5:1"
             }
@@ -5520,7 +5520,7 @@
               "type": "node",
               "lhId": "1-54-H3",
               "path": "1,HTML,1,BODY,0,DIV,3,DIV,0,DIV,1,DIV,0,DIV,4,DIV,0,DIV,0,DIV,1,DIV,2,H3",
-              "selector": "div.max-w-6xl > div.flex > div.w-full > h3.text-[#B6B499]",
+              "selector": "div.max-w-6xl > div.flex > div.w-full > h3.text-[#b8955a]",
               "boundingRect": {
                 "top": 7283,
                 "bottom": 7319,
@@ -5529,7 +5529,7 @@
                 "width": 388,
                 "height": 36
               },
-              "snippet": "<h3 class=\"text-[#B6B499] text-3xl mt-4\">",
+              "snippet": "<h3 class=\"text-[#b8955a] text-3xl mt-4\">",
               "nodeLabel": "Un cadeau qui fait la différence",
               "explanation": "Fix any of the following:\n  Element has insufficient color contrast of 2.1 (foreground color: #b6b499, background color: #ffffff, font size: 22.5pt (30px), font weight: normal). Expected contrast ratio of 3:1"
             },

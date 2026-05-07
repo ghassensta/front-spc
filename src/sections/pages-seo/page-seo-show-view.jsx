@@ -29,7 +29,7 @@ function FaqItem({ question, answer }) {
         <span
           className="flex-shrink-0 w-6 h-6 flex items-center justify-center transition-transform duration-300 text-xl font-bold"
           style={{
-            color: "#C7B892",
+            color: "#b8955a",
             transform: open ? "rotate(45deg)" : "rotate(0deg)",
           }}
         >
@@ -89,7 +89,7 @@ export default function PageSeoShow({ pageseo, pageseoLoading }) {
           <button
             onClick={() => window.history.back()}
             className="flex items-center gap-2 text-sm font-semibold mb-6 transition-all duration-300 hover:gap-3"
-            style={{ color: "#C7B892" }}
+            style={{ color: "#b8955a" }}
           >
             ← {translateSync("Retour")}
           </button>
@@ -97,7 +97,7 @@ export default function PageSeoShow({ pageseo, pageseoLoading }) {
           <div className="text-center w-full md:w-3/5 mx-auto flex flex-col gap-4">
             <p
               className="text-4xl uppercase tracking-widest font-semibold"
-              style={{ color: "#C7B892" }}
+              style={{ color: "#b8955a" }}
             >
               {translateSync("Spa & Prestige Collection")}
             </p>
@@ -143,7 +143,7 @@ export default function PageSeoShow({ pageseo, pageseoLoading }) {
                   rel="noopener noreferrer"
                   className="px-7 py-3 text-base font-semibold rounded-full transition-all duration-300 hover:scale-105"
                   style={{
-                    backgroundColor: "#C7B892",
+                    backgroundColor: "#b8955a",
                     color: "#fff",
                     textDecoration: "none",
                   }}
@@ -151,7 +151,7 @@ export default function PageSeoShow({ pageseo, pageseoLoading }) {
                     (e.target.style.backgroundColor = "#b5a480")
                   }
                   onMouseLeave={(e) =>
-                    (e.target.style.backgroundColor = "#C7B892")
+                    (e.target.style.backgroundColor = "#b8955a")
                   }
                 >
                   {translateSync(section.button_label)}
@@ -217,7 +217,7 @@ export default function PageSeoShow({ pageseo, pageseoLoading }) {
               target="_blank"
               rel="noopener noreferrer"
               className="flex items-center gap-2 text-lg font-semibold transition-all hover:gap-3"
-              style={{ color: "#C7B892", textDecoration: "none" }}
+              style={{ color: "#b8955a", textDecoration: "none" }}
             >
               <FaLink size={14} />
               {translateSync(cta_final_label)}
@@ -225,7 +225,7 @@ export default function PageSeoShow({ pageseo, pageseoLoading }) {
             <Link
               to={paths.cadeau}
               className="flex items-center gap-2 text-lg font-semibold transition-all hover:gap-3"
-              style={{ color: "#C7B892", textDecoration: "none" }}
+              style={{ color: "#b8955a", textDecoration: "none" }}
             >
               <FaLink size={14} />
               {translateSync("Offrir une carte cadeau")}

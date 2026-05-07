@@ -106,10 +106,10 @@ export default function CollectionPrestigePage() {
               <TranslatedText text="Les établissements souhaitant rejoindre Spa & Prestige Collection doivent fournir une documentation détaillant leur conformité aux critères de ce référentiel (certifications, photos, etc.). Ce référentiel garantit que les établissements respectent des standards élevés, assurant ainsi une expérience client d'exception et une qualité cohérente au sein du réseau." />
             </p>
             <div className="flex flex-col gap-6 md:gap-12 w-full justify-center items-center">
-              <Link to={paths.partenaire} className="bg-[#B6B499] w-max text-white px-6 rounded-full py-2 text-sm hover:bg-black uppercase tracking-wider transition">
+              <Link to={paths.partenaire} className="bg-[#b8955a] w-max text-white px-6 rounded-full py-2 text-sm hover:bg-black uppercase tracking-wider transition">
                 <TranslatedText text="Devenir partenaire" />
               </Link>
-              <Link to={paths.contact} className="bg-[#B6B499] w-max text-white px-6 rounded-full py-2 text-sm hover:bg-black uppercase tracking-wider transition">
+              <Link to={paths.contact} className="bg-[#b8955a] w-max text-white px-6 rounded-full py-2 text-sm hover:bg-black uppercase tracking-wider transition">
                 <TranslatedText text="Nous contacter" />
               </Link>
             </div>

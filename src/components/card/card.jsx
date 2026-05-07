@@ -167,7 +167,7 @@ export default function Card({
 
         {(offreValue > 0 ||
           (remise_desc_produit && remise_desc_produit.trim() !== "")) && (
-          <span className="bg-[#B6B499] w-max text-black font-bold font-roboto px-2 py-1 absolute bottom-0 left-1/2 translate-y-1/2 -translate-x-1/2 rounded-full text-s z-10">
+          <span className="bg-[#b8955a] w-max text-white font-bold font-roboto px-2 py-1 absolute bottom-0 left-1/2 translate-y-1/2 -translate-x-1/2 rounded-full text-s z-10">
             <TranslatedText
               text={
                 offreValue > 0

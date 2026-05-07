@@ -10,9 +10,16 @@ import { TranslatedText } from "src/components/translated-text/translated-text";
 import UniversalSpinner from "src/components/universal-spinner/universal-spinner";
 import { useGetHomePage } from "src/actions/homepage";
 import Partenaires from "../home2/comp/partenaires";
-import { FaUsers, FaShoppingBag, FaHandHoldingHeart } from "react-icons/fa";
+import {
+  FaUsers,
+  FaShoppingBag,
+  FaHandHoldingHeart,
+  FaPhone,
+  FaEnvelope,
+} from "react-icons/fa";
 import Select from "react-select";
-
+import HeroImage from "src/components/hero-image/HeroImage";
+import SectionHeader from "src/components/section-header/SectionHeader";
 export default function SolutionsPageView() {
   const { translateSync } = useTranslation();
   const { sections } = useGetHomePage();
@@ -123,47 +130,18 @@ export default function SolutionsPageView() {
 
   return (
     <>
-      {/* Hero Section */}
-      <div
-        className="w-full h-96 bg-black bg-center bg-cover relative"
-        style={{
-          backgroundImage: `url(${theImage})`,
-        }}
-      >
-        <div className="absolute inset-0 bg-black bg-opacity-40" />
-        <div className="absolute inset-0 flex items-center justify-center px-4">
-          <h1 className="text-white text-4xl md:text-5xl max-w-5xl mx-auto text-center font-bold leading-snug">
-            <TranslatedText text="Spa & Prestige Collection – CSE & Collectivités" />
-          </h1>
-        </div>
-      </div>
+      <HeroImage
+        image={theImage}
+        label="Spa & Prestige Collection"
+        title="CSE & Collectivités"
+      />
 
       {/* Engagement Section */}
       <section className="max-w-7xl mx-auto px-4 py-16">
-        <div className="text-center mb-12">
-          {/* Label */}
-          <p
-            className="text-xs uppercase tracking-widest mb-3"
-            style={{ color: "#C7B892", letterSpacing: "0.2em" }}
-          >
-            <TranslatedText text="Notre engagement" />
-          </p>
-
-          {/* Titre */}
-          <h2 className="text-2xl md:text-3xl italic font-bold">
-            <TranslatedText text="Offrir à vos salariés des expériences de bien-être d’exception" />
-          </h2>
-
-          {/* Ligne décorative */}
-          <div
-            className="mx-auto mt-4"
-            style={{
-              width: "60px",
-              height: "2px",
-              background: "#C7B892",
-            }}
-          />
-        </div>
+        <SectionHeader
+          label="Notre engagement"
+          title="Offrir à vos salariés des expériences de bien-être d'exception"
+        />
         <div className="grid grid-cols-1 md:grid-cols-2 gap-10 items-center">
           <div className="space-y-4 text-sm font-bricolage leading-relaxed">
             <p>
@@ -229,52 +207,30 @@ export default function SolutionsPageView() {
       {/* Solutions Section */}
       <section className="bg-white py-16">
         <div className="max-w-7xl mx-auto px-4 text-center">
-          <div className="text-center mb-12">
-            {/* Label */}
-            <p
-              className="text-xs uppercase tracking-widest mb-3"
-              style={{ color: "#C7B892", letterSpacing: "0.2em" }}
-            >
-              <TranslatedText text="CSE & collectivités" />
-            </p>
+          <SectionHeader
+            label="CSE & collectivités"
+            title="Spa & Prestige Collection - CSE & Collectivités"
+          />
 
-            {/* Titre */}
-            <h2 className="text-3xl md:text-4xl font-semibold">
-              <TranslatedText text="Spa & Prestige Collection - CSE & Collectivités" />
-            </h2>
-
-            {/* Ligne décorative */}
-            <div
-              className="mx-auto mt-4 mb-4"
-              style={{
-                width: "60px",
-                height: "2px",
-                background: "#C7B892",
-              }}
-            />
-
-            {/* Sous-texte */}
-            <p className="text-gray-600 text-lg font-bricolage max-w-2xl mx-auto">
-              <TranslatedText text="Des solutions adaptées à votre quotidien et à celui de vos salariés" />
-            </p>
-          </div>
-
+          <p className="text-gray-600 text-lg font-bricolage max-w-2xl mx-auto text-center -mt-6 mb-12">
+            <TranslatedText text="Des solutions adaptées à votre quotidien et à celui de vos salariés" />
+          </p>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            <div className="py-12 bg-[#faf4ec] p-6 rounded shadow-sm text-left hover:bg-[#B6B499] duration-300 ease-out transition-colors">
-              {/* Icône + Titre sur la même ligne */}
+            {/* Card 1 */}
+            <div className="py-12 bg-[#faf4ec] p-6 rounded shadow-sm text-left hover:bg-[#b8955a] duration-300 ease-out transition-colors group">
               <div className="flex items-center gap-3 mb-4">
-                <div className="w-11 h-11 bg-[#c8a96e] rounded-full flex items-center justify-center border-2 border-[#a07840] shrink-0">
-                  <FaUsers className="text-white text-lg" />
+                <div className="w-12 h-12 flex items-center justify-center rounded-full bg-[#F3EBDD] shrink-0 group-hover:bg-white/20">
+                  <FaUsers className="text-[#b8955a] text-2xl group-hover:text-white" />
                 </div>
-                <h3 className="font-bold text-2xl">
+                <h3 className="font-bold text-2xl group-hover:text-white">
                   <TranslatedText text="Commandes Groupées" />
                 </h3>
               </div>
-
-              {/* Liste */}
-              <ul className="space-y-2 font-bricolage text-[#565656]">
+              <ul className="space-y-2 font-bricolage text-[#565656] group-hover:text-white/90">
                 <li className="flex items-start gap-2">
-                  <span className="text-[#c8a96e] font-bold mt-0.5">✓</span>
+                  <span className="text-[#b8955a] font-bold mt-0.5 group-hover:text-white">
+                    ✓
+                  </span>
                   <span>
                     <strong>
                       <TranslatedText text="Remises Exclusives :" />
@@ -283,7 +239,9 @@ export default function SolutionsPageView() {
                   </span>
                 </li>
                 <li className="flex items-start gap-2">
-                  <span className="text-[#c8a96e] font-bold mt-0.5">✓</span>
+                  <span className="text-[#b8955a] font-bold mt-0.5 group-hover:text-white">
+                    ✓
+                  </span>
                   <span>
                     <strong>
                       <TranslatedText text="Personnalisation :" />
@@ -292,7 +250,9 @@ export default function SolutionsPageView() {
                   </span>
                 </li>
                 <li className="flex items-start gap-2">
-                  <span className="text-[#c8a96e] font-bold mt-0.5">✓</span>
+                  <span className="text-[#b8955a] font-bold mt-0.5 group-hover:text-white">
+                    ✓
+                  </span>
                   <span>
                     <strong>
                       <TranslatedText text="Pour Toutes les Occasions :" />
@@ -303,21 +263,21 @@ export default function SolutionsPageView() {
               </ul>
             </div>
 
-            <div className="py-12 bg-[#faf4ec] p-6 rounded shadow-sm text-left hover:bg-[#B6B499] duration-300 ease-out transition-colors">
-              {/* Icône + Titre sur la même ligne */}
+            {/* Card 2 */}
+            <div className="py-12 bg-[#faf4ec] p-6 rounded shadow-sm text-left hover:bg-[#b8955a] duration-300 ease-out transition-colors group">
               <div className="flex items-center gap-3 mb-4">
-                <div className="w-11 h-11 bg-[#c8a96e] rounded-full flex items-center justify-center border-2 border-[#a07840] shrink-0">
-                  <FaShoppingBag className="text-white text-lg" />
+                <div className="w-12 h-12 flex items-center justify-center rounded-full bg-[#F3EBDD] shrink-0 group-hover:bg-white/20">
+                  <FaShoppingBag className="text-[#b8955a] text-2xl group-hover:text-white" />
                 </div>
-                <h3 className="font-bold text-2xl">
+                <h3 className="font-bold text-2xl group-hover:text-white">
                   <TranslatedText text="Vente en Ligne" />
                 </h3>
               </div>
-
-              {/* Liste */}
-              <ul className="space-y-2 font-bricolage text-[#565656]">
+              <ul className="space-y-2 font-bricolage text-[#565656] group-hover:text-white/90">
                 <li className="flex items-start gap-2">
-                  <span className="text-[#c8a96e] font-bold mt-0.5">✓</span>
+                  <span className="text-[#b8955a] font-bold mt-0.5 group-hover:text-white">
+                    ✓
+                  </span>
                   <span>
                     <strong>
                       <TranslatedText text="Tarifs Préférentiels :" />
@@ -326,7 +286,9 @@ export default function SolutionsPageView() {
                   </span>
                 </li>
                 <li className="flex items-start gap-2">
-                  <span className="text-[#c8a96e] font-bold mt-0.5">✓</span>
+                  <span className="text-[#b8955a] font-bold mt-0.5 group-hover:text-white">
+                    ✓
+                  </span>
                   <span>
                     <strong>
                       <TranslatedText text="Accessibilité 24h/24 :" />
@@ -335,7 +297,9 @@ export default function SolutionsPageView() {
                   </span>
                 </li>
                 <li className="flex items-start gap-2">
-                  <span className="text-[#c8a96e] font-bold mt-0.5">✓</span>
+                  <span className="text-[#b8955a] font-bold mt-0.5 group-hover:text-white">
+                    ✓
+                  </span>
                   <span>
                     <strong>
                       <TranslatedText text="Simplicité et Rapidité :" />
@@ -346,27 +310,29 @@ export default function SolutionsPageView() {
               </ul>
             </div>
 
-            <div className="py-12 bg-[#faf4ec] p-6 rounded shadow-sm text-left hover:bg-[#B6B499] duration-300 ease-out transition-colors">
-              {/* Icône + Titre sur la même ligne */}
+            {/* Card 3 */}
+            <div className="py-12 bg-[#faf4ec] p-6 rounded shadow-sm text-left hover:bg-[#b8955a] duration-300 ease-out transition-colors group">
               <div className="flex items-center gap-3 mb-4">
-                <div className="w-11 h-11 bg-[#c8a96e] rounded-full flex items-center justify-center border-2 border-[#a07840] shrink-0">
-                  <FaHandHoldingHeart className="text-white text-lg" />
+                <div className="w-12 h-12 flex items-center justify-center rounded-full bg-[#F3EBDD] shrink-0 group-hover:bg-white/20">
+                  <FaHandHoldingHeart className="text-[#b8955a] text-2xl group-hover:text-white" />
                 </div>
-                <h3 className="font-bold text-2xl">
+                <h3 className="font-bold text-2xl group-hover:text-white">
                   <TranslatedText text="Avantages pour vos équipes" />
                 </h3>
               </div>
-
-              {/* Liste */}
-              <ul className="space-y-2 font-bricolage text-[#565656]">
+              <ul className="space-y-2 font-bricolage text-[#565656] group-hover:text-white/90">
                 <li className="flex items-start gap-2">
-                  <span className="text-[#c8a96e] font-bold mt-0.5">✓</span>
+                  <span className="text-[#b8955a] font-bold mt-0.5 group-hover:text-white">
+                    ✓
+                  </span>
                   <span>
                     <TranslatedText text="Stimulez vos collaborateurs avec des cadeaux exceptionnels qui marquent leur quotidien." />
                   </span>
                 </li>
                 <li className="flex items-start gap-2">
-                  <span className="text-[#c8a96e] font-bold mt-0.5">✓</span>
+                  <span className="text-[#b8955a] font-bold mt-0.5 group-hover:text-white">
+                    ✓
+                  </span>
                   <span>
                     <TranslatedText text="Exprimez votre reconnaissance en offrant des moments de bien-être uniques à vos équipes." />
                   </span>
@@ -374,7 +340,6 @@ export default function SolutionsPageView() {
               </ul>
             </div>
           </div>
-
 
           <div className="mt-10">
             <Link
@@ -392,7 +357,7 @@ export default function SolutionsPageView() {
           <div className="text-center mb-12">
             <p
               className="text-xs uppercase tracking-widest mb-3"
-              style={{ color: "#C7B892", letterSpacing: "0.2em" }}
+              style={{ color: "#b8955a", letterSpacing: "0.2em" }}
             >
               <TranslatedText text="Notre différence" />
             </p>
@@ -401,7 +366,7 @@ export default function SolutionsPageView() {
             </h2>
             <div
               className="mx-auto mt-4"
-              style={{ width: "60px", height: "2px", background: "#C7B892" }}
+              style={{ width: "60px", height: "2px", background: "#b8955a" }}
             />
           </div>
 
@@ -584,23 +549,11 @@ export default function SolutionsPageView() {
 
           {/* Besoin d'un renseignement */}
           <div className="mt-10 flex items-start gap-4 pt-8 border-t border-[#E8DCC8]">
-            <div className="shrink-0 w-11 h-11 rounded-full bg-white border border-[#D6C9B0] flex items-center justify-center">
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                width="18"
-                height="18"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="#c8a96e"
-                strokeWidth="1.6"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  d="M2.25 6.75c0 8.284 6.716 15 15 15h2.25a2.25 2.25 0 002.25-2.25v-1.372c0-.516-.351-.966-.852-1.091l-4.423-1.106c-.44-.11-.902.055-1.173.417l-.97 1.293c-.282.376-.769.542-1.21.38a12.035 12.035 0 01-7.143-7.143c-.162-.441.004-.928.38-1.21l1.293-.97c.363-.271.527-.734.417-1.173L6.963 3.102a1.125 1.125 0 00-1.091-.852H4.5A2.25 2.25 0 002.25 4.5v2.25z"
-                />
-              </svg>
+            {/* Icône cercle */}
+            <div className="shrink-0 w-11 h-11 rounded-full bg-[#F3EBDD] flex items-center justify-center">
+              <FaPhone className="text-[#b8955a] text-base" />
             </div>
+
             <div>
               <p className="font-semibold text-gray-800 mb-0.5">
                 <TranslatedText text="Besoin d'un renseignement ?" />
@@ -608,47 +561,21 @@ export default function SolutionsPageView() {
               <p className="text-sm text-gray-500 mb-2">
                 <TranslatedText text="Notre équipe est à votre écoute du lundi au vendredi de 9h à 18h." />
               </p>
+
               <div className="flex flex-col gap-1.5">
                 <a
                   href="tel:+33184801152"
-                  className="flex items-center gap-2 text-sm font-medium text-gray-700 hover:text-[#c8a96e] transition-colors"
+                  className="flex items-center gap-2 text-sm font-medium text-gray-700 hover:text-[#b8955a] transition-colors"
                 >
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    width="14"
-                    height="14"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    stroke="currentColor"
-                    strokeWidth="2"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      d="M2.25 6.75c0 8.284 6.716 15 15 15h2.25a2.25 2.25 0 002.25-2.25v-1.372c0-.516-.351-.966-.852-1.091l-4.423-1.106c-.44-.11-.902.055-1.173.417l-.97 1.293c-.282.376-.769.542-1.21.38a12.035 12.035 0 01-7.143-7.143c-.162-.441.004-.928.38-1.21l1.293-.97c.363-.271.527-.734.417-1.173L6.963 3.102a1.125 1.125 0 00-1.091-.852H4.5A2.25 2.25 0 002.25 4.5v2.25z"
-                    />
-                  </svg>
+                  <FaPhone className="text-[#b8955a] text-xs shrink-0" />
                   01 84 80 11 52
                 </a>
+
                 <a
                   href="mailto:partenaires@spa-prestige-collection.com"
-                  className="flex items-center gap-2 text-sm font-medium text-gray-700 hover:text-[#c8a96e] transition-colors"
+                  className="flex items-center gap-2 text-sm font-medium text-gray-700 hover:text-[#b8955a] transition-colors"
                 >
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    width="14"
-                    height="14"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    stroke="currentColor"
-                    strokeWidth="2"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      d="M21.75 6.75v10.5a2.25 2.25 0 01-2.25 2.25h-15a2.25 2.25 0 01-2.25-2.25V6.75m19.5 0A2.25 2.25 0 0019.5 4.5h-15a2.25 2.25 0 00-2.25 2.25m19.5 0v.243a2.25 2.25 0 01-1.07 1.916l-7.5 4.615a2.25 2.25 0 01-2.36 0L3.32 8.91a2.25 2.25 0 01-1.07-1.916V6.75"
-                    />
-                  </svg>
+                  <FaEnvelope className="text-[#b8955a] text-xs shrink-0" />
                   partenaires@spa-prestige-collection.com
                 </a>
               </div>
@@ -656,8 +583,7 @@ export default function SolutionsPageView() {
           </div>
         </section>
 
-          <Partenaires section={section6} />
-
+        <Partenaires section={section6} />
       </div>
     </>
   );

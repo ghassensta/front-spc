@@ -275,7 +275,7 @@ export default function ({
             )}
 
             {product?.remise_produit > 0 && (
-              <span className="inline-block bg-[#B6B499] text-black font-bold font-roboto px-4 py-2 rounded-full text-sm mt-4">
+              <span className="inline-block bg-[#b8955a] text-white font-bold font-roboto px-4 py-2 rounded-full text-sm mt-4">
                 {translateSync(`${product.remise_produit}% de remise`)}
               </span>
             )}

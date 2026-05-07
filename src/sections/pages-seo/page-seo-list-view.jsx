@@ -68,7 +68,7 @@ function ExperienceCard({ tag, title, description, ctas }) {
     <div className="flex flex-col items-center text-center px-4 py-6">
       <p
         className="text-xl uppercase tracking-widest mb-1 font-semibold"
-        style={{ color: "#C7B892" }}
+        style={{ color: "#b8955a" }}
       >
         {translateSync(tag)}
       </p>
@@ -86,7 +86,7 @@ function ExperienceCard({ tag, title, description, ctas }) {
                 key={i}
                 to={cta.to}
                 className="flex items-center gap-2 text-lg font-semibold transition-all hover:gap-3"
-                style={{ color: "#C7B892", textDecoration: "none" }}
+                style={{ color: "#b8955a", textDecoration: "none" }}
               >
                 <FaLink size={14} />
                 {translateSync(cta.label)}
@@ -96,7 +96,7 @@ function ExperienceCard({ tag, title, description, ctas }) {
                 key={i}
                 href={cta.to}
                 className="flex items-center gap-2 text-lg font-semibold transition-all hover:gap-3"
-                style={{ color: "#C7B892", textDecoration: "none" }}
+                style={{ color: "#b8955a", textDecoration: "none" }}
               >
                 <FaLink size={14} />
                 {translateSync(cta.label)}
@@ -120,8 +120,8 @@ function TagItem({ label, slug, onClick }) {
       onMouseLeave={() => setHovered(false)}
       className="px-4 py-2 text-xs cursor-pointer transition-all duration-300 text-center block font-tahoma"
       style={{
-        border: `1px solid ${hovered ? "#C7B892" : "#d0c8bc"}`,
-        color: hovered ? "#C7B892" : "#555",
+        border: `1px solid ${hovered ? "#b8955a" : "#d0c8bc"}`,
+        color: hovered ? "#b8955a" : "#555",
         background: hovered ? "#FBF6EC" : "#fff",
         transform: hovered ? "translateY(-1px)" : "none",
       }}
@@ -162,7 +162,7 @@ export default function PageSeoSList({ pageseo, pageseoLoading }) {
         <div className="flex flex-col justify-center gap-4 max-w-6xl mx-auto px-4 py-10 text-center w-full md:w-3/5">
           <p
             className="text-4xl uppercase tracking-widest font-semibold"
-            style={{ color: "#C7B892", letterSpacing: "0.23em" }}
+            style={{ color: "#b8955a", letterSpacing: "0.23em" }}
           >
             {translateSync("Spa & Prestige Collection")}
           </p>
@@ -180,7 +180,7 @@ export default function PageSeoSList({ pageseo, pageseoLoading }) {
             <Link
               to={paths.spa.list}
               className="flex items-center gap-2 text-xl font-semibold"
-              style={{ color: "#C7B892", textDecoration: "none" }}
+              style={{ color: "#b8955a", textDecoration: "none" }}
             >
               <FaUserCheck size={18} />
               {translateSync("Établissements")}
@@ -189,7 +189,7 @@ export default function PageSeoSList({ pageseo, pageseoLoading }) {
             <Link
               to={paths.categories("spa")}
               className="flex items-center gap-2 text-xl font-semibold"
-              style={{ color: "#C7B892", textDecoration: "none" }}
+              style={{ color: "#b8955a", textDecoration: "none" }}
             >
               <FaTrophy size={18} />
               {translateSync("Spas")}
@@ -236,7 +236,7 @@ export default function PageSeoSList({ pageseo, pageseoLoading }) {
               <Link
                 to={paths.referentiel}
                 className="flex items-center gap-2 text-lg font-semibold transition-all hover:gap-3"
-                style={{ color: "#C7B892", textDecoration: "none" }}
+                style={{ color: "#b8955a", textDecoration: "none" }}
               >
                 <FaLink size={14} />
                 {translateSync("Notre référentiel candidature")}
@@ -244,7 +244,7 @@ export default function PageSeoSList({ pageseo, pageseoLoading }) {
               <Link
                 to={paths.partenaire}
                 className="flex items-center gap-2 text-lg font-semibold transition-all hover:gap-3"
-                style={{ color: "#C7B892", textDecoration: "none" }}
+                style={{ color: "#b8955a", textDecoration: "none" }}
               >
                 <FaLink size={14} />
 
@@ -266,7 +266,7 @@ export default function PageSeoSList({ pageseo, pageseoLoading }) {
             <Link
               to={paths.solutions}
               className="flex items-center gap-2 text-lg font-semibold transition-all hover:gap-3"
-              style={{ color: "#C7B892", textDecoration: "none" }}
+              style={{ color: "#b8955a", textDecoration: "none" }}
             >
               <FaLink size={14} />
               {translateSync("Découvrir les solutions CE")}
@@ -291,7 +291,7 @@ export default function PageSeoSList({ pageseo, pageseoLoading }) {
           <Link
             to={paths.partenaire}
             className="flex items-center gap-2 text-lg font-semibold transition-all hover:gap-3"
-            style={{ color: "#C7B892", textDecoration: "none" }}
+            style={{ color: "#b8955a", textDecoration: "none" }}
           >
             <FaLink size={14} />
             {translateSync("Découvrir comment devenir une marque partenaire")}

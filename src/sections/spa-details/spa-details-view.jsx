@@ -303,13 +303,13 @@ function SpaDetailsView({
       <div className="flex items-center justify-center gap-2">
         <Link
           to={paths.spa.list}
-          className="inline-flex font-tahoma rounded-full items-center gap-2 uppercase font-normal tracking-widest transition-all duration-300 px-6 py-3 text-sm bg-[#B6B499] hover:bg-black text-white"
+          className="inline-flex font-tahoma rounded-full items-center gap-2 uppercase font-normal tracking-widest transition-all duration-300 px-6 py-3 text-sm bg-[#b8955a] hover:bg-black text-white"
         >
           {translateSync("Nos établissements")}
         </Link>
         <Link
           to={paths.main}
-          className="inline-flex font-tahoma rounded-full items-center gap-2 uppercase font-normal tracking-widest transition-all duration-300 px-6 py-3 text-sm bg-[#B6B499] hover:bg-black text-white"
+          className="inline-flex font-tahoma rounded-full items-center gap-2 uppercase font-normal tracking-widest transition-all duration-300 px-6 py-3 text-sm bg-[#b8955a] hover:bg-black text-white"
         >
           {translateSync("Accueil")}
         </Link>

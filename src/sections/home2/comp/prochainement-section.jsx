@@ -74,7 +74,7 @@ export default function ProchainementSection({ prochainement }) {
               {translateSync(prochainement.title)}
             </h2>
 
-            <h3 className="text-[#B6B499] text-2xl mb-4">
+            <h3 className="text-[#b8955a] text-2xl mb-4">
               {translateSync(prochainement.description)}
             </h3>
 
@@ -114,7 +114,7 @@ export default function ProchainementSection({ prochainement }) {
                 />
               </AnimatePresence>
 
-              <div className="absolute w-full bg-[#B6B499] left-0 bottom-0 text-center px-4 py-2 text-lg font-bold text-white">
+              <div className="absolute w-full bg-[#b8955a] left-0 bottom-0 text-center px-4 py-2 text-lg font-bold text-white">
                 {translateSync(cards[currentIndex].title)}
               </div>
             </div>
@@ -126,8 +126,8 @@ export default function ProchainementSection({ prochainement }) {
                   key={index}
                   onClick={() => goToSlide(index)}
                   className={`w-3 h-3 rounded-full ${currentIndex === index
-                      ? "bg-[#B6B498]"
-                      : "bg-gray-400 hover:bg-[#B6B498]"
+                      ? "bg-[#b8955a]"
+                      : "bg-gray-400 hover:bg-[#b8955a]"
                     } transition-colors duration-300`}
                   aria-label={translateSync("Aller à la diapositive") + ` ${index + 1}`}
                 />

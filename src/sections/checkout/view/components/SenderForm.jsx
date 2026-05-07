@@ -21,7 +21,7 @@ export default function SenderForm({
                     onClick={() =>
                         router.push(`${paths.auth.register}?returnTo=${encodeURIComponent("/checkout")}`)
                     }
-                    className="w-full inline-flex justify-center items-center gap-2 uppercase font-normal tracking-widest transition-all duration-300 px-6 py-3 text-sm bg-[#B6B499] hover:bg-black text-white rounded-full"
+                    className="w-full inline-flex justify-center items-center gap-2 uppercase font-normal tracking-widest transition-all duration-300 px-6 py-3 text-sm bg-[#b8955a] hover:bg-black text-white rounded-full"
                 >
                     <TranslatedText text="Continuer" />
                 </button>
@@ -60,7 +60,7 @@ export default function SenderForm({
 
             <button
                 onClick={onCheckout}
-                className="w-full mt-4 inline-flex justify-center items-center rounded-full gap-2 uppercase font-normal tracking-widest transition-all duration-300 px-6 py-3 text-sm bg-[#B6B499] hover:bg-black text-white"
+                className="w-full mt-4 inline-flex justify-center items-center rounded-full gap-2 uppercase font-normal tracking-widest transition-all duration-300 px-6 py-3 text-sm bg-[#b8955a] hover:bg-black text-white"
             >
                 <TranslatedText text="Payer" />
             </button>

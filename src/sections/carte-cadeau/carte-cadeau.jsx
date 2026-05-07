@@ -1,7 +1,4 @@
-// src/components/carte-cadeau/CarteCadeau.jsx (ou .tsx) - Code complet, propre et corrigé
-
 import React, { useState } from "react";
-import { MapPin, BookOpen, PhoneCall, Sparkles } from "lucide-react";
 import { useCheckoutContext } from "../checkout/context";
 import { Link, useNavigate } from "react-router-dom";
 import { paths } from "src/router/paths";
@@ -10,10 +7,23 @@ import {
   useGetCarteCadeaux,
   createPersonalizedCarteCadeaux,
 } from "src/actions/cartes-cadeaux";
-import theImage from "src/assets/images/SPC-carte-cadeau-montant-3.jpg";
+import theImage from "src/assets/images/SPC-carte-cadeau-montant-4.png";
 import theImage2 from "src/assets/images/SPC-Femme-cartes-square.jpg";
 import { TranslatedText } from "src/components/translated-text/translated-text";
 import { useTranslation } from "react-i18next";
+import SectionHeader from "src/components/section-header/SectionHeader";
+import CarteBadges from "/src/sections/carte-cadeau/components/CarteBadges.jsx";
+import CommentCaMarche from "src/sections/carte-cadeau/components/CommentCaMarche";
+import {
+  FaMapMarkerAlt,
+  FaEnvelope,
+  FaPaperPlane,
+  FaSpa,
+} from "react-icons/fa";
+const GOLD = "#b8955a";
+const FONT = "Calibri, 'Segoe UI', sans-serif";
+const inputClass =
+  "w-full border border-gray-300 rounded-lg py-2.5 px-4 text-sm focus:outline-none focus:ring-2 focus:ring-[#b8955a] text-gray-700";
 
 export default function CarteCadeau() {
   const checkout = useCheckoutContext();
@@ -24,12 +34,11 @@ export default function CarteCadeau() {
   const [amount, setAmount] = useState(null);
   const [isCustom, setIsCustom] = useState(false);
   const [receiver, setReceiver] = useState([
-      { fullName: "", email: "", date: new Date().toISOString().slice(0, 10) },
-    ]);
+    { fullName: "", email: "", date: new Date().toISOString().slice(0, 10) },
+  ]);
   const [submitting, setSubmitting] = useState(false);
 
   const addProductToCheckout = async () => {
-    // Validation du montant
     if (!amount || isNaN(amount) || amount < 1 || amount > 1000) {
       toast.error(
         t(
@@ -38,10 +47,6 @@ export default function CarteCadeau() {
       );
       return;
     }
-
-   
-
-    // Validation des champs
     if (!receiver[0].fullName || !receiver[0].email) {
       toast.error(t("Veuillez remplir les champs pour le destinataire."));
       return;
@@ -50,19 +55,16 @@ export default function CarteCadeau() {
       toast.error(t("Veuillez remplir votre nom et prénom."));
       return;
     }
-
     try {
       let cardToUse = cartes.find((carte) => {
         const price =
           typeof carte.price === "string"
             ? parseFloat(carte.price)
             : carte.price;
-        return Math.abs(price - amount) < 0.001; 
+        return Math.abs(price - amount) < 0.001;
       });
-
       if (!cardToUse) {
         const createdCard = await createPersonalizedCarteCadeaux(amount);
-
         cardToUse = {
           id: createdCard.id,
           name: createdCard.nom || `Carte cadeau de ${amount.toFixed(2)} €`,
@@ -70,8 +72,7 @@ export default function CarteCadeau() {
           image: theImage,
         };
       }
-
-      const cartData = {
+      checkout.onAddToCart({
         id: cardToUse.id,
         name: cardToUse.name,
         price: cardToUse.price,
@@ -79,9 +80,7 @@ export default function CarteCadeau() {
         destinataires: receiver,
         expediteur: checkout.expediteur,
         quantity: 1,
-      };
-
-      checkout.onAddToCart(cartData);
+      });
       toast.success(t("Carte cadeau ajoutée au panier !"));
       navigate(paths.checkout);
     } catch (error) {
@@ -94,96 +93,136 @@ export default function CarteCadeau() {
     }
   };
 
+  const howItWorks = [
+    {
+      icon: <FaMapMarkerAlt size={22} />,
+      num: 1,
+      title: "Choisissez votre carte cadeau",
+      desc: "Sélectionnez le montant qui vous convient.",
+    },
+    {
+      icon: <FaEnvelope size={22} />,
+      num: 2,
+      title: "Personnalisez votre envoi",
+      desc: "Ajoutez les informations du destinataire et votre message.",
+    },
+    {
+      icon: <FaPaperPlane size={22} />,
+      num: 3,
+      title: "Recevez la carte par email",
+      desc: "La carte cadeau est envoyée à la date choisie.",
+    },
+    {
+      icon: <FaSpa size={22} />,
+      num: 4,
+      title: "Profitez librement",
+      desc: "Le bénéficiaire utilise sa carte dans l'un de nos établissements partenaires.",
+    },
+  ];
   return (
-    <>
-      {/* ... */}
-      <div className="flex bg-[#FBF6EC] w-screen relative left-[calc(-50vw+50%)] px-5">
-        <div className="max-w-6xl mx-auto py-6">
-          <div className="flex flex-col md:flex-row gap-6">
-            <div className="md:w-1/2">
-              <h1 className="text-4xl font-bold mb-4">
+    <div style={{ fontFamily: FONT }}>
+      <div className="w-full" style={{ backgroundColor: "#FBF6EC" }}>
+        <div className="max-w-6xl mx-auto px-6 py-10">
+          <div className="flex flex-col md:flex-row gap-10 items-center">
+            <div className="w-full md:w-1/2">
+              <p
+                className="text-xs uppercase tracking-widest font-semibold mb-3 text-center md:text-left"
+                style={{ color: "#b8955a", letterSpacing: "0.2em" }}
+              >
+                <TranslatedText text="Notre Engagement" />
+              </p>
+              <h1
+                className="mb-3 leading-tight text-center md:text-left"
+                style={{
+                  color: "#1a1a1a",
+                  fontFamily: "'Cormorant Garamond', serif",
+                  fontWeight: 500,
+                  fontSize: "clamp(2.5rem, 5vw, 4.5rem)",
+                  lineHeight: "1",
+                }}
+              >
                 <TranslatedText text="Un cadeau qui fait la différence" />
               </h1>
-              <p className="font-roboto pr-6 text-[#5E5E5E]">
-                <TranslatedText text="Instantanée. Attentionnée. La carte cadeau Spa & Prestige Collection vous permet d'offrir une expérience bien-être unique à vos proches, en toute simplicité." />
-                <br />
-                <TranslatedText text="Un choix varié de prestations exceptionnelles, à savourer en un clic. Un cadeau facile à offrir, agréable à recevoir, pour des moments de pure détente et d'évasion." />
-                <br />
-                <TranslatedText text="La carte cadeau Spa Prestige Collection est valable dans l'ensemble de nos partenaires Spas pour une période de un an à partir de la date de commande." />
-                <br />
-                <TranslatedText text="Vous pouvez aussi offrir directement un soin (avec nos remises prix) en consultant les offres de nos partenaires Spas." />
-              </p>
+              <div
+                className="mb-6 mx-auto md:mx-0"
+                style={{
+                  width: "52px",
+                  height: "2px",
+                  background: "#b8955a",
+                }}
+              />
+
+              {/* Paragraphes */}
+              <div
+                className="font-tahoma text-base text-center md:text-left space-y-3 mb-6"
+                style={{ color: "#555" }}
+              >
+                <p
+                  style={{
+                    fontFamily: "'Cormorant Garamond', serif",
+                    fontWeight: 400,
+                    fontSize: "clamp(1.1rem, 2vw, 1.35rem)",
+                    lineHeight: "1.5",
+                    letterSpacing: "0.02em",
+                    color: "#1a1a1a",
+                  }}
+                >
+                  <TranslatedText text="Offrez une expérience bien-être unique, simple à envoyer, agréable à recevoir." />
+                </p>
+              </div>
             </div>
+
+            {/* Image droite */}
             <div className="md:w-1/2">
               <img
                 loading="lazy"
                 src={theImage}
                 alt="Carte Cadeau Spa & Prestige"
-                className="w-full h-auto object-cover rounded"
+                className="w-full h-auto object-cover rounded-xl"
               />
             </div>
           </div>
         </div>
       </div>
+      <CarteBadges />
+      <div className="max-w-6xl mx-auto py-12 px-6">
+        <SectionHeader
+          label="Offrir une carte cadeau"
+          title="OFFRIR UNE CARTE CADEAU"
+        />
 
-      {/* ... */}
-      <div className="max-w-6xl mx-auto gap-6 py-8">
-        <div className="grid grid-cols-1 md:grid-cols-3 items-start">
-          <div className="flex flex-col items-center justify-center">
-            <h2 className="text-center text-2xl mb-4 font-bold">
-              <TranslatedText text="Un cadeau instantané et pratique" />
-            </h2>
-            <p className="font-roboto text-center">
-              <TranslatedText text="Offrez un moment de sérénité immédiate, sans attente ni contrainte." />
-            </p>
-          </div>
-          <div className="flex flex-col items-center justify-center">
-            <h2 className="text-center text-2xl mb-4 font-bold">
-              <TranslatedText text="Un choix infini" />
-            </h2>
-            <p className="font-roboto text-center">
-              <TranslatedText text="Des prestations variées pour toutes les occasions et tous les budgets." />
-            </p>
-          </div>
-          <div className="flex flex-col items-center justify-center">
-            <h2 className="text-center text-2xl mb-4 font-bold">
-              <TranslatedText text="Un bien-être sur mesure" />
-            </h2>
-            <p className="font-roboto text-center">
-              <TranslatedText text="Une invitation à se détendre, valable 1 an." />
-            </p>
-          </div>
-        </div>
-      </div>
-
-      {/* ... */}
-      <div className="max-w-6xl mx-auto py-12 px-4">
-        <h2 className="text-3xl font-bold text-center mb-10">
-          <TranslatedText text="OFFRIR UNE CARTE CADEAU :" />
-          <br />
-          <TranslatedText text="UNE ATTENTION QUI A DU SENS." />
-        </h2>
-
-        <div className="flex flex-col md:flex-row gap-8 lg:gap-12 items-start">
-          {/* ... */}
-          <div className="w-full md:w-1/2 order-1 md:order-1">
+        <div className="flex flex-col md:flex-row gap-10 items-start">
+          {/* Image gauche */}
+          <div className="hidden md:block md:w-1/2">
             <img
               loading="lazy"
               src={theImage2}
-              alt="Femme recevant une carte cadeau Spa & Prestige Collection"
+              alt="Femme recevant une carte cadeau"
               className="w-full h-auto object-cover rounded-xl shadow-lg"
             />
           </div>
-
-          {/* ... */}
-          <div className="w-full md:w-1/2 order-2 md:order-2 font-roboto space-y-8">
+          {/* Formulaire droite */}
+          <div className="w-full md:w-1/2 space-y-8">
+            {/* Étape 1 — Montant */}
             <div>
-              <h3 className="text-2xl font-bold mb-6">
-                <TranslatedText text="Sélectionnez le montant" />
-              </h3>
-              <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
+              <p
+                className="text-xs uppercase tracking-widest mb-2"
+                style={{
+                  color: GOLD,
+                  letterSpacing: "0.15em",
+                  fontFamily: FONT,
+                }}
+              >
+                <TranslatedText text="1. Choisissez le montant" />
+              </p>
+              <div
+                className="w-6 h-0.5 mb-4"
+                style={{ backgroundColor: GOLD }}
+              />
+
+              <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
                 {loading ? (
-                  <p className="col-span-full text-center text-gray-500">
+                  <p className="col-span-full text-center text-sm text-gray-500">
                     <TranslatedText text="Chargement des cartes..." />
                   </p>
                 ) : (
@@ -193,6 +232,7 @@ export default function CarteCadeau() {
                         typeof carte.price === "string"
                           ? parseFloat(carte.price)
                           : carte.price;
+                      const selected = amount === price && !isCustom;
                       return (
                         <button
                           key={carte.id}
@@ -200,13 +240,12 @@ export default function CarteCadeau() {
                             setAmount(price);
                             setIsCustom(false);
                           }}
-                          className={`border border-black py-3 px-4 font-bold rounded-lg transition-all duration-200
-                      ${
-                        amount === price && !isCustom
-                          ? "bg-black text-white"
-                          : "bg-gray-100 hover:bg-black hover:text-white"
-                      }
-                    `}
+                          className="py-2.5 px-4 text-sm font-semibold rounded-lg border transition-all duration-200"
+                          style={{
+                            backgroundColor: selected ? GOLD : "#fff",
+                            borderColor: selected ? GOLD : "#d1d5db",
+                            color: selected ? "#fff" : "#374151",
+                          }}
                         >
                           {price.toFixed(2)} €
                         </button>
@@ -217,54 +256,55 @@ export default function CarteCadeau() {
                         setIsCustom(true);
                         setAmount(null);
                       }}
-                      className={`border border-black py-3 px-4 font-bold rounded-lg transition-all duration-200 col-span-2 sm:col-span-3 md:col-span-1
-                  ${
-                    isCustom
-                      ? "bg-black text-white"
-                      : "bg-gray-100 hover:bg-black hover:text-white"
-                  }
-                `}
+                      className="py-2.5 px-4 text-sm font-semibold rounded-lg border transition-all duration-200 col-span-2 sm:col-span-4"
+                      style={{
+                        backgroundColor: isCustom ? GOLD : "#fff",
+                        borderColor: isCustom ? GOLD : "#d1d5db",
+                        color: isCustom ? "#fff" : "#374151",
+                      }}
                     >
-                      <TranslatedText text="Montant personnalisé" />
+                      <TranslatedText text="Autre montant" />
                     </button>
                   </>
                 )}
               </div>
 
-              {/* ... */}
               {isCustom && (
-                <div className="mt-8 bg-gray-50 p-6 rounded-xl border">
-                  <h4 className="text-xl font-bold mb-4">
+                <div className="mt-4 bg-gray-50 p-5 rounded-xl border border-gray-200">
+                  <p
+                    className="text-sm font-semibold text-gray-700 mb-3"
+                    style={{ fontFamily: FONT }}
+                  >
                     <TranslatedText text="Entrez votre montant personnalisé" />
-                  </h4>
-                  <div className="flex items-center gap-4 max-w-md">
+                  </p>
+                  <div className="flex items-center gap-3">
                     <input
                       type="number"
                       min="1"
                       max="1000"
                       step="0.01"
                       placeholder={t("ex. 150.00")}
-                      className="w-full border border-gray-400 rounded-lg py-3 px-4 text-lg focus:outline-none focus:ring-2 focus:ring-black"
+                      className={inputClass}
                       value={amount ?? ""}
-                      onChange={(e) => {
-                        const val =
+                      onChange={(e) =>
+                        setAmount(
                           e.target.value === ""
                             ? null
-                            : parseFloat(e.target.value);
-                        setAmount(val);
-                      }}
+                            : parseFloat(e.target.value),
+                        )
+                      }
                     />
-                    <span className="text-2xl font-bold">€</span>
+                    <span className="text-lg font-bold text-gray-700">€</span>
                   </div>
-                  <p className="text-sm text-gray-600 mt-3">
-                    <TranslatedText text="Montant compris entre 1 € et 1 000 € (deux décimales autorisées)." />
+                  <p className="text-xs text-gray-400 mt-2">
+                    <TranslatedText text="Entre 1 € et 1 000 €." />
                   </p>
                   <button
                     onClick={() => {
                       setIsCustom(false);
                       setAmount(null);
                     }}
-                    className="mt-4 text-sm underline hover:text-black transition"
+                    className="mt-3 text-xs underline text-gray-500 hover:text-gray-800 transition"
                   >
                     <TranslatedText text="Annuler" />
                   </button>
@@ -272,19 +312,33 @@ export default function CarteCadeau() {
               )}
             </div>
 
-            {/* ... */}
+            {/* Étape 2 — Destinataire */}
             <div>
-              <h3 className="text-xl font-tahoma font-normal mb-4">
-                <TranslatedText text="Nom et prénom de la personne qui recevra la carte cadeau" />
-              </h3>
-              <div className="space-y-4">
-                <div className="flex flex-col sm:flex-row gap-4 sm:gap-6 sm:items-center">
-                  <label className="sm:w-40 text-sm font-tahoma font-medium">
+              <p
+                className="text-xs uppercase tracking-widest mb-2"
+                style={{
+                  color: GOLD,
+                  letterSpacing: "0.15em",
+                  fontFamily: FONT,
+                }}
+              >
+                <TranslatedText text="2. Informations du destinataire" />
+              </p>
+              <div
+                className="w-6 h-0.5 mb-4"
+                style={{ backgroundColor: GOLD }}
+              />
+              <div className="space-y-3">
+                <div className="flex flex-col sm:flex-row gap-3 sm:items-center">
+                  <label
+                    className="sm:w-36 text-sm text-gray-600 shrink-0"
+                    style={{ fontFamily: FONT }}
+                  >
                     <TranslatedText text="Nom et prénom" />
                   </label>
                   <input
                     type="text"
-                    className="flex-1 border border-gray-300 rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-black"
+                    className={inputClass}
                     value={receiver[0].fullName}
                     onChange={(e) =>
                       setReceiver([
@@ -293,53 +347,73 @@ export default function CarteCadeau() {
                     }
                   />
                 </div>
-                <div className="flex flex-col sm:flex-row gap-4 sm:gap-6 sm:items-center">
-                  <label className="sm:w-40 text-sm font-tahoma font-medium">
+                <div className="flex flex-col sm:flex-row gap-3 sm:items-center">
+                  <label
+                    className="sm:w-36 text-sm text-gray-600 shrink-0"
+                    style={{ fontFamily: FONT }}
+                  >
                     <TranslatedText text="Email" />
                   </label>
                   <input
                     type="email"
-                    className="flex-1 border border-gray-300 rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-black"
+                    className={inputClass}
                     value={receiver[0].email}
                     onChange={(e) =>
                       setReceiver([{ ...receiver[0], email: e.target.value }])
                     }
                   />
                 </div>
-                <div className="flex flex-col sm:flex-row gap-4 sm:gap-6 sm:items-center">
-                  <label className="sm:w-40 text-sm font-tahoma font-medium">
+                <div className="flex flex-col sm:flex-row gap-3 sm:items-center">
+                  <label
+                    className="sm:w-36 text-sm text-gray-600 shrink-0"
+                    style={{ fontFamily: FONT }}
+                  >
                     <TranslatedText text="Date d'envoi" />
                   </label>
                   <input
                     type="date"
-                    className="flex-1 border border-gray-300 rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-black"
+                    className={inputClass}
                     value={
                       receiver[0].date || new Date().toISOString().slice(0, 10)
                     }
                     min={new Date().toISOString().slice(0, 10)}
                     onChange={(e) => {
-                      const updatedReceiver = [...receiver];
-                      updatedReceiver[0].date = e.target.value;
-                      setReceiver(updatedReceiver);
+                      const r = [...receiver];
+                      r[0].date = e.target.value;
+                      setReceiver(r);
                     }}
                   />
                 </div>
               </div>
             </div>
 
-            {/* ... */}
+            {/* Étape 3 — Expéditeur */}
             <div>
-              <h3 className="text-xl font-tahoma font-normal mb-4">
-                <TranslatedText text="Nom et prénom de la personne qui commande" />
-              </h3>
-              <div className="space-y-4">
-                <div className="flex flex-col sm:flex-row gap-4 sm:gap-6 sm:items-center">
-                  <label className="sm:w-40 text-sm font-tahoma font-medium">
+              <p
+                className="text-xs uppercase tracking-widest mb-2"
+                style={{
+                  color: GOLD,
+                  letterSpacing: "0.15em",
+                  fontFamily: FONT,
+                }}
+              >
+                <TranslatedText text="3. Informations de l'expéditeur" />
+              </p>
+              <div
+                className="w-6 h-0.5 mb-4"
+                style={{ backgroundColor: GOLD }}
+              />
+              <div className="space-y-3">
+                <div className="flex flex-col sm:flex-row gap-3 sm:items-center">
+                  <label
+                    className="sm:w-36 text-sm text-gray-600 shrink-0"
+                    style={{ fontFamily: FONT }}
+                  >
                     <TranslatedText text="Nom et prénom" />
                   </label>
                   <input
                     type="text"
-                    className="flex-1 border border-gray-300 rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-black"
+                    className={inputClass}
                     value={checkout.expediteur.fullName || ""}
                     onChange={(e) =>
                       checkout.onCreateExpediteur({
@@ -349,13 +423,16 @@ export default function CarteCadeau() {
                     }
                   />
                 </div>
-                <div className="flex flex-col sm:flex-row gap-4 sm:gap-6 sm:items-start">
-                  <label className="sm:w-40 text-sm font-tahoma font-medium">
+                <div className="flex flex-col sm:flex-row gap-3 sm:items-start">
+                  <label
+                    className="sm:w-36 text-sm text-gray-600 shrink-0 pt-2"
+                    style={{ fontFamily: FONT }}
+                  >
                     <TranslatedText text="Message" />
                   </label>
                   <textarea
                     rows={4}
-                    className="flex-1 border border-gray-300 rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-black resize-none"
+                    className={`${inputClass} resize-none`}
                     value={checkout.expediteur.message || ""}
                     onChange={(e) =>
                       checkout.onCreateExpediteur({
@@ -368,17 +445,29 @@ export default function CarteCadeau() {
               </div>
             </div>
 
-            {/* ... */}
-            <div className="flex justify-start sm:justify-end">
+            {/* Bouton Offrir — caramel */}
+            <div className="flex justify-end">
               <button
                 onClick={addProductToCheckout}
                 disabled={submitting || !amount}
-                className="px-10 py-4 bg-black text-white uppercase font-tahoma text-sm tracking-[3px] rounded-full hover:bg-gray-800 transition disabled:opacity-50 disabled:cursor-not-allowed shadow-md"
+                className="px-10 py-3 rounded-full text-sm font-semibold uppercase tracking-wider text-white transition-colors disabled:opacity-50 disabled:cursor-not-allowed shadow-md"
+                style={{
+                  backgroundColor: GOLD,
+                  letterSpacing: "0.1em",
+                  fontFamily: FONT,
+                }}
+                onMouseEnter={(e) =>
+                  !submitting &&
+                  (e.currentTarget.style.backgroundColor = "#1a1a1a")
+                }
+                onMouseLeave={(e) =>
+                  (e.currentTarget.style.backgroundColor = GOLD)
+                }
               >
                 {submitting ? (
                   <TranslatedText text="Traitement en cours..." />
                 ) : (
-                  <TranslatedText text="Offrir" />
+                  <TranslatedText text="Personnaliser et continuer" />
                 )}
               </button>
             </div>
@@ -386,65 +475,17 @@ export default function CarteCadeau() {
         </div>
       </div>
 
-      {/* ... */}
-      <div className="max-w-6xl mx-auto py-12 px-4">
-        <h2 className="text-3xl font-bold text-center mb-10">
-          <TranslatedText text="Comment ça marche ?" />
-        </h2>
-        <h2 className="text-3xl text-center mb-10">
-          <TranslatedText text="Explorez notre site et sélectionnez l'établissement ou la prestation qui vous convient !" />
-        </h2>
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-8 text-center">
-          <div>
-            <MapPin className="mx-auto mb-4 text-[#B6B498]" size={32} />
-            <h3 className="font-bold text-lg mb-2">
-              <TranslatedText text="Sélectionnez votre adresse bien-être" />
-            </h3>
-            <p className="text-sm text-gray-700 font-roboto">
-              <TranslatedText text="Parcourez notre page" />
-              <strong>
-                <TranslatedText text="Tous nos spas" />
-              </strong>
-              <TranslatedText text="et choisissez l'établissement qui vous correspond." />
-            </p>
-          </div>
-          <div>
-            <BookOpen className="mx-auto mb-4 text-[#B6B498]" size={32} />
-            <h3 className="font-bold text-lg mb-2">
-              <TranslatedText text="Plongez dans l'univers du Spa" />
-            </h3>
-            <p className="text-sm text-gray-700 font-roboto">
-              <TranslatedText text="Découvrez en détail les soins et installations de chaque établissement." />
-            </p>
-          </div>
-          <div>
-            <PhoneCall className="mx-auto mb-4 text-[#B6B498]" size={32} />
-            <h3 className="font-bold text-lg mb-2">
-              <TranslatedText text="Réservez votre moment privilégié" />
-            </h3>
-            <p className="text-sm text-gray-700 font-roboto">
-              <TranslatedText text="Contactez directement l'établissement en indiquant votre numéro de carte cadeau." />
-            </p>
-          </div>
-          <div>
-            <Sparkles className="mx-auto mb-4 text-[#B6B498]" size={32} />
-            <h3 className="font-bold text-lg mb-2">
-              <TranslatedText text="Vivez l'instant" />
-            </h3>
-            <p className="text-sm text-gray-700 font-roboto">
-              <TranslatedText text="Profitez d'une parenthèse de bien-être unique." />
-            </p>
-          </div>
-        </div>
-        <div className="flex justify-center mt-10">
-          <Link
-            to={paths.spa.list}
-            className="bg-[#B6B498] text-white rounded-full py-3 px-8 hover:bg-black transition font-roboto"
-          >
-            <TranslatedText text="Accueil" />
-          </Link>
-        </div>
-      </div>
-    </>
+      {/* ══════════════════════════════
+          SECTION 4 — Comment ça marche
+          ══════════════════════════════ */}
+      <CommentCaMarche
+        label="Utilisation"
+        title="Comment ça marche ?"
+        subtitle="Explorez notre site et sélectionnez l'établissement qui vous convient !"
+        steps={howItWorks}
+        ctaLabel="Découvrir nos établissements"
+        ctaLink={paths.spa.list}
+      />
+    </div>
   );
 }

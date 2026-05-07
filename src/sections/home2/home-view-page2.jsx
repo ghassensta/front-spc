@@ -110,7 +110,7 @@ export default function HomePageView() {
             <div className="max-w-6xl mx-auto py-6 px-3">
               <h2 className="text-3xl font-bold text-center">
                 {translateSync("Actualités :")}{" "}
-                <span className="text-[#B6B499]">
+                <span className="text-[#b8955a]">
                   {translateSync("Nos derniers articles")}
                 </span>
               </h2>

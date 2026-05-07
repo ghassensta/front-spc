@@ -22,7 +22,7 @@ export default function Section({
           {translateSync(header)}
 
           {!!subheader && (
-            <div className="text-[#B6B499] text-3xl mt-2">
+            <div className="text-[#b8955a] text-3xl mt-2">
               {translateSync(subheader)}
             </div>
           )}

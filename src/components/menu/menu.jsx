@@ -74,7 +74,7 @@ export default function Menu({ show, onClose }) {
                         <Link
                           to={item.url}
                           onClick={onClose} 
-                          className="relative inline-block  hover:bg-[#B6B498] hover:text-white w-full p-2"
+                          className="relative inline-block  hover:bg-[#b8955a] hover:text-white w-full p-2"
                         >
                           <TranslatedText text={item.title} />
                         </Link>

@@ -65,7 +65,7 @@ export default function ForgotPassword() {
           <input
             type="email"
             id="email"
-            className="w-full border rounded p-2 mb-2 focus:outline-none focus:ring-2 focus:ring-[#B6B499]"
+            className="w-full border rounded p-2 mb-2 focus:outline-none focus:ring-2 focus:ring-[#b8955a]"
             required
             value={email}
             onChange={(e) => setEmail(e.target.value)}
@@ -86,7 +86,7 @@ export default function ForgotPassword() {
       <p className="mt-4 text-sm text-center text-gray-600">
         <Link 
           to={paths.auth.login} 
-          className="text-[#B6B499] hover:underline"
+          className="text-[#b8955a] hover:underline"
         >
           <TranslatedText text="Retour à la page de connexion" />
         </Link>

@@ -159,7 +159,7 @@ export default function Header() {
             className="block relative z-10 p-6 no-underline hover:no-underline"
           >
             {current.remise_offres > 0 && (
-              <p className="absolute top-0 -translate-y-1/2 bg-[#B6B499] text-black font-bold font-roboto px-4 py-2 rounded-full text-sm z-10">
+              <p className="absolute top-0 -translate-y-1/2 bg-[#b8955a] text-white font-bold font-roboto px-4 py-2 rounded-full text-sm z-10">
                 {translateSync("Jusqu'à")} {current.remise_offres}%{" "}
                 {translateSync("de remise")}
               </p>

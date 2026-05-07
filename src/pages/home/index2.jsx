@@ -225,7 +225,7 @@ export default function Page() {
         <meta name="language" content="fr-FR" />
         <meta name="author" content="Spa & Prestige Collection" />
         <meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1" />
-        <meta name="theme-color" content="#B6B499" />
+        <meta name="theme-color" content="#b8955a" />
         
         {}
         <link rel="preconnect" href="https://fonts.googleapis.com" />

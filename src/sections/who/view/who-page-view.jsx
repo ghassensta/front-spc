@@ -1,9 +1,5 @@
 import React, { useEffect, useRef, useState } from "react";
-import {
-  FaChevronLeft,
-  FaChevronRight,
-  FaChevronRight as FaArrow,
-} from "react-icons/fa";
+
 import { Shield, Mail, Star } from "lucide-react";
 import ButtonIcon from "src/components/button-icon/button-icon";
 import { paths } from "src/router/paths";
@@ -14,6 +10,7 @@ import theImage4 from "src/assets/images/SPC-carte-cadeau-montant-3.jpg";
 import { TranslatedText } from "src/components/translated-text/translated-text";
 import { useTranslation } from "src/context/translation-context";
 import theImageFounder from "src/assets/images/SPC-qui-sommes-nous.jpg";
+import SectionHeader from "src/components/section-header/SectionHeader";
 
 /* ── Icône lotus mobile ── */
 function LotusIcon() {
@@ -28,23 +25,23 @@ function LotusIcon() {
     >
       <path
         d="M18 30c0 0-8-6-8-14a8 8 0 0 1 8-8 8 8 0 0 1 8 8c0 8-8 14-8 14z"
-        stroke="#C7B892"
+        stroke="#b8955a"
         strokeWidth="1.2"
         fill="none"
       />
       <path
         d="M18 30c0 0-6-5-10-11 2-4 6-5 10-3"
-        stroke="#C7B892"
+        stroke="#b8955a"
         strokeWidth="1.2"
         fill="none"
       />
       <path
         d="M18 30c0 0 6-5 10-11-2-4-6-5-10-3"
-        stroke="#C7B892"
+        stroke="#b8955a"
         strokeWidth="1.2"
         fill="none"
       />
-      <circle cx="18" cy="18" r="2" fill="#C7B892" />
+      <circle cx="18" cy="18" r="2" fill="#b8955a" />
     </svg>
   );
 }
@@ -55,9 +52,9 @@ function FeatureItem({ Icon, title, desc }) {
       {/* Icône */}
       <div
         className="flex-shrink-0 w-10 h-10 flex items-center justify-center rounded-full"
-        style={{ border: "1.5px solid #C7B892" }}
+        style={{ border: "1.5px solid #b8955a" }}
       >
-        <Icon size={18} style={{ color: "#C7B892" }} />
+        <Icon size={18} style={{ color: "#b8955a" }} />
       </div>
       {/* Texte */}
       <div className="flex-1">
@@ -127,7 +124,7 @@ export default function WhoPageView() {
               {/* Label */}
               <p
                 className="text-xs uppercase tracking-widest font-semibold mb-3 text-center md:text-left"
-                style={{ color: "#C7B892", letterSpacing: "0.2em" }}
+                style={{ color: "#b8955a", letterSpacing: "0.2em" }}
               >
                 <TranslatedText text="Notre Engagement" />
               </p>
@@ -146,7 +143,7 @@ export default function WhoPageView() {
                 style={{
                   width: "48px",
                   height: "2px",
-                  background: "#C7B892",
+                  background: "#b8955a",
                 }}
               />
 
@@ -169,12 +166,12 @@ export default function WhoPageView() {
               {/* Bloc citation */}
               <div
                 className="relative bg-white px-6 py-5 mb-4"
-                style={{ borderLeft: "3px solid #C7B892" }}
+                style={{ borderLeft: "3px solid #b8955a" }}
               >
                 {/* Grand guillemet */}
                 <span
                   className="absolute -top-2 left-4 text-5xl leading-none select-none"
-                  style={{ color: "#C7B892", fontFamily: "Georgia, serif" }}
+                  style={{ color: "#b8955a", fontFamily: "Georgia, serif" }}
                 >
                   ❝
                 </span>
@@ -190,7 +187,7 @@ export default function WhoPageView() {
               <p
                 className="text-xl italic text-center md:text-left"
                 style={{
-                  color: "#C7B892",
+                  color: "#b8955a",
                   fontFamily: "'Dancing Script', 'Brush Script MT', cursive",
                 }}
               >
@@ -260,33 +257,7 @@ export default function WhoPageView() {
           Section 2 : Nos valeurs
       ══════════════════════════════════════════ */}
       <div className="max-w-6xl mx-auto py-10 px-5">
-        <div className="text-center mb-10">
-          {/* Petit label au-dessus */}
-          <p
-            className="text-xs uppercase tracking-widest mb-3"
-            style={{ color: "#C7B892", letterSpacing: "0.2em" }}
-          >
-            <TranslatedText text="Notre philosophie" />
-          </p>
-
-          {/* Titre principal */}
-          <h2
-            className="text-4xl md:text-5xl font-bold"
-            style={{ color: "#1a1a1a" }}
-          >
-            <TranslatedText text="Nos valeurs" />
-          </h2>
-
-          {/* Ligne décorative */}
-          <div
-            className="mx-auto mt-4"
-            style={{
-              width: "60px",
-              height: "2px",
-              background: "#C7B892",
-            }}
-          />
-        </div>
+        <SectionHeader label="Notre philosophie" title="Nos valeurs" />
 
         {/* Grille des valeurs */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
@@ -314,7 +285,7 @@ export default function WhoPageView() {
           ].map(({ title, text }, i) => (
             <div
               key={i}
-              className="bg-[#FBF6EC] px-4 py-8 cursor-pointer duration-300 ease-in hover:text-white hover:bg-[#C7B892]"
+              className="bg-[#FBF6EC] px-4 py-8 cursor-pointer duration-300 ease-in hover:text-white hover:bg-[#b8955a]"
             >
               <h3 className="mb-4 font-bold text-2xl">
                 <TranslatedText text={title} />
@@ -341,30 +312,10 @@ export default function WhoPageView() {
       ══════════════════════════════════════════ */}
       <div className="bg-[#FBF6EC] w-screen relative left-[calc(-50vw+50%)]">
         <div className="max-w-6xl mx-auto py-10 px-5">
-          <div className="text-center mb-10">
-            <p
-              className="text-xs uppercase tracking-widest mb-3"
-              style={{ color: "#C7B892", letterSpacing: "0.2em" }}
-            >
-              <TranslatedText text="Communauté privée" />
-            </p>
-
-            <h2
-              className="text-4xl md:text-5xl font-semibold leading-tight"
-              style={{ color: "#1a1a1a" }}
-            >
-              <TranslatedText text="Rejoignez la communauté privée de Spa & Prestige Collection" />
-            </h2>
-
-            <div
-              className="mx-auto mt-4"
-              style={{
-                width: "60px",
-                height: "2px",
-                background: "#C7B892",
-              }}
-            />
-          </div>
+          <SectionHeader
+            label="Communauté privée"
+            title="Rejoignez la communauté privée de Spa & Prestige Collection"
+          />
           <div
             className="font-tahoma text-xl text-center mb-10 w-full md:w-1/2 mx-auto"
             style={{ color: "#414244" }}

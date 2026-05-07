@@ -227,7 +227,7 @@ export default function ProfileDetails() {
       <div className="col-span-2 flex justify-end">
         <button
           type="button"
-          className="inline-flex font-tahoma rounded-full items-center gap-2 uppercase font-normal tracking-widest transition-all duration-300 px-6 py-3 text-sm bg-[#B6B499] hover:bg-black text-white"
+          className="inline-flex font-tahoma rounded-full items-center gap-2 uppercase font-normal tracking-widest transition-all duration-300 px-6 py-3 text-sm bg-[#b8955a] hover:bg-black text-white"
           onClick={handleSubmit}
         >
           <TranslatedText text="Enregistrer" />

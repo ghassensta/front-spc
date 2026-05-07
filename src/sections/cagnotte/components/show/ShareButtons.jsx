@@ -46,7 +46,7 @@ const ShareButtons = ({ cagnotte, cleanUrl, handleCopyPublic, t }) => {
       <div className="flex gap-3">
         <button
           onClick={handleShare}
-          className="flex-1 flex items-center justify-center gap-2 bg-[#B6B498] text-white py-3 px-5 rounded-lg hover:opacity-90 transition font-bold"
+          className="flex-1 flex items-center justify-center gap-2 bg-[#b8955a] text-white py-3 px-5 rounded-lg hover:opacity-90 transition font-bold"
         >
           <Share2 size={20} />
           {t("Partager")}
@@ -54,7 +54,7 @@ const ShareButtons = ({ cagnotte, cleanUrl, handleCopyPublic, t }) => {
 
         <button
           onClick={handleCopy}
-          className="flex items-center justify-center gap-2 border-2 border-[#B6B498] text-[#B6B498] py-3 px-5 rounded-lg hover:bg-[#B6B498] hover:text-white transition font-bold"
+          className="flex items-center justify-center gap-2 border-2 border-[#b8955a] text-[#b8955a] py-3 px-5 rounded-lg hover:bg-[#b8955a] hover:text-white transition font-bold"
         >
           {copiedPublic ? <Check size={20} /> : <Copy size={20} />}
         </button>

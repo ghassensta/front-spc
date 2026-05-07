@@ -157,7 +157,7 @@ export default function ShowCagnotte() {
     return (
       <div className="flex items-center justify-center min-h-screen">
         <div className="text-center">
-          <div className="animate-spin rounded-full h-16 w-16 border-b-4 border-[#B6B498] mx-auto mb-4"></div>
+          <div className="animate-spin rounded-full h-16 w-16 border-b-4 border-[#b8955a] mx-auto mb-4"></div>
           <p className="text-gray-600 font-roboto">
             <TranslatedText text="Chargement de la cagnotte..." />
           </p>
@@ -178,7 +178,7 @@ export default function ShowCagnotte() {
           </p>
           <button
             onClick={() => navigate("/")}
-            className="bg-[#B6B498] text-white px-8 py-3 rounded-full font-bold hover:opacity-90 transition"
+            className="bg-[#b8955a] text-white px-8 py-3 rounded-full font-bold hover:opacity-90 transition"
           >
             <TranslatedText text="Retour à l'accueil" />
           </button>
@@ -188,7 +188,7 @@ export default function ShowCagnotte() {
   }
 
   const Header = () => (
-    <div className="bg-gradient-to-r from-[#B6B498] to-[#8B8970] w-screen relative left-[calc(-50vw+50%)] px-5 py-16">
+    <div className="bg-gradient-to-r from-[#b8955a] to-[#8B8970] w-screen relative left-[calc(-50vw+50%)] px-5 py-16">
       <div className="max-w-6xl mx-auto text-center text-white">
         <div className="flex items-center justify-center gap-3 mb-6">
           <Gift size={36} />
@@ -216,19 +216,19 @@ export default function ShowCagnotte() {
   const StatsCards = () => (
     <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
       {cagnotte.prix_is_public && (
-        <div className="bg-gradient-to-br from-[#B6B498] to-[#8B8970] text-white p-8 rounded-xl text-center">
+        <div className="bg-gradient-to-br from-[#b8955a] to-[#8B8970] text-white p-8 rounded-xl text-center">
           <Euro className="mx-auto mb-3" size={36} />
           <p className="text-4xl font-bold">{montantCollecte.toFixed(2)} €</p>
           <p className="text-sm opacity-90 mt-1"><TranslatedText text="Collectés" /></p>
         </div>
       )}
-      <div className="bg-white border-2 border-[#B6B498] p-8 rounded-xl text-center">
-        <Users className="mx-auto mb-3 text-[#B6B498]" size={36} />
+      <div className="bg-white border-2 border-[#b8955a] p-8 rounded-xl text-center">
+        <Users className="mx-auto mb-3 text-[#b8955a]" size={36} />
         <p className="text-4xl font-bold">{nombreContributeurs}</p>
         <p className="text-sm text-gray-600 mt-1"><TranslatedText text="Contributeurs" /></p>
       </div>
-      <div className="bg-white border-2 border-[#B6B498] p-8 rounded-xl text-center">
-        <Calendar className="mx-auto mb-3 text-[#B6B498]" size={36} />
+      <div className="bg-white border-2 border-[#b8955a] p-8 rounded-xl text-center">
+        <Calendar className="mx-auto mb-3 text-[#b8955a]" size={36} />
         <p className="text-4xl font-bold">{joursRestants}</p>
         <p className="text-sm text-gray-600 mt-1"><TranslatedText text="Jours restants" /></p>
       </div>
@@ -240,7 +240,7 @@ export default function ShowCagnotte() {
     nombreContributeurs > 0 && (
       <div className="bg-white p-8 rounded-xl shadow-md">
         <h2 className="text-2xl font-bold mb-6 flex items-center gap-3">
-          <MessageCircle className="text-[#B6B498]" size={28} />
+          <MessageCircle className="text-[#b8955a]" size={28} />
           <TranslatedText text="Contributions" />
         </h2>
         <div className="space-y-4 max-h-[600px] overflow-y-auto">
@@ -248,8 +248,8 @@ export default function ShowCagnotte() {
             <div key={i} className="border border-gray-200 rounded-lg p-5 hover:bg-gray-50 transition">
               <div className="flex items-start justify-between mb-3">
                 <div className="flex items-center gap-4">
-                  <div className="w-12 h-12 bg-[#B6B498]/20 rounded-full flex items-center justify-center">
-                    <Heart className="text-[#B6B498]" size={24} />
+                  <div className="w-12 h-12 bg-[#b8955a]/20 rounded-full flex items-center justify-center">
+                    <Heart className="text-[#b8955a]" size={24} />
                   </div>
                   <div>
                     <p className="font-bold text-lg">{contrib.nom}</p>
@@ -259,7 +259,7 @@ export default function ShowCagnotte() {
                   </div>
                 </div>
                 {cagnotte.prix_is_public && (
-                  <p className="font-bold text-[#B6B498] text-xl">
+                  <p className="font-bold text-[#b8955a] text-xl">
                     {parseFloat(contrib.montant).toFixed(2)} €
                   </p>
                 )}
@@ -283,7 +283,7 @@ export default function ShowCagnotte() {
     !isClosed ? (
       <form onSubmit={handleContribute} className="space-y-5">
         <h3 className="font-bold text-2xl mb-5 flex items-center gap-3">
-          <Banknote  className="text-[#B6B498]" size={28} />
+          <Banknote  className="text-[#b8955a]" size={28} />
           <TranslatedText text="Contribuer" />
         </h3>
 
@@ -297,7 +297,7 @@ export default function ShowCagnotte() {
             value={contributionData.nom}
             onChange={handleContributionChange}
             placeholder={t("Ex: Jean Dupont")}
-            className={`w-full border ${contributionErrors.nom ? "border-red-500" : "border-gray-300"} rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-[#B6B498]`}
+            className={`w-full border ${contributionErrors.nom ? "border-red-500" : "border-gray-300"} rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-[#b8955a]`}
           />
           {contributionErrors.nom && <p className="text-red-500 text-sm mt-1">{contributionErrors.nom}</p>}
         </div>
@@ -312,7 +312,7 @@ export default function ShowCagnotte() {
             value={contributionData.email}
             onChange={handleContributionChange}
             placeholder={t("email@exemple.com")}
-            className={`w-full border ${contributionErrors.email ? "border-red-500" : "border-gray-300"} rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-[#B6B498]`}
+            className={`w-full border ${contributionErrors.email ? "border-red-500" : "border-gray-300"} rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-[#b8955a]`}
           />
           {contributionErrors.email && <p className="text-red-500 text-sm mt-1">{contributionErrors.email}</p>}
         </div>
@@ -330,7 +330,7 @@ export default function ShowCagnotte() {
               min="5"
               step="0.01"
               placeholder="50"
-              className={`flex-1 border ${contributionErrors.montant ? "border-red-500" : "border-gray-300"} rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-[#B6B498]`}
+              className={`flex-1 border ${contributionErrors.montant ? "border-red-500" : "border-gray-300"} rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-[#b8955a]`}
             />
             <span className="text-2xl font-bold">€</span>
           </div>
@@ -347,14 +347,14 @@ export default function ShowCagnotte() {
             rows={4}
             maxLength={500}
             placeholder={t("Laissez un message...")}
-            className="w-full border border-gray-300 rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-[#B6B498] resize-none font-roboto"
+            className="w-full border border-gray-300 rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-[#b8955a] resize-none font-roboto"
           />
         </div>
 
         <button
           type="submit"
           disabled={isSubmitting}
-          className="w-full bg-gradient-to-r from-[#B6B498] to-[#8B8970] text-white py-4 rounded-lg font-bold hover:opacity-90 transition disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-3"
+          className="w-full bg-gradient-to-r from-[#b8955a] to-[#8B8970] text-white py-4 rounded-lg font-bold hover:opacity-90 transition disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-3"
         >
           {isSubmitting ? (
             <>
@@ -393,7 +393,7 @@ export default function ShowCagnotte() {
           <div className="lg:col-span-2 space-y-10">
             <div className="bg-white p-8 rounded-xl shadow-md">
               <h2 className="text-2xl font-bold mb-5 flex items-center gap-3">
-                <Heart className="text-[#B6B498]" size={28} />
+                <Heart className="text-[#b8955a]" size={28} />
                 <TranslatedText text="À propos de cette cagnotte" />
               </h2>
               <p className="text-lg text-gray-700 whitespace-pre-line leading-relaxed font-roboto">

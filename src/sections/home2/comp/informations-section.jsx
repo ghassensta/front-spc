@@ -114,7 +114,7 @@ export default function InformationsSection() {
                {translateSync(data[currentIndex].header)}
             </h2>
 
-            <h3 className="text-[#B6B499] text-3xl mt-4">
+            <h3 className="text-[#b8955a] text-3xl mt-4">
               {translateSync(data[currentIndex].title)}
             </h3>
 

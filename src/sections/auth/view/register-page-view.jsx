@@ -227,7 +227,7 @@ export default function RegisterPageView({ code }) {
 
       <p className="mt-4 text-sm text-center text-gray-600">
         <TranslatedText text="Vous avez déjà un compte ?" />{" "}
-        <Link to={paths.auth.root} className="text-[#B6B499] hover:underline">
+        <Link to={paths.auth.root} className="text-[#b8955a] hover:underline">
           <TranslatedText text="Se connecter" />
         </Link>
       </p>

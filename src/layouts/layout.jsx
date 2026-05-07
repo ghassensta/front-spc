@@ -119,7 +119,7 @@ export default function LayoutTheme({ children }) {
         {}
         <button
           onClick={handleScrollToTop}
-          className="fixed bottom-6 right-6 z-50 bg-[#787766] hover:bg-[#676556] text-white rounded-full shadow-2xl p-1 md:p-4 transition-all duration-300"
+          className="fixed bottom-6 right-6 z-50 bg-[#b8955a] hover:bg-[#676556] text-white rounded-full shadow-2xl p-1 md:p-4 transition-all duration-300"
         >
           <FaChevronUp size={24} />
         </button>

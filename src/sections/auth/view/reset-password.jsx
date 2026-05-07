@@ -81,7 +81,7 @@ export default function ResetPassword() {
               placeholder={t("Entrez votre nouveau mot de passe")}
               disabled={isSubmitting}
               required
-              className="focus:outline-none focus:ring-2 focus:ring-[#B6B499]"
+              className="focus:outline-none focus:ring-2 focus:ring-[#b8955a]"
             />
             <p className="text-xs text-gray-500 mt-1"><TranslatedText text="Minimum 8 caractères" /></p>
           </div>
@@ -98,7 +98,7 @@ export default function ResetPassword() {
               placeholder={t("Confirmez votre mot de passe")}
               disabled={isSubmitting}
               required
-              className="focus:outline-none focus:ring-2 focus:ring-[#B6B499]"
+              className="focus:outline-none focus:ring-2 focus:ring-[#b8955a]"
             />
           </div>
         </div>
@@ -115,7 +115,7 @@ export default function ResetPassword() {
       <p className="mt-4 text-sm text-center text-gray-600">
         <Link 
           to={paths.auth.login} 
-          className="text-[#B6B499] hover:underline"
+          className="text-[#b8955a] hover:underline"
         >
           <TranslatedText text="Retour à la page de connexion" />
         </Link>

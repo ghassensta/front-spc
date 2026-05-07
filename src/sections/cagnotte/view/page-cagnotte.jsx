@@ -35,7 +35,7 @@ export default function PageCagnotte() {
             </p>
             {/* CTA dans le hero pour une conversion rapide */}
             <Link to={paths.cagnotte.create}
-              className="bg-white text-[#B6B498] font-bold text-lg py-4 px-12 rounded-full hover:bg-gray-100 transition-all transform hover:scale-105 shadow-xl inline-flex items-center gap-3"
+              className="bg-white text-[#b8955a] font-bold text-lg py-4 px-12 rounded-full hover:bg-gray-100 transition-all transform hover:scale-105 shadow-xl inline-flex items-center gap-3"
             >
               <TranslatedText text="Créer ma cagnotte" />
               <ArrowRight size={24} />
@@ -79,8 +79,8 @@ export default function PageCagnotte() {
         </h2>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
           <div className="flex flex-col items-center text-center p-6 bg-white rounded-xl shadow-md hover:shadow-xl transition-shadow">
-            <div className="bg-[#B6B498] bg-opacity-20 p-4 rounded-full mb-4">
-              <Users className="text-[#B6B498]" size={40} />
+            <div className="bg-[#b8955a] bg-opacity-20 p-4 rounded-full mb-4">
+              <Users className="text-[#b8955a]" size={40} />
             </div>
             <h3 className="text-2xl font-bold mb-3">
               <TranslatedText text="Participatif et solidaire" />
@@ -91,8 +91,8 @@ export default function PageCagnotte() {
           </div>
 
           <div className="flex flex-col items-center text-center p-6 bg-white rounded-xl shadow-md hover:shadow-xl transition-shadow">
-            <div className="bg-[#B6B498] bg-opacity-20 p-4 rounded-full mb-4">
-              <Heart className="text-[#B6B498]" size={40} />
+            <div className="bg-[#b8955a] bg-opacity-20 p-4 rounded-full mb-4">
+              <Heart className="text-[#b8955a]" size={40} />
             </div>
             <h3 className="text-2xl font-bold mb-3">
               <TranslatedText text="Personnalisé et touchant" />
@@ -103,8 +103,8 @@ export default function PageCagnotte() {
           </div>
 
           <div className="flex flex-col items-center text-center p-6 bg-white rounded-xl shadow-md hover:shadow-xl transition-shadow">
-            <div className="bg-[#B6B498] bg-opacity-20 p-4 rounded-full mb-4">
-              <CheckCircle className="text-[#B6B498]" size={40} />
+            <div className="bg-[#b8955a] bg-opacity-20 p-4 rounded-full mb-4">
+              <CheckCircle className="text-[#b8955a]" size={40} />
             </div>
             <h3 className="text-2xl font-bold mb-3">
               <TranslatedText text="Simple et sécurisé" />
@@ -129,12 +129,12 @@ export default function PageCagnotte() {
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-12">
             {/* Étape 1 */}
             <div className="flex gap-6 items-start bg-white p-6 rounded-xl shadow-md">
-              <div className="flex-shrink-0 w-16 h-16 bg-[#B6B498] text-white rounded-full flex items-center justify-center text-2xl font-bold">
+              <div className="flex-shrink-0 w-16 h-16 bg-[#b8955a] text-white rounded-full flex items-center justify-center text-2xl font-bold">
                 1
               </div>
               <div>
                 <h3 className="text-2xl font-bold mb-3 flex items-center gap-2">
-                  <Gift size={28} className="text-[#B6B498]" />
+                  <Gift size={28} className="text-[#b8955a]" />
                   <TranslatedText text="Créez votre cagnotte" />
                 </h3>
                 <p className="font-tahoma text-gray-700 leading-relaxed">
@@ -145,12 +145,12 @@ export default function PageCagnotte() {
 
             {/* Étape 2 */}
             <div className="flex gap-6 items-start bg-white p-6 rounded-xl shadow-md">
-              <div className="flex-shrink-0 w-16 h-16 bg-[#B6B498] text-white rounded-full flex items-center justify-center text-2xl font-bold">
+              <div className="flex-shrink-0 w-16 h-16 bg-[#b8955a] text-white rounded-full flex items-center justify-center text-2xl font-bold">
                 2
               </div>
               <div>
                 <h3 className="text-2xl font-bold mb-3 flex items-center gap-2">
-                  <Users size={28} className="text-[#B6B498]" />
+                  <Users size={28} className="text-[#b8955a]" />
                   <TranslatedText text="Partagez avec vos proches" />
                 </h3>
                 <p className="font-tahoma text-gray-700 leading-relaxed">
@@ -161,12 +161,12 @@ export default function PageCagnotte() {
 
             {/* Étape 3 */}
             <div className="flex gap-6 items-start bg-white p-6 rounded-xl shadow-md">
-              <div className="flex-shrink-0 w-16 h-16 bg-[#B6B498] text-white rounded-full flex items-center justify-center text-2xl font-bold">
+              <div className="flex-shrink-0 w-16 h-16 bg-[#b8955a] text-white rounded-full flex items-center justify-center text-2xl font-bold">
                 3
               </div>
               <div>
                 <h3 className="text-2xl font-bold mb-3 flex items-center gap-2">
-                  <Calendar size={28} className="text-[#B6B498]" />
+                  <Calendar size={28} className="text-[#b8955a]" />
                   <TranslatedText text="Suivez les contributions" />
                 </h3>
                 <p className="font-tahoma text-gray-700 leading-relaxed">
@@ -177,12 +177,12 @@ export default function PageCagnotte() {
 
             {/* Étape 4 */}
             <div className="flex gap-6 items-start bg-white p-6 rounded-xl shadow-md">
-              <div className="flex-shrink-0 w-16 h-16 bg-[#B6B498] text-white rounded-full flex items-center justify-center text-2xl font-bold">
+              <div className="flex-shrink-0 w-16 h-16 bg-[#b8955a] text-white rounded-full flex items-center justify-center text-2xl font-bold">
                 4
               </div>
               <div>
                 <h3 className="text-2xl font-bold mb-3 flex items-center gap-2">
-                  <Sparkles size={28} className="text-[#B6B498]" />
+                  <Sparkles size={28} className="text-[#b8955a]" />
                   <TranslatedText text="Offrez l'expérience" />
                 </h3>
                 <p className="font-tahoma text-gray-700 leading-relaxed">
@@ -323,10 +323,10 @@ export default function PageCagnotte() {
             className="group bg-white p-8 rounded-xl shadow-md hover:shadow-xl transition-all border border-gray-200"
           >
             <div className="flex items-center justify-between mb-4">
-              <h3 className="text-2xl font-bold group-hover:text-[#B6B498] transition">
+              <h3 className="text-2xl font-bold group-hover:text-[#b8955a] transition">
                 <TranslatedText text="Découvrir nos spas" />
               </h3>
-              <ArrowRight className="text-[#B6B498] group-hover:translate-x-2 transition-transform" size={28} />
+              <ArrowRight className="text-[#b8955a] group-hover:translate-x-2 transition-transform" size={28} />
             </div>
             <p className="font-tahoma text-gray-600">
               <TranslatedText text="Explorez notre sélection d'établissements partenaires de prestige" />
@@ -338,10 +338,10 @@ export default function PageCagnotte() {
             className="group bg-white p-8 rounded-xl shadow-md hover:shadow-xl transition-all border border-gray-200"
           >
             <div className="flex items-center justify-between mb-4">
-              <h3 className="text-2xl font-bold group-hover:text-[#B6B498] transition">
+              <h3 className="text-2xl font-bold group-hover:text-[#b8955a] transition">
                 <TranslatedText text="Cartes cadeaux" />
               </h3>
-              <ArrowRight className="text-[#B6B498] group-hover:translate-x-2 transition-transform" size={28} />
+              <ArrowRight className="text-[#b8955a] group-hover:translate-x-2 transition-transform" size={28} />
             </div>
             <p className="font-tahoma text-gray-600">
               <TranslatedText text="Offrez une carte cadeau individuelle pour un moment de bien-être" />
@@ -351,7 +351,7 @@ export default function PageCagnotte() {
       </div>
 
       {/* Section CTA finale */}
-      <div className="bg-gradient-to-r from-[#B6B498] to-[#8B8970] w-screen relative left-[calc(-50vw+50%)] px-5 py-20">
+      <div className="bg-gradient-to-r from-[#b8955a] to-[#8B8970] w-screen relative left-[calc(-50vw+50%)] px-5 py-20">
         <div className="max-w-4xl mx-auto text-center text-white">
           <h2 className="text-5xl font-bold mb-6">
             <TranslatedText text="Prêt à créer votre cagnotte ?" />
@@ -360,7 +360,7 @@ export default function PageCagnotte() {
             <TranslatedText text="Quelques clics suffisent pour offrir ensemble un moment d'exception" />
           </p>
           <Link to={paths.cagnotte.create}
-            className="bg-white text-[#B6B498] font-bold text-lg py-4 px-12 rounded-full hover:bg-gray-100 transition-all transform hover:scale-105 shadow-xl inline-flex items-center gap-3"
+            className="bg-white text-[#b8955a] font-bold text-lg py-4 px-12 rounded-full hover:bg-gray-100 transition-all transform hover:scale-105 shadow-xl inline-flex items-center gap-3"
           >
             <TranslatedText text="Créer ma cagnotte" />
             <ArrowRight size={24} />
