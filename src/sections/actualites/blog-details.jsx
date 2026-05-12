@@ -6,6 +6,7 @@ import { paths } from "src/router/paths";
 import theImage from "src/assets/images/SPC-Essence-1975x1318-02.jpg";
 import { useTranslation } from "src/context/translation-context";
 import HeroImage from "src/components/hero-image/HeroImage";
+import ButtonLink from "src/components/button-link/ButtonLink";
 
 export default function BlogDetails({ actualitie }) {
   const { translateSync } = useTranslation();
@@ -40,12 +41,10 @@ export default function BlogDetails({ actualitie }) {
 
         {/* Bouton vers les établissements */}
         <div className="w-full flex items-center justify-center my-4">
-          <Link
+          <ButtonLink
             to={paths.spa.list}
-            className="bg-[#b8955a] font-roboto text-white py-2 px-4 rounded-full"
-          >
-            {translateSync("NOS ÉTABLISSEMENTS PARTENAIRES")}
-          </Link>
+            text="NOS ÉTABLISSEMENTS PARTENAIRES"
+          />
         </div>
 
         <hr className="border-black my-6" />

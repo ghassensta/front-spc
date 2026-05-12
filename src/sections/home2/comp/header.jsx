@@ -3,25 +3,14 @@ import { CONFIG } from "src/config-global";
 import { paths } from "src/router/paths";
 import { useGetHomePage } from "src/actions/homepage";
 import { Link } from "react-router-dom";
-import { MapPin } from "lucide-react";
+import { MapPin, Tag, Search, Gift } from "lucide-react";
 import { useTranslation } from "src/context/translation-context";
 
 // ─── HELPERS ────────────────────────────────────────────────────────────────
 
-/**
- * FIX LCP/CLS — Génère un srcSet responsive pour les images du slider.
- * Les slides originales font ~957x1318 mais s'affichent en 850x567.
- * On demande au backend de servir les bonnes tailles via des suffixes d'URL
- * (adapter selon votre CDN / transformations d'images).
- *
- * Si vous n'avez pas de resize CDN, remplacez getImageSrcSet par :
- *   const getImageSrcSet = () => ({ src, srcSet: src, sizes: "100vw" });
- */
 function getImageSrcSet(baseUrl) {
-  // Adapter les suffixes selon votre CDN (Cloudinary, Imgix, Laravel intervention, etc.)
-  // Exemple générique — à ajuster :
   return {
-    src: baseUrl,                // fallback
+    src: baseUrl,
     srcSet: [
       `${baseUrl}?w=400 400w`,
       `${baseUrl}?w=850 850w`,
@@ -62,7 +51,9 @@ export default function Header() {
   }, [etablissements.length]);
 
   const prevSlide = useCallback(() => {
-    setCurrentSlide((prev) => (prev - 1 + etablissements.length) % etablissements.length);
+    setCurrentSlide(
+      (prev) => (prev - 1 + etablissements.length) % etablissements.length,
+    );
     setIsAutoPlaying(true);
   }, [etablissements.length]);
 
@@ -74,28 +65,17 @@ export default function Header() {
   const current = etablissements[currentSlide];
 
   return (
-    /*
-     * FIX CLS (score 0.060) — Le conteneur avait min-h-[500px] mais pas de
-     * hauteur réservée au premier paint, causant un layout shift quand les
-     * images arrivaient. On force un aspect-ratio ET un min-height pour que
-     * l'espace soit réservé dès le premier rendu CSS, avant tout JS.
-     *
-     * AVANT : className="relative w-screen left-[calc(-50vw+50%)] h-full overflow-hidden min-h-[500px]"
-     * APRÈS : ajout de style={{ aspectRatio: "16/9", ... }} + contain layout
-     */
     <div
       className="relative w-screen left-[calc(-50vw+50%)] overflow-hidden"
       style={{
         minHeight: "500px",
-        // Réserve l'espace vertical avant que les images se chargent → évite CLS
         aspectRatio: "16/9",
-        // Isole le repaint des slides du reste du document
         contain: "layout",
       }}
     >
+      {/* ── Slides ── */}
       {etablissements.map((s, index) => {
         const imageUrl = `${CONFIG.serverUrl}/storage/${s.image}`;
-        // FIX LCP — srcSet responsive (voir helper en haut)
         const { src, srcSet, sizes } = getImageSrcSet(imageUrl);
 
         return (
@@ -105,34 +85,14 @@ export default function Header() {
               index === currentSlide ? "opacity-100 z-20" : "opacity-0"
             }`}
           >
-            {/*
-             * FIX LCP / CLS / Accessibilité :
-             *
-             * AVANT :
-             *   <img src="..." loading={index===0?"eager":"lazy"} fetchpriority="high|low" />
-             *   Pas de width/height → CLS
-             *   Pas de srcSet → image de 957x1318 servie pour un affichage 850x567
-             *
-             * APRÈS :
-             *   width + height explicites → le navigateur réserve l'espace → CLS ↓
-             *   srcSet + sizes → image redimensionnée par le navigateur → LCP ↓
-             *   fetchpriority="high" uniquement sur la 1ère slide (déjà présent)
-             *   decoding="async" sur les slides non visibles → thread principal libéré
-             */}
             <img
               src={src}
               srcSet={srcSet}
               sizes={sizes}
               alt={`Slide ${index + 1}`}
-              className="w-full h-full object-cover"
               loading={index === 0 ? "eager" : "lazy"}
               fetchpriority={index === 0 ? "high" : "low"}
               decoding={index === 0 ? "sync" : "async"}
-              /*
-               * FIX CLS — width/height correspondent aux dimensions AFFICHÉES
-               * (850x567 selon le rapport Lighthouse), pas aux dimensions natives.
-               * Le navigateur calcule ainsi le ratio avant de charger l'image.
-               */
               width={850}
               height={567}
               onError={() => handleImageError(index)}
@@ -145,79 +105,127 @@ export default function Header() {
                 objectFit: "cover",
               }}
             />
+            {/* Dégradé gauche pour lisibilité du texte */}
             {!imageErrors[index] && (
-              <div className="absolute inset-0 bg-black/20 z-10" />
+              <div
+                className="absolute inset-0 z-10"
+                style={{
+                  background:
+                    "linear-gradient(to right, rgba(0,0,0,0.55) 0%, rgba(0,0,0,0.25) 55%, transparent 100%)",
+                }}
+              />
             )}
           </div>
         );
       })}
 
+      {/* ── Overlay texte + boutons directement sur l'image ── */}
       {!!current && (
-        <div className="absolute bottom-24 md:bottom-8 left-4 md:left-12 z-40 text-gray-900 rounded-md shadow-lg w-[90%] max-w-md backdrop-blur-sm">
-          <Link
-            to={paths.spa.details(current.slug)}
-            className="block relative z-10 p-6 no-underline hover:no-underline"
+        <div className="absolute bottom-16 md:bottom-10 left-6 md:left-14 z-40 max-w-md">
+          {/* Badge remise */}
+          {current.remise_offres > 0 && (
+            <span className="inline-flex items-center gap-1.5 bg-[#b8955a] text-white font-roboto font-bold px-4 py-1.5 rounded-full text-xs mb-3">
+              <Tag className="w-3 h-3" aria-hidden="true" />
+              {translateSync("Jusqu'à")} {current.remise_offres}%{" "}
+              {translateSync("de remise")}
+            </span>
+          )}
+
+          {/* Titre */}
+          <p
+            className="text-3xl md:text-4xl font-bold text-white leading-tight mb-2"
+            style={{ fontFamily: "Cormorant Garamond" }}
           >
-            {current.remise_offres > 0 && (
-              <p className="absolute top-0 -translate-y-1/2 bg-[#b8955a] text-white font-bold font-roboto px-4 py-2 rounded-full text-sm z-10">
-                {translateSync("Jusqu'à")} {current.remise_offres}%{" "}
-                {translateSync("de remise")}
-              </p>
-            )}
+            {translateSync(current.title)}
+          </p>
 
-            <p
-              className="text-2xl md:text-3xl font-bold mb-1"
-              style={{ fontFamily: "Cormorant Garamond" }}
+          {/* Description */}
+          <p className="text-sm text-white/90 mb-5 leading-snug">
+            {translateSync(current.description)}
+          </p>
+
+          {/* ── Deux boutons côte à côte ── */}
+          <div className="flex flex-col sm:flex-row gap-2 sm:gap-3 mb-5">
+            {/* Bouton 1 — doré plein */}
+            <Link
+              to={paths.spa.list}
+              onClick={(e) => e.stopPropagation()}
+              className="flex items-center gap-2 sm:gap-3 bg-[#b8955a] text-white no-underline px-3 sm:px-5 py-2.5 sm:py-4 rounded-lg shadow-md hover:bg-[#a0814d] hover:shadow-xl hover:-translate-y-1 hover:scale-[1.03] active:scale-95 transition-all duration-200 ease-out max-w-fit"
             >
-              {translateSync(current.title)}
-            </p>
+              <Search
+                className="w-4 h-4 sm:w-5 sm:h-5 flex-shrink-0"
+                aria-hidden="true"
+              />
 
-            <p className="text-base text-gray-900 mb-1 leading-snug font-bold">
-              {translateSync(current.description)}
-            </p>
-
-            {current.prix_offres > 0 && (
-              <p className="text-base text-gray-700 mb-4 font-bold">
-                {translateSync("Offres exclusives à partir de")}{" "}
-                <span className="font-semibold text-black">
-                  {current.prix_offres}€
+              <span className="flex flex-col gap-0.5">
+                <span
+                  className="font-bold uppercase tracking-[1px] sm:tracking-[2px] text-xs sm:text-sm leading-tight whitespace-nowrap"
+                  style={{ fontFamily: "Cormorant Garamond" }}
+                >
+                  {translateSync("Trouver la prestation")}
                 </span>
-              </p>
-            )}
 
-            <div className="flex items-center gap-2 bg-[#020100C9] text-white font-tahoma font-light uppercase tracking-[2px] w-fit py-2 px-2 rounded-full text-[10px]">
-              {/*
-               * FIX Accessibilité — MapPin est décoratif ici, on le cache
-               * aux lecteurs d'écran avec aria-hidden
-               */}
-              <MapPin className="w-4 h-4 text-white" aria-hidden="true" />
+                <span
+                  className="font-light text-[10px] sm:text-xs leading-tight opacity-90 normal-case tracking-wide whitespace-nowrap"
+                  style={{ fontFamily: "Cormorant Garamond" }}
+                >
+                  {translateSync("Découvrez nos établissements")} →
+                </span>
+              </span>
+            </Link>
+
+            {/* Bouton 2 — blanc */}
+            <Link
+              to={paths.cadeau || "#"}
+              onClick={(e) => e.stopPropagation()}
+              className="flex items-center gap-2 sm:gap-3 bg-white/95 text-gray-800 no-underline px-3 sm:px-5 py-2.5 sm:py-4 rounded-lg shadow-md hover:bg-white hover:shadow-xl hover:-translate-y-1 hover:scale-[1.03] active:scale-95 transition-all duration-200 ease-out max-w-fit"
+            >
+              <Gift
+                className="w-4 h-4 sm:w-5 sm:h-5 flex-shrink-0 text-[#b8955a]"
+                aria-hidden="true"
+              />
+
+              <span className="flex flex-col gap-0.5">
+                <span
+                  className="font-bold uppercase tracking-[1px] sm:tracking-[2px] text-xs sm:text-sm leading-tight text-gray-400 whitespace-nowrap"
+                  style={{ fontFamily: "Cormorant Garamond" }}
+                >
+                  {translateSync("Offrir une carte cadeau")}
+                </span>
+
+                <span
+                  className="font-light text-[10px] sm:text-xs leading-tight text-gray-600 normal-case tracking-wide whitespace-nowrap"
+                  style={{ fontFamily: "Cormorant Garamond" }}
+                >
+                  {translateSync("Le plaisir d'offrir")}
+                </span>
+              </span>
+            </Link>
+          </div>
+          {/* Adresse */}
+          <div className="flex items-center gap-2 mb-3">
+            <div className="flex items-center gap-2 bg-[#020100C9] text-white font-tahoma font-light uppercase tracking-[2px] w-fit py-1.5 px-3 rounded-full text-[10px]">
+              <MapPin
+                className="w-3.5 h-3.5 text-white flex-shrink-0"
+                aria-hidden="true"
+              />
               {current.adresse}
             </div>
+          </div>
 
-            <p className="text-sm font-tahoma text-secondary font-bold hover:underline mt-3">
-              {translateSync("En savoir plus")} →
-            </p>
+          {/* En savoir plus */}
+          <Link
+            to={paths.spa.details(current.slug)}
+            className="text-sm font-tahoma text-white font-bold hover:underline no-underline"
+          >
+            {translateSync("En savoir plus")} →
           </Link>
-
-          <div
-            className="absolute rounded-md top-0 left-0 bg-white/95 h-full w-[105%]"
-            style={{
-              clipPath: "polygon(95% 0, 100% 50%, 95% 100%, 0 100%, 0 0)",
-            }}
-          />
         </div>
       )}
 
-      {/* Slider controls */}
+      {/* ── Slider controls ── */}
       {etablissements.length > 0 && (
-        <div className="absolute font-tahoma bottom-6 right-8 z-20 flex items-center gap-3 bg-white shadow-lg px-4 py-2 rounded-lg border border-gray-200">
-          {/*
-           * FIX Accessibilité — aria-label déjà présent sur ces boutons ✓
-           * FIX Bonnes pratiques — taille minimum 44x44px pour les zones tactiles.
-           * Les boutons ← → étaient trop petits (p-1 = ~28px).
-           * AVANT : className="... p-1 ..."
-           * APRÈS : className="... p-2 min-w-[44px] min-h-[44px] ..."
-           */}
+        <div className="hidden md:flex absolute font-tahoma bottom-6 right-8 z-30 items-center gap-3 bg-white shadow-lg px-3 py-1 rounded-lg border border-gray-200">
           <button
             onClick={prevSlide}
             className="text-lg font-semibold hover:bg-gray-100 p-2 rounded transition-colors min-w-[44px] min-h-[44px] flex items-center justify-center"
@@ -226,11 +234,11 @@ export default function Header() {
             ←
           </button>
 
-          <span className="text-xs font-semibold text-gray-700" aria-live="polite" aria-atomic="true">
-            {/*
-             * FIX Accessibilité — aria-live permet aux lecteurs d'écran
-             * d'annoncer le changement de slide automatiquement
-             */}
+          <span
+            className="text-xs font-semibold text-gray-700"
+            aria-live="polite"
+            aria-atomic="true"
+          >
             {currentSlide + 1}/{etablissements.length}
           </span>
 
@@ -242,14 +250,12 @@ export default function Header() {
             →
           </button>
 
-          <div className="flex items-center gap-2 ml-2" role="tablist" aria-label="Navigation des slides">
+          <div
+            className="flex items-center gap-2 ml-2"
+            role="tablist"
+            aria-label="Navigation des slides"
+          >
             {etablissements.map((_, index) => (
-              /*
-               * FIX Bonnes pratiques — Les dots faisaient w-2.5 h-2.5 = 10px.
-               * Trop petit pour les zones tactiles (minimum recommandé : 44px).
-               * AVANT : className="w-2.5 h-2.5 rounded-full ..."
-               * APRÈS : wrapper 44x44 transparent + point visuel centré dedans
-               */
               <button
                 key={index}
                 onClick={() => goToSlide(index)}

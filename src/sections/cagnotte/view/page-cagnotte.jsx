@@ -1,375 +1,512 @@
-// src/components/cagnotte/PageCagnotte.jsx - Page explicative complète pour les cagnottes
-
-import React from "react";
-import { Users, Heart, Gift, Calendar, CheckCircle, Sparkles, ArrowRight } from "lucide-react";
+import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { paths } from "src/router/paths";
 import { TranslatedText } from "src/components/translated-text/translated-text";
 import ImgCagnotte from "src/assets/images/SPC-cagnotte-1.jpg";
-import ImgCagnotteCollectif  from "src/assets/images/SPC-cagnotte-2.jpg";
-export default function PageCagnotte() {
-  const navigate = useNavigate();
+import ImgCagnotteCollectif from "src/assets/images/SPC-cagnotte-2.jpg";
+import HeroImage from "src/components/hero-image/HeroImage";
+import SectionHeader from "src/components/section-header/SectionHeader";
+import ButtonLink from "src/components/button-link/ButtonLink";
 
-  const handleCreateCagnotte = () => {
-    navigate(paths.cagnotte.create || "/cagnotte/creer");
-  };
+import {
+  FaUsers,
+  FaHeart,
+  FaShieldAlt,
+  FaGift,
+  FaShareAlt,
+  FaChartLine,
+  FaSpa,
+  FaChevronRight,
+  FaArrowRight,
+} from "react-icons/fa";
+
+const GOLD = "#b8955a";
+const FONT = "Calibri, 'Segoe UI', sans-serif";
+const FONT_SERIF = "'Cormorant Garamond', 'Georgia', serif";
+
+// ── Données ──────────────────────────────────────────────
+
+const avantages = [
+  {
+    icon: <FaUsers />,
+    title: "Participatif et solidaire",
+    desc: "Chacun contribue librement pour créer ensemble un cadeau qui a du sens.",
+  },
+  {
+    icon: <FaHeart />,
+    title: "Personnalisé et attentionné",
+    desc: "Ajoutez un message et laissez chaque participant exprimer ses mots.",
+  },
+  {
+    icon: <FaShieldAlt />,
+    title: "Simple et sécurisé",
+    desc: "Créez votre cagnotte en quelques clics et partagez-la facilement. Paiements 100% sécurisés.",
+  },
+];
+
+const steps = [
+  {
+    icon: <FaGift />,
+    num: 1,
+    title: "Créez votre cagnotte",
+    desc: "Donnez un titre, précisez l'occasion et personnalisez votre message. Ajoutez si vous le souhaitez une date de clôture et un objectif.",
+  },
+  {
+    icon: <FaShareAlt />,
+    num: 2,
+    title: "Partagez avec vos proches",
+    desc: "Envoyez votre lien par email, SMS ou réseaux sociaux. Chacun peut participer en toute simplicité.",
+  },
+  {
+    icon: <FaChartLine />,
+    num: 3,
+    title: "Suivez les contributions",
+    desc: "Consultez à tout moment le montant collecté et les messages laissés.",
+  },
+  {
+    icon: <FaSpa />,
+    num: 4,
+    title: "Offrez l'expérience",
+    desc: "Une fois la cagnotte clôturée, le bénéficiaire reçoit une carte cadeau valable dans nos établissements pendant 1 an.",
+  },
+];
+
+const occasions = [
+  { emoji: "🎂", label: "Anniversaire" },
+  { emoji: "💍", label: "Mariage" },
+  { emoji: "👶", label: "Naissance" },
+  { emoji: "🎓", label: "Diplôme" },
+  { emoji: "🏖️", label: "Retraite" },
+  { emoji: "❤️", label: "Saint-Valentin" },
+  { emoji: "🎄", label: "Noël" },
+  { emoji: "🌟", label: "Juste pour le plaisir" },
+];
+
+const faqs = [
+  {
+    q: "Combien coûte la création d'une cagnotte ?",
+    a: "La création d'une cagnotte est entièrement gratuite. Aucun frais n'est prélevé sur les contributions de vos proches.",
+  },
+  {
+    q: "Y a-t-il un montant minimum ou maximum ?",
+    a: "Chaque personne peut contribuer librement à partir de 5€. Il n'y a pas de montant maximum pour la cagnotte totale.",
+  },
+  {
+    q: "Combien de temps reste ouverte une cagnotte ?",
+    a: "Vous définissez vous-même la date de clôture lors de la création. Une cagnotte peut rester ouverte jusqu'à 6 mois maximum.",
+  },
+  {
+    q: "Comment le bénéficiaire reçoit-il son cadeau ?",
+    a: "À la clôture de la cagnotte, le bénéficiaire reçoit automatiquement par email une carte cadeau du montant total collecté, valable 1 an dans tous nos établissements partenaires.",
+  },
+  {
+    q: "Les paiements sont-ils sécurisés ?",
+    a: "Oui, tous les paiements sont traités par Stripe, leader mondial du paiement en ligne sécurisé. Aucune donnée bancaire n'est stockée sur nos serveurs.",
+  },
+];
+
+// ── Composant ─────────────────────────────────────────────
+
+export default function PageCagnotte() {
+  const [openFaq, setOpenFaq] = useState(null);
 
   return (
-    <>
-      {/* Section Hero avec image de fond */}
-      <div className="relative w-screen left-[calc(-50vw+50%)] h-[500px] overflow-hidden">
-        <img
-          loading="lazy"
-          src={ImgCagnotte}
-          alt="Cagnotte Spa & Prestige Collection"
-          className="w-full h-full object-cover"
-        />
-       
-        <div className="absolute inset-0 bg-black bg-opacity-40 flex items-center justify-center">
-          <div className="text-center text-white px-4">
-            <h1 className="text-5xl md:text-6xl font-bold mb-4">
-              <TranslatedText text="La Cagnotte Bien-Être" />
-            </h1>
-            <p className="text-xl md:text-2xl font-tahoma max-w-2xl mx-auto mb-10">
-              <TranslatedText text="Offrez ensemble un moment d'exception à vos proches" />
-            </p>
-            {/* CTA dans le hero pour une conversion rapide */}
-            <Link to={paths.cagnotte.create}
-              className="bg-white text-[#b8955a] font-bold text-lg py-4 px-12 rounded-full hover:bg-gray-100 transition-all transform hover:scale-105 shadow-xl inline-flex items-center gap-3"
-            >
-              <TranslatedText text="Créer ma cagnotte" />
-              <ArrowRight size={24} />
-            </Link>
+    <div style={{ fontFamily: FONT }}>
+      {/* ── Hero ── */}
+      <HeroImage
+        image={ImgCagnotte}
+        label="Spa & Prestige Collection"
+        title="La Cagnotte Bien-Être"
+        description="Offrez ensemble un moment qui compte à vos proches."
+        opacity={45}
+      >
+        <div className="flex flex-col gap-3 mt-2">
+          <Link
+            to={paths.cagnotte.create}
+            className="inline-flex items-center gap-2 px-8 py-3 rounded-full text-sm font-semibold uppercase text-white transition-colors w-fit"
+            style={{
+              backgroundColor: GOLD,
+              letterSpacing: "0.08em",
+              fontFamily: FONT,
+            }}
+            onMouseEnter={(e) =>
+              (e.currentTarget.style.backgroundColor = "#1a1a1a")
+            }
+            onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = GOLD)}
+          >
+            <TranslatedText text="Créer ma cagnotte" />
+            <FaArrowRight className="text-xs" />
+          </Link>
+
+          {/* 3 badges sur la même ligne — cachés sur mobile */}
+          <div className="hidden md:flex items-center gap-4">
+            {[
+              { icon: <FaGift />, label: "Gratuite" },
+              { icon: <FaShieldAlt />, label: "Sécurisée" },
+              { icon: <FaHeart />, label: "Sans engagement" },
+            ].map((badge, i) => (
+              <div
+                key={i}
+                className="flex items-center gap-1.5 text-white/80 text-xs"
+                style={{ fontFamily: FONT }}
+              >
+                <span style={{ color: GOLD }}>{badge.icon}</span>
+                <TranslatedText text={badge.label} />
+              </div>
+            ))}
           </div>
         </div>
-      </div>
+      </HeroImage>
 
-      {/* Section Introduction */}
-      <div className="flex bg-[#FBF6EC] w-screen relative left-[calc(-50vw+50%)] px-5 py-12">
-        <div className="max-w-6xl mx-auto">
-          <div className="flex flex-col md:flex-row gap-8 items-center">
+      <div
+        className="w-screen relative left-[calc(-50vw+50%)]"
+        style={{ backgroundColor: "#FBF6EC" }}
+      >
+        <div className="max-w-6xl mx-auto px-6 py-12">
+          <div className="flex flex-col md:flex-row gap-10 items-center">
             <div className="md:w-1/2">
-              <h2 className="text-4xl font-bold mb-6">
+              <p
+                className="text-xs uppercase tracking-widest mb-3"
+                style={{
+                  color: GOLD,
+                  letterSpacing: "0.18em",
+                  fontFamily: FONT,
+                }}
+              >
+                <TranslatedText text="Le cadeau collectif" />
+              </p>
+              <h2
+                className="text-gray-900 mb-4 leading-tight"
+                style={{
+                  fontFamily: FONT_SERIF,
+                  fontWeight: 400,
+                  fontSize: "clamp(1.6rem, 3vw, 2.4rem)",
+                }}
+              >
                 <TranslatedText text="Un cadeau collectif qui crée des souvenirs" />
               </h2>
-              <p className="font-tahoma text-lg text-[#5E5E5E] leading-relaxed">
-                <TranslatedText text="La cagnotte Spa & Prestige Collection permet à plusieurs personnes de participer ensemble à l'achat d'un moment de bien-être exceptionnel." />
-                <br /><br />
-                <TranslatedText text="Que ce soit pour un anniversaire, un mariage, une naissance, un départ à la retraite ou simplement pour faire plaisir, la cagnotte est le moyen idéal de rassembler vos contributions pour offrir une expérience inoubliable." />
-                <br /><br />
-                <TranslatedText text="Simple, conviviale et sécurisée, elle transforme chaque participation en un geste de générosité partagée." />
+              <div
+                className="w-10 h-0.5 mb-5"
+                style={{ backgroundColor: GOLD }}
+              />
+              <p
+                className="text-sm text-gray-600 leading-relaxed mb-5"
+                style={{ fontFamily: FONT }}
+              >
+                <TranslatedText text="La cagnotte Spa & Prestige Collection permet à plusieurs personnes de participer à un moment de bien-être à offrir." />
               </p>
+              <ul className="space-y-3">
+                {[
+                  "Pour toutes les occasions : anniversaire, mariage, naissance, retraite ou simplement pour faire plaisir",
+                  "Simple, conviviale et sécurisée, elle transforme chaque participation en une attention partagée",
+                ].map((item, i) => (
+                  <li
+                    key={i}
+                    className="flex items-start gap-3 text-sm text-gray-600"
+                    style={{ fontFamily: FONT }}
+                  >
+                    <div
+                      className="w-5 h-5 rounded-full flex items-center justify-center shrink-0 mt-0.5"
+                      style={{ backgroundColor: "#F3EBDD" }}
+                    >
+                      <FaChevronRight
+                        style={{ color: GOLD, fontSize: "0.5rem" }}
+                      />
+                    </div>
+                    <TranslatedText text={item} />
+                  </li>
+                ))}
+              </ul>
             </div>
+
             <div className="md:w-1/2">
               <img
                 loading="lazy"
                 src={ImgCagnotteCollectif}
                 alt="Groupe d'amis célébrant ensemble"
-                className="w-full h-auto object-cover rounded-xl shadow-xl"
+                className="w-full h-auto object-cover rounded-xl shadow-lg"
               />
             </div>
           </div>
         </div>
       </div>
 
-      {/* Section Avantages */}
-      <div className="max-w-6xl mx-auto py-16 px-4">
-        <h2 className="text-4xl font-bold text-center mb-12">
-          <TranslatedText text="Pourquoi choisir une cagnotte ?" />
-        </h2>
+      {/* ── Pourquoi choisir ── */}
+      <div className="max-w-6xl mx-auto px-6 py-14">
+        <SectionHeader
+          label="Nos avantages"
+          title="Pourquoi choisir une cagnotte ?"
+        />
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-          <div className="flex flex-col items-center text-center p-6 bg-white rounded-xl shadow-md hover:shadow-xl transition-shadow">
-            <div className="bg-[#b8955a] bg-opacity-20 p-4 rounded-full mb-4">
-              <Users className="text-[#b8955a]" size={40} />
+          {avantages.map((item, i) => (
+            <div
+              key={i}
+              className="flex flex-col items-center text-center p-6 rounded-xl hover:shadow-lg transition-shadow"
+              style={{ backgroundColor: "#FBF6EC" }}
+            >
+              <div
+                className="w-14 h-14 rounded-full flex items-center justify-center mb-4"
+                style={{ backgroundColor: "#F3EBDD" }}
+              >
+                <span style={{ color: GOLD, fontSize: "1.4rem" }}>
+                  {item.icon}
+                </span>
+              </div>
+              <h3
+                className="text-base font-semibold text-gray-800 mb-2"
+                style={{ fontFamily: FONT }}
+              >
+                <TranslatedText text={item.title} />
+              </h3>
+              <p
+                className="text-sm text-gray-500 leading-relaxed"
+                style={{ fontFamily: FONT }}
+              >
+                <TranslatedText text={item.desc} />
+              </p>
             </div>
-            <h3 className="text-2xl font-bold mb-3">
-              <TranslatedText text="Participatif et solidaire" />
-            </h3>
-            <p className="font-tahoma text-gray-700">
-              <TranslatedText text="Chacun contribue selon ses moyens pour créer ensemble un cadeau d'exception." />
-            </p>
-          </div>
-
-          <div className="flex flex-col items-center text-center p-6 bg-white rounded-xl shadow-md hover:shadow-xl transition-shadow">
-            <div className="bg-[#b8955a] bg-opacity-20 p-4 rounded-full mb-4">
-              <Heart className="text-[#b8955a]" size={40} />
-            </div>
-            <h3 className="text-2xl font-bold mb-3">
-              <TranslatedText text="Personnalisé et touchant" />
-            </h3>
-            <p className="font-tahoma text-gray-700">
-              <TranslatedText text="Ajoutez un message personnel et laissez chaque contributeur exprimer ses vœux." />
-            </p>
-          </div>
-
-          <div className="flex flex-col items-center text-center p-6 bg-white rounded-xl shadow-md hover:shadow-xl transition-shadow">
-            <div className="bg-[#b8955a] bg-opacity-20 p-4 rounded-full mb-4">
-              <CheckCircle className="text-[#b8955a]" size={40} />
-            </div>
-            <h3 className="text-2xl font-bold mb-3">
-              <TranslatedText text="Simple et sécurisé" />
-            </h3>
-            <p className="font-tahoma text-gray-700">
-              <TranslatedText text="Créez votre cagnotte en quelques clics et partagez-la facilement. Paiements 100% sécurisés." />
-            </p>
-          </div>
+          ))}
         </div>
       </div>
 
-      {/* Section Comment ça marche */}
-      <div className="bg-gradient-to-b from-white to-[#FBF6EC] w-screen relative left-[calc(-50vw+50%)] px-5 py-16">
-        <div className="max-w-6xl mx-auto">
-          <h2 className="text-4xl font-bold text-center mb-4">
-            <TranslatedText text="Comment ça marche ?" />
-          </h2>
-          <p className="text-center font-tahoma text-xl text-gray-600 mb-12 max-w-3xl mx-auto">
+      {/* ── Comment ça marche ── */}
+      <div
+        className="w-screen relative left-[calc(-50vw+50%)]"
+        style={{ backgroundColor: "#FBF6EC" }}
+      >
+        <div className="max-w-6xl mx-auto px-6 py-14">
+          <SectionHeader label="En 4 étapes" title="Comment ça marche ?" />
+          <p
+            className="text-center text-sm text-gray-500 -mt-6 mb-10"
+            style={{ fontFamily: FONT }}
+          >
             <TranslatedText text="En 4 étapes simples, créez votre cagnotte et offrez un cadeau mémorable" />
           </p>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-12">
-            {/* Étape 1 */}
-            <div className="flex gap-6 items-start bg-white p-6 rounded-xl shadow-md">
-              <div className="flex-shrink-0 w-16 h-16 bg-[#b8955a] text-white rounded-full flex items-center justify-center text-2xl font-bold">
-                1
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-10">
+            {steps.map((step) => (
+              <div
+                key={step.num}
+                className="flex items-start gap-5 bg-white p-6 rounded-xl"
+                style={{ border: `1px solid rgba(184,149,90,0.15)` }}
+              >
+                <div
+                  className="shrink-0 w-12 h-12 rounded-full flex items-center justify-center"
+                  style={{ backgroundColor: "#F3EBDD" }}
+                >
+                  <span style={{ color: GOLD, fontSize: "1.2rem" }}>
+                    {step.icon}
+                  </span>
+                </div>
+                <div>
+                  <div className="flex items-center gap-2 mb-1">
+                    <span
+                      className="text-xs font-bold px-2 py-0.5 rounded-full text-white"
+                      style={{ backgroundColor: GOLD }}
+                    >
+                      {step.num}
+                    </span>
+                    <h3
+                      className="text-sm font-semibold text-gray-800"
+                      style={{ fontFamily: FONT }}
+                    >
+                      <TranslatedText text={step.title} />
+                    </h3>
+                  </div>
+                  <p
+                    className="text-xs text-gray-500 leading-relaxed"
+                    style={{ fontFamily: FONT }}
+                  >
+                    <TranslatedText text={step.desc} />
+                  </p>
+                </div>
               </div>
-              <div>
-                <h3 className="text-2xl font-bold mb-3 flex items-center gap-2">
-                  <Gift size={28} className="text-[#b8955a]" />
-                  <TranslatedText text="Créez votre cagnotte" />
-                </h3>
-                <p className="font-tahoma text-gray-700 leading-relaxed">
-                  <TranslatedText text="Donnez un titre évocateur, décrivez l'occasion et personnalisez votre message. Définissez éventuellement une date limite et un objectif de collecte." />
-                </p>
-              </div>
-            </div>
-
-            {/* Étape 2 */}
-            <div className="flex gap-6 items-start bg-white p-6 rounded-xl shadow-md">
-              <div className="flex-shrink-0 w-16 h-16 bg-[#b8955a] text-white rounded-full flex items-center justify-center text-2xl font-bold">
-                2
-              </div>
-              <div>
-                <h3 className="text-2xl font-bold mb-3 flex items-center gap-2">
-                  <Users size={28} className="text-[#b8955a]" />
-                  <TranslatedText text="Partagez avec vos proches" />
-                </h3>
-                <p className="font-tahoma text-gray-700 leading-relaxed">
-                  <TranslatedText text="Partagez le lien unique de votre cagnotte par email, SMS ou réseaux sociaux. Vos proches peuvent contribuer en toute simplicité et laisser un message." />
-                </p>
-              </div>
-            </div>
-
-            {/* Étape 3 */}
-            <div className="flex gap-6 items-start bg-white p-6 rounded-xl shadow-md">
-              <div className="flex-shrink-0 w-16 h-16 bg-[#b8955a] text-white rounded-full flex items-center justify-center text-2xl font-bold">
-                3
-              </div>
-              <div>
-                <h3 className="text-2xl font-bold mb-3 flex items-center gap-2">
-                  <Calendar size={28} className="text-[#b8955a]" />
-                  <TranslatedText text="Suivez les contributions" />
-                </h3>
-                <p className="font-tahoma text-gray-700 leading-relaxed">
-                  <TranslatedText text="Suivez en temps réel l'évolution de votre cagnotte grâce à votre tableau de bord personnel. Consultez les messages et le montant collecté." />
-                </p>
-              </div>
-            </div>
-
-            {/* Étape 4 */}
-            <div className="flex gap-6 items-start bg-white p-6 rounded-xl shadow-md">
-              <div className="flex-shrink-0 w-16 h-16 bg-[#b8955a] text-white rounded-full flex items-center justify-center text-2xl font-bold">
-                4
-              </div>
-              <div>
-                <h3 className="text-2xl font-bold mb-3 flex items-center gap-2">
-                  <Sparkles size={28} className="text-[#b8955a]" />
-                  <TranslatedText text="Offrez l'expérience" />
-                </h3>
-                <p className="font-tahoma text-gray-700 leading-relaxed">
-                  <TranslatedText text="Une fois la cagnotte clôturée, le bénéficiaire reçoit une carte cadeau du montant collecté, valable dans tous nos établissements partenaires pendant 1 an." />
-                </p>
-              </div>
-            </div>
+            ))}
+          </div>
+          <div className="flex justify-center">
+            <ButtonLink
+              to={paths.cagnotte.create}
+              text="Créer ma cagnotte"
+              hoverColor={GOLD}
+              icon={<FaArrowRight className="text-xs" />}
+            />
           </div>
         </div>
       </div>
 
-      {/* Section Occasions */}
-      <div className="max-w-6xl mx-auto py-16 px-4">
-        <h2 className="text-4xl font-bold text-center mb-6">
-          <TranslatedText text="Pour toutes les occasions" />
-        </h2>
-        <p className="text-center font-tahoma text-lg text-gray-600 mb-12 max-w-2xl mx-auto">
-          <TranslatedText text="La cagnotte bien-être s'adapte à tous vos événements spéciaux" />
+      {/* ── Occasions ── */}
+      <div className="max-w-6xl mx-auto px-6 py-14">
+        <SectionHeader label="Occasions" title="Pour toutes les occasions" />
+        <p
+          className="text-center text-sm text-gray-500 -mt-6 mb-10"
+          style={{ fontFamily: FONT }}
+        >
+          <TranslatedText text="La cagnotte bien-être s'adapte à tous vos moments importants" />
         </p>
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+          {occasions.map((item, i) => (
+            <div
+              key={i}
+              className="text-center p-5 rounded-xl hover:shadow-md transition-shadow cursor-default"
+              style={{ backgroundColor: "#FBF6EC" }}
+            >
+              <div className="text-3xl mb-2">{item.emoji}</div>
+              <p
+                className="text-sm font-semibold text-gray-700"
+                style={{ fontFamily: FONT }}
+              >
+                <TranslatedText text={item.label} />
+              </p>
+            </div>
+          ))}
+        </div>
+      </div>
 
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
-          <div className="text-center p-6 bg-[#FBF6EC] rounded-xl hover:shadow-lg transition-shadow">
-            <div className="text-4xl mb-3">🎂</div>
-            <h4 className="font-bold text-lg">
-              <TranslatedText text="Anniversaire" />
-            </h4>
-          </div>
-
-          <div className="text-center p-6 bg-[#FBF6EC] rounded-xl hover:shadow-lg transition-shadow">
-            <div className="text-4xl mb-3">💍</div>
-            <h4 className="font-bold text-lg">
-              <TranslatedText text="Mariage" />
-            </h4>
-          </div>
-
-          <div className="text-center p-6 bg-[#FBF6EC] rounded-xl hover:shadow-lg transition-shadow">
-            <div className="text-4xl mb-3">👶</div>
-            <h4 className="font-bold text-lg">
-              <TranslatedText text="Naissance" />
-            </h4>
-          </div>
-
-          <div className="text-center p-6 bg-[#FBF6EC] rounded-xl hover:shadow-lg transition-shadow">
-            <div className="text-4xl mb-3">🎓</div>
-            <h4 className="font-bold text-lg">
-              <TranslatedText text="Diplôme" />
-            </h4>
-          </div>
-
-          <div className="text-center p-6 bg-[#FBF6EC] rounded-xl hover:shadow-lg transition-shadow">
-            <div className="text-4xl mb-3">🏖️</div>
-            <h4 className="font-bold text-lg">
-              <TranslatedText text="Retraite" />
-            </h4>
-          </div>
-
-          <div className="text-center p-6 bg-[#FBF6EC] rounded-xl hover:shadow-lg transition-shadow">
-            <div className="text-4xl mb-3">❤️</div>
-            <h4 className="font-bold text-lg">
-              <TranslatedText text="Saint-Valentin" />
-            </h4>
-          </div>
-
-          <div className="text-center p-6 bg-[#FBF6EC] rounded-xl hover:shadow-lg transition-shadow">
-            <div className="text-4xl mb-3">🎄</div>
-            <h4 className="font-bold text-lg">
-              <TranslatedText text="Noël" />
-            </h4>
-          </div>
-
-          <div className="text-center p-6 bg-[#FBF6EC] rounded-xl hover:shadow-lg transition-shadow">
-            <div className="text-4xl mb-3">🌟</div>
-            <h4 className="font-bold text-lg">
-              <TranslatedText text="Juste pour le plaisir" />
-            </h4>
+      {/* ── FAQ ── */}
+      <div
+        className="w-screen relative left-[calc(-50vw+50%)]"
+        style={{ backgroundColor: "#FBF6EC" }}
+      >
+        <div className="max-w-4xl mx-auto px-6 py-14">
+          <SectionHeader label="Informations" title="Questions fréquentes" />
+          <div className="space-y-3">
+            {faqs.map((faq, i) => (
+              <div
+                key={i}
+                className="bg-white rounded-xl overflow-hidden"
+                style={{ border: `1px solid rgba(184,149,90,0.2)` }}
+              >
+                <button
+                  onClick={() => setOpenFaq(openFaq === i ? null : i)}
+                  className="w-full flex items-center justify-between px-6 py-4 text-left"
+                >
+                  <span
+                    className="text-sm font-semibold text-gray-800"
+                    style={{ fontFamily: FONT }}
+                  >
+                    <TranslatedText text={faq.q} />
+                  </span>
+                  <FaChevronRight
+                    className="shrink-0 transition-transform duration-200"
+                    style={{
+                      color: GOLD,
+                      transform:
+                        openFaq === i ? "rotate(90deg)" : "rotate(0deg)",
+                    }}
+                  />
+                </button>
+                {openFaq === i && (
+                  <div className="px-6 pb-4">
+                    <p
+                      className="text-sm text-gray-500 leading-relaxed"
+                      style={{ fontFamily: FONT }}
+                    >
+                      <TranslatedText text={faq.a} />
+                    </p>
+                  </div>
+                )}
+              </div>
+            ))}
           </div>
         </div>
       </div>
 
-      {/* Section FAQ */}
-      <div className="max-w-4xl mx-auto py-16 px-4">
-        <h2 className="text-4xl font-bold text-center mb-12">
-          <TranslatedText text="Questions fréquentes" />
-        </h2>
-        <div className="space-y-6">
-          <div className="bg-white p-6 rounded-xl shadow-md">
-            <h3 className="font-bold text-xl mb-3">
-              <TranslatedText text="Combien coûte la création d'une cagnotte ?" />
-            </h3>
-            <p className="font-tahoma text-gray-700">
-              <TranslatedText text="La création d'une cagnotte est entièrement gratuite. Aucun frais n'est prélevé sur les contributions de vos proches." />
-            </p>
-          </div>
-
-          <div className="bg-white p-6 rounded-xl shadow-md">
-            <h3 className="font-bold text-xl mb-3">
-              <TranslatedText text="Y a-t-il un montant minimum ou maximum ?" />
-            </h3>
-            <p className="font-tahoma text-gray-700">
-              <TranslatedText text="Chaque personne peut contribuer librement à partir de 5€. Il n'y a pas de montant maximum pour la cagnotte totale." />
-            </p>
-          </div>
-
-          <div className="bg-white p-6 rounded-xl shadow-md">
-            <h3 className="font-bold text-xl mb-3">
-              <TranslatedText text="Combien de temps reste ouverte une cagnotte ?" />
-            </h3>
-            <p className="font-tahoma text-gray-700">
-              <TranslatedText text="Vous définissez vous-même la date de clôture lors de la création. Une cagnotte peut rester ouverte jusqu'à 6 mois maximum." />
-            </p>
-          </div>
-
-          <div className="bg-white p-6 rounded-xl shadow-md">
-            <h3 className="font-bold text-xl mb-3">
-              <TranslatedText text="Comment le bénéficiaire reçoit-il son cadeau ?" />
-            </h3>
-            <p className="font-tahoma text-gray-700">
-              <TranslatedText text="À la clôture de la cagnotte, le bénéficiaire reçoit automatiquement par email une carte cadeau du montant total collecté, valable 1 an dans tous nos établissements partenaires." />
-            </p>
-          </div>
-
-          <div className="bg-white p-6 rounded-xl shadow-md">
-            <h3 className="font-bold text-xl mb-3">
-              <TranslatedText text="Les paiements sont-ils sécurisés ?" />
-            </h3>
-            <p className="font-tahoma text-gray-700">
-              <TranslatedText text="Oui, tous les paiements sont traités par Stripe, leader mondial du paiement en ligne sécurisé. Aucune donnée bancaire n'est stockée sur nos serveurs." />
-            </p>
-          </div>
-        </div>
-      </div>
-
-      {/* Section Navigation complémentaire */}
-      <div className="max-w-6xl mx-auto py-12 px-4">
+      {/* ── Redirections ── */}
+      <div className="max-w-6xl mx-auto px-6 py-12">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          <Link
-            to={paths.spa.list || "/spas"}
-            className="group bg-white p-8 rounded-xl shadow-md hover:shadow-xl transition-all border border-gray-200"
-          >
-            <div className="flex items-center justify-between mb-4">
-              <h3 className="text-2xl font-bold group-hover:text-[#b8955a] transition">
-                <TranslatedText text="Découvrir nos spas" />
-              </h3>
-              <ArrowRight className="text-[#b8955a] group-hover:translate-x-2 transition-transform" size={28} />
-            </div>
-            <p className="font-tahoma text-gray-600">
-              <TranslatedText text="Explorez notre sélection d'établissements partenaires de prestige" />
-            </p>
-          </Link>
-
-          <Link
-            to={paths.cadeau || "/carte-cadeau"}
-            className="group bg-white p-8 rounded-xl shadow-md hover:shadow-xl transition-all border border-gray-200"
-          >
-            <div className="flex items-center justify-between mb-4">
-              <h3 className="text-2xl font-bold group-hover:text-[#b8955a] transition">
-                <TranslatedText text="Cartes cadeaux" />
-              </h3>
-              <ArrowRight className="text-[#b8955a] group-hover:translate-x-2 transition-transform" size={28} />
-            </div>
-            <p className="font-tahoma text-gray-600">
-              <TranslatedText text="Offrez une carte cadeau individuelle pour un moment de bien-être" />
-            </p>
-          </Link>
+          {[
+            {
+              title: "Découvrir nos spas",
+              desc: "Explorez notre sélection d'établissements partenaires de prestige.",
+              link: paths.spa.list,
+            },
+            {
+              title: "Cartes cadeaux",
+              desc: "Offrez une carte cadeau individuelle pour un moment de bien-être.",
+              link: paths.cadeau,
+            },
+          ].map((item, i) => (
+            <Link
+              key={i}
+              to={item.link || "#"}
+              className="group flex items-center justify-between p-8 bg-white rounded-xl hover:shadow-md transition-shadow"
+              style={{ border: `1px solid rgba(184,149,90,0.2)` }}
+            >
+              <div>
+                <h3
+                  className="text-base font-semibold text-gray-800 mb-1 group-hover:text-[#b8955a] transition-colors"
+                  style={{ fontFamily: FONT }}
+                >
+                  <TranslatedText text={item.title} />
+                </h3>
+                <p
+                  className="text-sm text-gray-500"
+                  style={{ fontFamily: FONT }}
+                >
+                  <TranslatedText text={item.desc} />
+                </p>
+              </div>
+              <FaArrowRight
+                className="shrink-0 ml-4 group-hover:translate-x-1 transition-transform"
+                style={{ color: GOLD }}
+              />
+            </Link>
+          ))}
         </div>
       </div>
 
-      {/* Section CTA finale */}
-      <div className="bg-gradient-to-r from-[#b8955a] to-[#8B8970] w-screen relative left-[calc(-50vw+50%)] px-5 py-20">
-        <div className="max-w-4xl mx-auto text-center text-white">
-          <h2 className="text-5xl font-bold mb-6">
+      {/* ── CTA final ── */}
+      <div
+        className="w-screen relative left-[calc(-50vw+50%)] py-16 px-6"
+        style={{ backgroundColor: GOLD }}
+      >
+        <div className="max-w-3xl mx-auto text-center text-white">
+          <p
+            className="text-xs uppercase tracking-widest mb-4 opacity-80"
+            style={{ letterSpacing: "0.2em", fontFamily: FONT }}
+          >
+            <TranslatedText text="Commencez maintenant" />
+          </p>
+          <h2
+            className="mb-4 leading-tight"
+            style={{
+              fontFamily: FONT_SERIF,
+              fontWeight: 300,
+              fontSize: "clamp(1.8rem, 4vw, 3rem)",
+            }}
+          >
             <TranslatedText text="Prêt à créer votre cagnotte ?" />
           </h2>
-          <p className="text-xl font-tahoma mb-10 opacity-95">
+          <div
+            className="w-10 h-0.5 mx-auto mb-5"
+            style={{ backgroundColor: "rgba(255,255,255,0.4)" }}
+          />
+          <p className="text-sm mb-8 opacity-90" style={{ fontFamily: FONT }}>
             <TranslatedText text="Quelques clics suffisent pour offrir ensemble un moment d'exception" />
           </p>
-          <Link to={paths.cagnotte.create}
-            className="bg-white text-[#b8955a] font-bold text-lg py-4 px-12 rounded-full hover:bg-gray-100 transition-all transform hover:scale-105 shadow-xl inline-flex items-center gap-3"
+          <Link
+            to={paths.cagnotte.create}
+            className="inline-flex items-center gap-3 px-10 py-3 rounded-full text-sm font-semibold uppercase transition-colors"
+            style={{
+              backgroundColor: "#1a1a1a",
+              color: "#fff",
+              letterSpacing: "0.08em",
+              fontFamily: FONT,
+            }}
+            onMouseEnter={(e) =>
+              (e.currentTarget.style.backgroundColor = "#333")
+            }
+            onMouseLeave={(e) =>
+              (e.currentTarget.style.backgroundColor = "#1a1a1a")
+            }
           >
             <TranslatedText text="Créer ma cagnotte" />
-            <ArrowRight size={24} />
+            <FaArrowRight className="text-xs" />
           </Link>
-          <p className="mt-6 text-sm opacity-80">
+          <p className="mt-5 text-xs opacity-70" style={{ fontFamily: FONT }}>
             <TranslatedText text="Gratuit • Sans engagement • Sécurisé" />
           </p>
         </div>
       </div>
-    </>
+    </div>
   );
 }

@@ -12,13 +12,13 @@ import {
 } from "react-icons/fa";
 import { GiTakeMyMoney } from "react-icons/gi";
 import { MdOutlineEmail } from "react-icons/md";
-import ButtonIcon from "src/components/button-icon/button-icon";
 import { paths } from "src/router/paths";
 import theImage from "src/assets/SPC-Parrainage-1975x1318-01.jpg";
 import { useTranslation } from "src/context/translation-context";
 import { Link as RouterLink } from "react-router-dom";
 import HeroImage from "src/components/hero-image/HeroImage";
 import SectionHeader from "src/components/section-header/SectionHeader";
+import ButtonLink from "src/components/button-link/ButtonLink";
 
 const GOLD = "#b8955a";
 const FONT = "Calibri, 'Segoe UI', sans-serif";
@@ -49,7 +49,7 @@ const steps = [
 const conditions = [
   { icon: FaCheck, label: "Valable 1 an" },
   { icon: FaGlobe, label: "Utilisable sur tout le site" },
-  { icon: FaUser,  label: "Parrainage illimité" },
+  { icon: FaUser, label: "Parrainage illimité" },
 ];
 
 export default function ProgrammePageView() {
@@ -60,12 +60,13 @@ export default function ProgrammePageView() {
     script.src = "https://app.mailjet.com/pas-nc-embedded-v1.js";
     script.async = true;
     document.body.appendChild(script);
-    return () => { document.body.removeChild(script); };
+    return () => {
+      document.body.removeChild(script);
+    };
   }, []);
 
   return (
     <div className="w-full" style={{ fontFamily: FONT }}>
-
       {/* ── Hero ── */}
       <HeroImage
         image={theImage}
@@ -77,31 +78,37 @@ export default function ProgrammePageView() {
         {/* Desktop — bordure blanche */}
         <RouterLink
           to={paths.auth.register}
-          className="hidden md:inline-block bg-transparent border border-white text-white px-8 py-3 font-semibold rounded-md hover:bg-white hover:text-black transition"
+          className="hidden md:inline-block bg-transparent border border-white text-white px-6 py-3 text-xs font-semibold rounded-md hover:bg-white hover:text-black transition uppercase tracking-wider w-fit"
         >
           {translateSync("Se connecter / Créer un compte")}
         </RouterLink>
+
         {/* Mobile — fond noir */}
         <RouterLink
           to={paths.auth.register}
-          className="md:hidden inline-block bg-black text-white text-center px-8 py-3 font-semibold rounded-md hover:bg-[#b8955a] transition"
+          className="md:hidden inline-block bg-black text-white text-center px-6 py-3 text-xs font-semibold rounded-md hover:bg-[#b8955a] transition uppercase tracking-wider w-fit"
         >
           {translateSync("Se connecter / Créer un compte")}
         </RouterLink>
       </HeroImage>
 
       {/* ── Parrainage intro ── */}
-      <div className="w-screen relative left-[calc(-50vw+50%)]" style={{ backgroundColor: "#FBF6EC" }}>
+      <div
+        className="w-screen relative left-[calc(-50vw+50%)]"
+        style={{ backgroundColor: "#FBF6EC" }}
+      >
         <div className="max-w-3xl mx-auto px-4 py-12 text-center">
-
           <SectionHeader
             label="Parrainage"
             title="Offrez 5€, et recevez 5€ en retour"
           />
 
-          <p className="text-gray-600 mb-8 text-sm leading-relaxed" style={{ fontFamily: FONT }}>
+          <p
+            className="text-gray-600 mb-8 text-sm leading-relaxed"
+            style={{ fontFamily: FONT }}
+          >
             {translateSync(
-              "Un instant de détente, une attention, une belle découverte… Invitez vos proches à rejoindre Spa & Prestige Collection et recevez un bon d'achat à chaque première commande validée."
+              "Un instant de détente, une attention, une belle découverte… Invitez vos proches à rejoindre Spa & Prestige Collection et recevez un bon d'achat à chaque première commande validée.",
             )}
           </p>
 
@@ -119,8 +126,14 @@ export default function ProgrammePageView() {
                 rel="noopener noreferrer"
                 className="w-10 h-10 rounded-full flex items-center justify-center transition-colors"
                 style={{ border: `1px solid ${GOLD}`, color: GOLD }}
-                onMouseEnter={(e) => { e.currentTarget.style.backgroundColor = GOLD; e.currentTarget.style.color = "#fff"; }}
-                onMouseLeave={(e) => { e.currentTarget.style.backgroundColor = "transparent"; e.currentTarget.style.color = GOLD; }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.backgroundColor = GOLD;
+                  e.currentTarget.style.color = "#fff";
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.backgroundColor = "transparent";
+                  e.currentTarget.style.color = GOLD;
+                }}
               >
                 {item.icon}
               </a>
@@ -131,18 +144,23 @@ export default function ProgrammePageView() {
 
       {/* ── Comment ça marche ── */}
       <div className="max-w-6xl mx-auto px-4 py-16">
-        <SectionHeader
-          label="Processus"
-          title="Comment ça marche ?"
-        />
+        <SectionHeader label="Processus" title="Comment ça marche ?" />
 
-        <p className="text-center text-gray-500 text-sm mb-12 -mt-6" style={{ fontFamily: FONT }}>
-          {translateSync("Un programme simple et généreux, pensé pour celles et ceux qui aiment partager leurs plus belles adresses bien-être.")}
+        <p
+          className="text-center text-gray-500 text-sm mb-12 -mt-6"
+          style={{ fontFamily: FONT }}
+        >
+          {translateSync(
+            "Un programme simple et généreux, pensé pour celles et ceux qui aiment partager leurs plus belles adresses bien-être.",
+          )}
         </p>
 
         <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
           {steps.map((item, idx) => (
-            <div key={idx} className="flex flex-col items-center text-center gap-3">
+            <div
+              key={idx}
+              className="flex flex-col items-center text-center gap-3"
+            >
               <div className="relative">
                 <div
                   className="w-16 h-16 rounded-full flex items-center justify-center"
@@ -157,10 +175,16 @@ export default function ProgrammePageView() {
                   {idx + 1}
                 </span>
               </div>
-              <h3 className="text-base font-semibold text-gray-800" style={{ fontFamily: FONT }}>
+              <h3
+                className="text-base font-semibold text-gray-800"
+                style={{ fontFamily: FONT }}
+              >
                 {translateSync(item.title)}
               </h3>
-              <p className="text-sm text-gray-500 leading-relaxed" style={{ fontFamily: FONT }}>
+              <p
+                className="text-sm text-gray-500 leading-relaxed"
+                style={{ fontFamily: FONT }}
+              >
                 {translateSync(item.desc)}
               </p>
             </div>
@@ -169,15 +193,14 @@ export default function ProgrammePageView() {
       </div>
 
       {/* ── Conditions & Newsletter ── */}
-      <div className="w-screen relative left-[calc(-50vw+50%)]" style={{ backgroundColor: "#FBF6EC" }}>
+      <div
+        className="w-screen relative left-[calc(-50vw+50%)]"
+        style={{ backgroundColor: "#FBF6EC" }}
+      >
         <div className="max-w-6xl mx-auto px-4 py-16 grid grid-cols-1 md:grid-cols-2 gap-12">
-
           {/* Conditions */}
           <div>
-            <SectionHeader
-              label="Informations"
-              title="Les conditions"
-            />
+            <SectionHeader label="Informations" title="Les conditions" />
 
             {/* Carte bouclier */}
             <div
@@ -190,8 +213,13 @@ export default function ProgrammePageView() {
               >
                 <FaShieldAlt style={{ color: GOLD, fontSize: "1.1rem" }} />
               </div>
-              <p className="text-gray-700 text-sm leading-snug" style={{ fontFamily: FONT }}>
-                {translateSync("Code unique d'une valeur de 5 € à valoir sur le site Spa & Prestige Collection.")}
+              <p
+                className="text-gray-700 text-sm leading-snug"
+                style={{ fontFamily: FONT }}
+              >
+                {translateSync(
+                  "Code unique d'une valeur de 5 € à valoir sur le site Spa & Prestige Collection.",
+                )}
               </p>
             </div>
 
@@ -205,7 +233,10 @@ export default function ProgrammePageView() {
                   >
                     <c.icon style={{ color: GOLD }} />
                   </div>
-                  <span className="text-xs text-gray-500" style={{ fontFamily: FONT }}>
+                  <span
+                    className="text-xs text-gray-500"
+                    style={{ fontFamily: FONT }}
+                  >
                     {translateSync(c.label)}
                   </span>
                 </div>
@@ -231,18 +262,12 @@ export default function ProgrammePageView() {
               title="Newsletter"
             />
           </div>
-
+        </div>
+        {/* ── Bouton CTA ── */}
+        <div className="py-10 flex justify-center">
+          <ButtonLink to={paths.spa.list} text="COUP DE CŒUR" />
         </div>
       </div>
-
-      {/* ── Bouton CTA ── */}
-      <div className="py-10 flex justify-center">
-        <ButtonIcon
-          title={translateSync("COUP DE CŒUR")}
-          link={paths.spa.list}
-        />
-      </div>
-
     </div>
   );
 }

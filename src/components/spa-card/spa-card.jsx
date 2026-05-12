@@ -1,12 +1,14 @@
 import React from "react";
 import { Link } from "react-router-dom";
-import ButtonIcon from "../button-icon/button-icon";
 import { motion } from "framer-motion";
 import { FiMapPin } from "react-icons/fi";
+import { FaArrowRight } from "react-icons/fa";
 import { CONFIG } from "src/config-global";
 import { TranslatedText } from "../translated-text/translated-text";
-import { useTranslation } from "react-i18next";
 import defaultImage from "../../assets/default-image-avant-etablissment.png";
+
+const GOLD = "#b8955a";
+const FONT = "Calibri, 'Segoe UI', sans-serif";
 
 export default function SpaCard({
   to,
@@ -17,108 +19,118 @@ export default function SpaCard({
   remise_offres,
   prix_offres,
 }) {
-  const { t } = useTranslation();
-  const renderLocation = () => {
-    if (!location) return null;
-    return (
-      <span className="bg-[#020100C9] z-10 text-white font-tahoma uppercase flex items-center justify-start w-max py-3 px-6 gap-2 absolute left-1/2 -translate-x-1/2 -translate-y-1/2 top-0 font-medium text-xs tracking-[2px] max-w-[90%] -mr-6 rounded-3xl">
-        <FiMapPin className="text-white" />
-        {location}
-      </span>
-    );
-  };
-
- const renderImage = () => {
-  return (
-    <div className="relative">
-      {renderLocation()}
-
-      <img
-        loading="lazy"
-        src={
-          image
-            ? `${CONFIG.serverUrl}/storage/${image}`
-            : defaultImage
-        }
-        alt={title || "Établissement"}
-        className="w-full rounded-3xl object-cover overflow-hidden max-h-[242px]"
-        width="400"
-        height="242"
-        srcset={
-          image
-            ? `${CONFIG.serverUrl}/storage/${image} 400w, ${CONFIG.serverUrl}/storage/${image} 800w`
-            : undefined
-        }
-        sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 33vw"
-      />
-
-      {renderRemisePer()}
-    </div>
-  );
-};
-
-  const renderRemisePer = () => {
-    if (!remise_offres && !prix_offres) return null;
-
-    const texteAAfficher = remise_offres
-      ? `Jusqu'à ${remise_offres}% de remise`
-      : prix_offres
-        ? `${prix_offres}`
-        : '';
-
-    return (
-      <span className="bg-[#b8955a] w-max text-white font-bold font-roboto px-2 py-1 absolute -bottom-1 left-1/2 -translate-x-1/2 rounded-3xl">
-        <TranslatedText text={texteAAfficher} />
-      </span>
-    );
-  };
-
-
-  const renderTitle = () => {
-    if (!title) return null;
-    return (
-      <h3 className="text-lg font-bold font-tahoma mt-4 text-center">
-        {title}
-      </h3>
-    );
-  };
-
-  const renderDescription = () => {
-    if (!description) return null;
-    return (
-      <p className="text-black font-tahoma text-base mt-2 text-center h-12 overflow-y-hidden">
-        {description}
-      </p>
-    );
-  };
-
-  const renderOffres = () => {
-    if (!prix_offres || !remise_offres) return null;
-
-    return (
-      <p className="font-tahoma text-center mt-2">
-        {remise_offres} <TranslatedText text="offres à partir de" />{" "}
-        <strong>{parseFloat(prix_offres)} €</strong>
-      </p>
-    );
-  };
+  const imgSrc = image ? `${CONFIG.serverUrl}/storage/${image}` : defaultImage;
 
   return (
     <Link to={to}>
       <motion.div
-        initial={{ opacity: 0, y: 50 }}
+        initial={{ opacity: 0, y: 40 }}
         whileInView={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.6, ease: "easeOut" }}
+        transition={{ duration: 0.5, ease: "easeOut" }}
         viewport={{ once: true }}
-        className="relative rounded-xl mb-6 cursor-pointer transition-all duration-300"
+        className="cursor-pointer group rounded-2xl overflow-hidden"
+        style={{
+          
+          border: "1px solid rgba(184,149,90,0.2)",
+          boxShadow: "0 2px 12px rgba(0,0,0,0.07)",
+        }}
       >
-        {renderImage()}
-        {renderTitle()}
-        {renderDescription()}
-        {renderOffres()}
-        <div className="mt-2 w-full flex justify-center items-center">
-          <button className="inline-flex mx-auto font-tahoma rounded-full items-center gap-2 uppercase font-normal tracking-widest transition-all duration-300 bg-[#b8955a] hover:bg-black text-white px-6 py-3 text-sm">
-            <TranslatedText text="Offrir une expérience" />
+        {/* ── Image ── */}
+        <div
+          className="relative rounded-2xl overflow-hidden"
+          style={{ height: "220px" }}
+        >
+          <img
+            loading="lazy"
+            src={imgSrc}
+            alt={title || "Établissement"}
+            className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+            width="400"
+            height="220"
+          />
+
+          {/* Adresse — haut gauche dans l'image */}
+          {location && (
+            <div className="absolute top-3 left-3">
+              <span
+                className="inline-flex items-center gap-1.5 text-white text-xs font-medium px-3 py-1.5 rounded-full"
+                style={{
+                  backgroundColor: "rgba(2,1,0,0.72)",
+                  
+                  letterSpacing: "0.02em",
+                }}
+              >
+                <FiMapPin size={11} className="shrink-0" />
+                {location}
+              </span>
+            </div>
+          )}
+
+          {(remise_offres || prix_offres) && (
+            <div className="absolute bottom-3 left-3">
+              <span
+                className="inline-block text-white text-xs font-bold px-3 py-1 rounded-full"
+                style={{ backgroundColor: GOLD, }}
+              >
+                {remise_offres
+                  ? `Jusqu'à ${remise_offres}% de remise`
+                  : `À partir de ${parseFloat(prix_offres)} €`}
+              </span>
+            </div>
+          )}
+        </div>
+
+        {/* ── Contenu texte ── */}
+        <div className="pt-4 px-1">
+          {/* Séparateur doré */}
+          <div className="w-8 h-0.5 mb-3" style={{ backgroundColor: GOLD }} />
+
+          {/* Titre — gauche */}
+          {title && (
+            <h3
+              className="text-left text-xl md:text-2xl px-2 line-clamp-1"
+              
+            >
+              {title}
+            </h3>
+          )}
+
+          {/* Description — gauche */}
+          {description && (
+            <p
+              className="font-normal text-left text-lg px-2 line-clamp-2"
+              style={{
+                
+                display: "-webkit-box",
+                WebkitLineClamp: 2,
+                WebkitBoxOrient: "vertical",
+                overflow: "hidden",
+              }}
+            >
+              {description}
+            </p>
+          )}
+
+          <button
+            className="inline-flex items-center gap-2 text-xs font-semibold uppercase tracking-wider px-4 py-2 rounded-full transition-all duration-300 m-3"
+            style={{
+              backgroundColor: "#f3ebdd",
+              color: "#5a4a35",
+              
+              letterSpacing: "0.08em",
+              border: "none",
+            }}
+            onMouseEnter={(e) => {
+              e.currentTarget.style.backgroundColor = GOLD;
+              e.currentTarget.style.color = "#fff";
+            }}
+            onMouseLeave={(e) => {
+              e.currentTarget.style.backgroundColor = "#f3ebdd";
+              e.currentTarget.style.color = "#5a4a35";
+            }}
+          >
+            <TranslatedText text="Découvrir l'établissement" />
+            <FaArrowRight className="text-xs" />
           </button>
         </div>
       </motion.div>

@@ -8,6 +8,8 @@ import {
   FaGift,
   FaUsers,
   FaCoins,
+  FaCreditCard,
+  FaEuroSign,
 } from "react-icons/fa";
 import { paths } from "src/router/paths";
 import { TranslatedText } from "src/components/translated-text/translated-text";
@@ -36,11 +38,10 @@ export default function RecompensePageView() {
   }, []);
 
   const recompenses = [
-    { icon: <FaCoins />, text: "1 € dépensé = 1 point" },
+    { icon: <FaEuroSign />, text: "1 € dépensé = 1 point" },
     { icon: <FaGift />, text: "Échange possible dès 10 €" },
-    { icon: <FaStar />, text: "Cartes cadeaux de 10 € et 25 €" },
+    { icon: <FaCreditCard />, text: "Cartes cadeaux de 10 € et 25 €" },
   ];
-
   const steps = [
     {
       icon: <FaShoppingCart />,
@@ -97,7 +98,8 @@ export default function RecompensePageView() {
         {/* Desktop — bordure blanche */}
         <Link
           to={paths.auth.register}
-          className="hidden md:inline-block bg-transparent border border-white text-center text-white px-8 py-3 font-semibold rounded-md hover:bg-white hover:text-black transition"
+          className="hidden md:inline-block bg-transparent border border-white text-white px-6 py-3 text-xs font-semibold rounded-lg hover:bg-white hover:text-black transition uppercase tracking-wider w-fit"
+          style={{ fontFamily: FONT }}
         >
           {translateSync("Se connecter / Créer un compte")}
         </Link>
@@ -105,7 +107,12 @@ export default function RecompensePageView() {
         {/* Mobile — fond noir */}
         <Link
           to={paths.auth.register}
-          className="md:hidden inline-block bg-black text-center text-white px-8 py-3 font-semibold rounded-md hover:bg-[#b8955a] transition"
+          className="md:hidden inline-block text-white text-center px-6 py-3 text-xs font-semibold rounded-full transition uppercase tracking-wider w-fit"
+          style={{ backgroundColor: "#1a1a1a", fontFamily: FONT }}
+          onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = GOLD)}
+          onMouseLeave={(e) =>
+            (e.currentTarget.style.backgroundColor = "#1a1a1a")
+          }
         >
           {translateSync("Se connecter / Créer un compte")}
         </Link>
@@ -161,18 +168,20 @@ export default function RecompensePageView() {
             </p>
 
             {/* Liste avantages */}
-            <ul className="space-y-3 mb-4">
+            <ul className="space-y-4 mb-5">
               {recompenses.map((item, i) => (
                 <li
                   key={i}
-                  className="flex items-center gap-3 text-sm text-gray-700"
+                  className="flex items-center gap-4 text-sm text-gray-700"
                   style={{ fontFamily: FONT }}
                 >
                   <div
-                    className="w-8 h-8 rounded-full flex items-center justify-center shrink-0"
+                    className="w-12 h-12 rounded-full flex items-center justify-center shrink-0"
                     style={{ backgroundColor: "#F3EBDD" }}
                   >
-                    <span style={{ color: GOLD }}>{item.icon}</span>
+                    <span style={{ color: GOLD, fontSize: "1.6rem" }}>
+                      {item.icon}
+                    </span>
                   </div>
                   <span>{translateSync(item.text)}</span>
                 </li>
@@ -192,25 +201,40 @@ export default function RecompensePageView() {
       {/* ══════════════════════════
           POINTS
           ══════════════════════════ */}
-      <div className="max-w-6xl mx-auto px-4 py-10 text-center">
+      <div className="max-w-6xl mx-auto px-4 py-8">
         <SectionHeader
           label="Fidélité récompensée"
           title="Gagnez des points à chaque commande."
         />
-        <p className="text-gray-600 mb-6 text-sm" style={{ fontFamily: FONT }}>
-          <TranslatedText text="Vos points sont ajoutés automatiquement." />
-        </p>
-        <div
-          className="inline-flex items-center gap-3 px-8 py-4 rounded-full"
-          style={{ backgroundColor: "#F3EBDD" }}
-        >
-          <FaCoins className="text-2xl" style={{ color: GOLD }} />
-          <span
-            className="text-2xl font-bold text-gray-900"
-            style={{ fontFamily: FONT_LIGHT }}
+        <div className="flex flex-row items-center justify-center gap-6 px-8 py-3">
+          {/* Icône */}
+          <div
+            className="shrink-0 w-24 h-24 rounded-full flex items-center justify-center"
+            style={{ backgroundColor: "#F3EBDD" }}
           >
-            1 € = 1 point
-          </span>
+            <FaCoins style={{ color: GOLD, fontSize: "3rem" }} />
+          </div>
+
+          {/* Texte centré */}
+          <div className="flex flex-col items-center gap-2 text-center">
+            <p
+              className="text-lg font-semibold text-gray-700"
+              style={{ fontFamily: FONT }}
+            >
+              <TranslatedText text="Vos points sont ajoutés automatiquement." />
+            </p>
+            <div
+              className="inline-flex items-center gap-2 px-5 py-2 rounded-full"
+              style={{ backgroundColor: "#F3EBDD" }}
+            >
+              <span
+                className="text-sm font-semibold text-gray-700"
+                style={{ fontFamily: FONT }}
+              >
+                1 € = 1 point
+              </span>
+            </div>
+          </div>
         </div>
       </div>
 
@@ -224,7 +248,7 @@ export default function RecompensePageView() {
         <div className="max-w-6xl mx-auto px-4 py-10">
           <SectionHeader label="En 3 étapes" title="Comment ça marche ?" />
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+          <div className="grid grid-cols-3 md:grid-cols-3 gap-4 md:gap-8">
             {steps.map((step) => (
               <div
                 key={step.num}
@@ -233,29 +257,32 @@ export default function RecompensePageView() {
                 {/* Icône cercle doré */}
                 <div className="relative">
                   <div
-                    className="w-16 h-16 rounded-full flex items-center justify-center"
+                    className="w-12 h-12 md:w-16 md:h-16 rounded-full flex items-center justify-center"
                     style={{ backgroundColor: "#F3EBDD" }}
                   >
-                    <span className="text-2xl" style={{ color: GOLD }}>
+                    <span
+                      className="text-xl md:text-2xl"
+                      style={{ color: GOLD }}
+                    >
                       {step.icon}
                     </span>
                   </div>
-                  {/* Numéro cerclé */}
                   <span
-                    className="absolute -top-1 -right-1 w-6 h-6 rounded-full flex items-center justify-center text-xs font-bold text-white"
+                    className="absolute -top-1 -right-1 w-5 h-5 md:w-6 md:h-6 rounded-full flex items-center justify-center text-xs font-bold text-white"
                     style={{ backgroundColor: GOLD }}
                   >
                     {step.num}
                   </span>
                 </div>
                 <h3
-                  className="text-lg font-semibold text-gray-800"
+                  className="text-xs md:text-lg font-semibold text-gray-800"
                   style={{ fontFamily: FONT }}
                 >
                   {translateSync(step.title)}
                 </h3>
+                {/* Description cachée sur mobile */}
                 <p
-                  className="text-sm text-gray-600 leading-relaxed"
+                  className="hidden md:block text-sm text-gray-600 leading-relaxed"
                   style={{ fontFamily: FONT }}
                 >
                   {translateSync(step.desc)}
@@ -280,7 +307,6 @@ export default function RecompensePageView() {
         >
           <TranslatedText text="Inscrivez-vous à notre newsletter et recevez 10 € offerts sur votre première commande." />
         </p>
-
         <div className="max-w-xl mx-auto">
           <iframe
             data-w-type="embedded"
@@ -294,44 +320,36 @@ export default function RecompensePageView() {
             title="Mailjet Newsletter"
           />
         </div>
-
-        {/* Bouton accueil */}
-        <div className="flex justify-center mt-8">
-          <Link
-            to={paths.main}
-            className="px-8 py-2.5 rounded-full text-sm font-semibold uppercase text-white transition-colors"
-            style={{
-              backgroundColor: GOLD,
-              fontFamily: FONT,
-              letterSpacing: "0.08em",
-            }}
-            onMouseEnter={(e) =>
-              (e.currentTarget.style.backgroundColor = "#a07a45")
-            }
-            onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = GOLD)}
-          >
-            <TranslatedText text="Accueil" />
-          </Link>
-        </div>
       </div>
 
       {/* ══════════════════════════
           BADGES DU BAS
           ══════════════════════════ */}
       <div
-        className="w-screen relative left-[calc(-50vw+50%)] py-6 px-4"
+        className="w-screen relative left-[calc(-50vw+50%)] py-4 md:py-8 px-4"
         style={{ backgroundColor: "#FBF6EC" }}
       >
-        <div className="max-w-6xl mx-auto grid grid-cols-2 md:grid-cols-4 gap-6">
+        <div className="max-w-6xl mx-auto grid grid-cols-4 gap-4 md:gap-6">
           {badges.map((badge, i) => (
-            <div key={i} className="flex items-start gap-3">
+            <div
+              key={i}
+              className="flex flex-col md:flex-row items-center gap-3"
+            >
+              {/* Icône */}
               <div
-                className="w-10 h-10 rounded-full flex items-center justify-center shrink-0"
+                className="w-12 h-12 md:w-16 md:h-16 rounded-full flex items-center justify-center shrink-0"
                 style={{ backgroundColor: "#F3EBDD" }}
               >
-                <span style={{ color: GOLD }}>{badge.icon}</span>
+                <span
+                  style={{ color: GOLD, fontSize: "1.4rem" }}
+                  className="md:text-3xl"
+                >
+                  {badge.icon}
+                </span>
               </div>
-              <div>
+
+              {/* Texte — caché sur mobile */}
+              <div className="hidden md:block">
                 <p
                   className="text-sm font-semibold text-gray-800"
                   style={{ fontFamily: FONT }}

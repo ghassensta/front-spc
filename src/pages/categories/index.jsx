@@ -25,7 +25,7 @@ export default function Page() {
   const pageTitle       = category?.meta_title       || `${category?.nom || "Catégorie"} - Nos SPAs`;
   const pageDescription = category?.meta_description || `Découvrez les SPAs dans la catégorie ${category?.nom || ""}.`;
   const pageKeywords    = category?.meta_keywords    || `${category?.nom || ""}, SPA, bien-être`;
-
+  console.log("Category Data:", categoryData);
   return (
     <>
       <Helmet htmlAttributes={{ lang: "fr" }}>
@@ -44,6 +44,8 @@ export default function Page() {
       <CategoriesPageView
         {...categoryData}   
         slug_categorie={slug}
+        description={category?.description}
+        nomcat={category?.nom}
         villes={villes}
         types={types}
         services={services}

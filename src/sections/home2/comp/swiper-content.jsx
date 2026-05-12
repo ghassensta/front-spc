@@ -12,6 +12,8 @@ const SwiperContent = ({ slidesPerView = 3, data = [] }) => {
   const swiperRef = useRef(null);
   const { translateSync } = useTranslation();
 
+  //console.log("xxxxxxxxxxxxxxxxxxxxxxx", data);
+
   // Lazy charger Swiper seulement si nécessaire
   useEffect(() => {
     if (data.length > 1) {
@@ -19,7 +21,7 @@ const SwiperContent = ({ slidesPerView = 3, data = [] }) => {
         import("swiper/modules").then((modules) => {
           setSwiper({
             ...swiperModule,
-            Navigation: modules.Navigation
+            Navigation: modules.Navigation,
           });
         });
       });
@@ -28,9 +30,18 @@ const SwiperContent = ({ slidesPerView = 3, data = [] }) => {
 
   // S'assurer que les refs sont correctement attachées après l'initialisation de Swiper
   useEffect(() => {
-    if (Swiper && swiperRef.current && swiperRef.current.swiper && prevRef.current && nextRef.current) {
+    if (
+      Swiper &&
+      swiperRef.current &&
+      swiperRef.current.swiper &&
+      prevRef.current &&
+      nextRef.current
+    ) {
       const swiper = swiperRef.current.swiper;
-      if (swiper.params.navigation && typeof swiper.params.navigation !== "boolean") {
+      if (
+        swiper.params.navigation &&
+        typeof swiper.params.navigation !== "boolean"
+      ) {
         swiper.params.navigation.prevEl = prevRef.current;
         swiper.params.navigation.nextEl = nextRef.current;
         swiper.navigation.update();
@@ -59,7 +70,7 @@ const SwiperContent = ({ slidesPerView = 3, data = [] }) => {
       768: { slidesPerView: 2, spaceBetween: 15, centeredSlides: true },
       1024: { slidesPerView, spaceBetween: 20, centeredSlides: false },
     }),
-    [slidesPerView]
+    [slidesPerView],
   );
 
   if (!Array.isArray(data) || data.length === 0) {
@@ -72,11 +83,16 @@ const SwiperContent = ({ slidesPerView = 3, data = [] }) => {
       <div className="relative max-w-[1200px] mx-auto px-4 md:px-12">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
           {data.slice(0, slidesPerView).map((item, index) => (
-            <div key={item.id ? `item-${item.id}` : `slide-${index}`} className="pt-8">
+            <div
+              key={item.id ? `item-${item.id}` : `slide-${index}`}
+              className="pt-8"
+            >
               {/* Card component here - simplifié pour le fallback */}
               <div className="bg-white rounded-lg shadow-md p-4">
                 <div className="w-full h-48 bg-gray-200 rounded mb-4"></div>
-                <h3 className="text-lg font-semibold mb-2">{translateSync(item.name || "Produit")}</h3>
+                <h3 className="text-lg font-semibold mb-2">
+                  {translateSync(item.name || "Produit")}
+                </h3>
               </div>
             </div>
           ))}
@@ -88,6 +104,7 @@ const SwiperContent = ({ slidesPerView = 3, data = [] }) => {
   if (data.length === 1) {
     // Single item - no Swiper needed
     const item = data[0];
+
     return (
       <div className="relative max-w-[1200px] mx-auto px-4 md:px-12">
         <div className="pt-8">
@@ -138,8 +155,12 @@ const SwiperContent = ({ slidesPerView = 3, data = [] }) => {
 
           return (
             <Swiper.SwiperSlide
-              className="pt-8"
-              key={item.id ? `item-${item.id}-${index}` : `slide-${index}-${Math.random().toString(36).substr(2, 9)}`}
+              className="pt-8 h-auto"
+              key={
+                item.id
+                  ? `item-${item.id}-${index}`
+                  : `slide-${index}-${Math.random().toString(36).substr(2, 9)}`
+              }
             >
               <Card
                 to={item.slug ? paths.product(item.slug) : "#"}
@@ -157,7 +178,9 @@ const SwiperContent = ({ slidesPerView = 3, data = [] }) => {
                 duration={translateSync(item.duration || "")}
                 id={item.produit_id || item.id || null}
                 exclusivite_image={item.exclusivite_image}
-                remise_desc_produit={translateSync(item.remiseDescProduit || "")}
+                remise_desc_produit={translateSync(
+                  item.remiseDescProduit || "",
+                )}
                 offre_flash={item.offre_flash || ""}
                 date_debut={item.date_debut || ""}
                 date_fin={item.date_fin || ""}
@@ -222,9 +245,9 @@ SwiperContent.propTypes = {
       exclusivite_image: PropTypes.string,
       remiseDescProduit: PropTypes.string,
       offre_flash: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
-      date_debut:PropTypes.string,
-      date_fin:PropTypes.string,
-    })
+      date_debut: PropTypes.string,
+      date_fin: PropTypes.string,
+    }),
   ),
 };
 

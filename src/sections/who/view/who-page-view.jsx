@@ -1,6 +1,5 @@
 import React, { useEffect, useRef, useState } from "react";
-
-import { Shield, Mail, Star } from "lucide-react";
+import { FaShieldAlt, FaEnvelope, FaStar, FaCheckCircle } from "react-icons/fa";
 import ButtonIcon from "src/components/button-icon/button-icon";
 import { paths } from "src/router/paths";
 import theImage from "src/assets/images/SPA-images-1975x1318-Qui-Sommes-Nous-02.jpg";
@@ -8,9 +7,13 @@ import theImage2 from "src/assets/images/SPA-images-1975x1318-Qui-Sommes-Nous-01
 import theImage3 from "src/assets/images/SPA-images-1975x1318-Qui-Sommes-Nous-03.jpg";
 import theImage4 from "src/assets/images/SPC-carte-cadeau-montant-3.jpg";
 import { TranslatedText } from "src/components/translated-text/translated-text";
-import { useTranslation } from "src/context/translation-context";
 import theImageFounder from "src/assets/images/SPC-qui-sommes-nous.jpg";
 import SectionHeader from "src/components/section-header/SectionHeader";
+import ButtonLink from "src/components/button-link/ButtonLink";
+
+const GOLD = "#b8955a";
+const FONT = "Calibri, 'Segoe UI', sans-serif";
+const FONT_SERIF = "'Cormorant Garamond', 'Georgia', serif";
 
 /* ── Icône lotus mobile ── */
 function LotusIcon() {
@@ -25,63 +28,63 @@ function LotusIcon() {
     >
       <path
         d="M18 30c0 0-8-6-8-14a8 8 0 0 1 8-8 8 8 0 0 1 8 8c0 8-8 14-8 14z"
-        stroke="#b8955a"
+        stroke={GOLD}
         strokeWidth="1.2"
         fill="none"
       />
       <path
         d="M18 30c0 0-6-5-10-11 2-4 6-5 10-3"
-        stroke="#b8955a"
+        stroke={GOLD}
         strokeWidth="1.2"
         fill="none"
       />
       <path
         d="M18 30c0 0 6-5 10-11-2-4-6-5-10-3"
-        stroke="#b8955a"
+        stroke={GOLD}
         strokeWidth="1.2"
         fill="none"
       />
-      <circle cx="18" cy="18" r="2" fill="#b8955a" />
+      <circle cx="18" cy="18" r="2" fill={GOLD} />
     </svg>
   );
 }
 
-function FeatureItem({ Icon, title, desc }) {
+/* ── Feature item ── */
+function FeatureItem({ icon, title, desc }) {
   return (
     <div className="flex items-center gap-4 py-4 md:py-0">
-      {/* Icône */}
       <div
-        className="flex-shrink-0 w-10 h-10 flex items-center justify-center rounded-full"
-        style={{ border: "1.5px solid #b8955a" }}
+        className="shrink-0 w-10 h-10 flex items-center justify-center rounded-full"
+        style={{ border: `1.5px solid ${GOLD}` }}
       >
-        <Icon size={18} style={{ color: "#b8955a" }} />
+        <span style={{ color: GOLD, fontSize: "1rem" }}>{icon}</span>
       </div>
-      {/* Texte */}
       <div className="flex-1">
-        <p className="font-semibold text-sm" style={{ color: "#1a1a1a" }}>
+        <p
+          className="font-semibold text-sm"
+          style={{ color: "#1a1a1a", fontFamily: FONT }}
+        >
           <TranslatedText text={title} />
         </p>
-        <p className="font-tahoma text-xs mt-0.5" style={{ color: "#777" }}>
+        <p
+          className="text-xs mt-0.5"
+          style={{ color: "#777", fontFamily: FONT }}
+        >
           <TranslatedText text={desc} />
         </p>
       </div>
     </div>
   );
 }
-export default function WhoPageView() {
-  const { t } = useTranslation();
-  const images = [theImage, theImage2, theImage3];
 
-  const [currentSlide, setCurrentSlide] = useState(0);
+export default function WhoPageView() {
+  const images = [theImage, theImage2, theImage3];
   const timerRef = useRef(null);
 
   useEffect(() => {
-    const startTimer = () => {
-      timerRef.current = setInterval(() => {
-        setCurrentSlide((prev) => (prev + 1) % images.length);
-      }, 5000);
-    };
-    startTimer();
+    timerRef.current = setInterval(() => {
+      setCurrentSlide((prev) => (prev + 1) % images.length);
+    }, 5000);
     return () => clearInterval(timerRef.current);
   }, [images.length]);
 
@@ -96,61 +99,106 @@ export default function WhoPageView() {
     setCurrentSlide(index);
     resetTimer();
   };
-  const goToPrev = () => {
-    setCurrentSlide((prev) => (prev - 1 + images.length) % images.length);
-    resetTimer();
-  };
-  const goToNext = () => {
-    setCurrentSlide((prev) => (prev + 1) % images.length);
-    resetTimer();
-  };
+
+  const valeurs = [
+    {
+      title: "Sincérité",
+      text: "Nous privilégions des expériences authentiques, où chaque établissement et chaque moment reflètent l'essence même du lieu. Cette approche repose sur une transparence et une confiance constantes, assurant une immersion véritable et sincère.",
+    },
+    {
+      title: "Élégance",
+      text: "L'élégance, pour nous, se révèle dans l'attention minutieuse portée aux gestes subtils et aux détails soigneusement pensés. Chaque prestation incarne un équilibre parfait entre simplicité et raffinement, pour des moments remplis de charme et de quiétude.",
+    },
+    {
+      title: "Proximité",
+      text: "L'humain est au cœur de notre démarche. Que ce soit avec nos partenaires ou nos membres, nous cultivons des relations fondées sur l'écoute et la bienveillance. Cela nous permet de répondre aux besoins spécifiques de chacun et de bâtir des liens solides et durables.",
+    },
+    {
+      title: "Durabilité",
+      text: "Nous sommes convaincus que la beauté du monde réside dans sa préservation. Chaque établissement de notre réseau s'engage à adopter des pratiques respectueuses de l'environnement, créant un impact positif et responsable pour les générations à venir.",
+    },
+    {
+      title: "Engagement",
+      text: "Nous nous engageons à soutenir le succès de nos partenaires et à partager notre savoir-faire avec nos membres, afin que chaque projet se développe en harmonie avec nos valeurs communes, tout en favorisant la transmission et l'innovation.",
+    },
+  ];
+
+  const privileges = [
+    {
+      label: "Vivez",
+      desc: "Des expériences personnalisées, créées spécialement pour vous",
+    },
+    {
+      label: "Accédez",
+      desc: "A des établissements prestigieux, rigoureusement sélectionnés par nos équipes",
+    },
+    {
+      label: "Profitez",
+      desc: "De tarifs préférentiels pour des instants de bien-être inoubliables",
+    },
+    {
+      label: "Offrez",
+      desc: "Des cartes cadeaux élégantes, disponibles en version numérique ou physique",
+    },
+    {
+      label: "Partagez",
+      desc: "Ces moments d'exception en parrainant vos proches",
+    },
+    {
+      label: "Recevez",
+      desc: "Des conseils exclusifs de Spa & Prestige Collection pour enrichir votre expérience",
+    },
+  ];
 
   return (
-    <div>
+    <div style={{ fontFamily: FONT }}>
       {/* ══════════════════════════════════════════
           Section 1 : L'Essence
       ══════════════════════════════════════════ */}
-      <div className="bg-[#FBF6EC] w-screen relative left-[calc(-50vw+50%)]">
+      <div
+        className="w-screen relative left-[calc(-50vw+50%)]"
+        style={{ backgroundColor: "#FBF6EC" }}
+      >
         <div className="max-w-6xl mx-auto px-5 py-10">
           {/* Icône lotus — mobile uniquement */}
           <div className="md:hidden mb-2">
             <LotusIcon />
           </div>
 
-          {/* Grille 2 colonnes desktop / 1 colonne mobile */}
           <div className="flex flex-col md:flex-row gap-10 items-start">
             {/* ── Colonne gauche : texte ── */}
             <div className="w-full md:w-1/2">
-              {/* Label */}
               <p
                 className="text-xs uppercase tracking-widest font-semibold mb-3 text-center md:text-left"
-                style={{ color: "#b8955a", letterSpacing: "0.2em" }}
+                style={{
+                  color: GOLD,
+                  letterSpacing: "0.2em",
+                  fontFamily: FONT,
+                }}
               >
                 <TranslatedText text="Notre Engagement" />
               </p>
 
-              {/* Titre */}
               <h1
-                className="text-4xl md:text-5xl font-bold mb-3 leading-tight text-center md:text-left"
-                style={{ color: "#1a1a1a" }}
+                className="mb-3 leading-tight text-center md:text-left"
+                style={{
+                  color: "#1a1a1a",
+                  fontFamily: FONT_SERIF,
+                  fontWeight: 400,
+                  fontSize: "clamp(2rem, 4vw, 3rem)",
+                }}
               >
                 <TranslatedText text="L'Essence de Spa & Prestige Collection" />
               </h1>
 
-              {/* Ligne dorée */}
               <div
                 className="mb-6 mx-auto md:mx-0"
-                style={{
-                  width: "48px",
-                  height: "2px",
-                  background: "#b8955a",
-                }}
+                style={{ width: "48px", height: "2px", background: GOLD }}
               />
 
-              {/* Paragraphes */}
               <div
-                className="font-tahoma text-base text-center md:text-left space-y-3 mb-6"
-                style={{ color: "#555" }}
+                className="text-base text-center md:text-left space-y-3 mb-6"
+                style={{ color: "#555", fontFamily: FONT }}
               >
                 <p>
                   <TranslatedText text="Spa & Prestige Collection, c'est avant tout une rencontre." />
@@ -166,28 +214,27 @@ export default function WhoPageView() {
               {/* Bloc citation */}
               <div
                 className="relative bg-white px-6 py-5 mb-4"
-                style={{ borderLeft: "3px solid #b8955a" }}
+                style={{ borderLeft: `3px solid ${GOLD}` }}
               >
-                {/* Grand guillemet */}
                 <span
                   className="absolute -top-2 left-4 text-5xl leading-none select-none"
-                  style={{ color: "#b8955a", fontFamily: "Georgia, serif" }}
+                  style={{ color: GOLD, fontFamily: "Georgia, serif" }}
                 >
                   ❝
                 </span>
                 <p
-                  className="font-tahoma text-base italic pt-4"
-                  style={{ color: "#555" }}
+                  className="text-base italic pt-4"
+                  style={{ color: "#555", fontFamily: FONT }}
                 >
                   <TranslatedText text="Nous avons imaginé Spa & Prestige Collection comme un réseau à taille humaine, où chaque adresse compte, et où chaque expérience doit être à la hauteur de ce qu'elle promet." />
                 </p>
               </div>
 
-              {/* Signature cursive */}
+              {/* Signature */}
               <p
                 className="text-xl italic text-center md:text-left"
                 style={{
-                  color: "#b8955a",
+                  color: GOLD,
                   fontFamily: "'Dancing Script', 'Brush Script MT', cursive",
                 }}
               >
@@ -199,8 +246,8 @@ export default function WhoPageView() {
             <div className="hidden md:block md:w-1/2">
               <img
                 src={theImageFounder}
-                alt="Fondateurs de Spa & Prestige Collection - expérience bien-être premium"
-                className="w-full h-auto object-cover border rounded-lg shadow-md"
+                alt="Fondateurs de Spa & Prestige Collection"
+                className="w-full h-auto object-cover rounded-xl shadow-md"
                 loading="lazy"
               />
             </div>
@@ -209,15 +256,14 @@ export default function WhoPageView() {
           {/* ── 3 features en bas ── */}
           <div
             className="mt-10 grid grid-cols-1 md:grid-cols-3 gap-0 md:gap-8"
-            style={{ borderTop: "1px solid #e8e0d4" }}
+            style={{ borderTop: `1px solid #e8e0d4` }}
           >
-            {/* Séparateurs verticaux sur desktop */}
             <div
               className="md:pt-6 border-b md:border-b-0 md:border-r"
               style={{ borderColor: "#e8e0d4" }}
             >
               <FeatureItem
-                Icon={Shield}
+                icon={<FaShieldAlt />}
                 title="Paiement sécurisé"
                 desc="Vos transactions sont 100 % sécurisées"
               />
@@ -227,28 +273,23 @@ export default function WhoPageView() {
               style={{ borderColor: "#e8e0d4" }}
             >
               <FeatureItem
-                Icon={Mail}
+                icon={<FaEnvelope />}
                 title="Envoi immédiat"
                 desc="Recevez votre carte cadeau par email"
               />
             </div>
             <div className="md:pt-6">
               <FeatureItem
-                Icon={Star}
+                icon={<FaStar />}
                 title="Adresses sélectionnées"
                 desc="Des établissements de confiance, choisis avec soin"
               />
             </div>
           </div>
 
-          {/* ── Bouton NOUS CONTACTER noir ── */}
+          {/* Bouton */}
           <div className="flex items-center justify-center mt-8">
-            <div className="flex items-center justify-center my-6">
-              <ButtonIcon
-                link={paths.contact}
-                title={<TranslatedText text="Nous Contacter" />}
-              />
-            </div>
+            <ButtonLink to={paths.contact} text="Nous Contacter" />
           </div>
         </div>
       </div>
@@ -259,38 +300,22 @@ export default function WhoPageView() {
       <div className="max-w-6xl mx-auto py-10 px-5">
         <SectionHeader label="Notre philosophie" title="Nos valeurs" />
 
-        {/* Grille des valeurs */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          {[
-            {
-              title: "Sincérité",
-              text: "Nous privilégions des expériences authentiques, où chaque établissement et chaque moment reflètent l'essence même du lieu. Cette approche repose sur une transparence et une confiance constantes, assurant une immersion véritable et sincère.",
-            },
-            {
-              title: "Élégance",
-              text: "L'élégance, pour nous, se révèle dans l'attention minutieuse portée aux gestes subtils et aux détails soigneusement pensés. Chaque prestation incarne un équilibre parfait entre simplicité et raffinement, pour des moments remplis de charme et de quiétude.",
-            },
-            {
-              title: "Proximité",
-              text: "L'humain est au cœur de notre démarche. Que ce soit avec nos partenaires ou nos membres, nous cultivons des relations fondées sur l'écoute et la bienveillance. Cela nous permet de répondre aux besoins spécifiques de chacun et de bâtir des liens solides et durables.",
-            },
-            {
-              title: "Durabilité",
-              text: "Nous sommes convaincus que la beauté du monde réside dans sa préservation. Chaque établissement de notre réseau s'engage à adopter des pratiques respectueuses de l'environnement, créant un impact positif et responsable pour les générations à venir.",
-            },
-            {
-              title: "Engagement",
-              text: "Nous nous engageons à soutenir le succès de nos partenaires et à partager notre savoir-faire avec nos membres, afin que chaque projet se développe en harmonie avec nos valeurs communes, tout en favorisant la transmission et l'innovation.",
-            },
-          ].map(({ title, text }, i) => (
+          {valeurs.map(({ title, text }, i) => (
             <div
               key={i}
-              className="bg-[#FBF6EC] px-4 py-8 cursor-pointer duration-300 ease-in hover:text-white hover:bg-[#b8955a]"
+              className="px-4 py-8 rounded-xl cursor-pointer duration-300 ease-in bg-[#FBF6EC] hover:bg-[#b8955a] group"
             >
-              <h3 className="mb-4 font-bold text-2xl">
+              <h3
+                className="mb-4 font-semibold text-xl text-gray-800 group-hover:text-white transition-colors"
+                style={{ fontFamily: FONT_SERIF }}
+              >
                 <TranslatedText text={title} />
               </h3>
-              <p className="font-tahoma text-base">
+              <p
+                className="text-sm leading-relaxed text-gray-600 group-hover:text-white transition-colors"
+                style={{ fontFamily: FONT }}
+              >
                 <TranslatedText text={text} />
               </p>
             </div>
@@ -301,7 +326,7 @@ export default function WhoPageView() {
               loading="lazy"
               src={theImage4}
               alt="Carte Cadeau Spa & Prestige"
-              className="max-w-full h-auto"
+              className="max-w-full h-auto rounded-xl"
             />
           </div>
         </div>
@@ -310,75 +335,49 @@ export default function WhoPageView() {
       {/* ══════════════════════════════════════════
           Section 3 : Rejoignez la Communauté
       ══════════════════════════════════════════ */}
-      <div className="bg-[#FBF6EC] w-screen relative left-[calc(-50vw+50%)]">
+      <div
+        className="w-screen relative left-[calc(-50vw+50%)]"
+        style={{ backgroundColor: "#FBF6EC" }}
+      >
         <div className="max-w-6xl mx-auto py-10 px-5">
           <SectionHeader
             label="Communauté privée"
             title="Rejoignez la communauté privée de Spa & Prestige Collection"
           />
-          <div
-            className="font-tahoma text-xl text-center mb-10 w-full md:w-1/2 mx-auto"
-            style={{ color: "#414244" }}
+
+          <p
+            className="text-base text-center mb-10 w-full md:w-1/2 mx-auto"
+            style={{ color: "#414244", fontFamily: FONT }}
           >
             <TranslatedText text="Plongez dans un univers d'exception et laissez-vous séduire par des privilèges rares et uniques :" />
-          </div>
+          </p>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-            <div className="space-y-8">
-              <div className="text-center md:text-left">
-                <h3 className="text-2xl font-bold mb-2">
-                  <span className="text-[#c8a96e] font-bold m-1">✓</span>
-                  <TranslatedText text="Vivez" />
+          {/* 3 colonnes */}
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+            {privileges.map(({ label, desc }) => (
+              <div key={label} className="text-center md:text-left">
+                <h3
+                  className="font-semibold mb-2"
+                  style={{ fontSize: "1.2rem", fontFamily: FONT_SERIF }}
+                >
+                  <FaCheckCircle
+                    className="inline mr-2 mb-0.5"
+                    style={{ color: GOLD }}
+                  />
+                  <TranslatedText text={label} />
                 </h3>
-                <p className="font-bricolage">
-                  <TranslatedText text="Des expériences personnalisées, créées spécialement pour vous" />
+                <p
+                  className="text-sm text-gray-600 leading-relaxed"
+                  style={{ fontFamily: FONT }}
+                >
+                  <TranslatedText text={desc} />
                 </p>
               </div>
-              <div className="text-center md:text-left">
-                <h3 className="text-2xl font-bold mb-2">
-                  <span className="text-[#c8a96e] font-bold m-1">✓</span>
-                  <TranslatedText text="Accédez" />
-                </h3>
-                <p className="font-bricolage">
-                  <TranslatedText text="A des établissements prestigieux, rigoureusement sélectionnés par nos équipes" />
-                </p>
-              </div>
-            </div>
-
-            <div className="space-y-8">
-              {[
-                {
-                  label: "Profitez",
-                  desc: "De tarifs préférentiels pour des instants de bien-être inoubliables",
-                },
-                {
-                  label: "Offrez",
-                  desc: "Des cartes cadeaux élégantes, disponibles en version numérique ou physique",
-                },
-                {
-                  label: "Partagez",
-                  desc: "Ces moments d'exception en parrainant vos proches",
-                },
-                {
-                  label: "Recevez",
-                  desc: "Des conseils exclusifs de Spa & Prestige Collection pour enrichir votre expérience",
-                },
-              ].map(({ label, desc }) => (
-                <div key={label} className="text-center md:text-left">
-                  <h3 className="text-2xl font-bold mb-2">
-                    <span className="text-[#c8a96e] font-bold m-1">✓</span>{" "}
-                    <TranslatedText text={label} />
-                  </h3>
-                  <p className="font-bricolage">
-                    <TranslatedText text={desc} />
-                  </p>
-                </div>
-              ))}
-            </div>
+            ))}
           </div>
 
           <div className="flex justify-center mt-10">
-            <ButtonIcon link={paths.spa.list} title="COUP DE CŒUR" />
+            <ButtonLink to={paths.spa.list} text="COUP DE CŒUR" />
           </div>
         </div>
       </div>

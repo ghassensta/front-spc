@@ -4,7 +4,7 @@
   appearance: none;
   width: 16px;
   height: 16px;
-  background: black;
+  background: #b8955a; /* GOLD */
   border-radius: 50%;
   cursor: pointer;
   border: none;
@@ -14,7 +14,7 @@
 .range-slider::-moz-range-thumb {
   width: 16px;
   height: 16px;
-  background: black;
+  background: #b8955a; /* GOLD */
   border-radius: 50%;
   cursor: pointer;
   border: none;

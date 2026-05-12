@@ -1,16 +1,13 @@
 import React, { useCallback, useEffect, useState } from "react";
 import ImageCarousel from "../spa-details/comp/image-carousel";
 import ProductCarousel from "./comp/product-carousel";
-import { Star } from "lucide-react";
 import { Link, useNavigate } from "react-router-dom";
-import { FaHeart, FaRegHeart, FaStar } from "react-icons/fa";
+import { FaHeart, FaArrowRight, FaGift } from "react-icons/fa";
 import LocationSection from "./comp/location-section";
-import { motion, AnimatePresence } from "framer-motion";
 import { useAuthContext } from "src/auth/hooks/use-auth-context";
 import { useToggleWishlist } from "src/actions/wishlists";
 import { toast } from "react-toastify";
 import { usePathname, useRouter, useSearchParams } from "src/hooks";
-import StarRatingInput from "src/components/star-rating-input/star-rating-input";
 import { usePostProductAvis } from "src/actions/products";
 import ProductDetailsSkeleton from "./product-details-skeleton";
 import { CONFIG } from "src/config-global";
@@ -22,6 +19,7 @@ import OfferFlashSVG from "../../../src/components/offre-flash/offer-flash-badge
 import GlobalShare from "src/components/button-share/GlobalShare";
 import SpaConseil from "../spa-details/comp/SpaConseil";
 import logoSpc from "../../assets/logo-small.png";
+import TrustBar from "src/components/trust-bar/TrustBar.jsx";
 
 export default function ({
   product,
@@ -146,13 +144,13 @@ export default function ({
       newRecipients.length > 0
         ? newRecipients
         : [
-          {
-            fullName: "",
-            email: "",
-            message: "",
-            date: new Date().toISOString().slice(0, 10),
-          },
-        ],
+            {
+              fullName: "",
+              email: "",
+              message: "",
+              date: new Date().toISOString().slice(0, 10),
+            },
+          ],
     );
   };
 
@@ -238,14 +236,14 @@ export default function ({
   if (loading) return <ProductDetailsSkeleton />;
 
   return (
-    <div className="max-w-7xl mx-auto px-4">
+    <div className="max-w-7xl mx-auto px-4 ">
       <div className="py-6">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
           <div className="flex flex-col col-span-2 h-[300px] md:h-[600px]">
             <ImageCarousel images={gallery} height="300px" />
           </div>
 
-          <div className="bg-[beige] px-8 py-4 col-span-2 lg:col-span-1 rounded-2xl">
+          <div className="bg-[#F3EBDD] px-8 py-4 col-span-2 lg:col-span-1 rounded-2xl">
             <Link
               to={paths.spa.details(etablissement?.slug)}
               className="text-4xl font-bold mb-6 text-[#333]"
@@ -266,13 +264,14 @@ export default function ({
                 {servicesEquipements.map((cat, index) => (
                   <span
                     key={`${cat}-${index}`}
-                    className="bg-[#e2dfba] px-2 py-1 text-sm rounded"
+                    className="bg-[#b8955a] px-3 py-1 text-sm rounded-2xl text-white"
                   >
                     {translateSync(cat)}
                   </span>
                 ))}
               </div>
             )}
+            {/*   <hr className="border-[#000000] border-1 mt-5" /> */}
 
             {product?.remise_produit > 0 && (
               <span className="inline-block bg-[#b8955a] text-white font-bold font-roboto px-4 py-2 rounded-full text-sm mt-4">
@@ -354,13 +353,17 @@ export default function ({
 
             <Link
               to={paths.spa.details(etablissement?.slug)}
-              className="w-max rounded-md mx-auto mt-10 px-5 py-3 bg-[#e2dfba] leading-4 text-black uppercase font-normal text-xs tracking-[3px] hover:bg-black transition hover:text-white font-tahoma flex items-center justify-center gap-2"
+              className="inline-flex items-center justify-start gap-2 text-xs font-semibold uppercase tracking-wider px-5 py-3 rounded-full transition-all duration-300 border border-[#b8955a]  bg-[#b8955a] text-white mt-6"
+              style={{
+                letterSpacing: "0.08em",
+              }}
             >
               {translateSync("Voir l'établissement")}
+              <FaArrowRight className="text-xs" />
             </Link>
           </div>
 
-          <div className="bg-[beige] px-8 py-4 col-span-2 lg:col-span-1 rounded-2xl">
+          <div className="bg-[#F3EBDD] px-8 py-4 col-span-2 lg:col-span-1 rounded-2xl">
             <div>
               {/* Prix barré */}
               {!!product?.prix_barre && (
@@ -409,24 +412,29 @@ export default function ({
             <div className="mt-4 font-tahoma">
               {/* Switch toggle */}
               <div className="flex items-center justify-between border border-gray-200 rounded-xl px-4 py-3 mb-4">
-                <div>
-                  <p className="text-sm font-semibold text-[#333]">
-                    {translateSync("Personnaliser ma carte cadeau")}
-                  </p>
-                  <p className="text-xs text-gray-400 mt-0.5">
-                    {translateSync(
-                      "Ajoutez un message, une date d'envoi et un destinataire",
-                    )}
-                  </p>
+                <div className="flex items-start gap-3">
+                  <FaGift className="text-black text-2xl mt-1" />
+                  <div>
+                    <p className="text-sm font-semibold text-[#333]">
+                      {translateSync("Personnaliser ma carte cadeau")}
+                    </p>
+                    <p className="text-xs text-gray-400 mt-0.5">
+                      {translateSync(
+                        "Ajoutez un message, une date d'envoi et un destinataire",
+                      )}
+                    </p>
+                  </div>
                 </div>
                 <button
                   onClick={() => setShowPersonalize((prev) => !prev)}
-                  className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors duration-300 focus:outline-none ${showPersonalize ? "bg-black" : "bg-gray-300"
-                    }`}
+                  className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors duration-300 focus:outline-none ${
+                    showPersonalize ? "bg-black" : "bg-gray-300"
+                  }`}
                 >
                   <span
-                    className={`inline-block h-4 w-4 transform rounded-full bg-white shadow transition-transform duration-300 ${showPersonalize ? "translate-x-6" : "translate-x-1"
-                      }`}
+                    className={`inline-block h-4 w-4 transform rounded-full bg-white shadow transition-transform duration-300 ${
+                      showPersonalize ? "translate-x-6" : "translate-x-1"
+                    }`}
                   />
                 </button>
               </div>
@@ -533,36 +541,36 @@ export default function ({
                         {(recipient.fullName ||
                           recipient.email ||
                           recipient.message) && (
-                            <div className="mt-2 p-2 bg-white border border-gray-200 rounded-lg text-xs text-gray-500 space-y-1">
-                              <p className="font-semibold text-gray-600 mb-1">
-                                {translateSync("Rappel de l'offre")}
+                          <div className="mt-2 p-2 bg-white border border-gray-200 rounded-lg text-xs text-gray-500 space-y-1">
+                            <p className="font-semibold text-gray-600 mb-1">
+                              {translateSync("Rappel de l'offre")}
+                            </p>
+                            {recipient.fullName && (
+                              <p>
+                                <span className="font-medium">
+                                  {translateSync("Offert à")} :
+                                </span>{" "}
+                                {recipient.fullName}
                               </p>
-                              {recipient.fullName && (
-                                <p>
-                                  <span className="font-medium">
-                                    {translateSync("Offert à")} :
-                                  </span>{" "}
-                                  {recipient.fullName}
-                                </p>
-                              )}
-                              {recipient.email && (
-                                <p>
-                                  <span className="font-medium">Email :</span>{" "}
-                                  {recipient.email}
-                                </p>
-                              )}
-                              {recipient.date && (
-                                <p>
-                                  <span className="font-medium">
-                                    {translateSync("Envoi le")} :
-                                  </span>{" "}
-                                  {new Date(recipient.date).toLocaleDateString(
-                                    "fr-FR",
-                                  )}
-                                </p>
-                              )}
-                            </div>
-                          )}
+                            )}
+                            {recipient.email && (
+                              <p>
+                                <span className="font-medium">Email :</span>{" "}
+                                {recipient.email}
+                              </p>
+                            )}
+                            {recipient.date && (
+                              <p>
+                                <span className="font-medium">
+                                  {translateSync("Envoi le")} :
+                                </span>{" "}
+                                {new Date(recipient.date).toLocaleDateString(
+                                  "fr-FR",
+                                )}
+                              </p>
+                            )}
+                          </div>
+                        )}
                       </div>
                     </div>
                   ))}
@@ -762,6 +770,7 @@ export default function ({
             </div>
           </div> */}
         </div>
+        <TrustBar className="w-full" />
         <SpaConseil
           image={`${CONFIG.serverUrl}/storage/${spaData?.image_conseil}`}
           text={spaData?.text_conseil}

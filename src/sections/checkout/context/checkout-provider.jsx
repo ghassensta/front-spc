@@ -43,11 +43,10 @@ function Container({ children }) {
     initialState
   );
 
-  // Check cart expiration (1 hour of inactivity)
   const checkCartExpiration = useCallback(() => {
     if (state.cartTimestamp) {
       const now = Date.now();
-      const oneHour = 60 * 60 * 1000; // 1 hour in ms
+      const oneHour = 60 * 60 * 1000; 
       if (now - state.cartTimestamp > oneHour) {
         // Clear entire cart if inactive for 1 hour
         setField("items", []);
@@ -67,7 +66,7 @@ function Container({ children }) {
   const checkCouponExpiration = useCallback(() => {
     if (state.couponId && state.couponTimestamp) {
       const now = Date.now();
-      const oneHour = 60 * 60 * 1000; // 1 hour in ms
+      const oneHour = 60 * 60 * 1000; 
       if (now - state.couponTimestamp > oneHour) {
         // Clear coupon and discounts
         setField("couponId", null);
@@ -121,13 +120,13 @@ function Container({ children }) {
           ...existing,
           destinataires: [...existing.destinataires, ...newDest],
           quantity: existing.destinataires.length + newDest.length,
-          discount: 0, // Reset discount on update
+          discount: 0, 
         };
       } else {
         updatedItems.push({
           ...newItem,
           quantity: newItem.destinataires.length,
-          discount: 0, // Initialize discount
+          discount: 0, 
         });
       }
       const clearedItems = updatedItems.map((item) => ({ ...item, discount: 0 }));

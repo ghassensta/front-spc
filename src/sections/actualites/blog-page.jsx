@@ -6,6 +6,7 @@ import PageSkeleton from "./page-skeleton";
 import theImage from "src/assets/images/SPC-Essence-1975x1318-02.jpg";
 import { useTranslation } from "src/context/translation-context";
 import HeroImage from "src/components/hero-image/HeroImage";
+import ButtonLink from "src/components/button-link/ButtonLink";
 
 export default function BlogPage({ categories, articles, loading }) {
   const { translateSync } = useTranslation();
@@ -204,12 +205,11 @@ export default function BlogPage({ categories, articles, loading }) {
       </div>
 
       <div className="flex items-center justify-center mb-8 mt-4">
-        <Link
-          to={"/assistance-contact"}
-          className="font-bricolage bg-[#b8955a] py-2 px-4 rounded-full text-white hover:bg-black duration-300"
-        >
-          {translateSync("NOUS CONTACTER")}
-        </Link>
+        <ButtonLink
+          to="/assistance-contact"
+          text="NOUS CONTACTER"
+      
+        />
       </div>
     </>
   );

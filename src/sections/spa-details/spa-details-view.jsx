@@ -8,15 +8,12 @@ import CarteCadeau from "./comp/carte-cadeau";
 import logoSpc from "../../assets/logo-small.png";
 import LocationSection from "./comp/location-section";
 import TestimonialsSection from "./comp/others-section";
-import StarRatingInput from "src/components/star-rating-input/star-rating-input";
 import { CONFIG } from "src/config-global";
 import { usePostEtablissementsAvis } from "src/actions/etablissements";
-import { FaStar } from "react-icons/fa";
 import SpaDetailsSkeleton from "./spa-details-skeleton";
 import { Link } from "react-router-dom";
 import { paths } from "src/router/paths";
 import { useAuthContext } from "src/auth/hooks/use-auth-context";
-import { motion, AnimatePresence } from "framer-motion";
 import { useTranslation } from "src/context/translation-context";
 import SpaConseil from "./comp/SpaConseil";
 

@@ -1,12 +1,14 @@
-// GlossairePageView.jsx
 import React, { useState } from "react";
 import GlossaireItem from "../glossaire-item";
-import ButtonIcon from "src/components/button-icon/button-icon";
+import ButtonLink from "src/components/button-link/ButtonLink";
+import SectionHeader from "src/components/section-header/SectionHeader";
 import { paths } from "src/router/paths";
+
+const GOLD = "#b8955a";
+const FONT = "Calibri, 'Segoe UI', sans-serif";
 
 export default function GlossairePageView() {
   const [openIndex, setOpenIndex] = useState(null);
-
   const glossaryData = [
     {
       letter: "A",
@@ -2040,17 +2042,265 @@ export default function GlossairePageView() {
         },
       ],
     },
-    
+
+    {
+      letter: "T",
+      terms: [
+        {
+          keyword: "Thalassothérapie",
+          description:
+            "Thérapie marine utilisant les bienfaits de l'eau de mer, des algues et du climat marin pour revitaliser et détendre le corps.",
+        },
+        {
+          keyword: "Toucher thérapeutique",
+          description:
+            "Technique de soin basée sur le contact physique bienveillant pour réduire le stress et favoriser la guérison émotionnelle et physique.",
+        },
+        {
+          keyword: "Thaï",
+          description:
+            "Massage traditionnel thaïlandais combinant étirements assistés, pressions rythmées et manipulations articulaires pour améliorer la souplesse et la circulation énergétique.",
+        },
+        {
+          keyword: "Tisane",
+          description:
+            "Boisson à base de plantes ou de fleurs séchées, aux propriétés apaisantes ou revitalisantes, souvent proposée dans les rituels de bien-être.",
+        },
+        {
+          keyword: "Tonicité",
+          description:
+            "État de fermeté musculaire contribuant à la vitalité physique et à une silhouette harmonieuse, favorisé par l'exercice et les soins corporels.",
+        },
+        {
+          keyword: "Transcendance",
+          description:
+            "Expérience de dépassement de soi, souvent recherchée à travers la méditation ou les pratiques spirituelles, favorisant un bien-être profond.",
+        },
+        {
+          keyword: "Toucher bienveillant",
+          description:
+            "Forme de soin fondée sur un contact doux et attentionné qui procure sécurité, apaisement et reconnexion avec son corps.",
+        },
+        {
+          keyword: "Thérapie manuelle",
+          description:
+            "Ensemble des techniques de soins réalisées à la main — massages, ostéopathie, kinésithérapie — pour soulager les tensions et restaurer l'équilibre corporel.",
+        },
+        {
+          keyword: "Thermothérapie",
+          description:
+            "Utilisation de la chaleur sous différentes formes (sauna, bain chaud, enveloppements) pour détendre les muscles, améliorer la circulation et favoriser la récupération.",
+        },
+        {
+          keyword: "Terrain de vie",
+          description:
+            "Ensemble des habitudes et de l'environnement quotidien d'une personne, dont l'équilibre conditionne directement son niveau de bien-être.",
+        },
+        {
+          keyword: "Turbul-bain",
+          description:
+            "Bain avec jets d'eau et d'air produits par turbine, utilisé en hydrothérapie pour masser, tonifier et améliorer la circulation.",
+        },
+        {
+          keyword: "Tonification",
+          description:
+            "Action de raffermir et de dynamiser le corps ou l'esprit à travers des soins, des exercices ou des pratiques de bien-être ciblées.",
+        },
+      ],
+    },
+    {
+      letter: "U",
+      terms: [
+        {
+          keyword: "Ultrasons",
+          description:
+            "Technique de soin esthétique et thérapeutique utilisant des ondes sonores à haute fréquence pour traiter les tissus profonds et favoriser la régénération cellulaire.",
+        },
+        {
+          keyword: "Unicité",
+          description:
+            "Caractère singulier de chaque individu, fondement d'une approche de bien-être personnalisée et sur-mesure.",
+        },
+        {
+          keyword: "Union corps-esprit",
+          description:
+            "Concept central du bien-être holistique visant à rétablir la connexion harmonieuse entre les dimensions physique, mentale et émotionnelle de l'être.",
+        },
+        {
+          keyword: "Upgrade sensoriel",
+          description:
+            "Enrichissement de l'expérience de soin par des stimulations sensorielles soigneusement choisies : arômes, textures, sons et lumières.",
+        },
+        {
+          keyword: "Univers spa",
+          description:
+            "Environnement immersif et apaisant conçu pour favoriser la détente et le ressourcement, alliant esthétique raffinée et soins d'exception.",
+        },
+        {
+          keyword: "Unité intérieure",
+          description:
+            "État d'harmonie et de cohérence entre ses valeurs, émotions et actions, signe d'un équilibre psychologique profond.",
+        },
+      ],
+    },
+    {
+      letter: "V",
+      terms: [
+        {
+          keyword: "Vibration",
+          description:
+            "Concept énergétique désignant le niveau de fréquence intérieure d'une personne, dont l'élévation est recherchée à travers les soins, la méditation et les pratiques bien-être.",
+        },
+        {
+          keyword: "Vitalité",
+          description:
+            "Énergie physique et mentale rayonnante, signe d'un organisme sain et équilibré, souvent cultivée par de bonnes habitudes de vie.",
+        },
+        {
+          keyword: "Vapeur",
+          description:
+            "Utilisée dans le hammam, les soins du visage et certaines thérapies, la vapeur ouvre les pores, purifie la peau et détend en profondeur.",
+        },
+        {
+          keyword: "Visualisation",
+          description:
+            "Technique mentale consistant à imaginer des scènes positives ou des objectifs atteints pour réduire l'anxiété et renforcer le bien-être psychologique.",
+        },
+        {
+          keyword: "Vertus thérapeutiques",
+          description:
+            "Propriétés bénéfiques de certaines plantes, huiles, pierres ou pratiques, reconnues pour leurs effets positifs sur la santé et le bien-être.",
+        },
+        {
+          keyword: "Vinothérapie",
+          description:
+            "Soins du corps à base de polyphénols issus de la vigne et du vin, aux puissantes propriétés antioxydantes, raffermissantes et revitalisantes.",
+        },
+        {
+          keyword: "Vide intérieur",
+          description:
+            "État de calme et de détachement mental recherché dans certaines pratiques méditatives, permettant de se recentrer et de retrouver la paix intérieure.",
+        },
+        {
+          keyword: "Végétal",
+          description:
+            "Se dit des soins, cosmétiques ou pratiques fondés sur des ingrédients d'origine végétale, respectueux du corps et de l'environnement.",
+        },
+        {
+          keyword: "Vérité intérieure",
+          description:
+            "Connaissance profonde et authentique de soi, souvent révélée par des pratiques introspectives comme la méditation ou le développement personnel.",
+        },
+      ],
+    },
+    {
+      letter: "W",
+      terms: [
+        {
+          keyword: "Watsu",
+          description:
+            "Technique de relaxation aquatique combinant les principes du shiatsu et le mouvement dans l'eau chaude pour un relâchement musculaire et émotionnel profond.",
+        },
+        {
+          keyword: "Wellness",
+          description:
+            "Concept global de bien-être actif et conscient englobant la santé physique, mentale, émotionnelle et spirituelle d'un individu.",
+        },
+        {
+          keyword: "Wrap corporel",
+          description:
+            "Soin enveloppant appliqué sur l'ensemble du corps à l'aide d'ingrédients actifs (argile, algues, boue) pour hydrater, drainer et revitaliser la peau.",
+        },
+      ],
+    },
+    {
+      letter: "X",
+      terms: [
+        {
+          keyword: "Xénothérapie",
+          description:
+            "Soins utilisant des substances d'origines naturelles exogènes — minéraux marins, extraits exotiques — pour traiter et revitaliser le corps en profondeur.",
+        },
+        {
+          keyword: "X-stress",
+          description:
+            "Terme désignant les facteurs de stress extérieurs auxquels l'individu est exposé, dont la gestion est essentielle pour préserver l'équilibre et le bien-être.",
+        },
+      ],
+    },
+    {
+      letter: "Y",
+      terms: [
+        {
+          keyword: "Yoga",
+          description:
+            "Discipline ancestrale indienne unissant postures, respiration et méditation pour harmoniser le corps et l'esprit, réduire le stress et cultiver la pleine conscience.",
+        },
+        {
+          keyword: "Yin yoga",
+          description:
+            "Pratique douce et lente du yoga, axée sur des postures tenues en profondeur pour étirer les tissus conjonctifs et favoriser un relâchement intérieur profond.",
+        },
+        {
+          keyword: "Yoga nidra",
+          description:
+            "Méditation guidée alliant éveil et sommeil conscient, induisant un état de relaxation profonde pour régénérer le corps et apaiser l'esprit.",
+        },
+        {
+          keyword: "Yoga du visage",
+          description:
+            "Ensemble d'exercices ciblant les muscles du visage pour prévenir les signes du vieillissement, détendre les tensions et rayonner de bien-être.",
+        },
+      ],
+    },
+    {
+      letter: "Z",
+      terms: [
+        {
+          keyword: "Zen",
+          description:
+            "Philosophie et esthétique d'origine bouddhiste valorisant la simplicité, le calme et la pleine présence, largement associée à l'univers du bien-être et des spas.",
+        },
+        {
+          keyword: "Zone de sérénité",
+          description:
+            "Espace physique ou mental préservé du stress et des tensions, propice à la détente, à la méditation et au ressourcement profond.",
+        },
+        {
+          keyword: "Zéro déchet",
+          description:
+            "Approche de consommation responsable appliquée au bien-être, privilégiant des soins et produits éco-conçus, rechargeables et respectueux de l'environnement.",
+        },
+        {
+          keyword: "Zone réflexe",
+          description:
+            "Aire du corps — notamment des pieds, des mains ou des oreilles — stimulée en réflexologie pour agir à distance sur les organes et favoriser l'équilibre de l'organisme.",
+        },
+        {
+          keyword: "Zeste d'agrumes",
+          description:
+            "Ingrédient actif naturel aux propriétés tonifiantes, purifiantes et antioxydantes, utilisé dans de nombreux soins spa pour éveiller les sens et revitaliser la peau.",
+        },
+      ],
+    },
   ];
 
   return (
-    <div className="max-w-6xl mx-auto py-10">
-      <h1 className="text-5xl text-center mb-10">GLOSSAIRE</h1>
+    <div className="max-w-6xl mx-auto py-10 px-4" style={{ fontFamily: FONT }}>
+      <SectionHeader label="Spa & Prestige Collection" title="Glossaire" />
 
-      {}
-      <h2 className="text-2xl text-center mb-6">Liste des termes</h2>
+      <p
+        className="text-center text-sm text-gray-500 -mt-6 mb-10"
+        style={{ fontFamily: FONT }}
+      >
+        Liste des termes
+      </p>
 
-      <div className="flex flex-col divide-y font-bricolage mb-8">
+      {/* Liste */}
+      <div
+        className="flex flex-col divide-y mb-10 rounded-xl overflow-hidden"
+        style={{ border: `1px solid rgba(184,149,90,0.2)` }}
+      >
         {glossaryData.map((group, index) => (
           <GlossaireItem
             key={index}
@@ -2061,9 +2311,8 @@ export default function GlossairePageView() {
           />
         ))}
       </div>
-      <div className="w-full flex items-center justify-center mb-2">
-        <ButtonIcon title="Accueil" link={paths.main} />
-      </div>
+
+      <ButtonLink to={paths.main} text="Accueil" />
     </div>
   );
 }
