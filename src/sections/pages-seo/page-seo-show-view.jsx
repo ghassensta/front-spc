@@ -73,7 +73,6 @@ export default function PageSeoShow({ pageseo, pageseoLoading }) {
 
   const {
     titre_hero,
-    image_ouverture,
     sections = [],
     faq_json = [],
     cta_final_label,
@@ -109,24 +108,23 @@ export default function PageSeoShow({ pageseo, pageseoLoading }) {
       </div>
 
       <div className="max-w-5xl mx-auto px-4 py-8 space-y-10">
-        {/* ── IMAGE D'OUVERTURE ── */}
-        {image_ouverture && (
-          <div
-            className="overflow-hidden"
-            style={{ border: "1px solid #e0d8cc" }}
-          >
-            <img
-              src={`${CONFIG.serverUrl}/storage/${image_ouverture}`}
-              alt={translateSync(titre_hero)}
-              className="w-full object-cover"
-              style={{ maxHeight: "480px", display: "block" }}
-            />
-          </div>
-        )}
-
         {/* ── SECTIONS TEXTE + BOUTON ── */}
         {sections.map((section, index) => (
           <div key={section.id}>
+            {section.image_section && (
+              <div
+                className="overflow-hidden mb-6"
+                style={{ border: "1px solid #e0d8cc" }}
+              >
+                <img
+                  src={`${CONFIG.serverUrl}/storage/${section.image_section}`}
+                  alt={translateSync(section.button_label || titre_hero)}
+                  className="w-full object-cover"
+                  style={{ maxHeight: "480px", display: "block" }}
+                />
+              </div>
+            )}
+
             <div
               className="prose max-w-none font-tahoma text-base leading-relaxed mb-6"
               style={{ color: "#333" }}
