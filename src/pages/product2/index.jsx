@@ -1,52 +1,73 @@
-import { useParams } from "react-router-dom";
+import { useParams, useLocation } from "react-router-dom";
 import { useGetProduct } from "src/actions/products";
 import ProductDetailsView from "src/sections/product-details/product-details-view2";
-import { Helmet } from "react-helmet";
+import SeoHead from "../../components/seo/SeoHead";
+import JsonLd from "../../components/seo/JsonLd";
+import Breadcrumb from "../../components/seo/Breadcrumb";
+import { productSchema, breadcrumbSchema } from "../../lib/schema";
 
 export default function Page() {
   const { slug } = useParams();
-  const { product,avis,servicesEquipements, productLoading, like, etablissement } =
-    useGetProduct(slug);
+  const location = useLocation();
+  const {
+    product,
+    avis,
+    servicesEquipements,
+    productLoading,
+    like,
+    etablissement,
+  } = useGetProduct(slug);
 
-  const defaultTitle = "Détails du Produit";
-  const defaultDescription = "Découvrez les détails de ce produit exclusif.";
-  const defaultKeywords = "produit, spa, bien-être";
+  const nom = product?.nom || product?.name || "Produit";
+  const pageTitle = product?.meta_title || nom;
+  const pageDescription =
+    product?.meta_description ||
+    (product?.description
+      ? String(product.description).replace(/<[^>]+>/g, "").slice(0, 160)
+      : "Découvrez ce produit exclusif Spa & Prestige Collection.");
+  const pageKeywords =
+    product?.meta_keywords || `${nom}, spa, bien-être, soin, massage`;
 
-  const canonicalUrl = window.location.href;
+  const rawImage = product?.image_thumbnail || product?.image;
+  const imageUrl = rawImage
+    ? rawImage.startsWith("http")
+      ? rawImage
+      : `https://admin.spa-prestige-collection.com/storage/${rawImage}`
+    : null;
+
+  const breadcrumbItems = [
+    { label: "Accueil", path: "/" },
+    ...(etablissement?.slug || etablissement?.id
+      ? [
+          {
+            label: etablissement.nom || "Établissement",
+            path: `/spa/${etablissement.slug || etablissement.id}`,
+          },
+        ]
+      : []),
+    { label: nom, path: location.pathname },
+  ];
 
   return (
     <>
-      <Helmet>
-        <title>{product?.meta_title || defaultTitle}</title>
-        <meta
-          name="description"
-          content={product?.meta_description || defaultDescription}
-        />
-        <meta
-          name="keywords"
-          content={product?.meta_keywords || defaultKeywords}
-        />
-        <meta name="author" content="Spa & Prestige Collection" />
+      <SeoHead
+        title={pageTitle}
+        description={pageDescription}
+        canonical={location.pathname}
+        image={imageUrl}
+        keywords={pageKeywords}
+        type="product"
+      />
 
-        <meta
-          name="robots"
-          content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1"
-        />
-        <link rel="canonical" href={canonicalUrl} />
-        <meta
-          property="og:title"
-          content={product?.meta_title || defaultTitle}
-        />
-        <meta
-          property="og:description"
-          content={product?.meta_description || defaultDescription}
-        />
-        <meta property="og:type" content="product" />
-        <meta property="og:url" content={canonicalUrl} />
-        {product?.image_thumbnail && (
-          <meta property="og:image" content={product.image_thumbnail} />
-        )}
-      </Helmet>
+      <JsonLd
+        data={[
+          productSchema(product, etablissement),
+          breadcrumbSchema(breadcrumbItems),
+        ].filter(Boolean)}
+      />
+
+      <Breadcrumb items={breadcrumbItems} className="container mx-auto px-4" />
+
       <ProductDetailsView
         product={product}
         avis={avis}

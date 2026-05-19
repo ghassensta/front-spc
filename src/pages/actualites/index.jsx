@@ -1,7 +1,7 @@
 import React from "react";
 import { useGetNews } from "src/actions/actualites";
 import BlogPage from "src/sections/actualites/blog-page";
-import { Helmet } from "react-helmet";
+import { Helmet } from "react-helmet-async";
 import { useLocation } from "react-router-dom";
 import theImage from "src/assets/images/SPA-images-1975x1318-Qui-Sommes-Nous-02.jpg";
 

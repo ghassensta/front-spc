@@ -1,5 +1,5 @@
 import React from "react";
-import { Helmet } from "react-helmet"; // ou "react-helmet" si tu n'as pas async
+import { Helmet } from "react-helmet-async";
 import ContactPageView from "src/sections/contact/contact-page-view";
 
 const pageTitle = "Contact Spa Prestige Collection | +33 (0)1 82 35 01 26";

@@ -1,5 +1,5 @@
 import SolutionsPageView from "src/sections/solutions/solutions-page-view";
-import { Helmet } from 'react-helmet';
+import { Helmet } from "react-helmet-async";
 import theImage from "src/assets/images/SPC-Essence-1975x1318-02.jpg";
 import { useLocation } from "react-router-dom";
 

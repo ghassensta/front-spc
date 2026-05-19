@@ -5,7 +5,7 @@ import { useCategoryProducts } from "src/hooks/useCategoryProducts";
 import { useRouter } from "src/hooks";
 import { paths } from "src/router/paths";
 import CategoriesPageView from "src/sections/categories/view/categories-page-view";
-import { Helmet } from "react-helmet";
+import { Helmet } from "react-helmet-async";
 
 export default function Page() {
   const { slug }   = useParams();

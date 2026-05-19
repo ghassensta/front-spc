@@ -1,3 +1,19 @@
+# https://spa-prestige-collection.com/robots.txt
 User-agent: *
 Allow: /
+
+# Zones privées / techniques
+Disallow: /dashboard
+Disallow: /checkout
+Disallow: /payment
+Disallow: /succes
+Disallow: /failed
+Disallow: /auth
+Disallow: /panier
+Disallow: /api/
+Disallow: /*?utm_
+Disallow: /*?gclid
+Disallow: /*?fbclid
+
+# Sitemap
 Sitemap: https://spa-prestige-collection.com/sitemap.xml

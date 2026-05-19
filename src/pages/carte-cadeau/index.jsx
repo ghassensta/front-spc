@@ -1,6 +1,6 @@
 import { useLocation } from "react-router-dom";
 import CarteCadeau from "src/sections/carte-cadeau/carte-cadeau";
-import { Helmet } from 'react-helmet';
+import { Helmet } from "react-helmet-async";
 import { CONFIG } from "src/config-global";
 
 export default function Page() {

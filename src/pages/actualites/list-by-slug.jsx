@@ -2,7 +2,7 @@ import React from "react";
 import { useParams, useLocation } from "react-router-dom";
 import { useGetActualitezBySlug } from "src/actions/actualites";
 import BlogPage from "src/sections/actualites/blog-page";
-import { Helmet } from "react-helmet";
+import { Helmet } from "react-helmet-async";
 
 export default function ActualitesByslug() {
   const { slug } = useParams();
