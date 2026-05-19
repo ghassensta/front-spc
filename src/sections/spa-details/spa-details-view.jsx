@@ -8,15 +8,12 @@ import CarteCadeau from "./comp/carte-cadeau";
 import logoSpc from "../../assets/logo-small.png";
 import LocationSection from "./comp/location-section";
 import TestimonialsSection from "./comp/others-section";
-import StarRatingInput from "src/components/star-rating-input/star-rating-input";
 import { CONFIG } from "src/config-global";
 import { usePostEtablissementsAvis } from "src/actions/etablissements";
-import { FaStar } from "react-icons/fa";
 import SpaDetailsSkeleton from "./spa-details-skeleton";
 import { Link } from "react-router-dom";
 import { paths } from "src/router/paths";
 import { useAuthContext } from "src/auth/hooks/use-auth-context";
-import { motion, AnimatePresence } from "framer-motion";
 import { useTranslation } from "src/context/translation-context";
 import SpaConseil from "./comp/SpaConseil";
 
@@ -303,13 +300,13 @@ function SpaDetailsView({
       <div className="flex items-center justify-center gap-2">
         <Link
           to={paths.spa.list}
-          className="inline-flex font-tahoma rounded-full items-center gap-2 uppercase font-normal tracking-widest transition-all duration-300 px-6 py-3 text-sm bg-[#B6B499] hover:bg-black text-white"
+          className="inline-flex font-tahoma rounded-full items-center gap-2 uppercase font-normal tracking-widest transition-all duration-300 px-6 py-3 text-sm bg-[#b8955a] hover:bg-black text-white"
         >
           {translateSync("Nos établissements")}
         </Link>
         <Link
           to={paths.main}
-          className="inline-flex font-tahoma rounded-full items-center gap-2 uppercase font-normal tracking-widest transition-all duration-300 px-6 py-3 text-sm bg-[#B6B499] hover:bg-black text-white"
+          className="inline-flex font-tahoma rounded-full items-center gap-2 uppercase font-normal tracking-widest transition-all duration-300 px-6 py-3 text-sm bg-[#b8955a] hover:bg-black text-white"
         >
           {translateSync("Accueil")}
         </Link>

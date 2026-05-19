@@ -2,7 +2,7 @@ import React from 'react';
 import { useParams, useLocation } from 'react-router-dom';
 import { useGetNewsDetail } from 'src/actions/actualites';
 import BlogDetails from 'src/sections/actualites/blog-details';
-import { Helmet } from 'react-helmet';
+import { Helmet } from "react-helmet-async";
 
 export default function Page() {
   const { slug } = useParams();

@@ -1,6 +1,6 @@
 import { useLocation } from "react-router-dom";
 import MarquePartenairePage from "src/sections/marque-partenaire/marque-partenaire-page";
-import { Helmet } from 'react-helmet';
+import { Helmet } from "react-helmet-async";
 import theImage from "src/assets/images/SPC-equipe-ce-1975x1318-1-768x513.jpg";
 
 export default function Page() {

@@ -139,4 +139,56 @@ export const useSearchProduits = (catSlug, villeSlug, options = {}) => {
   }, [catSlug, villeSlug, page, per_page]);
 
   return { data, loading, error };
+
+
+  
+};
+
+export const useSearchProduitsEtablissements = () => {
+  const [query, setQuery] = useState("");
+  const [suggestions, setSuggestions] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const timeoutRef = useRef(null);
+
+  useEffect(() => {
+    if (timeoutRef.current) clearTimeout(timeoutRef.current);
+
+    if (!query || query.trim().length < 2) {
+      setSuggestions([]);
+      setLoading(false);
+      return;
+    }
+
+    timeoutRef.current = setTimeout(async () => {
+      setLoading(true);
+
+      try {
+        const q = query.trim();
+
+        const res = await fetcher(
+          `${endpoints.search.produitsEtablissements}?q=${encodeURIComponent(q)}`
+        );
+
+        const items = Array.isArray(res)
+          ? res.map(item => ({
+              ...item,
+              type: "produit", 
+              key: `produit/${item.slug}`,
+            }))
+          : [];
+
+        setSuggestions(items.slice(0, 10));
+      } catch (err) {
+        setSuggestions([]);
+      } finally {
+        setLoading(false);
+      }
+    }, 300);
+
+    return () => {
+      if (timeoutRef.current) clearTimeout(timeoutRef.current);
+    };
+  }, [query]);
+
+  return { query, setQuery, suggestions, loading };
 };

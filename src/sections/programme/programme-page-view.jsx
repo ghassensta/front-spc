@@ -1,21 +1,56 @@
 import React, { useEffect } from "react";
 import {
-  FaExchangeAlt,
   FaFacebookF,
   FaInstagram,
   FaLink,
-  FaRegShareSquare,
-  FaShoppingCart,
-  FaTrophy,
   FaShareAlt,
   FaUserCheck,
+  FaCheck,
+  FaGlobe,
+  FaUser,
+  FaShieldAlt,
 } from "react-icons/fa";
 import { GiTakeMyMoney } from "react-icons/gi";
 import { MdOutlineEmail } from "react-icons/md";
-import ButtonIcon from "src/components/button-icon/button-icon";
 import { paths } from "src/router/paths";
 import theImage from "src/assets/SPC-Parrainage-1975x1318-01.jpg";
 import { useTranslation } from "src/context/translation-context";
+import { Link as RouterLink } from "react-router-dom";
+import HeroImage from "src/components/hero-image/HeroImage";
+import SectionHeader from "src/components/section-header/SectionHeader";
+import ButtonLink from "src/components/button-link/ButtonLink";
+
+const GOLD = "#b8955a";
+const FONT = "Calibri, 'Segoe UI', sans-serif";
+
+const steps = [
+  {
+    icon: FaShareAlt,
+    title: "Invitez un proche",
+    desc: "Envoyez votre lien de parrainage à un ami pour qu'il crée son compte.",
+  },
+  {
+    icon: FaLink,
+    title: "Tout commence dans votre espace client",
+    desc: "Connectez-vous à votre compte pour retrouver votre lien de parrainage personnel.",
+  },
+  {
+    icon: FaUserCheck,
+    title: "Votre ami s'inscrit et en profite",
+    desc: "Votre ami s'inscrit via votre lien et reçoit 5€ offerts sur sa première commande.",
+  },
+  {
+    icon: GiTakeMyMoney,
+    title: "Recevez 5€ en bon d'achat",
+    desc: "Dès sa première commande validée, vous recevez à votre tour 5€ en bon d'achat.",
+  },
+];
+
+const conditions = [
+  { icon: FaCheck, label: "Valable 1 an" },
+  { icon: FaGlobe, label: "Utilisable sur tout le site" },
+  { icon: FaUser, label: "Parrainage illimité" },
+];
 
 export default function ProgrammePageView() {
   const { translateSync } = useTranslation();
@@ -25,168 +60,214 @@ export default function ProgrammePageView() {
     script.src = "https://app.mailjet.com/pas-nc-embedded-v1.js";
     script.async = true;
     document.body.appendChild(script);
-
     return () => {
       document.body.removeChild(script);
     };
   }, []);
 
   return (
-    <>
-      {/* Header avec image */}
-      <div
-        className="w-screen relative left-[calc(-50vw+50%)] h-96 bg-black bg-center bg-cover bg-fixed overflow-hidden hidden md:block"
-        style={{ backgroundImage: `url(${theImage})` }}
+    <div className="w-full" style={{ fontFamily: FONT }}>
+      {/* ── Hero ── */}
+      <HeroImage
+        image={theImage}
+        label="Programme de parrainage"
+        title="Offrez 5€, recevez 5€"
+        description="Invitez vos proches et profitez d'un avantage dès leur première commande."
+        opacity={45}
       >
-        <div className="absolute inset-0 bg-black bg-opacity-40" />
-        <div className="absolute inset-0 flex items-center justify-center">
-          <h1 className="text-white text-4xl font-bold">
-            {translateSync("PROGRAMME DE PARRAINAGE")}
-          </h1>
-        </div>
-      </div>
+        {/* Desktop — bordure blanche */}
+        <RouterLink
+          to={paths.auth.register}
+          className="hidden md:inline-block bg-transparent border border-white text-white px-6 py-3 text-xs font-semibold rounded-md hover:bg-white hover:text-black transition uppercase tracking-wider w-fit"
+        >
+          {translateSync("Se connecter / Créer un compte")}
+        </RouterLink>
 
-      {/* Section Offrez / Recevez */}
-      <div className="bg-[#FBF6EC] w-screen relative left-[calc(-50vw+50%)] mt-12 mb-4">
-        <div className="flex flex-col justify-center gap-4 max-w-6xl mx-auto px-4 py-6 text-center w-full md:w-2/5">
-          <h2 className="text-4xl font-bold">
-            {translateSync("Offrez 5€, et recevez 5€ en retour")}
-          </h2>
-          <p className="text-center font-tahoma mb-8">
+        {/* Mobile — fond noir */}
+        <RouterLink
+          to={paths.auth.register}
+          className="md:hidden inline-block bg-black text-white text-center px-6 py-3 text-xs font-semibold rounded-md hover:bg-[#b8955a] transition uppercase tracking-wider w-fit"
+        >
+          {translateSync("Se connecter / Créer un compte")}
+        </RouterLink>
+      </HeroImage>
+
+      {/* ── Parrainage intro ── */}
+      <div
+        className="w-screen relative left-[calc(-50vw+50%)]"
+        style={{ backgroundColor: "#FBF6EC" }}
+      >
+        <div className="max-w-3xl mx-auto px-4 py-12 text-center">
+          <SectionHeader
+            label="Parrainage"
+            title="Offrez 5€, et recevez 5€ en retour"
+          />
+
+          <p
+            className="text-gray-600 mb-8 text-sm leading-relaxed"
+            style={{ fontFamily: FONT }}
+          >
             {translateSync(
-              "Un instant de détente, une attention, une belle découverte… Invitez vos proches à rejoindre Spa & Prestige Collection et recevez un bon d’achat à chaque première commande validée.",
+              "Un instant de détente, une attention, une belle découverte… Invitez vos proches à rejoindre Spa & Prestige Collection et recevez un bon d'achat à chaque première commande validée.",
             )}
           </p>
-          <div className="flex items-center justify-center gap-6 text-2xl text-gray-600">
-            <a
-              href="https://facebook.com"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              <FaFacebookF />
-            </a>
-            <a
-              href="https://gmail.com"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              <MdOutlineEmail />
-            </a>
-            <a
-              href="https://instagram.com"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              <FaInstagram />
-            </a>
+
+          {/* Icônes partage */}
+          <div className="flex items-center justify-center gap-5">
+            {[
+              { href: "https://facebook.com", icon: <FaFacebookF /> },
+              { href: "mailto:?subject=Parrainage", icon: <MdOutlineEmail /> },
+              { href: "https://instagram.com", icon: <FaInstagram /> },
+            ].map((item, i) => (
+              <a
+                key={i}
+                href={item.href}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="w-10 h-10 rounded-full flex items-center justify-center transition-colors"
+                style={{ border: `1px solid ${GOLD}`, color: GOLD }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.backgroundColor = GOLD;
+                  e.currentTarget.style.color = "#fff";
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.backgroundColor = "transparent";
+                  e.currentTarget.style.color = GOLD;
+                }}
+              >
+                {item.icon}
+              </a>
+            ))}
           </div>
         </div>
       </div>
 
-      {/* Comment ça marche */}
-      <div className="bg-white w-screen relative left-[calc(-50vw+50%)] mb-4 px-4 py-4">
-        <h2 className="text-4xl mb-4 font-bold text-center">
-          {translateSync("Comment ça marche ?")}
-        </h2>
-        <p className="font-tahoma text-center mb-12 w-1/2 mx-auto">
+      {/* ── Comment ça marche ── */}
+      <div className="max-w-6xl mx-auto px-4 py-16">
+        <SectionHeader label="Processus" title="Comment ça marche ?" />
+
+        <p
+          className="text-center text-gray-500 text-sm mb-12 -mt-6"
+          style={{ fontFamily: FONT }}
+        >
           {translateSync(
             "Un programme simple et généreux, pensé pour celles et ceux qui aiment partager leurs plus belles adresses bien-être.",
           )}
         </p>
 
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-4 max-w-6xl mx-auto">
-          <div className="flex flex-col items-center">
-            <FaShareAlt className="text-6xl text-[#C7B892]" />
-            <div className="text-2xl font-bold text-center">
-              {translateSync("Invitez un proche. ")}
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
+          {steps.map((item, idx) => (
+            <div
+              key={idx}
+              className="flex flex-col items-center text-center gap-3"
+            >
+              <div className="relative">
+                <div
+                  className="w-16 h-16 rounded-full flex items-center justify-center"
+                  style={{ backgroundColor: "#F3EBDD" }}
+                >
+                  <item.icon className="text-2xl" style={{ color: GOLD }} />
+                </div>
+                <span
+                  className="absolute -top-1 -right-1 w-6 h-6 rounded-full flex items-center justify-center text-xs font-bold text-white"
+                  style={{ backgroundColor: GOLD }}
+                >
+                  {idx + 1}
+                </span>
+              </div>
+              <h3
+                className="text-base font-semibold text-gray-800"
+                style={{ fontFamily: FONT }}
+              >
+                {translateSync(item.title)}
+              </h3>
+              <p
+                className="text-sm text-gray-500 leading-relaxed"
+                style={{ fontFamily: FONT }}
+              >
+                {translateSync(item.desc)}
+              </p>
             </div>
-            <p className="text-center font-tahoma text-base">
-              {translateSync(
-                "Envoyez votre lien de parrainage à un ami pour qu’il crée son compte.",
-              )}
-            </p>
-          </div>
-          <div className="flex flex-col items-center">
-            <FaLink className="text-6xl text-[#C7B892]" />
-            <div className="text-2xl font-bold text-center">
-              {translateSync("Tout commence dans votre espace client")}
-            </div>
-            <p className="text-center font-tahoma text-base">
-              {translateSync(
-                "Connectez-vous à votre compte pour retrouver votre lien de parrainage personnel.",
-              )}
-            </p>
-          </div>
-          
-          <div className="flex flex-col items-center">
-            <FaUserCheck className="text-6xl text-[#C7B892]" />
-            <div className="text-2xl font-bold text-center">
-              {translateSync("Votre ami s’inscrit et en profite")}
-            </div>
-            <p className="text-center font-tahoma text-base">
-              {translateSync(
-                "Votre ami s’inscrit et en profite En s’inscrivant via votre lien, il reçoit 5€ offerts sur sa première commande.",
-              )}
-            </p>
-          </div>
-
-          <div className="flex flex-col items-center">
-            <GiTakeMyMoney className="text-6xl text-[#C7B892]" />
-            <div className="text-2xl font-bold text-center">
-              {translateSync("Recevez 5€ en bon d’achat")}
-            </div>
-            <p className="text-center font-tahoma text-base">
-              {translateSync(
-                "Vous êtes récompensé(e) Dès sa première commande validée, vous recevez à votre tour 5€ en bon d’achat, directement sur votre compte.",
-              )}
-            </p>
-          </div>
+          ))}
         </div>
       </div>
 
-      {/* Conditions & Newsletter Mailjet */}
-      <div className="w-screen relative max-w-6xl mx-auto mb-4 px-4 py-4 grid grid-cols-1 md:grid-cols-2 gap-8">
-        <div>
-          <h2 className="text-3xl font-semibold mb-6">
-            {translateSync("Les conditions")}
-          </h2>
-          <p className="font-tahoma mb-3">
-            {translateSync(
-              "Code unique d’une valeur de 5 € à valoir sur le site Spa & Prestige Collection...",
-            )}
-          </p>
+      {/* ── Conditions & Newsletter ── */}
+      <div
+        className="w-screen relative left-[calc(-50vw+50%)]"
+        style={{ backgroundColor: "#FBF6EC" }}
+      >
+        <div className="max-w-6xl mx-auto px-4 py-16 grid grid-cols-1 md:grid-cols-2 gap-12">
+          {/* Conditions */}
+          <div>
+            <SectionHeader label="Informations" title="Les conditions" />
+
+            {/* Carte bouclier */}
+            <div
+              className="bg-white rounded-xl p-5 mb-6 shadow-sm flex items-center gap-4"
+              style={{ border: `1px solid rgba(184,149,90,0.25)` }}
+            >
+              <div
+                className="shrink-0 w-11 h-11 rounded-full flex items-center justify-center"
+                style={{ border: `2px solid ${GOLD}` }}
+              >
+                <FaShieldAlt style={{ color: GOLD, fontSize: "1.1rem" }} />
+              </div>
+              <p
+                className="text-gray-700 text-sm leading-snug"
+                style={{ fontFamily: FONT }}
+              >
+                {translateSync(
+                  "Code unique d'une valeur de 5 € à valoir sur le site Spa & Prestige Collection.",
+                )}
+              </p>
+            </div>
+
+            {/* 3 badges */}
+            <div className="grid grid-cols-3 gap-4 text-center">
+              {conditions.map((c, i) => (
+                <div key={i} className="flex flex-col items-center gap-2">
+                  <div
+                    className="w-11 h-11 rounded-full flex items-center justify-center"
+                    style={{ backgroundColor: "#F3EBDD" }}
+                  >
+                    <c.icon style={{ color: GOLD }} />
+                  </div>
+                  <span
+                    className="text-xs text-gray-500"
+                    style={{ fontFamily: FONT }}
+                  >
+                    {translateSync(c.label)}
+                  </span>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* Newsletter */}
+          <div>
+            <SectionHeader
+              label="Newsletter"
+              title="Restez informé(e) de nos nouveautés et avantages"
+            />
+            <iframe
+              data-w-type="embedded"
+              frameBorder="0"
+              scrolling="no"
+              marginHeight="0"
+              marginWidth="0"
+              src="https://srm3t.mjt.lu/wgt/srm3t/0wp5/form?c=31298976"
+              width="100%"
+              style={{ height: "420px" }}
+              title="Newsletter"
+            />
+          </div>
         </div>
-
-        <div>
-          <h2 className="text-4xl mb-4 font-bold">
-            {translateSync("Soyez les premiers informés")}
-          </h2>
-          <p className="mb-6 font-tahoma">
-            {translateSync(
-              "Inscrivez-vous à notre newsletter pour être prévenu dès le lancement du programme.",
-            )}
-          </p>
-
-          <iframe
-            data-w-type="embedded"
-            frameBorder="0"
-            scrolling="no"
-            marginHeight="0"
-            marginWidth="0"
-            src="https://srm3t.mjt.lu/wgt/srm3t/0wp5/form?c=31298976"
-            width="100%"
-            style={{ height: "420px" }}
-            title="Mailjet Newsletter"
-          />
+        {/* ── Bouton CTA ── */}
+        <div className="py-10 flex justify-center">
+          <ButtonLink to={paths.spa.list} text="COUP DE CŒUR" />
         </div>
       </div>
-
-      <div className="w-full flex items-center justify-center mb-2">
-        <ButtonIcon
-          title={translateSync("COUP DE CŒUR")}
-          link={paths.spa.list}
-        />
-      </div>
-    </>
+    </div>
   );
 }

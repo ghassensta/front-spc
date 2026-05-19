@@ -19,7 +19,7 @@ export default function ButtonIcon({
   };  
 
   const variantStyles = {  
-    filled: "bg-[#B6B499] hover:bg-black text-white",  
+    filled: "bg-black hover:bg-black text-white",  
     outlined: "border border-secondary text-secondary bg-transparent hover:bg-secondary hover:text-white",  
     link: "text-secondary underline hover:text-black bg-transparent",  
   };  

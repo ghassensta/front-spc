@@ -163,6 +163,7 @@ export const endpoints = {
     locations: "/api/search/locations",
     serviceOrCategorie: "/api/search/services-categories",
     produits: "/api/search",
+    produitsEtablissements: "/api/search-produits-etablissements"
   },
 
   homesections: {
@@ -185,25 +186,25 @@ export const endpoints = {
   },
 
   emails: {
-    ContactMail:"/api/contact",
-    solutionCe:"/api/solution-ce",
-    devenirpartenair:"/api/devenir-partenair",
-    collaboration:"/api/collaboration-marques"
+    ContactMail: "/api/contact",
+    solutionCe: "/api/solution-ce",
+    devenirpartenair: "/api/devenir-partenair",
+    collaboration: "/api/collaboration-marques"
   },
 
-  coupons:{
-    validate:"/api/code-coupon/validate"
+  coupons: {
+    validate: "/api/code-coupon/validate"
   },
 
-  cagnottes:{
-    create:"/api/cagnottes ",
-    getBySlug:(slug) => `/api/cagnottes/${slug}`,
-    getBySlugManager:(slug, token) => `/api/cagnottes/${slug}/${token}/manager`,
-    contribute:(cagnotteId) => `/api/cagnottes/${cagnotteId}/contribute`
+  cagnottes: {
+    create: "/api/cagnottes ",
+    getBySlug: (slug) => `/api/cagnottes/${slug}`,
+    getBySlugManager: (slug, token) => `/api/cagnottes/${slug}/${token}/manager`,
+    contribute: (cagnotteId) => `/api/cagnottes/${cagnotteId}/contribute`
   },
-   pageseo: {
+  pageseo: {
     list: "/api/pages",
     details: (slug) => `/api/pages/${slug}`,
   },
-  
+
 };

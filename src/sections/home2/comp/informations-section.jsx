@@ -8,20 +8,23 @@ import theImage2 from "src/assets/images/6901d96653fb8_1761728870.webp";
 import theImage3 from "src/assets/images/SPA-images-1975x1318-Qui-Sommes-Nous-03.jpg";
 import { useTranslation } from "src/context/translation-context";
 
+const GOLD = "#b8955a";
+const FONT = "Calibri, 'Segoe UI', sans-serif";
+
 export default function InformationsSection() {
   const { translateSync } = useTranslation();
 
   const data = [
     {
-      header:"L'Essence de Spa & Prestige Collection",
+      header: "L'Essence de Spa & Prestige Collection",
       link: paths.who,
       title: "Qui sommes-nous ?",
       description:
-        "Spa & Prestige Collection réunit des établissements d’exception, soigneusement sélectionnés pour leur confort, leur ambiance singulière et leur service sur-mesure.",
+        "Spa & Prestige Collection réunit des établissements d'exception, soigneusement sélectionnés pour leur confort, leur ambiance singulière et leur service sur-mesure.",
       image: theImage3,
     },
     {
-      header:"Récompenses Spa & Prestige Collection",
+      header: "Récompenses Spa & Prestige Collection",
       link: paths.referentiel,
       title: "Points fidélité",
       description:
@@ -29,26 +32,17 @@ export default function InformationsSection() {
       image: theImage2,
     },
     {
-      header:"Carte Cadeau",
+      header: "Carte Cadeau",
       link: paths.collection,
       title: "Un cadeau qui fait la différence",
-      description:"Offrez un moment de sérénité immédiate, sans attente ni contrainte, grâce à des prestations variées pour toutes les occasions.",
+      description:
+        "Offrez un moment de sérénité immédiate, sans attente ni contrainte, grâce à des prestations variées pour toutes les occasions.",
       image: theImage,
     },
   ];
 
   const timerRef = useRef(null);
   const [currentIndex, setCurrentIndex] = useState(0);
-
-  const nextSlide = () => {
-    setCurrentIndex((prev) => (prev + 1) % data.length);
-    resetTimer();
-  };
-
-  const prevSlide = () => {
-    setCurrentIndex((prev) => (prev - 1 + data.length) % data.length);
-    resetTimer();
-  };
 
   const startTimer = () => {
     timerRef.current = setInterval(() => {
@@ -61,31 +55,44 @@ export default function InformationsSection() {
     startTimer();
   };
 
+  const nextSlide = () => {
+    setCurrentIndex((prev) => (prev + 1) % data.length);
+    resetTimer();
+  };
+  const prevSlide = () => {
+    setCurrentIndex((prev) => (prev - 1 + data.length) % data.length);
+    resetTimer();
+  };
+
   useEffect(() => {
     if (data.length > 1) startTimer();
     return () => clearInterval(timerRef.current);
   }, [data.length]);
 
+  const current = data[currentIndex];
+
   return (
-    <div className="bg-white w-screen relative left-[calc(-50vw+50%)] overflow-hidden py-6 px-3">
+    <div
+      className="bg-white w-screen relative left-[calc(-50vw+50%)] overflow-hidden py-6 px-3"
+      style={{ fontFamily: FONT }}
+    >
       <div className="max-w-6xl mx-auto">
-        <div className="flex flex-col md:flex-row gap-6 md:gap-24">
-          
+        <div className="flex flex-col md:flex-row gap-6 md:gap-16 items-center">
           {/* Image */}
           <div className="w-full md:w-1/2">
             <div className="relative rounded-3xl overflow-hidden">
               <AnimatePresence mode="wait">
-                <Link to={data[currentIndex].link}>
+                <Link to={current.link}>
                   <motion.img
                     key={currentIndex}
-                    src={data[currentIndex].image}
+                    src={current.image}
                     loading="lazy"
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}
                     exit={{ opacity: 0 }}
                     transition={{ duration: 0.5 }}
                     className="w-full min-h-[300px] object-cover"
-                    alt={translateSync(data[currentIndex].title)}
+                    alt={translateSync(current.title)}
                   />
                 </Link>
               </AnimatePresence>
@@ -93,34 +100,70 @@ export default function InformationsSection() {
           </div>
 
           {/* Texte */}
-          <div className="w-full md:w-1/3">
-            <div className="flex gap-3 my-4">
+          <div className="w-full md:w-1/2 flex flex-col gap-4">
+            {/* Boutons navigation */}
+            <div className="flex gap-2">
               <button
                 onClick={prevSlide}
-                className="text-xl border border-black rounded-full p-2"
+                className="text-base border border-gray-300 rounded-full p-2 hover:border-gray-500 transition-colors"
+                aria-label="Précédent"
               >
                 <FiChevronLeft />
               </button>
               <button
                 onClick={nextSlide}
-                className="text-xl border border-black rounded-full p-2"
+                className="text-base border border-gray-300 rounded-full p-2 hover:border-gray-500 transition-colors"
+                aria-label="Suivant"
               >
                 <FiChevronRight />
               </button>
             </div>
 
-            <h2 className="text-3xl">
-              
-               {translateSync(data[currentIndex].header)}
+            {/* Header — titre principal */}
+            <h2
+              className="leading-tight text-gray-900"
+              style={{
+                fontFamily: "'Cormorant Garamond', 'Georgia', serif",
+                fontWeight: 400,
+                fontSize: "clamp(1.4rem, 2.5vw, 2rem)",
+              }}
+            >
+              {translateSync(current.header)}
             </h2>
 
-            <h3 className="text-[#B6B499] text-3xl mt-4">
-              {translateSync(data[currentIndex].title)}
-            </h3>
+            {/* Séparateur doré */}
+            <div className="w-10 h-0.5" style={{ backgroundColor: GOLD }} />
 
-            <p className="font-tahoma text-sm">
-              {translateSync(data[currentIndex].description)}
+            {/* Description */}
+            <p
+              className="text-sm text-gray-600 leading-relaxed"
+              style={{ fontFamily: FONT }}
+            >
+              {translateSync(current.description)}
             </p>
+
+            {/* Bouton EN SAVOIR PLUS — grisé */}
+            <Link
+              to={current.link}
+              className="inline-flex items-center gap-2 px-5 py-2 rounded-lg text-xs font-semibold uppercase tracking-wider transition-colors w-fit"
+              style={{
+                backgroundColor: "#f0f0f0",
+                color: "#555",
+                letterSpacing: "0.08em",
+                fontFamily: FONT,
+              }}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.backgroundColor = GOLD;
+                e.currentTarget.style.color = "#fff";
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.backgroundColor = "#f0f0f0";
+                e.currentTarget.style.color = "#555";
+              }}
+            >
+              {translateSync("En savoir plus")}
+              <FiChevronRight className="text-sm" />
+            </Link>
           </div>
         </div>
       </div>

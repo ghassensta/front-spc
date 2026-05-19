@@ -1,5 +1,5 @@
 import React from "react";
-import { Helmet } from "react-helmet";
+import { Helmet } from "react-helmet-async";
 import { useLocation } from "react-router-dom";
 import CollectionPrestigePage from "src/sections/collection-prestige/views/collection-prestige-page";
 import theImage from "src/assets/images/SPC-Catalogue-1975x1318-1.jpg";

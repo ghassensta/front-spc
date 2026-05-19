@@ -154,7 +154,7 @@ export default function CreerCagnotte() {
   return (
     <>
       {/* En-tête */}
-      <div className="bg-gradient-to-r from-[#B6B498] to-[#8B8970] w-screen relative left-[calc(-50vw+50%)] px-5 py-16">
+      <div className="bg-gradient-to-r from-[#b8955a] to-[#8B8970] w-screen relative left-[calc(-50vw+50%)] px-5 py-16">
         <div className="max-w-4xl mx-auto text-center text-white">
           <h1 className="text-5xl font-bold mb-4">
             <TranslatedText text="Créer une cagnotte" />
@@ -176,7 +176,7 @@ export default function CreerCagnotte() {
               </h3>
               <div className="space-y-4 font-roboto text-sm text-gray-700">
                 <div className="flex gap-3">
-                  <div className="flex-shrink-0 w-6 h-6 bg-[#B6B498] text-white rounded-full flex items-center justify-center text-xs font-bold">
+                  <div className="flex-shrink-0 w-6 h-6 bg-[#b8955a] text-white rounded-full flex items-center justify-center text-xs font-bold">
                     1
                   </div>
                   <p>
@@ -184,7 +184,7 @@ export default function CreerCagnotte() {
                   </p>
                 </div>
                 <div className="flex gap-3">
-                  <div className="flex-shrink-0 w-6 h-6 bg-[#B6B498] text-white rounded-full flex items-center justify-center text-xs font-bold">
+                  <div className="flex-shrink-0 w-6 h-6 bg-[#b8955a] text-white rounded-full flex items-center justify-center text-xs font-bold">
                     2
                   </div>
                   <p>
@@ -192,7 +192,7 @@ export default function CreerCagnotte() {
                   </p>
                 </div>
                 <div className="flex gap-3">
-                  <div className="flex-shrink-0 w-6 h-6 bg-[#B6B498] text-white rounded-full flex items-center justify-center text-xs font-bold">
+                  <div className="flex-shrink-0 w-6 h-6 bg-[#b8955a] text-white rounded-full flex items-center justify-center text-xs font-bold">
                     3
                   </div>
                   <p>
@@ -200,7 +200,7 @@ export default function CreerCagnotte() {
                   </p>
                 </div>
                 <div className="flex gap-3">
-                  <div className="flex-shrink-0 w-6 h-6 bg-[#B6B498] text-white rounded-full flex items-center justify-center text-xs font-bold">
+                  <div className="flex-shrink-0 w-6 h-6 bg-[#b8955a] text-white rounded-full flex items-center justify-center text-xs font-bold">
                     4
                   </div>
                   <p>
@@ -227,7 +227,7 @@ export default function CreerCagnotte() {
               {/* Titre */}
               <div className="bg-white p-6 rounded-xl shadow-md">
                 <label className="flex items-center gap-2 text-xl font-bold mb-3">
-                  <FileText className="text-[#B6B498]" size={24} />
+                  <FileText className="text-[#b8955a]" size={24} />
                   <TranslatedText text="Titre de la cagnotte" />
                   <span className="text-red-500">*</span>
                 </label>
@@ -241,7 +241,7 @@ export default function CreerCagnotte() {
                   )}
                   className={`w-full border ${
                     errors.titre ? "border-red-500" : "border-gray-300"
-                  } rounded-lg p-4 text-lg focus:outline-none focus:ring-2 focus:ring-[#B6B498]`}
+                  } rounded-lg p-4 text-lg focus:outline-none focus:ring-2 focus:ring-[#b8955a]`}
                   maxLength="100"
                 />
                 {errors.titre && (
@@ -255,7 +255,7 @@ export default function CreerCagnotte() {
               {/* Destinataire */}
               <div className="bg-white p-6 rounded-xl shadow-md">
                 <div className="flex items-center gap-2 text-xl font-bold mb-4">
-                  <Users className="text-[#B6B498]" size={24} />
+                  <Users className="text-[#b8955a]" size={24} />
                   <TranslatedText text="Destinataire du cadeau" />
                 </div>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -274,7 +274,7 @@ export default function CreerCagnotte() {
                         errors.destinataire_nom
                           ? "border-red-500"
                           : "border-gray-300"
-                      } rounded-lg p-4 text-lg focus:outline-none focus:ring-2 focus:ring-[#B6B498]`}
+                      } rounded-lg p-4 text-lg focus:outline-none focus:ring-2 focus:ring-[#b8955a]`}
                       maxLength="100"
                     />
                     {errors.destinataire_nom && (
@@ -299,7 +299,7 @@ export default function CreerCagnotte() {
                         errors.destinataire_email
                           ? "border-red-500"
                           : "border-gray-300"
-                      } rounded-lg p-4 text-lg focus:outline-none focus:ring-2 focus:ring-[#B6B498]`}
+                      } rounded-lg p-4 text-lg focus:outline-none focus:ring-2 focus:ring-[#b8955a]`}
                     />
                     {errors.destinataire_email && (
                       <p className="text-red-500 text-sm mt-2">
@@ -316,7 +316,7 @@ export default function CreerCagnotte() {
               {/* Email organisateur */}
               <div className="bg-white p-6 rounded-xl shadow-md">
                 <label className="flex items-center gap-2 text-xl font-bold mb-3">
-                  <Mail className="text-[#B6B498]" size={24} />
+                  <Mail className="text-[#b8955a]" size={24} />
                   <TranslatedText text="Votre email (organisateur)" />
                   <span className="text-red-500">*</span>
                 </label>
@@ -328,7 +328,7 @@ export default function CreerCagnotte() {
                   placeholder={t("votre.email@exemple.com")}
                   className={`w-full border ${
                     errors.email_founder ? "border-red-500" : "border-gray-300"
-                  } rounded-lg p-4 text-lg focus:outline-none focus:ring-2 focus:ring-[#B6B498]`}
+                  } rounded-lg p-4 text-lg focus:outline-none focus:ring-2 focus:ring-[#b8955a]`}
                 />
                 {errors.email_founder && (
                   <p className="text-red-500 text-sm mt-2">
@@ -343,7 +343,7 @@ export default function CreerCagnotte() {
               {/* Description */}
               <div className="bg-white p-6 rounded-xl shadow-md">
                 <label className="flex items-center gap-2 text-xl font-bold mb-3">
-                  <Users className="text-[#B6B498]" size={24} />
+                  <Users className="text-[#b8955a]" size={24} />
                   <TranslatedText text="Description" />
                   <span className="text-red-500">*</span>
                 </label>
@@ -357,7 +357,7 @@ export default function CreerCagnotte() {
                   )}
                   className={`w-full border ${
                     errors.description ? "border-red-500" : "border-gray-300"
-                  } rounded-lg p-4 text-lg focus:outline-none focus:ring-2 focus:ring-[#B6B498] resize-none font-roboto`}
+                  } rounded-lg p-4 text-lg focus:outline-none focus:ring-2 focus:ring-[#b8955a] resize-none font-roboto`}
                   maxLength="1000"
                 />
                 {errors.description && (
@@ -373,7 +373,7 @@ export default function CreerCagnotte() {
               {/* Date limite */}
               <div className="bg-white p-6 rounded-xl shadow-md">
                 <label className="flex items-center gap-2 text-xl font-bold mb-3">
-                  <Calendar className="text-[#B6B498]" size={24} />
+                  <Calendar className="text-[#b8955a]" size={24} />
                   <TranslatedText text="Date limite" />
                   <span className="text-red-500">*</span>
                 </label>
@@ -386,7 +386,7 @@ export default function CreerCagnotte() {
                   max={maxDate}
                   className={`w-full border ${
                     errors.date_limite ? "border-red-500" : "border-gray-300"
-                  } rounded-lg p-4 text-lg focus:outline-none focus:ring-2 focus:ring-[#B6B498]`}
+                  } rounded-lg p-4 text-lg focus:outline-none focus:ring-2 focus:ring-[#b8955a]`}
                 />
                 {errors.date_limite && (
                   <p className="text-red-500 text-sm mt-2">
@@ -421,7 +421,7 @@ export default function CreerCagnotte() {
                         checked={formData.prix_is_public}
                         onChange={handleToggle("prix_is_public")}
                       />
-                      <div className="w-11 h-6 bg-gray-200 rounded-full peer peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-[#B6B498]/30 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-[#B6B498]"></div>
+                      <div className="w-11 h-6 bg-gray-200 rounded-full peer peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-[#b8955a]/30 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-[#b8955a]"></div>
                     </label>
                   </div>
 
@@ -442,7 +442,7 @@ export default function CreerCagnotte() {
                         checked={formData.contributions_is_public}
                         onChange={handleToggle("contributions_is_public")}
                       />
-                      <div className="w-11 h-6 bg-gray-200 rounded-full peer peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-[#B6B498]/30 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-[#B6B498]"></div>
+                      <div className="w-11 h-6 bg-gray-200 rounded-full peer peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-[#b8955a]/30 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-[#b8955a]"></div>
                     </label>
                   </div>
                 </div>
@@ -450,7 +450,7 @@ export default function CreerCagnotte() {
 
               {/* Prévisualisation */}
               {showPreview && (formData.titre || formData.description) && (
-                <div className="bg-[#FBF6EC] p-6 rounded-xl border-2 border-[#B6B498]">
+                <div className="bg-[#FBF6EC] p-6 rounded-xl border-2 border-[#b8955a]">
                   <h3 className="text-xl font-bold mb-4 flex items-center gap-2">
                     <TranslatedText text="Aperçu de votre cagnotte" />
                   </h3>
@@ -459,7 +459,7 @@ export default function CreerCagnotte() {
                       {formData.titre}
                     </h4>
                     {formData.destinataire_nom && (
-                      <p className="text-lg font-medium text-[#B6B498] mb-4">
+                      <p className="text-lg font-medium text-[#b8955a] mb-4">
                         Pour {formData.destinataire_nom}
                       </p>
                     )}
@@ -498,7 +498,7 @@ export default function CreerCagnotte() {
                 <button
                   type="button"
                   onClick={() => setShowPreview(!showPreview)}
-                  className="text-[#B6B498] font-bold underline hover:text-black transition"
+                  className="text-[#b8955a] font-bold underline hover:text-black transition"
                 >
                   {showPreview ? (
                     <TranslatedText text="Masquer l'aperçu" />
@@ -518,7 +518,7 @@ export default function CreerCagnotte() {
                   <button
                     type="submit"
                     disabled={isSubmitting}
-                    className="px-8 py-3 bg-gradient-to-r from-[#B6B498] to-[#8B8970] text-white rounded-full font-bold hover:opacity-90 transition disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2"
+                    className="px-8 py-3 bg-gradient-to-r from-[#b8955a] to-[#8B8970] text-white rounded-full font-bold hover:opacity-90 transition disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2"
                   >
                     {isSubmitting ? (
                       <>
@@ -547,8 +547,8 @@ export default function CreerCagnotte() {
           </h3>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6 text-center">
             <div className="bg-white p-6 rounded-xl shadow-md">
-              <div className="bg-[#B6B498] bg-opacity-20 w-12 h-12 rounded-full flex items-center justify-center mx-auto mb-4">
-                <Mail className="text-[#B6B498]" size={24} />
+              <div className="bg-[#b8955a] bg-opacity-20 w-12 h-12 rounded-full flex items-center justify-center mx-auto mb-4">
+                <Mail className="text-[#b8955a]" size={24} />
               </div>
               <h4 className="font-bold mb-2">
                 <TranslatedText text="Recevez votre lien" />
@@ -559,8 +559,8 @@ export default function CreerCagnotte() {
             </div>
 
             <div className="bg-white p-6 rounded-xl shadow-md">
-              <div className="bg-[#B6B498] bg-opacity-20 w-12 h-12 rounded-full flex items-center justify-center mx-auto mb-4">
-                <Copy className="text-[#B6B498]" size={24} />
+              <div className="bg-[#b8955a] bg-opacity-20 w-12 h-12 rounded-full flex items-center justify-center mx-auto mb-4">
+                <Copy className="text-[#b8955a]" size={24} />
               </div>
               <h4 className="font-bold mb-2">
                 <TranslatedText text="Partagez facilement" />
@@ -571,8 +571,8 @@ export default function CreerCagnotte() {
             </div>
 
             <div className="bg-white p-6 rounded-xl shadow-md">
-              <div className="bg-[#B6B498] bg-opacity-20 w-12 h-12 rounded-full flex items-center justify-center mx-auto mb-4">
-                <Sparkles className="text-[#B6B498]" size={24} />
+              <div className="bg-[#b8955a] bg-opacity-20 w-12 h-12 rounded-full flex items-center justify-center mx-auto mb-4">
+                <Sparkles className="text-[#b8955a]" size={24} />
               </div>
               <h4 className="font-bold mb-2">
                 <TranslatedText text="Suivez en temps réel" />

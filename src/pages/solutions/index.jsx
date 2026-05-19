@@ -1,12 +1,11 @@
 import SolutionsPageView from "src/sections/solutions/solutions-page-view";
-import { Helmet } from 'react-helmet';
+import { Helmet } from "react-helmet-async";
 import theImage from "src/assets/images/SPC-Essence-1975x1318-02.jpg";
 import { useLocation } from "react-router-dom";
 
 export default function Page() {
   const location = useLocation();
 
-  // ✅ Canonical dynamique (sans query params)
   const canonicalUrl = `${window.location.origin}${location.pathname}`;
 
   const pageTitle = "Solutions CSE & Collectivités - Spa & Prestige Collection";

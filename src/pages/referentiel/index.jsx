@@ -1,6 +1,6 @@
 import { useLocation } from "react-router-dom";
 import ReferentielViewPage from "src/sections/referentiel/referentiel-view-page";
-import { Helmet } from 'react-helmet';
+import { Helmet } from "react-helmet-async";
 import theImage from "src/assets/images/SPC-Catalogue-1975x1318-1.jpg";
 
 export default function Page() {

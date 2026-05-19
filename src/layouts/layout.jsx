@@ -13,6 +13,7 @@ import { motion } from "framer-motion";
 import Header from "src/sections/home2/comp/header";
 import { TranslatedText } from "src/components/translated-text/translated-text";
 import { useTranslation } from "src/context/translation-context";
+import GiftCardIcon from "../assets/spa-icons/SPC-picto-menu-carte-cadeau.svg";
 
 export default function LayoutTheme({ children }) {
   const [header, setHeader]=useState(false)
@@ -41,9 +42,9 @@ export default function LayoutTheme({ children }) {
   return (
     <div className="min-h-screen bg-background overflow-hidden">
       <div className="min-h-screen relative m-auto flex flex-col">
-        <div className={header ? "h-screen flex flex-col" : ""}>
+        <div className={header ? "min-h-screen flex flex-col" : ""}>
           <Navbar />
-          <div className="w-full px-4 md:px-8 pt-8 md:pt-10 flex flex-col items-center">
+          <div className="w-full px-4 md:px-8 pt-2 md:pt-2 flex flex-col items-center">
             <div className="
               grid grid-cols-4
               gap-x-2 gap-y-0
@@ -84,6 +85,26 @@ export default function LayoutTheme({ children }) {
                   />
                 </div>
               ))}
+              {/* // carte cadeaux */}
+               <div className="flex justify-center">
+                <motion.div whileHover={{ scale: 1.08 }} transition={{ type: "spring", stiffness: 300 }}>
+                  <Link
+                    to={paths.cadeau}
+                    className="group flex flex-col items-center gap-1.5 py-2 px-3 rounded-full hover:bg-[#f6f5e9]/30 transition-all duration-300"
+                  >
+                    <img
+                      loading="lazy"
+                      src={GiftCardIcon}
+                      alt={translateSync("Carte cadeau")}
+                      className="w-9 h-9 md:w-12 md:h-7 object-contain"
+                    />
+                    <span className="text-black text-[10px] md:text-[10px] font-tahoma uppercase tracking-wider leading-none text-center">
+                      <TranslatedText text="Carte cadeau" />
+                    </span>
+                    <motion.span className="h-0.5 bg-primary w-full origin-center scale-x-0 group-hover:scale-x-100 transition-transform duration-300 mt-1" />
+                  </Link>
+                </motion.div>
+              </div>
             </div>
             {}
           </div>
@@ -98,7 +119,7 @@ export default function LayoutTheme({ children }) {
         {}
         <button
           onClick={handleScrollToTop}
-          className="fixed bottom-6 right-6 z-50 bg-[#787766] hover:bg-[#676556] text-white rounded-full shadow-2xl p-1 md:p-4 transition-all duration-300"
+          className="fixed bottom-6 right-6 z-50 bg-[#b8955a] hover:bg-[#676556] text-white rounded-full shadow-2xl p-1 md:p-4 transition-all duration-300"
         >
           <FaChevronUp size={24} />
         </button>

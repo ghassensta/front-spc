@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from "react";
-import { FaChevronLeft, FaChevronRight } from "react-icons/fa";
+import { FaShieldAlt, FaEnvelope, FaStar, FaCheckCircle } from "react-icons/fa";
 import ButtonIcon from "src/components/button-icon/button-icon";
 import { paths } from "src/router/paths";
 import theImage from "src/assets/images/SPA-images-1975x1318-Qui-Sommes-Nous-02.jpg";
@@ -7,28 +7,84 @@ import theImage2 from "src/assets/images/SPA-images-1975x1318-Qui-Sommes-Nous-01
 import theImage3 from "src/assets/images/SPA-images-1975x1318-Qui-Sommes-Nous-03.jpg";
 import theImage4 from "src/assets/images/SPC-carte-cadeau-montant-3.jpg";
 import { TranslatedText } from "src/components/translated-text/translated-text";
-import { useTranslation } from "src/context/translation-context";
+import theImageFounder from "src/assets/images/SPC-qui-sommes-nous.jpg";
+import SectionHeader from "src/components/section-header/SectionHeader";
+import ButtonLink from "src/components/button-link/ButtonLink";
+
+const GOLD = "#b8955a";
+const FONT = "Calibri, 'Segoe UI', sans-serif";
+const FONT_SERIF = "'Cormorant Garamond', 'Georgia', serif";
+
+/* ── Icône lotus mobile ── */
+function LotusIcon() {
+  return (
+    <svg
+      width="36"
+      height="36"
+      viewBox="0 0 36 36"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+      className="mx-auto mb-2"
+    >
+      <path
+        d="M18 30c0 0-8-6-8-14a8 8 0 0 1 8-8 8 8 0 0 1 8 8c0 8-8 14-8 14z"
+        stroke={GOLD}
+        strokeWidth="1.2"
+        fill="none"
+      />
+      <path
+        d="M18 30c0 0-6-5-10-11 2-4 6-5 10-3"
+        stroke={GOLD}
+        strokeWidth="1.2"
+        fill="none"
+      />
+      <path
+        d="M18 30c0 0 6-5 10-11-2-4-6-5-10-3"
+        stroke={GOLD}
+        strokeWidth="1.2"
+        fill="none"
+      />
+      <circle cx="18" cy="18" r="2" fill={GOLD} />
+    </svg>
+  );
+}
+
+/* ── Feature item ── */
+function FeatureItem({ icon, title, desc }) {
+  return (
+    <div className="flex items-center gap-4 py-4 md:py-0">
+      <div
+        className="shrink-0 w-10 h-10 flex items-center justify-center rounded-full"
+        style={{ border: `1.5px solid ${GOLD}` }}
+      >
+        <span style={{ color: GOLD, fontSize: "1rem" }}>{icon}</span>
+      </div>
+      <div className="flex-1">
+        <p
+          className="font-semibold text-sm"
+          style={{ color: "#1a1a1a", fontFamily: FONT }}
+        >
+          <TranslatedText text={title} />
+        </p>
+        <p
+          className="text-xs mt-0.5"
+          style={{ color: "#777", fontFamily: FONT }}
+        >
+          <TranslatedText text={desc} />
+        </p>
+      </div>
+    </div>
+  );
+}
 
 export default function WhoPageView() {
-  const { t } = useTranslation();
-  const images = [
-    theImage,
-    theImage2,
-    theImage3,
-  ];
-
-  const [currentSlide, setCurrentSlide] = useState(0);
+  const images = [theImage, theImage2, theImage3];
   const timerRef = useRef(null);
 
   useEffect(() => {
-    const startTimer = () => {
-      timerRef.current = setInterval(() => {
-        setCurrentSlide((prev) => (prev + 1) % images.length);
-      }, 5000); 
-    };
-
-    startTimer();
-
+    timerRef.current = setInterval(() => {
+      setCurrentSlide((prev) => (prev + 1) % images.length);
+    }, 5000);
     return () => clearInterval(timerRef.current);
   }, [images.length]);
 
@@ -44,212 +100,284 @@ export default function WhoPageView() {
     resetTimer();
   };
 
-  const goToPrev = () => {
-    setCurrentSlide((prev) => (prev - 1 + images.length) % images.length);
-    resetTimer();
-  };
+  const valeurs = [
+    {
+      title: "Sincérité",
+      text: "Nous privilégions des expériences authentiques, où chaque établissement et chaque moment reflètent l'essence même du lieu. Cette approche repose sur une transparence et une confiance constantes, assurant une immersion véritable et sincère.",
+    },
+    {
+      title: "Élégance",
+      text: "L'élégance, pour nous, se révèle dans l'attention minutieuse portée aux gestes subtils et aux détails soigneusement pensés. Chaque prestation incarne un équilibre parfait entre simplicité et raffinement, pour des moments remplis de charme et de quiétude.",
+    },
+    {
+      title: "Proximité",
+      text: "L'humain est au cœur de notre démarche. Que ce soit avec nos partenaires ou nos membres, nous cultivons des relations fondées sur l'écoute et la bienveillance. Cela nous permet de répondre aux besoins spécifiques de chacun et de bâtir des liens solides et durables.",
+    },
+    {
+      title: "Durabilité",
+      text: "Nous sommes convaincus que la beauté du monde réside dans sa préservation. Chaque établissement de notre réseau s'engage à adopter des pratiques respectueuses de l'environnement, créant un impact positif et responsable pour les générations à venir.",
+    },
+    {
+      title: "Engagement",
+      text: "Nous nous engageons à soutenir le succès de nos partenaires et à partager notre savoir-faire avec nos membres, afin que chaque projet se développe en harmonie avec nos valeurs communes, tout en favorisant la transmission et l'innovation.",
+    },
+  ];
 
-  const goToNext = () => {
-    setCurrentSlide((prev) => (prev + 1) % images.length);
-    resetTimer();
-  };
+  const privileges = [
+    {
+      label: "Vivez",
+      desc: "Des expériences personnalisées, créées spécialement pour vous",
+    },
+    {
+      label: "Accédez",
+      desc: "A des établissements prestigieux, rigoureusement sélectionnés par nos équipes",
+    },
+    {
+      label: "Profitez",
+      desc: "De tarifs préférentiels pour des instants de bien-être inoubliables",
+    },
+    {
+      label: "Offrez",
+      desc: "Des cartes cadeaux élégantes, disponibles en version numérique ou physique",
+    },
+    {
+      label: "Partagez",
+      desc: "Ces moments d'exception en parrainant vos proches",
+    },
+    {
+      label: "Recevez",
+      desc: "Des conseils exclusifs de Spa & Prestige Collection pour enrichir votre expérience",
+    },
+  ];
 
   return (
-    <div className="">
-      <div className="flex bg-[#FBF6EC] w-screen relative left-[calc(-50vw+50%)] px-5 ">
-        <div className="max-w-6xl mx-auto py-6 px-1">
-          <h1 className="text-4xl font-bold mb-4">
-            <TranslatedText text="L'Essence de Spa & Prestige Collection" />
-          </h1>
-          <div className="flex flex-col md:flex-row gap-8">
-            <p className="font-roboto md:w-1/2 pr-6">
-              
-              <p className="mb-3">
-                <TranslatedText text="Nous travaillons main dans la main avec nos établissements partenaires, qui partagent notre vision de préserver et valoriser des lieux empreints de caractère. Ces établissements s'engagent à créer un cadre propice à la détente, avec un accueil chaleureux et une attention portée à chaque détail. Ensemble, nous garantissons une expérience inoubliable, alliant plénitude et bien-être." />
-              </p>
-              <p className="mb-3">
-                <TranslatedText text="Rejoindre Spa & Prestige Collection c'est accéder à un univers pensé autant pour nos membres que pour nos partenaires. Nos membres bénéficient de privilèges exclusifs, tels que des expériences sur mesure et l'accès à des lieux de confiance, tandis que nos partenaires profitent d'une visibilité renforcée et d'un accompagnement dédié." />
+    <div style={{ fontFamily: FONT }}>
+      {/* ══════════════════════════════════════════
+          Section 1 : L'Essence
+      ══════════════════════════════════════════ */}
+      <div
+        className="w-screen relative left-[calc(-50vw+50%)]"
+        style={{ backgroundColor: "#FBF6EC" }}
+      >
+        <div className="max-w-6xl mx-auto px-5 py-10">
+          {/* Icône lotus — mobile uniquement */}
+          <div className="md:hidden mb-2">
+            <LotusIcon />
+          </div>
+
+          <div className="flex flex-col md:flex-row gap-10 items-start">
+            {/* ── Colonne gauche : texte ── */}
+            <div className="w-full md:w-1/2">
+              <p
+                className="text-xs uppercase tracking-widest font-semibold mb-3 text-center md:text-left"
+                style={{
+                  color: GOLD,
+                  letterSpacing: "0.2em",
+                  fontFamily: FONT,
+                }}
+              >
+                <TranslatedText text="Notre Engagement" />
               </p>
 
-              <p className="italic">
-                <TranslatedText text="Ensemble, nous créons des expériences inoubliables, accessibles, dans un esprit de sérénité et d'élégance." />
+              <h1
+                className="mb-3 leading-tight text-center md:text-left"
+                style={{
+                  color: "#1a1a1a",
+                  fontFamily: FONT_SERIF,
+                  fontWeight: 400,
+                  fontSize: "clamp(2rem, 4vw, 3rem)",
+                }}
+              >
+                <TranslatedText text="L'Essence de Spa & Prestige Collection" />
+              </h1>
+
+              <div
+                className="mb-6 mx-auto md:mx-0"
+                style={{ width: "48px", height: "2px", background: GOLD }}
+              />
+
+              <div
+                className="text-base text-center md:text-left space-y-3 mb-6"
+                style={{ color: "#555", fontFamily: FONT }}
+              >
+                <p>
+                  <TranslatedText text="Spa & Prestige Collection, c'est avant tout une rencontre." />
+                </p>
+                <p>
+                  <TranslatedText text="Celle de lieux singuliers, choisis avec attention, et d'une vision commune : proposer des expériences de bien-être qui ont du sens." />
+                </p>
+                <p>
+                  <TranslatedText text="Nous travaillons main dans la main avec chaque établissement pour mettre en lumière leur identité, valoriser leur savoir-faire et offrir une expérience fluide, du premier clic jusqu'au moment vécu." />
+                </p>
+              </div>
+
+              {/* Bloc citation */}
+              <div
+                className="relative bg-white px-6 py-5 mb-4"
+                style={{ borderLeft: `3px solid ${GOLD}` }}
+              >
+                <span
+                  className="absolute -top-2 left-4 text-5xl leading-none select-none"
+                  style={{ color: GOLD, fontFamily: "Georgia, serif" }}
+                >
+                  ❝
+                </span>
+                <p
+                  className="text-base italic pt-4"
+                  style={{ color: "#555", fontFamily: FONT }}
+                >
+                  <TranslatedText text="Nous avons imaginé Spa & Prestige Collection comme un réseau à taille humaine, où chaque adresse compte, et où chaque expérience doit être à la hauteur de ce qu'elle promet." />
+                </p>
+              </div>
+
+              {/* Signature */}
+              <p
+                className="text-xl italic text-center md:text-left"
+                style={{
+                  color: GOLD,
+                  fontFamily: "'Dancing Script', 'Brush Script MT', cursive",
+                }}
+              >
+                Noélie &amp; Romain
               </p>
-            </p>
-             <div className="w-[90%] mx-auto md:w-1/2 relative">
-             <div className="relative">
-              <div className="relative w-full h-[400px] overflow-hidden">
-                {images.map((src, index) => (
-                  <img
-                    key={index}
-                    src={src}
-                    alt={`Spa & Prestige Slide ${index + 1}`}
-                    className={`absolute top-0 left-0 w-full h-full object-cover transition-transform duration-1000 ease-in-out ${
-                      currentSlide === index
-                        ? "translate-x-0"
-                        : index < currentSlide
-                        ? "-translate-x-full"
-                        : "translate-x-full"
-                    }`}
-                    loading="lazy"
-                  />
-                ))}
-              </div>
-              {}
-              <button
-                onClick={goToPrev}
-                className="absolute top-1/2 -left-8 transform -translate-y-1/2 text-black p-2 rounded-full transition-colors duration-300"
-                aria-label="Previous slide"
-              >
-                <FaChevronLeft size={20} />
-              </button>
-              <button
-                onClick={goToNext}
-                className="absolute top-1/2 -right-8 transform -translate-y-1/2 text-black p-2 rounded-full transition-colors duration-300"
-                aria-label="Next slide"
-              >
-                <FaChevronRight size={20} />
-              </button>
-              {}
-              <div className="absolute mt-3 left-1/2 transform -translate-x-1/2 flex space-x-2">
-                {images.map((_, index) => (
-                  <button
-                    key={index}
-                    onClick={() => goToSlide(index)}
-                    className={`w-2 h-2 rounded-full ${
-                      currentSlide === index ? "bg-black" : "bg-gray-400"
-                    } hover:bg-[#B6B498] transition-colors duration-300`}
-                    aria-label={`Go to slide ${index + 1}`}
-                  />
-                ))}
-              </div>
-              </div>
             </div>
+
+            {/* ── Colonne droite : photo fondateurs ── */}
+            <div className="hidden md:block md:w-1/2">
+              <img
+                src={theImageFounder}
+                alt="Fondateurs de Spa & Prestige Collection"
+                className="w-full h-auto object-cover rounded-xl shadow-md"
+                loading="lazy"
+              />
+            </div>
+          </div>
+
+          {/* ── 3 features en bas ── */}
+          <div
+            className="mt-10 grid grid-cols-1 md:grid-cols-3 gap-0 md:gap-8"
+            style={{ borderTop: `1px solid #e8e0d4` }}
+          >
+            <div
+              className="md:pt-6 border-b md:border-b-0 md:border-r"
+              style={{ borderColor: "#e8e0d4" }}
+            >
+              <FeatureItem
+                icon={<FaShieldAlt />}
+                title="Paiement sécurisé"
+                desc="Vos transactions sont 100 % sécurisées"
+              />
+            </div>
+            <div
+              className="md:pt-6 md:px-6 border-b md:border-b-0 md:border-r"
+              style={{ borderColor: "#e8e0d4" }}
+            >
+              <FeatureItem
+                icon={<FaEnvelope />}
+                title="Envoi immédiat"
+                desc="Recevez votre carte cadeau par email"
+              />
+            </div>
+            <div className="md:pt-6">
+              <FeatureItem
+                icon={<FaStar />}
+                title="Adresses sélectionnées"
+                desc="Des établissements de confiance, choisis avec soin"
+              />
+            </div>
+          </div>
+
+          {/* Bouton */}
+          <div className="flex items-center justify-center mt-8">
+            <ButtonLink to={paths.contact} text="Nous Contacter" />
           </div>
         </div>
       </div>
 
-      <div className="max-w-6xl mx-auto py-6 px-1">
-        <h2 className="text-4xl font-bold text-center mb-6"><TranslatedText text="Nos valeurs" /></h2>
-        <div className="text-base font-roboto font-normal text-center mb-10">
-          <TranslatedText text="Les valeurs de Spa & Prestige Collection guident chacune de nos actions et reflètent notre détermination à offrir des moments d'exception. Ces valeurs sont la clé d'une expérience unique, alliant bien-être, raffinement et humanité." />
-        </div>
+      {/* ══════════════════════════════════════════
+          Section 2 : Nos valeurs
+      ══════════════════════════════════════════ */}
+      <div className="max-w-6xl mx-auto py-10 px-5">
+        <SectionHeader label="Notre philosophie" title="Nos valeurs" />
 
-        {}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          <div className="bg-[#FBF6EC] px-4 rounded py-8 hover:text-white hover:bg-[#B6B498] cursor-pointer duration-300 ease-in">
-            <h3 className="mb-4 font-bold text-2xl"><TranslatedText text="Sincérité" /></h3>
-            <p className="font-bricolage text-base">
-              <TranslatedText text="Nous privilégions des expériences authentiques, où chaque établissement et chaque moment reflètent l'essence même du lieu. Cette approche repose sur une transparence et une confiance constantes, assurant une immersion véritable et sincère." />
-            </p>
-          </div>
-          <div className="bg-[#FBF6EC] px-4 rounded py-8 hover:text-white hover:bg-[#B6B498] cursor-pointer duration-300 ease-in">
-            <h3 className="mb-4 font-bold text-2xl"><TranslatedText text="Élégance" /></h3>
-            <p className="font-bricolage text-base">
-              <TranslatedText text="L'élégance, pour nous, se révèle dans l'attention minutieuse portée aux gestes subtils et aux détails soigneusement pensés. Chaque prestation incarne un équilibre parfait entre simplicité et raffinement, pour des moments remplis de charme et de quiétude." />
-            </p>
-          </div>
-          <div className="bg-[#FBF6EC] px-4 rounded py-8 hover:text-white hover:bg-[#B6B498] cursor-pointer duration-300 ease-in">
-            <h3 className="mb-4 font-bold text-2xl"><TranslatedText text="Proximité" /></h3>
-            <p className="font-bricolage text-base">
-              <TranslatedText text="L'humain est au cœur de notre démarche. Que ce soit avec nos partenaires ou nos membres, nous cultivons des relations fondées sur l'écoute et la bienveillance. Cela nous permet de répondre aux besoins spécifiques de chacun et de bâtir des liens solides et durables." />
-            </p>
-          </div>
-          <div className="bg-[#FBF6EC] px-4 rounded py-8 hover:text-white hover:bg-[#B6B498] cursor-pointer duration-300 ease-in">
-            <h3 className="mb-4 font-bold text-2xl"><TranslatedText text="Durabilité" /></h3>
-            <p className="font-bricolage text-base">
-              <TranslatedText text="Nous sommes convaincus que la beauté du monde réside dans sa préservation. Chaque établissement de notre réseau s'engage à adopter des pratiques respectueuses de l'environnement, créant un impact positif et responsable pour les générations à venir." />
-            </p>
-          </div>
-          <div className="bg-[#FBF6EC] px-4 rounded py-8 hover:text-white hover:bg-[#B6B498] cursor-pointer duration-300 ease-in">
-            <h3 className="mb-4 font-bold text-2xl"><TranslatedText text="Engagement" /></h3>
-            <p className="font-bricolage text-base">
-              <TranslatedText text="Nous nous engageons à soutenir le succès de nos partenaires et à partager notre savoir-faire avec nos membres, afin que chaque projet se développe en harmonie avec nos valeurs communes, tout en favorisant la transmission et l'innovation." />
-            </p>
-          </div>
+          {valeurs.map(({ title, text }, i) => (
+            <div
+              key={i}
+              className="px-4 py-8 rounded-xl cursor-pointer duration-300 ease-in bg-[#FBF6EC] hover:bg-[#b8955a] group"
+            >
+              <h3
+                className="mb-4 font-semibold text-xl text-gray-800 group-hover:text-white transition-colors"
+                style={{ fontFamily: FONT_SERIF }}
+              >
+                <TranslatedText text={title} />
+              </h3>
+              <p
+                className="text-sm leading-relaxed text-gray-600 group-hover:text-white transition-colors"
+                style={{ fontFamily: FONT }}
+              >
+                <TranslatedText text={text} />
+              </p>
+            </div>
+          ))}
+
           <div className="flex items-center justify-center">
             <img
-              lazyload="lazy"
+              loading="lazy"
               src={theImage4}
               alt="Carte Cadeau Spa & Prestige"
-              className="max-w-full h-auto"
+              className="max-w-full h-auto rounded-xl"
             />
           </div>
         </div>
-        <div className="flex items-center justify-center my-4">
-          <ButtonIcon link={paths.contact} title={<TranslatedText text="Nous Contacter" />} />
-        </div>
       </div>
 
-      <div className="bg-[#FBF6EC] w-screen relative left-[calc(-50vw+50%)]">
-        <div className="max-w-6xl mx-auto py-6 px-1">
-          <h2 className="text-4xl md:text-5xl font-semibold text-center mb-6">
-            <TranslatedText text="Rejoignez la Communauté Privée Spa & Prestige Collection" />
-          </h2>
-          <div className="text-xl text-[#414244] font-roboto font-normal text-center mb-10 w-full md:w-1/2 mx-auto">
+      {/* ══════════════════════════════════════════
+          Section 3 : Rejoignez la Communauté
+      ══════════════════════════════════════════ */}
+      <div
+        className="w-screen relative left-[calc(-50vw+50%)]"
+        style={{ backgroundColor: "#FBF6EC" }}
+      >
+        <div className="max-w-6xl mx-auto py-10 px-5">
+          <SectionHeader
+            label="Communauté privée"
+            title="Rejoignez la communauté privée de Spa & Prestige Collection"
+          />
+
+          <p
+            className="text-base text-center mb-10 w-full md:w-1/2 mx-auto"
+            style={{ color: "#414244", fontFamily: FONT }}
+          >
             <TranslatedText text="Plongez dans un univers d'exception et laissez-vous séduire par des privilèges rares et uniques :" />
-          </div>
-          {}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-            {}
-            <div className="space-y-8">
-              <div className="text-center md:text-left">
-                <h3 className="text-2xl font-bold mb-2">
-                  <span className="leading-none mt-1">✔</span> <TranslatedText text="Vivez" />
-                </h3>
-                <p className="font-bricolage">
-                  <TranslatedText text="Des expériences personnalisées, créées spécialement pour vous" />
-                </p>
-              </div>
-              <div className="text-center md:text-left">
-                <h3 className="text-2xl font-bold mb-2">
-                  <span className="leading-none mt-1">✔</span> <TranslatedText text="Accédez" />
-                </h3>
-                <p className="font-bricolage">
-                  <TranslatedText text="A des établissements prestigieux, rigoureusement sélectionnés par nos équipes" />
-                </p>
-              </div>
-            </div>
+          </p>
 
-            {}
-            <div className="space-y-8">
-              <div className="text-center md:text-left">
-                <h3 className="text-2xl font-bold mb-2">
-                  <span className="leading-none mt-1">✔</span> <TranslatedText text="Profitez" />
+          {/* 3 colonnes */}
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+            {privileges.map(({ label, desc }) => (
+              <div key={label} className="text-center md:text-left">
+                <h3
+                  className="font-semibold mb-2"
+                  style={{ fontSize: "1.2rem", fontFamily: FONT_SERIF }}
+                >
+                  <FaCheckCircle
+                    className="inline mr-2 mb-0.5"
+                    style={{ color: GOLD }}
+                  />
+                  <TranslatedText text={label} />
                 </h3>
-                <p className="font-bricolage">
-                  <TranslatedText text="De tarifs préférentiels pour des instants de bien-être inoubliables" />
+                <p
+                  className="text-sm text-gray-600 leading-relaxed"
+                  style={{ fontFamily: FONT }}
+                >
+                  <TranslatedText text={desc} />
                 </p>
               </div>
-              <div className="text-center md:text-left">
-                <h3 className="text-2xl font-bold mb-2">
-                  <span className="leading-none mt-1">✔</span> <TranslatedText text="Offrez" />
-                </h3>
-                <p className="font-bricolage">
-                  <TranslatedText text="Des cartes cadeaux élégantes, disponibles en version numérique ou physique" />
-                </p>
-              </div>
-              <div className="text-center md:text-left">
-                <h3 className="text-2xl font-bold mb-2">
-                  <span className="leading-none mt-1">✔</span> <TranslatedText text="Partagez" />
-                </h3>
-                <p className="font-bricolage">
-                  <TranslatedText text="Ces moments d'exception en parrainant vos proches" />
-                </p>
-              </div>
-              <div className="text-center md:text-left">
-                <h3 className="text-2xl font-bold mb-2">
-                  <span className="leading-none mt-1">✔</span> <TranslatedText text="Recevez" />
-                </h3>
-                <p className="font-bricolage">
-                  <TranslatedText text="Des conseils exclusifs de Spa & Prestige Collection pour enrichir votre expérience" />
-                </p>
-              </div>
-            </div>
+            ))}
           </div>
 
-          {}
           <div className="flex justify-center mt-10">
-            <ButtonIcon link={paths.spa.list} title="COUP DE CŒUR" />
+            <ButtonLink to={paths.spa.list} text="COUP DE CŒUR" />
           </div>
         </div>
       </div>

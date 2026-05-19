@@ -178,7 +178,7 @@ export default function ServiceCard({
           <div className="mt-4">{(details?.remise_offres > 0 || details?.prix_offres) && (
           <Link
             to="#etab-services"
-            className="bg-[#B6B499] w-max mb-2 text-black font-bold font-roboto px-2 py-1 rounded-2xl"
+            className="bg-[#b8955a] w-max mb-2 text-black font-bold font-roboto px-2 py-1 rounded-2xl"
             onClick={(e) => {
               e.preventDefault();
               window.scrollTo({

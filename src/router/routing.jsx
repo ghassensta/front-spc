@@ -78,9 +78,7 @@ export const routes = [
       { element: <Chekckout />, path: "checkout" },
       {
         element: (
-          <AuthGuard>
             <ChekckoutPayement />
-          </AuthGuard>
         ),
         path: "payment",
       },
@@ -112,6 +110,7 @@ export const routes = [
       { element: <AddCagbotte />, path: "cagnotte/create" },
       { element: <ShowCagnotte />, path: "cagnotte/:slug" },
       { element: <ListPageSeo />, path: "zones-dactivites" },
+      
       { element: <ShowPageSeo />, path: ":slug" },
 
 

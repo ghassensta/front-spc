@@ -1,123 +1,312 @@
 import React, { useEffect } from "react";
-import { FaExchangeAlt, FaShoppingCart, FaTrophy } from "react-icons/fa";
+import {
+  FaShoppingCart,
+  FaTrophy,
+  FaExchangeAlt,
+  FaRobot,
+  FaStar,
+  FaGift,
+  FaUsers,
+  FaCoins,
+  FaCreditCard,
+  FaEuroSign,
+} from "react-icons/fa";
 import { paths } from "src/router/paths";
 import { TranslatedText } from "src/components/translated-text/translated-text";
 import { useTranslation } from "src/context/translation-context";
 import theImage from "src/assets/images/SPC-images-1975x1318-Programme-Parrainage-01-1024x683.jpg";
 import theImageContent from "src/assets/SPC-Fidelisation-1975x1318-01.jpg";
 import { Link } from "react-router-dom";
+import SectionHeader from "src/components/section-header/SectionHeader";
+import HeroImage from "src/components/hero-image/HeroImage";
+
+const GOLD = "#b8955a";
+const FONT = "Calibri, 'Segoe UI', sans-serif";
+const FONT_LIGHT = "'Calibri Light', 'Segoe UI Light', 'Segoe UI', sans-serif";
 
 export default function RecompensePageView() {
-  const { t } = useTranslation();
+  const { translateSync } = useTranslation();
 
   useEffect(() => {
     const script = document.createElement("script");
     script.src = "https://app.mailjet.com/pas-nc-embedded-v1.js";
     script.async = true;
     document.body.appendChild(script);
-
     return () => {
       document.body.removeChild(script);
     };
   }, []);
 
-  return (
-    <>
-      {/* Bannière */}
-      <div
-        className="w-screen relative left-[calc(-50vw+50%)] h-96 bg-black bg-center bg-cover bg-fixed overflow-hidden hidden md:block"
-        style={{ backgroundImage: `url(${theImageContent})` }}
-      >
-        <div className="absolute inset-0 bg-black bg-opacity-40" />
-        <div className="absolute inset-0 flex items-center justify-center">
-          <h1 className="text-white text-4xl font-bold">
-            <TranslatedText text="Programme de fidélité" />
-          </h1>
-        </div>
-      </div>
+  const recompenses = [
+    { icon: <FaEuroSign />, text: "1 € dépensé = 1 point" },
+    { icon: <FaGift />, text: "Échange possible dès 10 €" },
+    { icon: <FaCreditCard />, text: "Cartes cadeaux de 10 € et 25 €" },
+  ];
+  const steps = [
+    {
+      icon: <FaShoppingCart />,
+      num: 1,
+      title: "Commandez",
+      desc: "Connectez-vous à votre compte et passez commande.",
+    },
+    {
+      icon: <FaTrophy />,
+      num: 2,
+      title: "Gagnez",
+      desc: "Vos points s'ajoutent automatiquement à chaque achat.",
+    },
+    {
+      icon: <FaExchangeAlt />,
+      num: 3,
+      title: "Échangez",
+      desc: "Utilisez vos points contre vos récompenses.",
+    },
+  ];
 
-      {/* Récompenses */}
-      <div className="bg-[#FBF6EC] w-screen relative left-[calc(-50vw+50%)] mb-4">
-        <div className="flex flex-col md:flex-row gap-4 max-w-6xl mx-auto px-4 py-6">
-          <img
-            loading="lazy"
-            src={theImage}
-            alt="Récompenses Spa & Prestige Collection"
-            className="md:w-1/2 rounded"
-          />
-          <div>
-            <h2 className="text-4xl mb-4 font-bold">
+  const badges = [
+    {
+      icon: <FaRobot />,
+      title: "Simple & automatique",
+      desc: "Vos points sont ajoutés automatiquement",
+    },
+    {
+      icon: <FaStar />,
+      title: "Avantages exclusifs",
+      desc: "Profitez d'offres réservées à nos membres",
+    },
+    {
+      icon: <FaGift />,
+      title: "Récompenses variées",
+      desc: "Des cartes cadeaux de 10 € et 25 €",
+    },
+    {
+      icon: <FaUsers />,
+      title: "Accessible à tous",
+      desc: "Le programme est gratuit et sans engagement",
+    },
+  ];
+
+  return (
+    <div style={{ fontFamily: FONT }}>
+      <HeroImage
+        image={theImageContent}
+        label="Spa & Prestige Collection"
+        title="Programme de fidélité"
+        description="Cumulez 1 point par euro dépensé et échangez vos points contre des cartes cadeaux de 10 € et 25 €."
+        opacity={50}
+      >
+        {/* Desktop — bordure blanche */}
+        <Link
+          to={paths.auth.register}
+          className="hidden md:inline-block bg-transparent border border-white text-white px-6 py-3 text-xs font-semibold rounded-lg hover:bg-white hover:text-black transition uppercase tracking-wider w-fit"
+          style={{ fontFamily: FONT }}
+        >
+          {translateSync("Se connecter / Créer un compte")}
+        </Link>
+
+        {/* Mobile — fond noir */}
+        <Link
+          to={paths.auth.register}
+          className="md:hidden inline-block text-white text-center px-6 py-3 text-xs font-semibold rounded-full transition uppercase tracking-wider w-fit"
+          style={{ backgroundColor: "#1a1a1a", fontFamily: FONT }}
+          onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = GOLD)}
+          onMouseLeave={(e) =>
+            (e.currentTarget.style.backgroundColor = "#1a1a1a")
+          }
+        >
+          {translateSync("Se connecter / Créer un compte")}
+        </Link>
+      </HeroImage>
+
+      {/* ══════════════════════════
+          RÉCOMPENSES
+          ══════════════════════════ */}
+      <div
+        className="w-screen relative left-[calc(-50vw+50%)]"
+        style={{ backgroundColor: "#FBF6EC" }}
+      >
+        <div className="max-w-6xl mx-auto px-4 py-10 flex flex-col md:flex-row gap-8 items-center">
+          {/* Image */}
+          <div className="md:w-1/2">
+            <img
+              loading="lazy"
+              src={theImage}
+              alt="Récompenses Spa & Prestige Collection"
+              className="w-full rounded-xl shadow-md object-cover"
+              style={{ maxHeight: "320px" }}
+            />
+          </div>
+
+          {/* Texte */}
+          <div className="md:w-1/2">
+            <p
+              className="text-xs uppercase tracking-widest mb-2"
+              style={{ color: GOLD, letterSpacing: "0.18em", fontFamily: FONT }}
+            >
+              {translateSync("Programme de récompenses")}
+            </p>
+            <h2
+              className="text-gray-900 mb-2 leading-tight"
+              style={{
+                fontFamily: FONT_LIGHT,
+                fontWeight: 300,
+                fontSize: "clamp(1.4rem, 2.5vw, 2rem)",
+              }}
+            >
               <TranslatedText text="Récompenses Spa & Prestige Collection" />
             </h2>
+            <div
+              className="w-10 h-0.5 mb-4"
+              style={{ backgroundColor: GOLD }}
+            />
 
-            <p className="mb-3">
-              <TranslatedText text="Accumulez des points à chaque commande et échangez-les contre des bons d'achat de 10 € et 25 €." />
+            <p
+              className="text-sm text-gray-600 mb-4 leading-relaxed"
+              style={{ fontFamily: FONT }}
+            >
+              <TranslatedText text="Cumulez des points à chaque commande et transformez-les en récompenses." />
             </p>
 
-            <p>
-              <TranslatedText text="Rejoignez" />{" "}
-              <strong>Spa & Prestige Collection Rewards</strong>{" "}
-              <TranslatedText text="et bénéficiez de nombreux avantages !" />
-            </p>
-          </div>
-        </div>
-      </div>
+            {/* Liste avantages */}
+            <ul className="space-y-4 mb-5">
+              {recompenses.map((item, i) => (
+                <li
+                  key={i}
+                  className="flex items-center gap-4 text-sm text-gray-700"
+                  style={{ fontFamily: FONT }}
+                >
+                  <div
+                    className="w-12 h-12 rounded-full flex items-center justify-center shrink-0"
+                    style={{ backgroundColor: "#F3EBDD" }}
+                  >
+                    <span style={{ color: GOLD, fontSize: "1.6rem" }}>
+                      {item.icon}
+                    </span>
+                  </div>
+                  <span>{translateSync(item.text)}</span>
+                </li>
+              ))}
+            </ul>
 
-      {/* Points */}
-      <div className="max-w-6xl mx-auto text-center">
-        <h2 className="text-4xl mb-4 font-bold">
-          <TranslatedText text="Gagnez des points à chaque commande." />
-        </h2>
-        <p className="text-lg mb-4">
-          <TranslatedText text="1 € dépensé = 1 point gagné automatiquement." />
-        </p>
-        <div className="text-3xl font-bold">1 € = 1 point</div>
-        <div className="text-lg text-[#b6b499] mb-6">Dépensé = gagné</div>
-      </div>
-
-      {/* Comment ça marche */}
-      <div className="bg-[#FBF6EC] w-screen relative left-[calc(-50vw+50%)] px-4 py-8 mb-4">
-        <h2 className="text-4xl font-bold text-center mb-8">
-          <TranslatedText text="Comment ça marche ?" />
-        </h2>
-
-        <div className="grid grid-cols-1 md:grid-cols-3 max-w-6xl mx-auto gap-6">
-          <div className="text-center">
-            <FaShoppingCart className="text-6xl mx-auto text-[#C7B892]" />
-            <h3 className="text-2xl font-bold mt-3">Commandez</h3>
-            <p>
-              <TranslatedText text="Passez vos commandes en étant connecté à votre compte." />
-            </p>
-          </div>
-
-          <div className="text-center">
-            <FaTrophy className="text-6xl mx-auto text-[#C7B892]" />
-            <h3 className="text-2xl font-bold mt-3">Gagnez</h3>
-            <p>
-              <TranslatedText text="Cumulez des points à chaque paiement." />
-            </p>
-          </div>
-
-          <div className="text-center">
-            <FaExchangeAlt className="text-6xl mx-auto text-[#C7B892]" />
-            <h3 className="text-2xl font-bold mt-3">Échangez</h3>
-            <p>
-              <TranslatedText text="Utilisez vos points pour obtenir des bons de réduction." />
+            <p
+              className="text-sm text-gray-500 italic"
+              style={{ fontFamily: FONT }}
+            >
+              <TranslatedText text="Le programme est simple, automatique et accessible depuis votre compte." />
             </p>
           </div>
         </div>
       </div>
 
-      {/* Newsletter Mailjet */}
-      <div className="w-screen relative left-[calc(-50vw+50%)] py-8 px-4">
-        <h2 className="text-4xl font-bold text-center mb-4">
-          <TranslatedText text="Soyez les premiers informés" />
-        </h2>
+      {/* ══════════════════════════
+          POINTS
+          ══════════════════════════ */}
+      <div className="max-w-6xl mx-auto px-4 py-8">
+        <SectionHeader
+          label="Fidélité récompensée"
+          title="Gagnez des points à chaque commande."
+        />
+        <div className="flex flex-row items-center justify-center gap-6 px-8 py-3">
+          {/* Icône */}
+          <div
+            className="shrink-0 w-24 h-24 rounded-full flex items-center justify-center"
+            style={{ backgroundColor: "#F3EBDD" }}
+          >
+            <FaCoins style={{ color: GOLD, fontSize: "3rem" }} />
+          </div>
 
-        <p className="text-center mb-6">
-          <TranslatedText text="Inscrivez-vous à notre newsletter." />
+          {/* Texte centré */}
+          <div className="flex flex-col items-center gap-2 text-center">
+            <p
+              className="text-lg font-semibold text-gray-700"
+              style={{ fontFamily: FONT }}
+            >
+              <TranslatedText text="Vos points sont ajoutés automatiquement." />
+            </p>
+            <div
+              className="inline-flex items-center gap-2 px-5 py-2 rounded-full"
+              style={{ backgroundColor: "#F3EBDD" }}
+            >
+              <span
+                className="text-sm font-semibold text-gray-700"
+                style={{ fontFamily: FONT }}
+              >
+                1 € = 1 point
+              </span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* ══════════════════════════
+          COMMENT ÇA MARCHE
+          ══════════════════════════ */}
+      <div
+        className="w-screen relative left-[calc(-50vw+50%)]"
+        style={{ backgroundColor: "#FBF6EC" }}
+      >
+        <div className="max-w-6xl mx-auto px-4 py-10">
+          <SectionHeader label="En 3 étapes" title="Comment ça marche ?" />
+
+          <div className="grid grid-cols-3 md:grid-cols-3 gap-4 md:gap-8">
+            {steps.map((step) => (
+              <div
+                key={step.num}
+                className="flex flex-col items-center text-center gap-3"
+              >
+                {/* Icône cercle doré */}
+                <div className="relative">
+                  <div
+                    className="w-12 h-12 md:w-16 md:h-16 rounded-full flex items-center justify-center"
+                    style={{ backgroundColor: "#F3EBDD" }}
+                  >
+                    <span
+                      className="text-xl md:text-2xl"
+                      style={{ color: GOLD }}
+                    >
+                      {step.icon}
+                    </span>
+                  </div>
+                  <span
+                    className="absolute -top-1 -right-1 w-5 h-5 md:w-6 md:h-6 rounded-full flex items-center justify-center text-xs font-bold text-white"
+                    style={{ backgroundColor: GOLD }}
+                  >
+                    {step.num}
+                  </span>
+                </div>
+                <h3
+                  className="text-xs md:text-lg font-semibold text-gray-800"
+                  style={{ fontFamily: FONT }}
+                >
+                  {translateSync(step.title)}
+                </h3>
+                {/* Description cachée sur mobile */}
+                <p
+                  className="hidden md:block text-sm text-gray-600 leading-relaxed"
+                  style={{ fontFamily: FONT }}
+                >
+                  {translateSync(step.desc)}
+                </p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+
+      {/* ══════════════════════════
+          NEWSLETTER
+          ══════════════════════════ */}
+      <div className="w-screen relative left-[calc(-50vw+50%)] py-10 px-4">
+        <SectionHeader
+          label="Restez informé(e)"
+          title="Restez informé(e) de nos nouveautés et avantages"
+        />
+        <p
+          className="text-center text-sm text-gray-500 mb-6 -mt-6"
+          style={{ fontFamily: FONT }}
+        >
+          <TranslatedText text="Inscrivez-vous à notre newsletter et recevez 10 € offerts sur votre première commande." />
         </p>
-
         <div className="max-w-xl mx-auto">
           <iframe
             data-w-type="embedded"
@@ -131,16 +320,53 @@ export default function RecompensePageView() {
             title="Mailjet Newsletter"
           />
         </div>
+      </div>
 
-        <div className="text-center mt-8">
-          <Link
-            to={paths.main}
-            className="bg-[#b6b499] text-white px-8 py-2 rounded-full uppercase inline-block"
-          >
-            <TranslatedText text="Accueil" />
-          </Link>
+      {/* ══════════════════════════
+          BADGES DU BAS
+          ══════════════════════════ */}
+      <div
+        className="w-screen relative left-[calc(-50vw+50%)] py-4 md:py-8 px-4"
+        style={{ backgroundColor: "#FBF6EC" }}
+      >
+        <div className="max-w-6xl mx-auto grid grid-cols-4 gap-4 md:gap-6">
+          {badges.map((badge, i) => (
+            <div
+              key={i}
+              className="flex flex-col md:flex-row items-center gap-3"
+            >
+              {/* Icône */}
+              <div
+                className="w-12 h-12 md:w-16 md:h-16 rounded-full flex items-center justify-center shrink-0"
+                style={{ backgroundColor: "#F3EBDD" }}
+              >
+                <span
+                  style={{ color: GOLD, fontSize: "1.4rem" }}
+                  className="md:text-3xl"
+                >
+                  {badge.icon}
+                </span>
+              </div>
+
+              {/* Texte — caché sur mobile */}
+              <div className="hidden md:block">
+                <p
+                  className="text-sm font-semibold text-gray-800"
+                  style={{ fontFamily: FONT }}
+                >
+                  {translateSync(badge.title)}
+                </p>
+                <p
+                  className="text-xs text-gray-500 leading-tight"
+                  style={{ fontFamily: FONT }}
+                >
+                  {translateSync(badge.desc)}
+                </p>
+              </div>
+            </div>
+          ))}
         </div>
       </div>
-    </>
+    </div>
   );
 }

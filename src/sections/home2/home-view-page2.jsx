@@ -1,5 +1,4 @@
 import React from "react";
-import Header from "./comp/header";
 import Section from "./comp/section";
 import Section2 from "./comp/section2";
 import ProchainementSection from "./comp/prochainement-section";
@@ -10,11 +9,13 @@ import { useGetLastNews } from "src/actions/actualites";
 import { paths } from "src/router/paths";
 import { CONFIG } from "src/config-global";
 import { Swiper, SwiperSlide } from "swiper/react";
-import { Autoplay } from "swiper/modules";
 import "swiper/css";
 import { Link } from "react-router-dom";
 import { useTranslation } from "src/context/translation-context";
 import Partenaires from "./comp/partenaires";
+import SectionHeader from "src/components/section-header/SectionHeader";
+import TrustBar from "src/components/trust-bar/TrustBar.jsx";
+import ButtonLink from "src/components/button-link/ButtonLink";
 
 export default function HomePageView() {
   const { sections } = useGetHomePage();
@@ -56,7 +57,10 @@ export default function HomePageView() {
 
                   spaName: card.etablissement?.nom || translateSync("Inconnu"),
 
-                  spaLocation: card.etablissement?.adresse || "",
+                  spaLocation:
+                    card.etablissement?.ville +
+                      ", " +
+                      card.etablissement?.pays || "",
 
                   spaSlug: card.etablissement?.slug || "#",
 
@@ -77,10 +81,11 @@ export default function HomePageView() {
               : [],
         }))
       : [];
-
   return (
     <div>
       <Serach />
+      <TrustBar />
+
       <Section2 />
 
       {/* Sections dynamiques */}
@@ -96,6 +101,7 @@ export default function HomePageView() {
           ))}
         </div>
       )}
+      <TrustBar />
 
       {/* Section Prochainement */}
       <ProchainementSection prochainement={section5} />
@@ -108,12 +114,13 @@ export default function HomePageView() {
           {/* Desktop */}
           <div className="hidden md:block bg-[#f6f5e9] rounded-lg left-[calc(-50vw+50%)] relative w-screen">
             <div className="max-w-6xl mx-auto py-6 px-3">
-              <h2 className="text-3xl font-bold text-center">
-                {translateSync("Actualités :")}{" "}
-                <span className="text-[#B6B499]">
-                  {translateSync("Nos derniers articles")}
-                </span>
-              </h2>
+              <SectionHeader
+                label="Spa & Prestige Collection"
+                title="Actualités"
+              />
+              <div className="text-[#b8955a] text-3xl text-center ">
+                {translateSync("Nos derniers articles")}
+              </div>
 
               <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-6">
                 {actualites.map((actualite) => (
@@ -127,7 +134,7 @@ export default function HomePageView() {
                           className="w-full h-64 object-cover"
                           width="400"
                           height="256"
-                          style={{ aspectRatio: '400/256' }}
+                          style={{ aspectRatio: "400/256" }}
                         />
                         <span className="absolute inset-0 bg-black/25" />
                       </div>
@@ -140,13 +147,8 @@ export default function HomePageView() {
                 ))}
               </div>
 
-              <div className="text-center mt-8">
-                <Link
-                  to={paths.actualites}
-                  className="inline-flex font-tahoma rounded-full items-center gap-2 uppercase tracking-widest px-6 py-3 text-sm bg-black text-white"
-                >
-                  {translateSync("Tous nos articles")}
-                </Link>
+              <div className="text-center mt-4">
+                <ButtonLink to={paths.actualites} text="Tous nos articles" />
               </div>
             </div>
           </div>
@@ -202,7 +204,6 @@ export default function HomePageView() {
           </div>
         </>
       )}
-
       {/* ===== LOGOS PARTENAIRES ===== */}
       <Partenaires section={section6} />
     </div>

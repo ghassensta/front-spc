@@ -14,7 +14,7 @@ export default function ServicesTemplates({ data = {} }) {
   return (
     <div className="max-w-7xl mx-auto flex flex-col md:flex-row gap-6 items-start">
       <div className="w-full text-center">
-        <div className="p-2 bg-[#F6F5E9] rounded-xl">
+        <div className="p-2 bg-[#F3EBDD] rounded-xl">
           <h2 className="text-2xl md:text-3xl font-bold text-gray-900 mb-2">
             {translateSync("Équipements")}
           </h2>
@@ -56,7 +56,7 @@ export default function ServicesTemplates({ data = {} }) {
         </div>
 
         {produits.length > 0 ? (
-          <div className="grid bg-[#F6F5E9] px-6 grid-cols-1 md:grid-cols-1 gap-6 mt-6 rounded-xl">
+          <div className="grid bg-[#F3EBDD] px-6 grid-cols-1 md:grid-cols-1 gap-6 mt-6 rounded-xl">
             {produits.map((prod) => (
               <CardItem
                 key={prod.id}
@@ -83,7 +83,7 @@ export default function ServicesTemplates({ data = {} }) {
             ))}
           </div>
         ) : equipements.length === 0 ? (
-          <div className="bg-[#F6F5E9] px-6 mt-6 rounded-xl">
+          <div className="bg-[#F3EBDD] px-6 mt-6 rounded-xl">
             <p className="text-gray-500 col-span-3 font-tahoma py-12">
               {translateSync("Aucun produit disponible.")}
             </p>

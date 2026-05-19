@@ -1,6 +1,6 @@
 import { useLocation } from "react-router-dom";
 import ShowCagnotte from "src/sections/cagnotte/view/show-cagnotte";
-import { Helmet } from "react-helmet";
+import { Helmet } from "react-helmet-async";
 import { CONFIG } from "src/config-global";
 
 export default function Page() {
@@ -20,7 +20,7 @@ export default function Page() {
       <Helmet htmlAttributes={{ lang: "fr" }}>
         <title>{pageTitle}</title>
         <meta name="description" content={pageDescription} />
-        <meta name="robots" content="noindex, nofollow" />
+        <meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1" />
 
         {/* Canonical */}
         <link rel="canonical" href={canonicalUrl} />

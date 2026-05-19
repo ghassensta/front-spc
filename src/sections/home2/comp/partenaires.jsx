@@ -5,6 +5,7 @@ import "swiper/css";
 import { CONFIG } from "src/config-global";
 import { useTranslation } from "src/context/translation-context";
 import { useLocation } from "react-router-dom";
+import SectionHeader from "src/components/section-header/SectionHeader";
 
 export default function Partenaires({ section }) {
   const { translateSync } = useTranslation();
@@ -27,9 +28,7 @@ export default function Partenaires({ section }) {
   return (
     <div className="bg-white py-2 md:py-16">
       <div className="max-w-7xl mx-auto px-4 text-center">
-        <h2 className="text-4xl md:text-5xl font-bold mb-4">
-          {translateSync(section.title)}
-        </h2>
+        <SectionHeader label="Rejoignez-nous" title={section.title} />
 
         {section.description && (
           <p className="text-gray-600 text-lg max-w-3xl mx-auto mb-12">

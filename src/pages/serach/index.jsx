@@ -1,6 +1,6 @@
 // src/pages/search/index.jsx
 import { useParams, useLocation } from "react-router-dom";
-import { Helmet } from "react-helmet";
+import { Helmet } from "react-helmet-async";
 import { useSearchProduits } from "src/actions/serach";
 import SearchPageView from "src/sections/serach/view/view-serach";
 import { useRouter } from "src/hooks";

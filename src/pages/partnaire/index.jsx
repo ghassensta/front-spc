@@ -1,6 +1,6 @@
 import { useLocation } from "react-router-dom";
 import DevenirPartnerView from "src/sections/devenir-partner/devenir-partner-view";
-import { Helmet } from 'react-helmet';
+import { Helmet } from "react-helmet-async";
 import theImage from "src/assets/images/SPC-equipe-ce-1975x1318-1-768x513.jpg";
 
 export default function Page() {

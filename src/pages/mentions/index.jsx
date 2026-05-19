@@ -1,5 +1,5 @@
 import React from "react";
-import { Helmet } from "react-helmet";
+import { Helmet } from "react-helmet-async";
 import MentionsPageView from "src/sections/mentions/mentions-page-view";
 
 export default function Page() {

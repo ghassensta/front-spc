@@ -5,7 +5,7 @@ import { useCategoryProducts } from "src/hooks/useCategoryProducts";
 import { useRouter } from "src/hooks";
 import { paths } from "src/router/paths";
 import CategoriesPageView from "src/sections/categories/view/categories-page-view";
-import { Helmet } from "react-helmet";
+import { Helmet } from "react-helmet-async";
 
 export default function Page() {
   const { slug }   = useParams();
@@ -25,7 +25,7 @@ export default function Page() {
   const pageTitle       = category?.meta_title       || `${category?.nom || "Catégorie"} - Nos SPAs`;
   const pageDescription = category?.meta_description || `Découvrez les SPAs dans la catégorie ${category?.nom || ""}.`;
   const pageKeywords    = category?.meta_keywords    || `${category?.nom || ""}, SPA, bien-être`;
-
+  console.log("Category Data:", categoryData);
   return (
     <>
       <Helmet htmlAttributes={{ lang: "fr" }}>
@@ -44,6 +44,8 @@ export default function Page() {
       <CategoriesPageView
         {...categoryData}   
         slug_categorie={slug}
+        description={category?.description}
+        nomcat={category?.nom}
         villes={villes}
         types={types}
         services={services}

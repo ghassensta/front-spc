@@ -8,6 +8,7 @@ import {
 import { Link } from "react-router-dom";
 import { useGetHomePage } from "src/actions/homepage";
 import { useTranslation } from "src/context/translation-context";
+import SectionHeader from "src/components/section-header/SectionHeader";
 
 const Search = () => {
   const { sections } = useGetHomePage();
@@ -20,10 +21,8 @@ const Search = () => {
     loading: villeLoading,
   } = useLocationSearch();
 
-  const {
-    suggestions: serviceSuggestions = [],
-    loading: serviceLoading,
-  } = useServiceCategoriesSearch();
+  const { suggestions: serviceSuggestions = [], loading: serviceLoading } =
+    useServiceCategoriesSearch();
 
   const [selectedService, setSelectedService] = useState("");
   const [showServiceDropdown, setShowServiceDropdown] = useState(false);
@@ -68,14 +67,13 @@ const Search = () => {
   return (
     <div className="relative w-screen left-[calc(-50vw+50%)] bg-white py-12">
       <div className="max-w-4xl mx-auto text-center px-8">
-        <h1
-          className="text-2xl md:text-3xl font-semibold mb-2"
-          style={{ fontFamily: "Cormorant Garamond" }}
-        >
-          {translateSync(section.title)}
-        </h1>
+        <SectionHeader
+          label="Spa & Prestige Collection"
+          title={section.title}
+          asH1
+        />
 
-        <h2 className="mb-8 font-light text-2xl md:text-3xl text-[#B6B499]">
+        <h2 className="mb-8 font-light text-2xl md:text-3xl text-[#b8955a]">
           {translateSync(section.description)}
         </h2>
 
@@ -140,8 +138,7 @@ const Search = () => {
                 <span
                   className={selectedService ? "text-black" : "text-gray-500"}
                 >
-                  {selectedService ||
-                    translateSync("Spa, massage, duo...")}
+                  {selectedService || translateSync("Spa, massage, duo...")}
                 </span>
                 <svg
                   className="w-4 h-4 text-gray-400"

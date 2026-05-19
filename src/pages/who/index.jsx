@@ -1,6 +1,6 @@
 import { useLocation } from "react-router-dom";
 import WhoPageView from "src/sections/who/view/who-page-view";
-import { Helmet } from 'react-helmet';
+import { Helmet } from "react-helmet-async";
 import theImage from "src/assets/images/SPA-images-1975x1318-Qui-Sommes-Nous-02.jpg";
 
 export default function Page() {
