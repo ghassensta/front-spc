@@ -37,8 +37,8 @@ export default function SpaCard({
       >
         {/* ── Image ── */}
         <div
-          className="relative rounded-2xl overflow-hidden"
-          style={{ height: "220px" }}
+          className="relative rounded-2xl overflow-hidden flex-shrink-0"
+          style={{ height: "256px" }}
         >
           <img
             loading="lazy"
@@ -46,7 +46,7 @@ export default function SpaCard({
             alt={title || "Établissement"}
             className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
             width="400"
-            height="220"
+            height="256"
           />
 
           {/* Adresse — haut gauche dans l'image */}
@@ -81,7 +81,7 @@ export default function SpaCard({
         </div>
 
         {/* ── Contenu texte ── */}
-        <div className="pt-4 px-1">
+        <div className="flex flex-col pt-4 px-1" style={{ height: "160px" }}>
           {/* Séparateur doré */}
           <div className="w-8 h-0.5 mb-3" style={{ backgroundColor: GOLD }} />
 

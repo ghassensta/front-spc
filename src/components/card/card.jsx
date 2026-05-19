@@ -135,7 +135,7 @@ export default function Card({
             aria-label={
               isFav ? t("Retirer des favoris") : t("Ajouter aux favoris")
             }
-            className="absolute z-10 text-red-500 top-12 right-3 text-xl bg-white/70 rounded-full p-1"
+            className="absolute z-10 text-red-500 top-2 right-2 text-xl bg-white/70 rounded-full p-1"
           >
             {isFav ? <FaHeart /> : <FaRegHeart />}
           </button>
