@@ -5,6 +5,7 @@ import SeoHead from "../../components/seo/SeoHead";
 import JsonLd from "../../components/seo/JsonLd";
 import Breadcrumb from "../../components/seo/Breadcrumb";
 import { localBusinessSchema, breadcrumbSchema } from "../../lib/schema";
+import { usePrerenderReady } from "../../hooks/use-prerender-ready";
 
 // ----------------------------------------------------------------------
 
@@ -21,6 +22,12 @@ export default function Page() {
     loading,
     error,
   } = useGetEtablissement(id);
+
+  // Pour le prérendu : attendre l'arrivée RÉELLE de l'établissement.
+  // Si l'API échoue (race condition Puppeteer), le fallback 12s dans
+  // main.jsx fera quand même fire l'event après que Helmet ait écrit
+  // au moins les meta par défaut.
+  usePrerenderReady(!loading && (!!etablissement || !!error));
 
   if (error || (!etablissement && !loading)) {
     return (

@@ -10,22 +10,21 @@ import { Helmet } from "react-helmet-async";
 export default function Page() {
   const { slug }   = useParams();
   const location   = useLocation();
-  const router     = useRouter();
 
-  if (!slug) {
-    toast.info("Choisir une catégorie!");
-    router.push(paths.main);
-    return null;
-  }
-
-  const categoryData = useCategoryProducts(slug);
+  const categoryData = useCategoryProducts(slug || "");
   const { villes, types, services, formules, filtersLoading } = useGetFiltersEtablissements();
 
   const { category } = categoryData;
-  const pageTitle       = category?.meta_title       || `${category?.nom || "Catégorie"} - Nos SPAs`;
-  const pageDescription = category?.meta_description || `Découvrez les SPAs dans la catégorie ${category?.nom || ""}.`;
-  const pageKeywords    = category?.meta_keywords    || `${category?.nom || ""}, SPA, bien-être`;
-  console.log("Category Data:", categoryData);
+
+  const pageTitle = slug
+    ? (category?.meta_title || `${category?.nom || "Catégorie"} - Nos SPAs`)
+    : "Nos catégories de spas — Spa & Prestige Collection";
+  const pageDescription = slug
+    ? (category?.meta_description || `Découvrez les SPAs dans la catégorie ${category?.nom || ""}.`)
+    : "Parcourez toutes les catégories d'établissements spa et bien-être : hôtels spa, thermes, instituts, day spa, et plus.";
+  const pageKeywords = slug
+    ? (category?.meta_keywords || `${category?.nom || ""}, SPA, bien-être`)
+    : "catégories spa, hôtel spa, thermes, institut beauté, day spa, bien-être";
   return (
     <>
       <Helmet htmlAttributes={{ lang: "fr" }}>

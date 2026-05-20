@@ -5,6 +5,7 @@ import SeoHead from "../../components/seo/SeoHead";
 import JsonLd from "../../components/seo/JsonLd";
 import Breadcrumb from "../../components/seo/Breadcrumb";
 import { productSchema, breadcrumbSchema } from "../../lib/schema";
+import { usePrerenderReady } from "../../hooks/use-prerender-ready";
 
 export default function Page() {
   const { slug } = useParams();
@@ -17,6 +18,10 @@ export default function Page() {
     like,
     etablissement,
   } = useGetProduct(slug);
+
+  // Pour le prérendu : attendre que le produit soit RÉELLEMENT chargé
+  // (et pas juste que loading=false avec product=null).
+  usePrerenderReady(!productLoading && !!product);
 
   const nom = product?.nom || product?.name || "Produit";
   const pageTitle = product?.meta_title || nom;

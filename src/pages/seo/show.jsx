@@ -5,6 +5,7 @@ import SeoHead from "../../components/seo/SeoHead";
 import JsonLd from "../../components/seo/JsonLd";
 import Breadcrumb from "../../components/seo/Breadcrumb";
 import { breadcrumbSchema } from "../../lib/schema";
+import { usePrerenderReady } from "../../hooks/use-prerender-ready";
 
 export default function Page() {
   const { slug } = useParams();
@@ -13,6 +14,8 @@ export default function Page() {
   if (!slug) return <Navigate to="/" replace />;
 
   const { page, loading } = useGetSeoPageDetail(slug);
+
+  usePrerenderReady(!loading && !!page);
 
   const titreHero = page?.titre_hero || "Catégorie";
   const pageTitle = page?.meta_title || `${titreHero} - Nos SPAs`;
