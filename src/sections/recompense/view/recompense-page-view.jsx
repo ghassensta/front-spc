@@ -10,15 +10,16 @@ import {
   FaCoins,
   FaCreditCard,
   FaEuroSign,
+  FaArrowRight,
 } from "react-icons/fa";
 import { paths } from "src/router/paths";
 import { TranslatedText } from "src/components/translated-text/translated-text";
 import { useTranslation } from "src/context/translation-context";
 import theImage from "src/assets/images/SPC-images-1975x1318-Programme-Parrainage-01-1024x683.jpg";
 import theImageContent from "src/assets/SPC-Fidelisation-1975x1318-01.jpg";
-import { Link } from "react-router-dom";
 import SectionHeader from "src/components/section-header/SectionHeader";
 import HeroImage from "src/components/hero-image/HeroImage";
+import ButtonLink from "src/components/button-link/ButtonLink";
 
 const GOLD = "#b8955a";
 const FONT = "Calibri, 'Segoe UI', sans-serif";
@@ -95,27 +96,13 @@ export default function RecompensePageView() {
         description="Cumulez 1 point par euro dépensé et échangez vos points contre des cartes cadeaux de 10 € et 25 €."
         opacity={50}
       >
-        {/* Desktop — bordure blanche */}
-        <Link
+        <ButtonLink
           to={paths.auth.register}
-          className="hidden md:inline-block bg-transparent border border-white text-white px-6 py-3 text-xs font-semibold rounded-lg hover:bg-white hover:text-black transition uppercase tracking-wider w-fit"
-          style={{ fontFamily: FONT }}
-        >
-          {translateSync("Se connecter / Créer un compte")}
-        </Link>
-
-        {/* Mobile — fond noir */}
-        <Link
-          to={paths.auth.register}
-          className="md:hidden inline-block text-white text-center px-6 py-3 text-xs font-semibold rounded-full transition uppercase tracking-wider w-fit"
-          style={{ backgroundColor: "#1a1a1a", fontFamily: FONT }}
-          onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = GOLD)}
-          onMouseLeave={(e) =>
-            (e.currentTarget.style.backgroundColor = "#1a1a1a")
-          }
-        >
-          {translateSync("Se connecter / Créer un compte")}
-        </Link>
+          text="Se connecter / Créer un compte"
+          variant="primary"
+          icon={<FaArrowRight />}
+          className="!mt-4 !justify-start"
+        />
       </HeroImage>
 
       {/* ══════════════════════════
@@ -292,7 +279,50 @@ export default function RecompensePageView() {
           </div>
         </div>
       </div>
+      <hr className="border-t border-[#D6C9B0]" />
+      <div
+        className="w-screen relative left-[calc(-50vw+50%)] py-4 md:py-8 px-4"
+        style={{ backgroundColor: "#FBF6EC" }}
+      >
+        <div className="max-w-6xl mx-auto grid grid-cols-4 gap-4 md:gap-6">
+          {badges.map((badge, i) => (
+            <div
+              key={i}
+              className="flex flex-col md:flex-row items-center gap-3"
+            >
+              {/* Icône */}
+              <div
+                className="w-12 h-12 md:w-16 md:h-16 rounded-full flex items-center justify-center shrink-0"
+                style={{ backgroundColor: "#F3EBDD" }}
+              >
+                <span
+                  style={{ color: GOLD, fontSize: "1.4rem" }}
+                  className="md:text-3xl"
+                >
+                  {badge.icon}
+                </span>
+              </div>
 
+              {/* Texte — caché sur mobile */}
+              <div className="text-center md:text-left">
+                <p
+                  className="text-xs md:text-lg font-semibold text-gray-800"
+                  style={{ fontFamily: FONT }}
+                >
+                  {translateSync(badge.title)}
+                </p>
+
+                <p
+                  className="text-xs text-gray-500 leading-tight hidden md:block"
+                  style={{ fontFamily: FONT }}
+                >
+                  {translateSync(badge.desc)}
+                </p>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
       {/* ══════════════════════════
           NEWSLETTER
           ══════════════════════════ */}
@@ -325,48 +355,6 @@ export default function RecompensePageView() {
       {/* ══════════════════════════
           BADGES DU BAS
           ══════════════════════════ */}
-      <div
-        className="w-screen relative left-[calc(-50vw+50%)] py-4 md:py-8 px-4"
-        style={{ backgroundColor: "#FBF6EC" }}
-      >
-        <div className="max-w-6xl mx-auto grid grid-cols-4 gap-4 md:gap-6">
-          {badges.map((badge, i) => (
-            <div
-              key={i}
-              className="flex flex-col md:flex-row items-center gap-3"
-            >
-              {/* Icône */}
-              <div
-                className="w-12 h-12 md:w-16 md:h-16 rounded-full flex items-center justify-center shrink-0"
-                style={{ backgroundColor: "#F3EBDD" }}
-              >
-                <span
-                  style={{ color: GOLD, fontSize: "1.4rem" }}
-                  className="md:text-3xl"
-                >
-                  {badge.icon}
-                </span>
-              </div>
-
-              {/* Texte — caché sur mobile */}
-              <div className="hidden md:block">
-                <p
-                  className="text-sm font-semibold text-gray-800"
-                  style={{ fontFamily: FONT }}
-                >
-                  {translateSync(badge.title)}
-                </p>
-                <p
-                  className="text-xs text-gray-500 leading-tight"
-                  style={{ fontFamily: FONT }}
-                >
-                  {translateSync(badge.desc)}
-                </p>
-              </div>
-            </div>
-          ))}
-        </div>
-      </div>
     </div>
   );
 }

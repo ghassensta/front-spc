@@ -11,6 +11,9 @@ import Partenaires from "src/sections/home2/comp/partenaires";
 import Select from "react-select";
 import SectionHeader from "src/components/section-header/SectionHeader";
 import HeroImage from "src/components/hero-image/HeroImage";
+import ContactInfo from "src/components/contact-info/ContactInfo";
+import ButtonLink from "src/components/button-link/ButtonLink";
+import { paths } from "src/router/paths";
 import {
   FaBullseye,
   FaVideo,
@@ -18,6 +21,7 @@ import {
   FaCalendarAlt,
   FaUserCheck,
   FaChartLine,
+  FaArrowRight,
 } from "react-icons/fa";
 
 export default function MarquePartenairePage() {
@@ -214,7 +218,15 @@ export default function MarquePartenairePage() {
         image={theImage}
         label="Spa & Prestige Collection"
         title="Offrez à votre marque une visibilité ciblée"
-      />
+      >
+        <ButtonLink
+          to={paths.contact}
+          text="Nous contacter"
+          variant="primary"
+          icon={<FaArrowRight />}
+          className="!mt-4 !justify-start"
+        />
+      </HeroImage>
 
       {/* Pourquoi nous rejoindre */}
       <section className="max-w-6xl mx-auto px-4 py-16">
@@ -569,6 +581,11 @@ export default function MarquePartenairePage() {
               </button>
             </div>
           </form>
+          <ContactInfo
+            phone="+33182350126"
+            phoneLabel="+33 (0)1 82 35 01 26"
+            email="contact@spa-prestige-collection.com"
+          />
         </section>
 
         {/* Nos marques partenaires */}

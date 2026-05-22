@@ -1,6 +1,6 @@
 import React, { useEffect } from "react";
-import { FaRegHeart, FaUser } from "react-icons/fa";
-import { IoMdCart, IoMdLogIn } from "react-icons/io";
+import { FaRegHeart, FaUser,FaRegUserCircle } from "react-icons/fa";
+import { IoMdCart } from "react-icons/io";
 import { Link } from "react-router-dom";
 import { useAuthContext } from "src/auth/hooks/use-auth-context";
 import { useTranslation } from "src/context/translation-context";
@@ -81,7 +81,7 @@ export default function LanguageNav({ cartCount = 0, wishlistCount = 0 }) {
             to={paths.auth.root}
             className="relative w-8 h-8 flex items-center justify-center"
           >
-            <IoMdLogIn size={24} className="text-black" />
+            <FaRegUserCircle size={24} className="text-black" />
           </Link>
         )}
 

@@ -1,5 +1,6 @@
 import React, { useEffect, useRef, useState } from "react";
 import { FaShieldAlt, FaEnvelope, FaStar, FaCheckCircle } from "react-icons/fa";
+import { Link } from "react-router-dom";
 import ButtonIcon from "src/components/button-icon/button-icon";
 import { paths } from "src/router/paths";
 import theImage from "src/assets/images/SPA-images-1975x1318-Qui-Sommes-Nous-02.jpg";
@@ -126,27 +127,45 @@ export default function WhoPageView() {
   const privileges = [
     {
       label: "Vivez",
+      subtitle: "Des expériences pensées pour vous, au cœur de nos établissements.",
       desc: "Des expériences personnalisées, créées spécialement pour vous",
+      link: paths.spa.list,
+      linkLabel: "Page établissements",
     },
     {
       label: "Accédez",
+      subtitle: "A des adresses sélectionnées avec attention par nos équipes.",
       desc: "A des établissements prestigieux, rigoureusement sélectionnés par nos équipes",
+      link: paths.spa.list,
+      linkLabel: "Page établissements",
     },
     {
-      label: "Profitez",
+      label: "Cumulez",
+      subtitle: "Gagnez des points à chaque commande et transformez-les en récompenses.",
       desc: "De tarifs préférentiels pour des instants de bien-être inoubliables",
+      link: paths.recompense,
+      linkLabel: "Page fidélité",
     },
     {
       label: "Offrez",
+      subtitle: "Des cartes cadeaux élégantes, à offrir en toute simplicité.",
       desc: "Des cartes cadeaux élégantes, disponibles en version numérique ou physique",
+      link: paths.cadeau,
+      linkLabel: "Page carte cadeau",
     },
     {
       label: "Partagez",
+      subtitle: "Invitez vos proches à découvrir ces moments en les parrainant.",
       desc: "Ces moments d'exception en parrainant vos proches",
+      link: paths.programme,
+      linkLabel: "Page parrainage",
     },
     {
       label: "Recevez",
+      subtitle: "Restez informé(e) de nos nouveautés et avantages",
       desc: "Des conseils exclusifs de Spa & Prestige Collection pour enrichir votre expérience",
+      link: paths.programme,
+      linkLabel: "Page newsletter",
     },
   ];
 
@@ -354,10 +373,13 @@ export default function WhoPageView() {
 
           {/* 3 colonnes */}
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            {privileges.map(({ label, desc }) => (
-              <div key={label} className="text-center md:text-left">
+            {privileges.map(({ label, subtitle, desc, link, linkLabel }) => (
+              <div
+                key={label}
+                className="flex flex-col items-center text-center md:items-start md:text-left"
+              >
                 <h3
-                  className="font-semibold mb-2"
+                  className="font-semibold mb-1"
                   style={{ fontSize: "1.2rem", fontFamily: FONT_SERIF }}
                 >
                   <FaCheckCircle
@@ -366,18 +388,38 @@ export default function WhoPageView() {
                   />
                   <TranslatedText text={label} />
                 </h3>
+
                 <p
-                  className="text-sm text-gray-600 leading-relaxed"
+                  className="text-sm italic mb-2 text-gray-500"
+                  style={{ fontFamily: FONT }}
+                >
+                  <TranslatedText text={subtitle} />
+                </p>
+
+                <p
+                  className="text-sm text-gray-700 leading-relaxed mb-3"
                   style={{ fontFamily: FONT }}
                 >
                   <TranslatedText text={desc} />
                 </p>
+
+                <Link
+                  to={link}
+                  className="mt-auto inline-flex items-center gap-1 text-xs font-bold uppercase tracking-widest hover:underline"
+                  style={{ color: GOLD, letterSpacing: "0.12em", fontFamily: FONT }}
+                >
+                  <TranslatedText text={linkLabel} />
+                  <span aria-hidden="true">→</span>
+                </Link>
               </div>
             ))}
           </div>
 
           <div className="flex justify-center mt-10">
-            <ButtonLink to={paths.spa.list} text="COUP DE CŒUR" />
+            <ButtonLink
+              to={paths.spa.list}
+              text="Découvrir nos établissements"
+            />
           </div>
         </div>
       </div>

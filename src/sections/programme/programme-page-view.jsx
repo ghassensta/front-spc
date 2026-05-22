@@ -9,13 +9,13 @@ import {
   FaGlobe,
   FaUser,
   FaShieldAlt,
+  FaArrowRight,
 } from "react-icons/fa";
 import { GiTakeMyMoney } from "react-icons/gi";
 import { MdOutlineEmail } from "react-icons/md";
 import { paths } from "src/router/paths";
 import theImage from "src/assets/SPC-Parrainage-1975x1318-01.jpg";
 import { useTranslation } from "src/context/translation-context";
-import { Link as RouterLink } from "react-router-dom";
 import HeroImage from "src/components/hero-image/HeroImage";
 import SectionHeader from "src/components/section-header/SectionHeader";
 import ButtonLink from "src/components/button-link/ButtonLink";
@@ -75,21 +75,13 @@ export default function ProgrammePageView() {
         description="Invitez vos proches et profitez d'un avantage dès leur première commande."
         opacity={45}
       >
-        {/* Desktop — bordure blanche */}
-        <RouterLink
+        <ButtonLink
           to={paths.auth.register}
-          className="hidden md:inline-block bg-transparent border border-white text-white px-6 py-3 text-xs font-semibold rounded-md hover:bg-white hover:text-black transition uppercase tracking-wider w-fit"
-        >
-          {translateSync("Se connecter / Créer un compte")}
-        </RouterLink>
-
-        {/* Mobile — fond noir */}
-        <RouterLink
-          to={paths.auth.register}
-          className="md:hidden inline-block bg-black text-white text-center px-6 py-3 text-xs font-semibold rounded-md hover:bg-[#b8955a] transition uppercase tracking-wider w-fit"
-        >
-          {translateSync("Se connecter / Créer un compte")}
-        </RouterLink>
+          text="Se connecter / Créer un compte"
+          variant="primary"
+          icon={<FaArrowRight />}
+          className="!mt-4 !justify-start"
+        />
       </HeroImage>
 
       {/* ── Parrainage intro ── */}
@@ -192,77 +184,77 @@ export default function ProgrammePageView() {
         </div>
       </div>
 
-      {/* ── Conditions & Newsletter ── */}
+      {/* ── Conditions (pleine largeur) ── */}
       <div
-        className="w-screen relative left-[calc(-50vw+50%)]"
+        className="w-screen relative left-[calc(-50vw+50%)] py-16 px-4"
         style={{ backgroundColor: "#FBF6EC" }}
       >
-        <div className="max-w-6xl mx-auto px-4 py-16 grid grid-cols-1 md:grid-cols-2 gap-12">
-          {/* Conditions */}
-          <div>
-            <SectionHeader label="Informations" title="Les conditions" />
+        <div className="max-w-3xl mx-auto">
+          <SectionHeader label="Informations" title="Les conditions" />
 
-            {/* Carte bouclier */}
+          {/* Carte bouclier */}
+          <div
+            className="bg-white rounded-xl p-5 mb-6 shadow-sm flex items-center gap-4"
+            style={{ border: `1px solid rgba(184,149,90,0.25)` }}
+          >
             <div
-              className="bg-white rounded-xl p-5 mb-6 shadow-sm flex items-center gap-4"
-              style={{ border: `1px solid rgba(184,149,90,0.25)` }}
+              className="shrink-0 w-11 h-11 rounded-full flex items-center justify-center"
+              style={{ border: `2px solid ${GOLD}` }}
             >
-              <div
-                className="shrink-0 w-11 h-11 rounded-full flex items-center justify-center"
-                style={{ border: `2px solid ${GOLD}` }}
-              >
-                <FaShieldAlt style={{ color: GOLD, fontSize: "1.1rem" }} />
-              </div>
-              <p
-                className="text-gray-700 text-sm leading-snug"
-                style={{ fontFamily: FONT }}
-              >
-                {translateSync(
-                  "Code unique d'une valeur de 5 € à valoir sur le site Spa & Prestige Collection.",
-                )}
-              </p>
+              <FaShieldAlt style={{ color: GOLD, fontSize: "1.1rem" }} />
             </div>
-
-            {/* 3 badges */}
-            <div className="grid grid-cols-3 gap-4 text-center">
-              {conditions.map((c, i) => (
-                <div key={i} className="flex flex-col items-center gap-2">
-                  <div
-                    className="w-11 h-11 rounded-full flex items-center justify-center"
-                    style={{ backgroundColor: "#F3EBDD" }}
-                  >
-                    <c.icon style={{ color: GOLD }} />
-                  </div>
-                  <span
-                    className="text-xs text-gray-500"
-                    style={{ fontFamily: FONT }}
-                  >
-                    {translateSync(c.label)}
-                  </span>
-                </div>
-              ))}
-            </div>
+            <p
+              className="text-gray-700 text-sm leading-snug"
+              style={{ fontFamily: FONT }}
+            >
+              {translateSync(
+                "Code unique d'une valeur de 5 € à valoir sur le site Spa & Prestige Collection.",
+              )}
+            </p>
           </div>
 
-          {/* Newsletter */}
-          <div>
-            <SectionHeader
-              label="Newsletter"
-              title="Restez informé(e) de nos nouveautés et avantages"
-            />
-            <iframe
-              data-w-type="embedded"
-              frameBorder="0"
-              scrolling="no"
-              marginHeight="0"
-              marginWidth="0"
-              src="https://srm3t.mjt.lu/wgt/srm3t/0wp5/form?c=31298976"
-              width="100%"
-              style={{ height: "420px" }}
-              title="Newsletter"
-            />
+          {/* 3 badges */}
+          <div className="grid grid-cols-3 gap-4 text-center">
+            {conditions.map((c, i) => (
+              <div key={i} className="flex flex-col items-center gap-2">
+                <div
+                  className="w-11 h-11 rounded-full flex items-center justify-center"
+                  style={{ backgroundColor: "#F3EBDD" }}
+                >
+                  <c.icon style={{ color: GOLD }} />
+                </div>
+                <span
+                  className="text-xs text-gray-500"
+                  style={{ fontFamily: FONT }}
+                >
+                  {translateSync(c.label)}
+                </span>
+              </div>
+            ))}
           </div>
         </div>
+      </div>
+
+      {/* ── Newsletter (pleine largeur, bg blanc) ── */}
+      <div className="w-screen relative left-[calc(-50vw+50%)] bg-white py-16 px-4">
+        <div className="max-w-2xl mx-auto">
+          <SectionHeader
+            label="Newsletter"
+            title="Restez informé(e) de nos nouveautés et avantages"
+          />
+          <iframe
+            data-w-type="embedded"
+            frameBorder="0"
+            scrolling="no"
+            marginHeight="0"
+            marginWidth="0"
+            src="https://srm3t.mjt.lu/wgt/srm3t/0wp5/form?c=31298976"
+            width="100%"
+            style={{ height: "420px" }}
+            title="Newsletter"
+          />
+        </div>
+
         {/* ── Bouton CTA ── */}
         <div className="py-10 flex justify-center">
           <ButtonLink to={paths.spa.list} text="COUP DE CŒUR" />
