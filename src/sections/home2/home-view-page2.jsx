@@ -192,13 +192,13 @@ export default function HomePageView() {
                 ))}
               </Swiper>
 
-              <div className="text-center mt-6">
-                <Link
+              {/* CTA Principal — même composant que la version desktop pour cohérence */}
+              <div className="mt-6">
+                <ButtonLink
                   to={paths.actualites}
-                  className="inline-block bg-black text-white px-8 py-4 rounded-full text-sm uppercase tracking-widest font-tahoma"
-                >
-                  {translateSync("Tous nos articles")}
-                </Link>
+                  text="Tous nos articles"
+                  className="mt-0"
+                />
               </div>
             </div>
           </div>

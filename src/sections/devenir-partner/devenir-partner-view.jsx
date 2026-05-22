@@ -471,12 +471,9 @@ export default function DevenirPartnerView() {
               />
             </label>
 
-            {/* Bouton */}
+            {/* CTA Principal — soumission du formulaire (conversion) */}
             <div className="md:col-span-2 flex justify-center mt-6">
-              <ButtonLink
-                text="ENVOYER MA DEMANDE"
-                hoverColor="#333"
-              />
+              <ButtonLink text="ENVOYER MA DEMANDE" />
             </div>
           </form>
         </section>

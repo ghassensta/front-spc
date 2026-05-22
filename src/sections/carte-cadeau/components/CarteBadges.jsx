@@ -19,7 +19,7 @@ const IconEmail = () => (
   </svg>
 );
 
-const IconGift = () => (
+const IconBuilding = () => (
   <svg
     xmlns="http://www.w3.org/2000/svg"
     viewBox="0 0 24 24"
@@ -30,11 +30,9 @@ const IconGift = () => (
     strokeLinejoin="round"
     className="w-5 h-5"
   >
-    <rect x="3" y="8" width="18" height="14" rx="1" />
-    <line x1="12" y1="8" x2="12" y2="22" />
-    <path d="M12 8H7.5a2.5 2.5 0 010-5C11 3 12 8 12 8z" />
-    <path d="M12 8h4.5a2.5 2.5 0 000-5C13 3 12 8 12 8z" />
-    <rect x="3" y="5" width="18" height="3" rx="1" />
+    <path d="M3 21h18" />
+    <path d="M5 21V7l7-4 7 4v14" />
+    <path d="M9 9h2M13 9h2M9 13h2M13 13h2M9 17h2M13 17h2" />
   </svg>
 );
 
@@ -61,14 +59,14 @@ const badges = [
     desc: "Votre carte cadeau est envoyée par email, sans attente.",
   },
   {
-    icon: <IconGift />,
-    title: "Un large choix",
-    desc: "Des expériences variées pour toutes les envies et tous les budgets.",
-  },
-  {
     icon: <IconShield />,
     title: "Valable 1 an",
     desc: "Une invitation à se détendre, utilisable pendant un an.",
+  },
+  {
+    icon: <IconBuilding />,
+    title: "Utilisable dans nos établissements",
+    desc: "À utiliser dans l'ensemble des spas partenaires Spa & Prestige Collection.",
   },
 ];
 

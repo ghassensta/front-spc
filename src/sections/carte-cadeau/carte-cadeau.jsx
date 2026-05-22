@@ -125,12 +125,7 @@ export default function CarteCadeau() {
         <div className="max-w-6xl mx-auto px-6 py-10">
           <div className="flex flex-col md:flex-row gap-10 items-center">
             <div className="w-full md:w-1/2">
-              <p
-                className="text-xs uppercase tracking-widest font-semibold mb-3 text-center md:text-left"
-                style={{ color: "#b8955a", letterSpacing: "0.2em" }}
-              >
-                <TranslatedText text="Notre Engagement" />
-              </p>
+            
               <h1
                 className="mb-3 leading-tight text-center md:text-left"
                 style={{
@@ -445,29 +440,28 @@ export default function CarteCadeau() {
               </div>
             </div>
 
-            {/* Bouton Offrir — caramel */}
+            {/* Bouton Offrir — CTA primary du projet */}
             <div className="flex justify-end">
               <button
                 onClick={addProductToCheckout}
                 disabled={submitting || !amount}
-                className="px-10 py-3 rounded-full text-sm font-semibold uppercase tracking-wider text-white transition-colors disabled:opacity-50 disabled:cursor-not-allowed shadow-md"
+                className="inline-flex items-center gap-2 uppercase tracking-widest rounded-full px-6 py-3 text-sm font-normal text-white transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed"
                 style={{
-                  backgroundColor: GOLD,
-                  letterSpacing: "0.1em",
+                  backgroundColor: "#1a1a1a",
                   fontFamily: FONT,
                 }}
-                onMouseEnter={(e) =>
-                  !submitting &&
-                  (e.currentTarget.style.backgroundColor = "#1a1a1a")
-                }
+                onMouseEnter={(e) => {
+                  if (!submitting && amount)
+                    e.currentTarget.style.backgroundColor = GOLD;
+                }}
                 onMouseLeave={(e) =>
-                  (e.currentTarget.style.backgroundColor = GOLD)
+                  (e.currentTarget.style.backgroundColor = "#1a1a1a")
                 }
               >
                 {submitting ? (
                   <TranslatedText text="Traitement en cours..." />
                 ) : (
-                  <TranslatedText text="Personnaliser et continuer" />
+                  <TranslatedText text="Ajouter au panier" />
                 )}
               </button>
             </div>

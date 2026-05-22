@@ -150,24 +150,25 @@ export default function ContactPageView() {
               />
             </div>
 
-            {/* Boutons */}
+            {/* Boutons — Hiérarchie : 1 principal (noir, conversion) + 1 secondaire (beige, navigation) */}
             <div className="flex flex-col sm:flex-row items-center justify-center gap-3 pt-2">
+              {/* CTA Principal — soumission formulaire (conversion) */}
               <button
                 type="submit"
                 disabled={isSubmitting || !recaptchaValue}
-                className="px-8 py-2.5 rounded-full text-sm font-semibold uppercase tracking-wider text-white transition-colors disabled:opacity-50"
-                style={{ backgroundColor: "#1a1a1a", letterSpacing: "0.08em", fontFamily: FONT }}
-                onMouseEnter={(e) => !isSubmitting && (e.currentTarget.style.backgroundColor = "#333")}
+                className="inline-flex items-center gap-2 uppercase tracking-widest rounded-full px-6 py-3 text-sm font-normal transition-all duration-300 disabled:opacity-50"
+                style={{ backgroundColor: "#1a1a1a", color: "#ffffff", fontFamily: FONT }}
+                onMouseEnter={(e) => !isSubmitting && (e.currentTarget.style.backgroundColor = GOLD)}
                 onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = "#1a1a1a")}
               >
                 {isSubmitting ? translateSync("Envoi en cours...") : translateSync("Envoyer")}
               </button>
 
+              {/* CTA Secondaire — navigation */}
               <ButtonLink
                 to={paths.main}
                 text="Accueil"
-                bgColor={GOLD}
-                hoverColor="#a07a45"
+                variant="secondary"
                 className="mt-0"
               />
             </div>

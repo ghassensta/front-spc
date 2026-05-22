@@ -131,17 +131,17 @@ export default function Header() {
             </span>
           )}
 
-          {/* Titre */}
+          {/* Titre marque — statique */}
           <p
-            className="text-3xl md:text-4xl font-bold text-white leading-tight mb-2"
+            className="text-4xl md:text-5xl font-medium text-white leading-[1.1] mb-3"
             style={{ fontFamily: "Cormorant Garamond" }}
           >
-            {translateSync(current.title)}
+            {translateSync("Des expériences dédiées à votre bien-être")}
           </p>
 
-          {/* Description */}
-          <p className="text-sm text-white/90 mb-5 leading-snug">
-            {translateSync(current.description)}
+          {/* Sous-titre marque — statique */}
+          <p className="text-sm text-white/90 mb-5 leading-snug max-w-sm">
+            {translateSync("Une sélection d'adresses d'exception pour vivre des expériences uniques.")}
           </p>
 
           {/* ── Deux boutons côte à côte ── */}
@@ -174,27 +174,27 @@ export default function Header() {
               </span>
             </Link>
 
-            {/* Bouton 2 — blanc */}
+            {/* Bouton 2 — blanc, contenu tout en noir (icône + textes) */}
             <Link
               to={paths.cadeau || "#"}
               onClick={(e) => e.stopPropagation()}
-              className="flex items-center gap-2 sm:gap-3 bg-white/95 text-gray-800 no-underline px-3 sm:px-5 py-2.5 sm:py-4 rounded-lg shadow-md hover:bg-white hover:shadow-xl hover:-translate-y-1 hover:scale-[1.03] active:scale-95 transition-all duration-200 ease-out max-w-fit"
+              className="flex items-center gap-2 sm:gap-3 bg-white/95 text-black no-underline px-3 sm:px-5 py-2.5 sm:py-4 rounded-lg shadow-md hover:bg-white hover:shadow-xl hover:-translate-y-1 hover:scale-[1.03] active:scale-95 transition-all duration-200 ease-out max-w-fit"
             >
               <Gift
-                className="w-4 h-4 sm:w-5 sm:h-5 flex-shrink-0 text-[#b8955a]"
+                className="w-4 h-4 sm:w-5 sm:h-5 flex-shrink-0 text-black"
                 aria-hidden="true"
               />
 
               <span className="flex flex-col gap-0.5">
                 <span
-                  className="font-bold uppercase tracking-[1px] sm:tracking-[2px] text-xs sm:text-sm leading-tight text-gray-400 whitespace-nowrap"
+                  className="font-bold uppercase tracking-[1px] sm:tracking-[2px] text-xs sm:text-sm leading-tight text-black whitespace-nowrap"
                   style={{ fontFamily: "Cormorant Garamond" }}
                 >
                   {translateSync("Offrir une carte cadeau")}
                 </span>
 
                 <span
-                  className="font-light text-[10px] sm:text-xs leading-tight text-gray-600 normal-case tracking-wide whitespace-nowrap"
+                  className="font-light text-[10px] sm:text-xs leading-tight text-black normal-case tracking-wide whitespace-nowrap"
                   style={{ fontFamily: "Cormorant Garamond" }}
                 >
                   {translateSync("Le plaisir d'offrir")}
@@ -202,21 +202,26 @@ export default function Header() {
               </span>
             </Link>
           </div>
-          {/* Adresse */}
-          <div className="flex items-center gap-2 mb-3">
-            <div className="flex items-center gap-2 bg-[#020100C9] text-white font-tahoma font-light uppercase tracking-[2px] w-fit py-1.5 px-3 rounded-full text-[10px]">
-              <MapPin
-                className="w-3.5 h-3.5 text-white flex-shrink-0"
-                aria-hidden="true"
-              />
-              {current.adresse}
+          {/* Établissement actif + adresse */}
+          <div className="flex items-start gap-2 mb-3 text-white font-tahoma">
+            <MapPin
+              className="w-3.5 h-3.5 text-white flex-shrink-0 mt-[3px]"
+              aria-hidden="true"
+            />
+            <div className="leading-snug">
+              <div className="text-xs font-bold uppercase tracking-[1.5px]">
+                {translateSync(current.title)}
+              </div>
+              <div className="text-[11px] opacity-90">
+                {current.adresse}
+              </div>
             </div>
           </div>
 
-          {/* En savoir plus */}
+          {/* En savoir plus — ligne dédiée sous l'établissement */}
           <Link
             to={paths.spa.details(current.slug)}
-            className="text-sm font-tahoma text-white font-bold hover:underline no-underline"
+            className="inline-block text-sm font-tahoma font-bold text-white hover:underline no-underline"
           >
             {translateSync("En savoir plus")} →
           </Link>

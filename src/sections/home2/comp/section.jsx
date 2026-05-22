@@ -27,7 +27,7 @@ export default function Section({
 
         {/* SUBHEADER */}
         {!!subheader && (
-          <div className="text-[#b8955a] text-3xl text-center">
+          <div className="text-black text-3xl text-center">
             {translateSync(subheader)}
           </div>
         )}

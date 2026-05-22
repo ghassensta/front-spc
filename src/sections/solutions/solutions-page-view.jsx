@@ -564,19 +564,19 @@ export default function SolutionsPageView() {
 
               <div className="flex flex-col gap-1.5">
                 <a
-                  href="tel:+33184801152"
+                  href="tel:+33182350126"
                   className="flex items-center gap-2 text-sm font-medium text-gray-700 hover:text-[#b8955a] transition-colors"
                 >
                   <FaPhone className="text-[#b8955a] text-xs shrink-0" />
-                  01 84 80 11 52
+                  +33 (0)1 82 35 01 26
                 </a>
 
                 <a
-                  href="mailto:partenaires@spa-prestige-collection.com"
+                  href="mailto:contact@spa-prestige-collection.com"
                   className="flex items-center gap-2 text-sm font-medium text-gray-700 hover:text-[#b8955a] transition-colors"
                 >
                   <FaEnvelope className="text-[#b8955a] text-xs shrink-0" />
-                  partenaires@spa-prestige-collection.com
+                  contact@spa-prestige-collection.com
                 </a>
               </div>
             </div>

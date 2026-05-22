@@ -230,7 +230,7 @@ export default function Card({
         />
         {/* PRICE + BUTTON */}
         <div className="flex items-center justify-between px-2 mt-3 mb-3">
-          <strong className="text-xl text-[#b8955a]">{price ?? 0}€</strong>
+          <strong className="text-xl text-black">{price ?? 0}€</strong>
 
           <Link
             to={to}

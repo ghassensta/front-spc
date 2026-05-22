@@ -27,7 +27,7 @@ export default function Page() {
       "@type": "ContactPoint",
       "contactType": "Sales",
       "email": "contact@spa-prestige-collection.com",
-      "telephone": "+33XXXXXXXXX"
+      "telephone": "+33182350126"
     },
     "offers": [
       {

@@ -166,7 +166,7 @@ export default function CategoriesPageView({
       />
       {description && (
         <h2
-          className="mb-8 font-light text-2xl md:text-3xl text-[#b8955a] text-center max-w-3xl mx-auto"
+          className="mb-8 font-light text-2xl md:text-3xl text-black text-center max-w-3xl mx-auto"
           
         >
           {translateSync(description) ||

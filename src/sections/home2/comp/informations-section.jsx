@@ -1,12 +1,19 @@
 import { AnimatePresence, motion } from "framer-motion";
 import React, { useEffect, useRef, useState } from "react";
-import { FiChevronLeft, FiChevronRight } from "react-icons/fi";
+import {
+  FiChevronLeft,
+  FiChevronRight,
+  FiMail,
+  FiClock,
+  FiHome,
+} from "react-icons/fi";
 import { Link } from "react-router-dom";
 import { paths } from "src/router/paths";
 import theImage from "src/assets/images/SPC-Essence-1975x1318-02.jpg";
 import theImage2 from "src/assets/images/6901d96653fb8_1761728870.webp";
 import theImage3 from "src/assets/images/SPA-images-1975x1318-Qui-Sommes-Nous-03.jpg";
 import { useTranslation } from "src/context/translation-context";
+import ButtonLink from "src/components/button-link/ButtonLink";
 
 const GOLD = "#b8955a";
 const FONT = "Calibri, 'Segoe UI', sans-serif";
@@ -22,6 +29,8 @@ export default function InformationsSection() {
       description:
         "Spa & Prestige Collection réunit des établissements d'exception, soigneusement sélectionnés pour leur confort, leur ambiance singulière et leur service sur-mesure.",
       image: theImage3,
+      ctaLabel: "En savoir plus",
+      ctaVariant: "primary",
     },
     {
       header: "Récompenses Spa & Prestige Collection",
@@ -30,14 +39,23 @@ export default function InformationsSection() {
       description:
         "Accumulez des points à chaque commande et échangez-les contre des bons d'achat de 10 € et 25 €.",
       image: theImage2,
+      ctaLabel: "En savoir plus",
+      ctaVariant: "primary",
     },
     {
       header: "Carte Cadeau",
-      link: paths.collection,
+      link: paths.cadeau,
       title: "Un cadeau qui fait la différence",
       description:
         "Offrez un moment de sérénité immédiate, sans attente ni contrainte, grâce à des prestations variées pour toutes les occasions.",
       image: theImage,
+      ctaLabel: "Ajouter au panier",
+      ctaVariant: "primary",
+      badges: [
+        { icon: <FiMail />, label: "Envoi immédiat" },
+        { icon: <FiClock />, label: "Valable 1 an" },
+        { icon: <FiHome />, label: "Utilisable dans nos établissements" },
+      ],
     },
   ];
 
@@ -142,28 +160,32 @@ export default function InformationsSection() {
               {translateSync(current.description)}
             </p>
 
-            {/* Bouton EN SAVOIR PLUS — grisé */}
-            <Link
+            {/* Pictos (slide carte cadeau) */}
+            {Array.isArray(current.badges) && current.badges.length > 0 && (
+              <ul className="flex flex-wrap gap-x-5 gap-y-2 mt-1">
+                {current.badges.map((b, i) => (
+                  <li
+                    key={i}
+                    className="flex items-center gap-2 text-xs text-gray-700"
+                    style={{ fontFamily: FONT }}
+                  >
+                    <span style={{ color: GOLD }} className="text-base">
+                      {b.icon}
+                    </span>
+                    {translateSync(b.label)}
+                  </li>
+                ))}
+              </ul>
+            )}
+
+            {/* CTA — système ButtonLink, variant par slide */}
+            <ButtonLink
               to={current.link}
-              className="inline-flex items-center gap-2 px-5 py-2 rounded-lg text-xs font-semibold uppercase tracking-wider transition-colors w-fit"
-              style={{
-                backgroundColor: "#f0f0f0",
-                color: "#555",
-                letterSpacing: "0.08em",
-                fontFamily: FONT,
-              }}
-              onMouseEnter={(e) => {
-                e.currentTarget.style.backgroundColor = GOLD;
-                e.currentTarget.style.color = "#fff";
-              }}
-              onMouseLeave={(e) => {
-                e.currentTarget.style.backgroundColor = "#f0f0f0";
-                e.currentTarget.style.color = "#555";
-              }}
-            >
-              {translateSync("En savoir plus")}
-              <FiChevronRight className="text-sm" />
-            </Link>
+              text={current.ctaLabel}
+              variant={current.ctaVariant}
+              icon={<FiChevronRight className="text-sm" />}
+              className="!mt-0 !justify-start"
+            />
           </div>
         </div>
       </div>
