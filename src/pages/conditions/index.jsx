@@ -1,6 +1,13 @@
 import React from "react";
 import { Helmet } from "react-helmet-async";
 import ConditionsPageView from "src/sections/conditions/conditions-page-view";
+import JsonLd from "src/components/seo/JsonLd";
+import Breadcrumb from "src/components/seo/Breadcrumb";
+import {
+  organizationSchema,
+  breadcrumbSchema,
+  webPageSchema,
+} from "src/lib/schema";
 
 const pageTitle = "Conditions Générales de Vente - Spa & Prestige Collection";
 const pageDescription =
@@ -8,11 +15,15 @@ const pageDescription =
 const pageUrl = "https://spa-prestige-collection.com/conditions-generales-de-vente";
 const imageUrl = "https://spa-prestige-collection.com/wp-content/uploads/2025/05/spa-cgv-og.jpg";
 
+const breadcrumbItems = [
+  { label: "Accueil", path: "/" },
+  { label: "Conditions Générales de Vente", path: "/conditions-generales-de-vente" },
+];
+
 export default function Page() {
   return (
     <>
       <Helmet htmlAttributes={{ lang: "fr" }}>
-        {/* SEO Meta */}
         <title>{pageTitle}</title>
         <meta name="description" content={pageDescription} />
         <meta
@@ -25,10 +36,8 @@ export default function Page() {
         <meta name="rating" content="general" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
 
-        {/* Canonical */}
         <link rel="canonical" href={pageUrl} />
 
-        {/* Open Graph */}
         <meta property="og:type" content="website" />
         <meta property="og:title" content={pageTitle} />
         <meta property="og:description" content={pageDescription} />
@@ -37,71 +46,26 @@ export default function Page() {
         <meta property="og:site_name" content="Spa & Prestige Collection" />
         <meta property="og:locale" content="fr_FR" />
 
-        {/* Twitter Card */}
         <meta name="twitter:card" content="summary_large_image" />
         <meta name="twitter:title" content={pageTitle} />
         <meta name="twitter:description" content={pageDescription} />
         <meta name="twitter:image" content={imageUrl} />
-
-        {/* JSON-LD Breadcrumb */}
-        <script type="application/ld+json">
-          {JSON.stringify({
-            "@context": "https://schema.org",
-            "@type": "BreadcrumbList",
-            "itemListElement": [
-              { "@type": "ListItem", "position": 1, "name": "Accueil", "item": "https://spa-prestige-collection.com" },
-              { "@type": "ListItem", "position": 2, "name": "Conditions Générales de Vente", "item": pageUrl }
-            ]
-          })}
-        </script>
-
-        {/* JSON-LD Organization */}
-        <script type="application/ld+json">
-          {JSON.stringify({
-            "@context": "https://schema.org",
-            "@type": "Organization",
-            "name": "Spa & Prestige Collection",
-            "legalName": "Prestige Global Solutions",
-            "url": "https://spa-prestige-collection.com",
-            "logo": "https://spa-prestige-collection.com/logo.png",
-            "address": {
-              "@type": "PostalAddress",
-              "streetAddress": "12 rue des Marguerites",
-              "addressLocality": "Moussy-le-Neuf",
-              "postalCode": "77230",
-              "addressCountry": "FR"
-            },
-            "contactPoint": {
-              "@type": "ContactPoint",
-              "telephone": "+33182350126",
-              "contactType": "Service Client",
-              "email": "contact@spa-prestige-collection.com",
-              "availableLanguage": "French"
-            }
-          })}
-        </script>
-
-        {/* JSON-LD WebPage */}
-        <script type="application/ld+json">
-          {JSON.stringify({
-            "@context": "https://schema.org",
-            "@type": "WebPage",
-            "name": pageTitle,
-            "description": pageDescription,
-            "url": pageUrl,
-            "lastReviewed": "2025-02-01",
-            "publisher": { "@type": "Organization", "name": "Spa & Prestige Collection" },
-            "inLanguage": "fr-FR",
-            "breadcrumb": {
-              "@type": "BreadcrumbList",
-              "itemListElement": [
-                { "@type": "ListItem", "position": 1, "name": "Accueil", "item": "https://spa-prestige-collection.com" },
-                { "@type": "ListItem", "position": 2, "name": "Conditions Générales de Vente", "item": pageUrl }
-              ]
-            }
-          })}
-        </script>
       </Helmet>
+
+      <JsonLd
+        data={[
+          webPageSchema({
+            title: pageTitle,
+            description: pageDescription,
+            url: "/conditions-generales-de-vente",
+            image: imageUrl,
+          }),
+          organizationSchema(),
+          breadcrumbSchema(breadcrumbItems),
+        ].filter(Boolean)}
+      />
+
+      <Breadcrumb items={breadcrumbItems} className="container mx-auto px-4" />
 
       <ConditionsPageView />
     </>

@@ -44,18 +44,16 @@ if (!rootElement._reactRoot) {
     </HelmetProvider>
   );
 
-  // Signal de fin de rendu pour vite-plugin-prerender (Puppeteer)
-  // Déclenché après le premier paint pour laisser les composants async se résoudre.
+  // Fallback prérendu : si une page n'appelle pas usePrerenderReady,
+  // on dispatche quand même render-event après 4s pour ne pas bloquer
+  // Puppeteer indéfiniment. Les pages SEO-critiques utilisent le hook
+  // pour fire immédiatement après leur fetch.
   if (typeof window !== "undefined") {
-    const fireRenderEvent = () => {
-      setTimeout(() => {
+    setTimeout(() => {
+      if (!window.__PRERENDER_FIRED__) {
+        window.__PRERENDER_FIRED__ = true;
         document.dispatchEvent(new Event("render-event"));
-      }, 0);
-    };
-    if (document.readyState === "complete") {
-      fireRenderEvent();
-    } else {
-      window.addEventListener("load", fireRenderEvent, { once: true });
-    }
+      }
+    }, 12000);
   }
 }

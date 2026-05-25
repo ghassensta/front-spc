@@ -8,7 +8,7 @@ import { TranslatedText } from "src/components/translated-text/translated-text";
 import HeroImage from "src/components/hero-image/HeroImage";
 import SectionHeader from "src/components/section-header/SectionHeader";
 import ButtonLink from "src/components/button-link/ButtonLink";
-
+import ContactInfo from "src/components/contact-info/ContactInfo";
 import Select from "react-select";
 import {
   FaBullseye,
@@ -17,7 +17,6 @@ import {
   FaEye,
   FaUserCheck,
   FaHandshake,
-  FaPaperPlane,
 } from "react-icons/fa";
 
 const GOLD = "#b8955a";
@@ -470,13 +469,14 @@ export default function DevenirPartnerView() {
                 className="hidden"
               />
             </label>
-
-            {/* Bouton */}
+            <ContactInfo
+              phone="+33182350126"
+              phoneLabel="+33 (0)1 82 35 01 26"
+              email="contact@spa-prestige-collection.com"
+            />
+            {/* CTA Principal — soumission du formulaire (conversion) */}
             <div className="md:col-span-2 flex justify-center mt-6">
-              <ButtonLink
-                text="ENVOYER MA DEMANDE"
-                hoverColor="#333"
-              />
+              <ButtonLink text="ENVOYER MA DEMANDE" />
             </div>
           </form>
         </section>

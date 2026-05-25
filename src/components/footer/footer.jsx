@@ -92,11 +92,11 @@ export default function Footer() {
             </p>
             <div className="w-8 h-0.5 mb-5" style={{ backgroundColor: GOLD }} />
             <a
-              href="tel:0182350126"
+              href="tel:+33182350126"
               className="flex items-center gap-2 text-sm text-gray-300 hover:text-white transition-colors"
             >
               <FaPhone className="text-xs" style={{ color: GOLD }} />
-              {translateSync("Tél.")} 01 82 35 01 26
+              {translateSync("Tél.")} +33 (0)1 82 35 01 26
             </a>
           </div>
 

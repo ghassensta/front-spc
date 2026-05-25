@@ -55,6 +55,7 @@ const AddCagbotte =lazy(() => import("../pages/cagnotte/create"));
 const ShowCagnotte = lazy(() => import("../pages/cagnotte/show"));
 const ListPageSeo=lazy(() => import("../pages/seo/index"));
 const ShowPageSeo=lazy(() => import("../pages/seo/show"));
+const NotFound = lazy(() => import("../pages/not-found/NotFound"));
 
 
 export const routes = [
@@ -110,7 +111,10 @@ export const routes = [
       { element: <AddCagbotte />, path: "cagnotte/create" },
       { element: <ShowCagnotte />, path: "cagnotte/:slug" },
       { element: <ListPageSeo />, path: "zones-dactivites" },
-      
+
+      // Route 404 directe (preview)
+      { element: <NotFound />, path: "404" },
+
       { element: <ShowPageSeo />, path: ":slug" },
 
 

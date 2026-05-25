@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useMemo } from "react";
 import { paths } from "src/router/paths";
 import CategoriesSkeleton from "../categories-skeleton";
 import FiltersSkeleton from "../filters-skeleton";
@@ -122,40 +122,21 @@ export default function CategoriesPageView({
   const displayMin = filters.min_price ?? priceMin;
   const displayMax = filters.max_price ?? priceMax;
 
-  const typeOptions = types.map((t) => ({
-    value: t.id,
-    label: translateSync(t.name),
-  }));
-  const villeOptions = villes.map((v) => ({
-    value: v.id,
-    label: translateSync(v.name),
-  }));
-  const formulesOptions = formules.map((s) => ({
-    value: s.id,
-    label: translateSync(s.name),
-  }));
+  const typeOptions = useMemo(
+    () => types.map((t) => ({ value: t.id, label: translateSync(t.name) })),
+    [types, translateSync]
+  );
+  const villeOptions = useMemo(
+    () => villes.map((v) => ({ value: v.id, label: translateSync(v.name) })),
+    [villes, translateSync]
+  );
+  const formulesOptions = useMemo(
+    () => formules.map((s) => ({ value: s.id, label: translateSync(s.name) })),
+    [formules, translateSync]
+  );
 
   if (filterLoading) return <FiltersSkeleton />;
-  console.log({
-    spaList,
-    pagination,
-    priceRange,
-    catLoading,
-    isFiltering,
-    filters,
-    page,
-    handleSelectFilter,
-    handlePriceFilter,
-    handlePageChange,
-    villes,
-    types,
-    services,
-    formules,
-    filterLoading,
-    nomcat,
-    slug_categorie,
-    description,
-  });
+
   return (
     <div className="max-w-6xl mx-auto px-4 py-6" >
       {/* ── Titre ── */}
@@ -166,7 +147,7 @@ export default function CategoriesPageView({
       />
       {description && (
         <h2
-          className="mb-8 font-light text-2xl md:text-3xl text-[#b8955a] text-center max-w-3xl mx-auto"
+          className="mb-8 font-light text-2xl md:text-3xl text-black text-center max-w-3xl mx-auto"
           
         >
           {translateSync(description) ||

@@ -45,7 +45,7 @@ export default function ServicesTemplates({ data = {} }) {
                       </div>
                     )}
 
-                    <span className="text-secondary text-base font-tahoma uppercase">
+                    <span className="text-black text-base font-tahoma uppercase">
                       {translateSync(equip?.name)}
                     </span>
                   </div>

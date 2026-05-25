@@ -6,6 +6,13 @@ export default function WelcomeModal() {
   const iframeRef = useRef(null);
 
   useEffect(() => {
+    // Détecter le crawler Puppeteer (prérendu) — ne PAS ouvrir le modal
+    // pour ne pas polluer le HTML statique généré pour le SEO.
+    const isPrerender =
+      typeof navigator !== "undefined" &&
+      /HeadlessChrome|Prerender/i.test(navigator.userAgent);
+    if (isPrerender) return;
+
     if (!localStorage.getItem("visited")) {
       const timer = setTimeout(() => {
         setIsOpen(true);

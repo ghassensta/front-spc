@@ -10,7 +10,7 @@ import defaultImage from "../../assets/default-image-avant-etablissment.png";
 const GOLD = "#b8955a";
 const FONT = "Calibri, 'Segoe UI', sans-serif";
 
-export default function SpaCard({
+function SpaCard({
   to,
   image,
   title,
@@ -137,3 +137,5 @@ export default function SpaCard({
     </Link>
   );
 }
+
+export default React.memo(SpaCard);

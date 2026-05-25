@@ -1,6 +1,10 @@
 import React from "react";
 import UniversalSpinner from "src/components/universal-spinner/universal-spinner";
 
+const GOLD = "#b8955a";
+const FONT = "Calibri, 'Segoe UI', sans-serif";
+
+/* CTA Principal — pagination "Charger plus" (même forme + hover doré que le système) */
 export default function LoadMoreButton({
   hasMore,
   loading,
@@ -14,13 +18,10 @@ export default function LoadMoreButton({
         <button
           onClick={onLoadMore}
           disabled={loading}
-          className="
-            px-10 py-4 bg-black text-white font-medium rounded-full
-            transition-all duration-300 shadow-md
-            hover:bg-gray-800 hover:shadow-lg
-            focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2
-            disabled:opacity-50 disabled:cursor-not-allowed
-          "
+          className="inline-flex items-center gap-2 uppercase tracking-widest rounded-full px-6 py-3 text-sm font-normal transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2"
+          style={{ backgroundColor: "#1a1a1a", color: "#ffffff", fontFamily: FONT }}
+          onMouseEnter={(e) => !loading && (e.currentTarget.style.backgroundColor = GOLD)}
+          onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = "#1a1a1a")}
         >
           {loading ? (
             <span className="flex items-center justify-center gap-3">

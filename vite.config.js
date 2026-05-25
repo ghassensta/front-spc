@@ -10,11 +10,6 @@ const PORT = 5173;
 export default defineConfig(async ({ mode }) => {
   const env = loadEnv(mode, process.cwd(), "");
 
-  const API_URL =
-    env.VITE_API_URL ||
-    env.SERVER_URL ||
-    "https://admin.spa-prestige-collection.com";
-
   // ───────────────────────────────────────────────────────────────
   //  Prérendu : activé uniquement quand on a explicitement demandé
   //  un build prérendu (PRERENDER=1 npm run build) afin que les
@@ -28,31 +23,64 @@ export default defineConfig(async ({ mode }) => {
       );
 
       const fetchRoutes = async () => {
-        const safe = async (url) => {
+        const FRONT_URL = (
+          env.VITE_FRONT_URL || "https://spa-prestige-collection.com"
+        ).replace(/\/$/, "");
+
+        // Récupère toutes les URLs depuis les sitemaps Laravel
+        // (source de vérité — contient TOUS les spas, produits, etc.)
+        const fetchSitemap = async (url) => {
           try {
             const r = await fetch(url);
-            if (!r.ok) return { data: [] };
-            const j = await r.json();
-            return { data: j?.data || j?.etablissements || j?.products || j };
+            if (!r.ok) {
+              console.warn(`[prerender] HTTP ${r.status} ${url}`);
+              return [];
+            }
+            const xml = await r.text();
+            const locs = [...xml.matchAll(/<loc>([^<]+)<\/loc>/g)].map(
+              (m) => m[1]
+            );
+            return locs;
           } catch (e) {
-            console.warn(`[prerender] échec fetch ${url}: ${e.message}`);
-            return { data: [] };
+            console.warn(`[prerender] échec fetch ${url} : ${e.message}`);
+            return [];
           }
         };
 
-        const [spas, produits, seoPages, categories, actualites] =
-          await Promise.all([
-            safe(`${API_URL}/api/etablissements`),
-            safe(`${API_URL}/api/produit`),
-            safe(`${API_URL}/api/pages`),
-            safe(`${API_URL}/api/categories`),
-            safe(`${API_URL}/api/actualites`),
-          ]);
+        const sitemaps = [
+          "sitemap-static.xml",
+          "sitemap-etablissements.xml",
+          "sitemap-produits.xml",
+          "sitemap-categories.xml",
+          "sitemap-blogs.xml",
+          "sitemap-blog-categories.xml",
+          "sitemap-landing-pages.xml",
+        ];
 
-        const dyn = (arr, fn) =>
-          Array.isArray(arr) ? arr.map(fn).filter(Boolean) : [];
+        const allUrls = (
+          await Promise.all(
+            sitemaps.map((s) => fetchSitemap(`${FRONT_URL}/${s}`))
+          )
+        ).flat();
 
-        return [
+        // Convertit les URLs absolues en chemins relatifs et déduplique
+        const seen = new Set();
+        const paths = [];
+        for (const u of allUrls) {
+          let p;
+          try {
+            p = new URL(u).pathname;
+          } catch {
+            p = u;
+          }
+          if (!seen.has(p)) {
+            seen.add(p);
+            paths.push(p);
+          }
+        }
+
+        // Pages internes garanties (au cas où elles ne sont pas dans le sitemap)
+        const guaranteed = [
           "/",
           "/liste-des-spas",
           "/carte-cadeau",
@@ -71,12 +99,16 @@ export default defineConfig(async ({ mode }) => {
           "/conditions",
           "/zones-dactivites",
           "/referentiel-de-candidature",
-          ...dyn(spas.data, (s) => s && `/spa/${s.slug || s.id}`),
-          ...dyn(produits.data, (p) => p?.slug && `/produit/${p.slug}`),
-          ...dyn(categories.data, (c) => c?.slug && `/categories/${c.slug}`),
-          ...dyn(actualites.data, (a) => a?.slug && `/actualites/${a.slug}`),
-          ...dyn(seoPages.data, (s) => s?.slug && `/${s.slug}`),
         ];
+        for (const g of guaranteed) {
+          if (!seen.has(g)) {
+            seen.add(g);
+            paths.push(g);
+          }
+        }
+
+        console.log(`[prerender] ${paths.length} routes à prérender`);
+        return paths;
       };
 
       prerenderPlugin = prerender({
@@ -84,9 +116,9 @@ export default defineConfig(async ({ mode }) => {
         renderer: "@prerenderer/renderer-puppeteer",
         rendererOptions: {
           renderAfterDocumentEvent: "render-event",
-          maxConcurrentRoutes: 4,
-          headless: "new",
-          timeout: 20000,
+          maxConcurrentRoutes: 2,
+          headless: true,
+          timeout: 120000,
         },
         postProcess(renderedRoute) {
           renderedRoute.html = renderedRoute.html

@@ -2,6 +2,13 @@ import { useLocation } from "react-router-dom";
 import CreerCagnotte from "src/sections/cagnotte/view/create-cagnotte";
 import { Helmet } from "react-helmet-async";
 import { CONFIG } from "src/config-global";
+import JsonLd from "src/components/seo/JsonLd";
+import Breadcrumb from "src/components/seo/Breadcrumb";
+import {
+  webPageSchema,
+  breadcrumbSchema,
+  organizationSchema,
+} from "src/lib/schema";
 
 export default function Page() {
   const location = useLocation();
@@ -13,29 +20,34 @@ export default function Page() {
   const pageKeywords = "carte cadeau, cadeau, bon cadeau, gift card";
   const imageUrl = `${CONFIG.frontUrl}/og-carte-cadeau.jpg`;
 
-  const schemaData = {
+  const breadcrumbItems = [
+    { label: "Accueil", path: "/" },
+    { label: "Cagnotte", path: "/cagnotte" },
+    { label: "Créer", path: location.pathname },
+  ];
+
+  const productSchema = {
     "@context": "https://schema.org",
     "@type": "Product",
-    "name": "Carte Cadeau",
-    "description": pageDescription,
-    "image": imageUrl,
-    "offers": {
+    name: "Carte Cadeau",
+    description: pageDescription,
+    image: imageUrl,
+    offers: {
       "@type": "AggregateOffer",
-      "availability": "https://schema.org/InStock",
-      "priceCurrency": "EUR",
-      "lowPrice": "10",
-      "highPrice": "500"
+      availability: "https://schema.org/InStock",
+      priceCurrency: "EUR",
+      lowPrice: "10",
+      highPrice: "500",
     },
-    "brand": {
+    brand: {
       "@type": "Brand",
-      "name": "Spa & Prestige Collection"
-    }
+      name: "Spa & Prestige Collection",
+    },
   };
 
   return (
     <>
       <Helmet htmlAttributes={{ lang: "fr" }}>
-        {/* Meta SEO */}
         <title>{pageTitle}</title>
         <meta name="description" content={pageDescription} />
         <meta name="keywords" content={pageKeywords} />
@@ -44,10 +56,8 @@ export default function Page() {
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <meta name="language" content="fr-FR" />
 
-        {/* Canonical dynamique */}
         <link rel="canonical" href={canonicalUrl} />
 
-        {/* Open Graph */}
         <meta property="og:type" content="website" />
         <meta property="og:title" content={pageTitle} />
         <meta property="og:description" content={pageDescription} />
@@ -55,17 +65,27 @@ export default function Page() {
         <meta property="og:url" content={canonicalUrl} />
         <meta property="og:site_name" content="Spa & Prestige Collection" />
 
-        {/* Twitter Card */}
         <meta name="twitter:card" content="summary_large_image" />
         <meta name="twitter:title" content={pageTitle} />
         <meta name="twitter:description" content={pageDescription} />
         <meta name="twitter:image" content={imageUrl} />
-
-        {/* JSON-LD */}
-        <script type="application/ld+json">
-          {JSON.stringify(schemaData)}
-        </script>
       </Helmet>
+
+      <JsonLd
+        data={[
+          productSchema,
+          webPageSchema({
+            title: pageTitle,
+            description: pageDescription,
+            url: location.pathname,
+            image: imageUrl,
+          }),
+          organizationSchema(),
+          breadcrumbSchema(breadcrumbItems),
+        ].filter(Boolean)}
+      />
+
+      <Breadcrumb items={breadcrumbItems} className="container mx-auto px-4" />
 
       <CreerCagnotte />
     </>

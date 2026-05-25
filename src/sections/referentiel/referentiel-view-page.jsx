@@ -1,5 +1,4 @@
 import React from "react";
-import { Link } from "react-router-dom";
 import { paths } from "src/router/paths";
 import theImageWeb from "src/assets/images/referentiel-de-candidature.webp";
 import theImageMobile from "src/assets/images/referentiel-de-candidature.png";
@@ -7,7 +6,9 @@ import theImage2 from "src/assets/images/SPC-Catalogue-1975x1318-1.jpg";
 import { useTranslation } from "src/context/translation-context";
 import HeroImage from "src/components/hero-image/HeroImage";
 import SectionHeader from "src/components/section-header/SectionHeader";
-import { FaFileAlt } from "react-icons/fa";
+import { FaFileAlt, FaArrowRight } from "react-icons/fa";
+import ContactInfo from "src/components/contact-info/ContactInfo";
+import ButtonLink from "src/components/button-link/ButtonLink";
 import {
   FaLeaf,
   FaUserFriends,
@@ -29,42 +30,50 @@ export default function ReferentielViewPage() {
     {
       icon: <FaLeaf />,
       title: "Atmosphère & Ambiance",
-      description: "Un cadre apaisant, une décoration soignée, une lumière et une atmosphère propices à la détente et au ressourcement.",
+      description:
+        "Un cadre apaisant, une décoration soignée, une lumière et une atmosphère propices à la détente et au ressourcement.",
     },
     {
       icon: <FaStar />,
       title: "Qualité des Soins & Prestations",
-      description: "Des soins d'excellence, des protocoles maîtrisés et des prestations uniques, adaptées à chaque client.",
+      description:
+        "Des soins d'excellence, des protocoles maîtrisés et des prestations uniques, adaptées à chaque client.",
     },
     {
       icon: <FaBed />,
       title: "Installations & Aménagements",
-      description: "Des espaces modernes, accessibles et parfaitement entretenus pour une expérience de bien-être optimale.",
+      description:
+        "Des espaces modernes, accessibles et parfaitement entretenus pour une expérience de bien-être optimale.",
     },
     {
       icon: <FaShieldAlt />,
       title: "Hygiène & Propreté",
-      description: "Une hygiène irréprochable et un entretien rigoureux pour garantir un environnement sain et serein.",
+      description:
+        "Une hygiène irréprochable et un entretien rigoureux pour garantir un environnement sain et serein.",
     },
     {
       icon: <FaUserFriends />,
       title: "Service Client & Expérience",
-      description: "Un accueil chaleureux, un service réactif et une expérience personnalisée à chaque étape du parcours client.",
+      description:
+        "Un accueil chaleureux, un service réactif et une expérience personnalisée à chaque étape du parcours client.",
     },
     {
       icon: <FaLock />,
       title: "Confidentialité & Respect de l'intimité",
-      description: "Le respect de l'intimité et la confidentialité des clients à chaque instant de leur expérience.",
+      description:
+        "Le respect de l'intimité et la confidentialité des clients à chaque instant de leur expérience.",
     },
     {
       icon: <FaSeedling />,
       title: "Démarche Durable & Responsable",
-      description: "Des engagements concrets pour limiter l'impact environnemental et promouvoir le bien-être durable.",
+      description:
+        "Des engagements concrets pour limiter l'impact environnemental et promouvoir le bien-être durable.",
     },
     {
       icon: <FaUsers />,
       title: "Équipe & Savoir-faire",
-      description: "Une équipe qualifiée, bienveillante et engagée, passionnée par l'art du bien-être.",
+      description:
+        "Une équipe qualifiée, bienveillante et engagée, passionnée par l'art du bien-être.",
     },
   ];
 
@@ -73,7 +82,6 @@ export default function ReferentielViewPage() {
 
   return (
     <div style={{ fontFamily: FONT }}>
-
       {/* ── Hero ── */}
       <HeroImage
         image={theImageWeb}
@@ -85,11 +93,18 @@ export default function ReferentielViewPage() {
         descBold="Il garantit une expérience"
         descAfter=" cliente d'exception et une qualité cohérente au sein de notre réseau."
         darkText={true}
-      />
+      >
+        <ButtonLink
+          to={paths.contact}
+          text="Nous contacter"
+          variant="primary"
+          icon={<FaArrowRight />}
+          className="!mt-4 !justify-start"
+        />
+      </HeroImage>
 
       {/* ── Section critères ── */}
       <div className="max-w-6xl mx-auto px-4 md:px-8 py-10">
-
         <SectionHeader
           label="Nos standards"
           title="Les critères d'évaluation"
@@ -107,7 +122,9 @@ export default function ReferentielViewPage() {
                     className="w-12 h-12 flex items-center justify-center rounded-full shrink-0 mt-1"
                     style={{ backgroundColor: "#F3EBDD" }}
                   >
-                    <span style={{ color: GOLD, fontSize: "1.2rem" }}>{item.icon}</span>
+                    <span style={{ color: GOLD, fontSize: "1.2rem" }}>
+                      {item.icon}
+                    </span>
                   </div>
                   <div>
                     <div className="flex items-center gap-2 mb-1">
@@ -125,13 +142,16 @@ export default function ReferentielViewPage() {
                         {translateSync(item.title)}
                       </h3>
                     </div>
-                    <p className="text-sm text-gray-600 leading-relaxed" style={{ fontFamily: FONT }}>
+                    <p
+                      className="text-sm text-gray-600 leading-relaxed"
+                      style={{ fontFamily: FONT }}
+                    >
                       {translateSync(item.description)}
                     </p>
                   </div>
                 </div>
               );
-            })
+            }),
           )}
         </div>
 
@@ -152,11 +172,16 @@ export default function ReferentielViewPage() {
                 >
                   {i + 1}
                 </span>
-                <span className="text-sm font-semibold text-gray-800" style={{ fontFamily: FONT }}>
+                <span
+                  className="text-sm font-semibold text-gray-800"
+                  style={{ fontFamily: FONT }}
+                >
                   {translateSync(item.title)}
                 </span>
               </div>
-              <span style={{ color: GOLD }} className="text-lg">›</span>
+              <span style={{ color: GOLD }} className="text-lg">
+                ›
+              </span>
             </div>
           ))}
         </div>
@@ -168,7 +193,6 @@ export default function ReferentielViewPage() {
         style={{ backgroundColor: "#FBF6EC" }}
       >
         <div className="max-w-6xl mx-auto px-4 md:px-8 grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
-
           <div>
             <div className="flex items-start gap-4 mb-4">
               {/* Icône document — react-icons */}
@@ -186,36 +210,37 @@ export default function ReferentielViewPage() {
                   {translateSync("Modalités d'adhésion")}
                 </h3>
                 {/* Séparateur doré */}
-                <div className="w-8 h-0.5 mb-3" style={{ backgroundColor: GOLD }} />
-                <p className="text-sm text-gray-600 leading-relaxed" style={{ fontFamily: FONT }}>
+                <div
+                  className="w-8 h-0.5 mb-3"
+                  style={{ backgroundColor: GOLD }}
+                />
+                <p
+                  className="text-sm text-gray-600 leading-relaxed"
+                  style={{ fontFamily: FONT }}
+                >
                   {translateSync(
-                    "Les établissements souhaitant rejoindre Spa & Prestige Collection doivent fournir une documentation détaillée attestant de leur conformité à ces critères (certifications, photos, descriptifs, etc.). Chaque candidature est étudiée avec soin par notre équipe."
+                    "Les établissements souhaitant rejoindre Spa & Prestige Collection doivent fournir une documentation détaillée attestant de leur conformité à ces critères (certifications, photos, descriptifs, etc.). Chaque candidature est étudiée avec soin par notre équipe.",
                   )}
                 </p>
               </div>
             </div>
 
-            {/* Boutons */}
+            {/* Boutons — CTAs du système ButtonLink */}
             <div className="flex flex-col sm:flex-row gap-3 mt-6">
-              <Link
+              <ButtonLink
                 to={paths.partenaire}
-                className="inline-flex items-center justify-center px-8 py-3 rounded-full text-sm font-semibold uppercase tracking-wider text-white transition-colors"
-                style={{ backgroundColor: "#1a1a1a", letterSpacing: "0.08em", fontFamily: FONT }}
-                onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = "#333")}
-                onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = "#1a1a1a")}
-              >
-                {translateSync("Devenir partenaire")}
-              </Link>
-
-              <Link
+                text="Devenir partenaire"
+                variant="primary"
+                icon={<FaArrowRight />}
+                className="!mt-0 !justify-start"
+              />
+              <ButtonLink
                 to={paths.contact}
-                className="inline-flex items-center justify-center px-8 py-3 rounded-full text-sm font-semibold uppercase tracking-wider transition-colors border-2"
-                style={{ borderColor: "#1a1a1a", color: "#1a1a1a", backgroundColor: "transparent", letterSpacing: "0.08em", fontFamily: FONT }}
-                onMouseEnter={(e) => { e.currentTarget.style.backgroundColor = "#1a1a1a"; e.currentTarget.style.color = "#fff"; }}
-                onMouseLeave={(e) => { e.currentTarget.style.backgroundColor = "transparent"; e.currentTarget.style.color = "#1a1a1a"; }}
-              >
-                {translateSync("Nous contacter")}
-              </Link>
+                text="Nous contacter"
+                variant="secondary"
+                icon={<FaArrowRight />}
+                className="!mt-0 !justify-start"
+              />
             </div>
           </div>
 
@@ -229,9 +254,14 @@ export default function ReferentielViewPage() {
               style={{ maxHeight: "280px" }}
             />
           </div>
+          <ContactInfo
+          phone="+33182350126"
+          phoneLabel="+33 (0)1 82 35 01 26"
+          email="contact@spa-prestige-collection.com"
+        />
         </div>
+        
       </div>
-
     </div>
   );
 }

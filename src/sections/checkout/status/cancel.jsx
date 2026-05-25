@@ -100,7 +100,7 @@ export default function PaymentCancelled({ sessionId: propSessionId }) {
         <p className="text-sm text-gray-500">
           Besoin d'aide ?{" "}
           <a
-            href={`mailto:contact@ecom-fr.com`}
+            href="mailto:contact@spa-prestige-collection.com"
             className="text-primary hover:underline"
           >
             Contactez notre service client

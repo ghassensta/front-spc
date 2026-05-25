@@ -10,16 +10,19 @@ import { TranslatedText } from "src/components/translated-text/translated-text";
 import UniversalSpinner from "src/components/universal-spinner/universal-spinner";
 import { useGetHomePage } from "src/actions/homepage";
 import Partenaires from "../home2/comp/partenaires";
+import ContactInfo from "src/components/contact-info/ContactInfo";
 import {
   FaUsers,
   FaShoppingBag,
   FaHandHoldingHeart,
   FaPhone,
   FaEnvelope,
+  FaArrowRight,
 } from "react-icons/fa";
 import Select from "react-select";
 import HeroImage from "src/components/hero-image/HeroImage";
 import SectionHeader from "src/components/section-header/SectionHeader";
+import ButtonLink from "src/components/button-link/ButtonLink";
 export default function SolutionsPageView() {
   const { translateSync } = useTranslation();
   const { sections } = useGetHomePage();
@@ -134,7 +137,15 @@ export default function SolutionsPageView() {
         image={theImage}
         label="Spa & Prestige Collection"
         title="CSE & Collectivités"
-      />
+      >
+        <ButtonLink
+          to={paths.contact}
+          text="Nous contacter"
+          variant="primary"
+          icon={<FaArrowRight />}
+          className="!mt-4 !justify-start"
+        />
+      </HeroImage>
 
       {/* Engagement Section */}
       <section className="max-w-7xl mx-auto px-4 py-16">
@@ -369,7 +380,6 @@ export default function SolutionsPageView() {
               style={{ width: "60px", height: "2px", background: "#b8955a" }}
             />
           </div>
-
           <form
             onSubmit={handleSubmit}
             className="grid grid-cols-1 md:grid-cols-2 gap-5"
@@ -546,41 +556,11 @@ export default function SolutionsPageView() {
               </button>
             </div>
           </form>
-
-          {/* Besoin d'un renseignement */}
-          <div className="mt-10 flex items-start gap-4 pt-8 border-t border-[#E8DCC8]">
-            {/* Icône cercle */}
-            <div className="shrink-0 w-11 h-11 rounded-full bg-[#F3EBDD] flex items-center justify-center">
-              <FaPhone className="text-[#b8955a] text-base" />
-            </div>
-
-            <div>
-              <p className="font-semibold text-gray-800 mb-0.5">
-                <TranslatedText text="Besoin d'un renseignement ?" />
-              </p>
-              <p className="text-sm text-gray-500 mb-2">
-                <TranslatedText text="Notre équipe est à votre écoute du lundi au vendredi de 9h à 18h." />
-              </p>
-
-              <div className="flex flex-col gap-1.5">
-                <a
-                  href="tel:+33184801152"
-                  className="flex items-center gap-2 text-sm font-medium text-gray-700 hover:text-[#b8955a] transition-colors"
-                >
-                  <FaPhone className="text-[#b8955a] text-xs shrink-0" />
-                  01 84 80 11 52
-                </a>
-
-                <a
-                  href="mailto:partenaires@spa-prestige-collection.com"
-                  className="flex items-center gap-2 text-sm font-medium text-gray-700 hover:text-[#b8955a] transition-colors"
-                >
-                  <FaEnvelope className="text-[#b8955a] text-xs shrink-0" />
-                  partenaires@spa-prestige-collection.com
-                </a>
-              </div>
-            </div>
-          </div>
+          <ContactInfo
+            phone="+33182350126"
+            phoneLabel="+33 (0)1 82 35 01 26"
+            email="contact@spa-prestige-collection.com"
+          />
         </section>
 
         <Partenaires section={section6} />

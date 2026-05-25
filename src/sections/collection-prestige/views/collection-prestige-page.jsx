@@ -117,18 +117,18 @@ export default function CollectionPrestigePage() {
               <TranslatedText text="Les établissements souhaitant rejoindre Spa & Prestige Collection doivent fournir une documentation détaillant leur conformité aux critères de ce référentiel (certifications, photos, etc.). Ce référentiel garantit que les établissements respectent des standards élevés, assurant ainsi une expérience client d'exception et une qualité cohérente au sein du réseau." />
             </p>
             <div className="flex flex-col sm:flex-row gap-3">
+              {/* CTA Principal — conversion (1 seul par section) */}
               <ButtonLink
                 to={paths.partenaire}
                 text="Devenir partenaire"
-                bgColor={GOLD}
-                hoverColor="#1a1a1a"
+                variant="primary"
                 className="mt-0"
               />
+              {/* CTA Secondaire — navigation */}
               <ButtonLink
                 to={paths.contact}
                 text="Nous contacter"
-                bgColor="#1a1a1a"
-                hoverColor={GOLD}
+                variant="secondary"
                 className="mt-0"
               />
             </div>

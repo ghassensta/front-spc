@@ -1,8 +1,8 @@
-import React, { useCallback, useEffect, useState } from "react";
+import React, { useCallback, useEffect, useMemo, useState } from "react";
 import ImageCarousel from "../spa-details/comp/image-carousel";
 import ProductCarousel from "./comp/product-carousel";
 import { Link, useNavigate } from "react-router-dom";
-import { FaHeart, FaArrowRight, FaGift } from "react-icons/fa";
+import { FaHeart, FaArrowRight, FaGift, FaMapMarkerAlt } from "react-icons/fa";
 import LocationSection from "./comp/location-section";
 import { useAuthContext } from "src/auth/hooks/use-auth-context";
 import { useToggleWishlist } from "src/actions/wishlists";
@@ -29,13 +29,17 @@ export default function ({
   loading,
   servicesEquipements = [],
 }) {
-  console.log("etablissement", etablissement);
-  const gallery = [
-    ...(etablissement?.image_avant ? [etablissement.image_avant] : []),
-    ...(etablissement?.gallerie?.length > 0
-      ? etablissement.gallerie.map((img) => img)
-      : []),
-  ].filter(Boolean);
+  // console.log("etablissement", etablissement);
+  const gallery = useMemo(
+    () =>
+      [
+        ...(etablissement?.image_avant ? [etablissement.image_avant] : []),
+        ...(etablissement?.gallerie?.length > 0
+          ? etablissement.gallerie
+          : []),
+      ].filter(Boolean),
+    [etablissement?.image_avant, etablissement?.gallerie]
+  );
 
   const { translateSync } = useTranslation();
   const navigate = useNavigate();
@@ -239,17 +243,76 @@ export default function ({
     <div className="max-w-7xl mx-auto px-4 ">
       <div className="py-6">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-          <div className="flex flex-col col-span-2 h-[300px] md:h-[600px]">
+          <div className="relative col-span-2 h-[300px] md:h-[600px] rounded-xl overflow-hidden">
             <ImageCarousel images={gallery} height="300px" />
+
+            {/* ── Overlay établissement ── */}
+            <div className="absolute inset-0 z-[5] pointer-events-none">
+              {/* dégradé gauche pour lisibilité */}
+              <div
+                className="absolute inset-0"
+                style={{
+                  background:
+                    "linear-gradient(to right, rgba(0,0,0,0.55) 0%, rgba(0,0,0,0.25) 45%, transparent 70%)",
+                }}
+              />
+
+              <div className="absolute inset-0 flex flex-col justify-center px-6 md:px-12">
+                <div className="max-w-md md:max-w-lg pointer-events-auto">
+                  {/* Badge */}
+                  <span
+                    className="inline-block bg-white text-[#1a1a1a] text-[10px] font-bold uppercase tracking-[2px] px-3 py-1.5 rounded-full mb-4 font-tahoma"
+                  >
+                    {translateSync("Établissement partenaire")}
+                  </span>
+
+                  {/* Nom établissement */}
+                  <h2
+                    className="text-white mb-2 leading-tight"
+                    style={{
+                      fontFamily: "'Cormorant Garamond', 'Georgia', serif",
+                      fontWeight: 500,
+                      fontSize: "clamp(2rem, 4vw, 3.25rem)",
+                    }}
+                  >
+                    {translateSync(etablissement?.nom)}
+                  </h2>
+
+                  {/* Sous-titre = nom du produit */}
+                  {product?.nom && (
+                    <p className="text-white/95 text-sm md:text-lg mb-4 font-light font-tahoma">
+                      {translateSync(product.nom)}
+                    </p>
+                  )}
+
+                  {/* Adresse */}
+                  {(etablissement?.ville || etablissement?.pays) && (
+                    <div className="flex items-center gap-2 text-white text-xs md:text-sm mb-5 font-tahoma">
+                      <FaMapMarkerAlt />
+                      <span>
+                        {[etablissement?.ville, etablissement?.pays]
+                          .filter(Boolean)
+                          .join(", ")}
+                      </span>
+                    </div>
+                  )}
+
+                  {/* CTA */}
+                  <Link
+                    to={paths.spa.details(etablissement?.slug)}
+                    className="inline-flex items-center gap-2 bg-[#FBF6EC] text-[#1a1a1a] no-underline px-5 py-3 rounded-full text-xs font-bold uppercase tracking-wider hover:bg-white transition font-tahoma"
+                    style={{ letterSpacing: "0.12em" }}
+                  >
+                    {translateSync("Découvrir l'expérience")}
+                    <FaArrowRight className="text-xs" />
+                  </Link>
+                </div>
+              </div>
+            </div>
           </div>
 
           <div className="bg-[#F3EBDD] px-8 py-4 col-span-2 lg:col-span-1 rounded-2xl">
-            <Link
-              to={paths.spa.details(etablissement?.slug)}
-              className="text-4xl font-bold mb-6 text-[#333]"
-            >
-              {translateSync(etablissement?.nom)}
-            </Link>
+          
 
             <div className="relative">
               <ProductCarousel
@@ -351,7 +414,7 @@ export default function ({
               </div>
             )}
 
-            <Link
+            {/* <Link
               to={paths.spa.details(etablissement?.slug)}
               className="inline-flex items-center justify-start gap-2 text-xs font-semibold uppercase tracking-wider px-5 py-3 rounded-full transition-all duration-300 border border-[#b8955a]  bg-[#b8955a] text-white mt-6"
               style={{
@@ -360,10 +423,12 @@ export default function ({
             >
               {translateSync("Voir l'établissement")}
               <FaArrowRight className="text-xs" />
-            </Link>
+            </Link> */}
           </div>
 
-          <div className="bg-[#F3EBDD] px-8 py-4 col-span-2 lg:col-span-1 rounded-2xl">
+          {/* Colonne droite — 2 cartes beiges empilées */}
+          <div className="col-span-2 lg:col-span-1 flex flex-col gap-4">
+          <div className="bg-[#F3EBDD] px-8 py-4 rounded-2xl">
             <div>
               {/* Prix barré */}
               {!!product?.prix_barre && (
@@ -592,6 +657,7 @@ export default function ({
                 {translateSync("Ajouter au panier")}
               </button>
             </div>
+            
             <div className="border-b border-black my-4 font-tahoma">
               <div className="py-3 gap-2">
                 <FaHeart className="inline-block mr-1" />
@@ -603,7 +669,12 @@ export default function ({
                 </Link>
               </div>
             </div>
+          </div>
+
+          {/* Carte 2 — Établissement (même bg beige, sous la carte prix) */}
+          <div className="bg-[#F3EBDD] px-8 py-4 rounded-2xl">
             <LocationSection data={spaData} />
+          </div>
           </div>
 
           {/*  <div

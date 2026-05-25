@@ -1,31 +1,43 @@
 import { useParams, useLocation } from "react-router-dom";
-import { toast } from "react-toastify";
 import { useGetFiltersEtablissements } from "src/actions/etablissements";
 import { useCategoryProducts } from "src/hooks/useCategoryProducts";
-import { useRouter } from "src/hooks";
-import { paths } from "src/router/paths";
 import CategoriesPageView from "src/sections/categories/view/categories-page-view";
 import { Helmet } from "react-helmet-async";
+import JsonLd from "../../components/seo/JsonLd";
+import Breadcrumb from "../../components/seo/Breadcrumb";
+import {
+  webPageSchema,
+  breadcrumbSchema,
+  organizationSchema,
+} from "../../lib/schema";
 
 export default function Page() {
   const { slug }   = useParams();
   const location   = useLocation();
-  const router     = useRouter();
 
-  if (!slug) {
-    toast.info("Choisir une catégorie!");
-    router.push(paths.main);
-    return null;
-  }
-
-  const categoryData = useCategoryProducts(slug);
+  const categoryData = useCategoryProducts(slug || "");
   const { villes, types, services, formules, filtersLoading } = useGetFiltersEtablissements();
 
   const { category } = categoryData;
-  const pageTitle       = category?.meta_title       || `${category?.nom || "Catégorie"} - Nos SPAs`;
-  const pageDescription = category?.meta_description || `Découvrez les SPAs dans la catégorie ${category?.nom || ""}.`;
-  const pageKeywords    = category?.meta_keywords    || `${category?.nom || ""}, SPA, bien-être`;
-  console.log("Category Data:", categoryData);
+
+  const pageTitle = slug
+    ? (category?.meta_title || `${category?.nom || "Catégorie"} - Nos SPAs`)
+    : "Nos catégories de spas — Spa & Prestige Collection";
+  const pageDescription = slug
+    ? (category?.meta_description || `Découvrez les SPAs dans la catégorie ${category?.nom || ""}.`)
+    : "Parcourez toutes les catégories d'établissements spa et bien-être : hôtels spa, thermes, instituts, day spa, et plus.";
+  const pageKeywords = slug
+    ? (category?.meta_keywords || `${category?.nom || ""}, SPA, bien-être`)
+    : "catégories spa, hôtel spa, thermes, institut beauté, day spa, bien-être";
+
+  const canonical = `${window.location.origin}${location.pathname}`;
+
+  const breadcrumbItems = [
+    { label: "Accueil", path: "/" },
+    { label: "Catégories", path: "/categories" },
+    ...(slug ? [{ label: category?.nom || slug, path: location.pathname }] : []),
+  ];
+
   return (
     <>
       <Helmet htmlAttributes={{ lang: "fr" }}>
@@ -36,13 +48,28 @@ export default function Page() {
         <meta property="og:title" content={pageTitle} />
         <meta property="og:description" content={pageDescription} />
         <meta property="og:type"  content="website" />
-        <meta property="og:url"   content={`${window.location.origin}${location.pathname}`} />
+        <meta property="og:url"   content={canonical} />
         <meta name="twitter:card" content="summary_large_image" />
-        <link rel="canonical"     href={`${window.location.origin}${location.pathname}`} />
+        <link rel="canonical"     href={canonical} />
       </Helmet>
 
+      <JsonLd
+        data={[
+          webPageSchema({
+            title: pageTitle,
+            description: pageDescription,
+            url: location.pathname,
+            type: "CollectionPage",
+          }),
+          breadcrumbSchema(breadcrumbItems),
+          organizationSchema(),
+        ].filter(Boolean)}
+      />
+
+      <Breadcrumb items={breadcrumbItems} className="container mx-auto px-4" />
+
       <CategoriesPageView
-        {...categoryData}   
+        {...categoryData}
         slug_categorie={slug}
         description={category?.description}
         nomcat={category?.nom}

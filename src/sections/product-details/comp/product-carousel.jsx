@@ -87,6 +87,13 @@ export default function ProductCarousel({ gallery = [], image = "" }) {
         ))}
       </div>
 
+      {/* Compteur mobile : remplace les dots (1/5) */}
+      {hasMultipleImages && (
+        <div className="md:hidden absolute bottom-3 right-3 z-10 px-2.5 py-1 rounded-full bg-black/55 text-white text-xs font-tahoma tracking-wider backdrop-blur-sm">
+          {currentSlide + 1} / {totalImages}
+        </div>
+      )}
+
       {/* Flèches : uniquement si + d'une image */}
       {hasMultipleImages && (
         <>
@@ -108,9 +115,9 @@ export default function ProductCarousel({ gallery = [], image = "" }) {
         </>
       )}
 
-      {/* Points de navigation (max 6 visibles) */}
+      {/* Points de navigation (max 6 visibles) — cachés sur mobile */}
       {hasMultipleImages && (
-        <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2 flex space-x-2">
+        <div className="hidden md:flex absolute bottom-4 left-1/2 transform -translate-x-1/2 space-x-2">
           {(() => {
             const maxDots = 6;
 

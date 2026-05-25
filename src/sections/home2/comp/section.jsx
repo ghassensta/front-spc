@@ -14,7 +14,7 @@ export default function Section({
   max = 3,
 }) {
   const { translateSync } = useTranslation();
-
+  // console.log("Section data:", data);
   return (
     <div
       className={`relative w-screen left-[calc(-50vw+50%)] overflow-hidden py-6 ${
@@ -27,7 +27,7 @@ export default function Section({
 
         {/* SUBHEADER */}
         {!!subheader && (
-          <div className="text-[#b8955a] text-3xl text-center">
+          <div className="text-black text-3xl text-center">
             {translateSync(subheader)}
           </div>
         )}
@@ -39,7 +39,7 @@ export default function Section({
               className="scale-75 origin-right"  
               text={
                 <span className="flex items-center gap-2 text-xs whitespace-nowrap">
-                  {`${translateSync("Nos offres")} ${translateSync(header)}`}
+                  VOIR TOUTES LES OFFRES
                   <FaArrowRight className="text-xs" />
                 </span>
               }
@@ -58,7 +58,7 @@ export default function Section({
               to={link}
               text={
                 <span className="flex items-center gap-1 text-sm whitespace-nowrap">
-                  Voir offres
+                  VOIR TOUTES LES OFFRES
                   <FaArrowRight className="text-xs" />
                 </span>
               }

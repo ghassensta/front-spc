@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useMemo } from "react";
 import { motion } from "framer-motion";
 import { FiMapPin } from "react-icons/fi";
 import { FaBagShopping } from "react-icons/fa6";
@@ -15,7 +15,7 @@ import { useTranslation } from "react-i18next";
 import { CONFIG } from "src/config-global";
 import OfferFlashSVG from "../offre-flash/offer-flash-badge";
 
-export default function Card({
+function Card({
   to = "/",
   id,
   image,
@@ -53,8 +53,10 @@ export default function Card({
     };
   }, [id, inWishlist]);
 
-  const isOfferActive =
-    offre_flash === 1 && date_fin && new Date(date_fin) > new Date();
+  const isOfferActive = useMemo(
+    () => offre_flash === 1 && date_fin && new Date(date_fin) > new Date(),
+    [offre_flash, date_fin]
+  );
 
   useEffect(() => {
     if (!isOfferActive) {
@@ -147,11 +149,11 @@ export default function Card({
               src={image}
               alt={title || t("spa")}
               loading="lazy"
+              decoding="async"
               className="w-full h-full rounded-xl object-cover object-center"
               width="400"
               height="256"
               style={{ aspectRatio: "400/256" }}
-              fetchpriority="high"
             />
           </Link>
         )}
@@ -230,7 +232,7 @@ export default function Card({
         />
         {/* PRICE + BUTTON */}
         <div className="flex items-center justify-between px-2 mt-3 mb-3">
-          <strong className="text-xl text-[#b8955a]">{price ?? 0}€</strong>
+          <strong className="text-xl text-black">{price ?? 0}€</strong>
 
           <Link
             to={to}
@@ -269,3 +271,5 @@ export default function Card({
     </motion.div>
   );
 }
+
+export default React.memo(Card);

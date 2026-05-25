@@ -1,6 +1,6 @@
 import React, { useState, useRef, useContext, useEffect } from "react";
 import { IoMdMenu, IoMdClose, IoMdLogIn, IoMdCart } from "react-icons/io";
-import { FaRegHeart, FaUser } from "react-icons/fa";
+import { FaRegHeart, FaUser,FaRegUserCircle } from "react-icons/fa";
 
 import Logo from "../logo/logo";
 import MenuPopover from "../menu/menu-popover";
@@ -95,7 +95,7 @@ export default function Navbar() {
               </Link>
             ) : (
               <Link to={paths.auth.root}>
-                <IoMdLogIn size={24} className="text-black" />
+                <FaRegUserCircle size={24} className="text-black" />
               </Link>
             )}
 

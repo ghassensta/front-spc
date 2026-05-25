@@ -3,6 +3,14 @@ import { useGetNews } from "src/actions/actualites";
 import BlogPage from "src/sections/actualites/blog-page";
 import { Helmet } from "react-helmet-async";
 import { useLocation } from "react-router-dom";
+import JsonLd from "src/components/seo/JsonLd";
+import Breadcrumb from "src/components/seo/Breadcrumb";
+import {
+  webPageSchema,
+  breadcrumbSchema,
+  organizationSchema,
+  itemListSchema,
+} from "src/lib/schema";
 import theImage from "src/assets/images/SPA-images-1975x1318-Qui-Sommes-Nous-02.jpg";
 
 export default function Page() {
@@ -11,13 +19,23 @@ export default function Page() {
   const currentUrl = `${window.location.origin}${location.pathname}`;
 
   const pageTitle = "Actualités - Spa & Prestige Collection";
-  const pageDescription = "Retrouvez toutes nos actualités, conseils et nouveautés spa & bien-être sur Spa & Prestige Collection.";
+  const pageDescription =
+    "Retrouvez toutes nos actualités, conseils et nouveautés spa & bien-être sur Spa & Prestige Collection.";
   const imageUrl = actualites?.[0]?.image || theImage;
+
+  const breadcrumbItems = [
+    { label: "Accueil", path: "/" },
+    { label: "Actualités", path: location.pathname },
+  ];
+
+  const articleList = (actualites || []).slice(0, 10).map((item, index) => ({
+    name: item.title || `Article ${index + 1}`,
+    url: `${location.pathname}#${item.slug || index}`,
+  }));
 
   return (
     <>
       <Helmet>
-        {/* SEO */}
         <title>{pageTitle}</title>
         <meta name="description" content={pageDescription} />
         <meta name="keywords" content="actualités spa, blog spa, bien-être, spa prestige, conseils spa, nouveautés spa" />
@@ -27,7 +45,6 @@ export default function Page() {
         <meta name="robots" content="index, follow" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
 
-        {/* Open Graph */}
         <meta property="og:type" content="website" />
         <meta property="og:title" content={pageTitle} />
         <meta property="og:description" content={pageDescription} />
@@ -35,42 +52,28 @@ export default function Page() {
         <meta property="og:url" content={currentUrl} />
         <meta property="og:site_name" content="Spa & Prestige Collection" />
 
-        {/* Twitter Card */}
         <meta name="twitter:card" content="summary_large_image" />
         <meta name="twitter:title" content={pageTitle} />
         <meta name="twitter:description" content={pageDescription} />
         <meta name="twitter:image" content={imageUrl} />
-
-        {/* JSON-LD WebPage */}
-        <script type="application/ld+json">
-          {JSON.stringify({
-            "@context": "https://schema.org",
-            "@type": "WebPage",
-            "name": pageTitle,
-            "description": pageDescription,
-            "url": currentUrl,
-            "image": imageUrl,
-            "publisher": {
-              "@type": "Organization",
-              "name": "Spa & Prestige Collection",
-              "logo": { "@type": "ImageObject", "url": `${window.location.origin}/logo.png` }
-            },
-            "mainEntityOfPage": {
-              "@type": "ItemList",
-              "name": "Actualités Spa & Bien-être",
-              "numberOfItems": actualites?.length || 0,
-              "itemListElement": (actualites || []).slice(0, 10).map((item, index) => ({
-                "@type": "ListItem",
-                "position": index + 1,
-                "name": item.title || `Article ${index + 1}`,
-                "description": item.excerpt || "",
-                "image": item.image || imageUrl,
-                "url": `${currentUrl}#${item.slug || index}`
-              }))
-            }
-          })}
-        </script>
       </Helmet>
+
+      <JsonLd
+        data={[
+          webPageSchema({
+            title: pageTitle,
+            description: pageDescription,
+            url: location.pathname,
+            image: imageUrl,
+            type: "CollectionPage",
+          }),
+          organizationSchema(),
+          breadcrumbSchema(breadcrumbItems),
+          itemListSchema(articleList, { name: "Actualités Spa & Bien-être" }),
+        ].filter(Boolean)}
+      />
+
+      <Breadcrumb items={breadcrumbItems} className="container mx-auto px-4" />
 
       <BlogPage
         articles={actualites}

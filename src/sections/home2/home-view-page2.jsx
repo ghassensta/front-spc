@@ -57,10 +57,12 @@ export default function HomePageView() {
 
                   spaName: card.etablissement?.nom || translateSync("Inconnu"),
 
-                  spaLocation:
-                    card.etablissement?.ville +
-                      ", " +
-                      card.etablissement?.pays || "",
+                  spaLocation: [
+                    card.etablissement?.ville,
+                    card.etablissement?.pays || "France",
+                  ]
+                    .filter(Boolean)
+                    .join(" - "),
 
                   spaSlug: card.etablissement?.slug || "#",
 
@@ -118,7 +120,7 @@ export default function HomePageView() {
                 label="Spa & Prestige Collection"
                 title="Actualités"
               />
-              <div className="text-[#b8955a] text-3xl text-center ">
+              <div className="text-black text-3xl text-center ">
                 {translateSync("Nos derniers articles")}
               </div>
 
@@ -192,13 +194,13 @@ export default function HomePageView() {
                 ))}
               </Swiper>
 
-              <div className="text-center mt-6">
-                <Link
+              {/* CTA Principal — même composant que la version desktop pour cohérence */}
+              <div className="mt-6">
+                <ButtonLink
                   to={paths.actualites}
-                  className="inline-block bg-black text-white px-8 py-4 rounded-full text-sm uppercase tracking-widest font-tahoma"
-                >
-                  {translateSync("Tous nos articles")}
-                </Link>
+                  text="Tous nos articles"
+                  className="mt-0"
+                />
               </div>
             </div>
           </div>

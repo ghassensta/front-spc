@@ -14,23 +14,46 @@ export default function SenderForm({
     const { t } = useTranslation();
     const router = useRouter();
 
+    // ── Styles communs aux boutons (= ButtonLink shape) ──────────────
+    const baseBtn =
+        "w-full inline-flex justify-center items-center gap-2 uppercase font-normal tracking-widest transition-all duration-300 px-6 py-3 text-sm rounded-full";
+
     if (!user) {
         return (
             <div className="bg-white p-4 rounded-lg shadow-sm flex flex-col gap-3">
+                {/* PRIMARY — noir → hover doré */}
                 <button
                     onClick={() =>
-                        router.push(`${paths.auth.register}?returnTo=${encodeURIComponent("/checkout")}`)
+                        router.push(
+                            `${paths.auth.register}?returnTo=${encodeURIComponent("/checkout")}`,
+                        )
                     }
-                    className="w-full inline-flex justify-center items-center gap-2 uppercase font-normal tracking-widest transition-all duration-300 px-6 py-3 text-sm bg-[#b8955a] hover:bg-black text-white rounded-full"
+                    className={baseBtn}
+                    style={{ backgroundColor: "#1a1a1a", color: "#ffffff" }}
+                    onMouseEnter={(e) =>
+                        (e.currentTarget.style.backgroundColor = "#b8955a")
+                    }
+                    onMouseLeave={(e) =>
+                        (e.currentTarget.style.backgroundColor = "#1a1a1a")
+                    }
                 >
-                    <TranslatedText text="Continuer" />
+                    <TranslatedText text="Se connecter et continuer" />
                 </button>
-                 <button
+
+                {/* TERTIARY — gris clair → hover gris moyen */}
+                <button
                     onClick={onCheckout}
-                    className="w-full inline-flex justify-center items-center gap-2 uppercase font-normal tracking-widest transition-all duration-300 px-6 py-3 text-sm bg-black hover:bg-gray-900 text-white rounded-full"
+                    className={baseBtn}
+                    style={{ backgroundColor: "#F5F5F5", color: "#444444" }}
+                    onMouseEnter={(e) =>
+                        (e.currentTarget.style.backgroundColor = "#E5E5E5")
+                    }
+                    onMouseLeave={(e) =>
+                        (e.currentTarget.style.backgroundColor = "#F5F5F5")
+                    }
                 >
                     <TranslatedText text="Continuer en tant qu'invité" />
-                </button> 
+                </button>
             </div>
         );
     }
@@ -58,9 +81,17 @@ export default function SenderForm({
                 />
             </div>
 
+            {/* PRIMARY — noir → hover doré (cohérent avec le reste) */}
             <button
                 onClick={onCheckout}
-                className="w-full mt-4 inline-flex justify-center items-center rounded-full gap-2 uppercase font-normal tracking-widest transition-all duration-300 px-6 py-3 text-sm bg-[#b8955a] hover:bg-black text-white"
+                className={`${baseBtn} mt-4`}
+                style={{ backgroundColor: "#1a1a1a", color: "#ffffff" }}
+                onMouseEnter={(e) =>
+                    (e.currentTarget.style.backgroundColor = "#b8955a")
+                }
+                onMouseLeave={(e) =>
+                    (e.currentTarget.style.backgroundColor = "#1a1a1a")
+                }
             >
                 <TranslatedText text="Payer" />
             </button>

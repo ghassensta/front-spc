@@ -24,6 +24,7 @@ export const TranslationProvider = ({ children }) => {
   };
 
   const translate = async (text) => {
+    if (typeof text !== 'string') return text;
     if (!text || text.trim() === '') return text;
     if (currentLanguage === 'fr') return text;
 
@@ -58,6 +59,7 @@ export const TranslationProvider = ({ children }) => {
   };
 
   const translateSync = (text) => {
+    if (typeof text !== 'string') return text;
     if (!text || text.trim() === '') return text;
     if (currentLanguage === 'fr') return text;
 

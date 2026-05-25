@@ -2,12 +2,24 @@ import { Link } from "react-router-dom";
 import { breadcrumbSchema } from "../../lib/schema";
 import JsonLd from "./JsonLd";
 
+const toLabel = (label) => {
+  if (label == null) return "";
+  if (typeof label === "string" || typeof label === "number") return String(label);
+  if (typeof label === "object") return label.name || label.nom || label.label || "";
+  return "";
+};
+
 export default function Breadcrumb({ items, className = "" }) {
   if (!items || items.length === 0) return null;
 
+  const safeItems = items.map((it) => ({
+    ...it,
+    label: toLabel(it.label),
+  }));
+
   return (
     <>
-      <JsonLd data={breadcrumbSchema(items)} />
+      <JsonLd data={breadcrumbSchema(safeItems)} />
       <nav
         aria-label="Fil d'ariane"
         className={`seo-breadcrumb ${className}`}
@@ -23,8 +35,8 @@ export default function Breadcrumb({ items, className = "" }) {
             fontSize: "14px",
           }}
         >
-          {items.map((item, i) => {
-            const isLast = i === items.length - 1;
+          {safeItems.map((item, i) => {
+            const isLast = i === safeItems.length - 1;
             return (
               <li
                 key={`${item.path}-${i}`}

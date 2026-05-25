@@ -2,12 +2,19 @@ import React from "react";
 import { Helmet } from "react-helmet-async";
 import { useLocation } from "react-router-dom";
 import CollectionPrestigePage from "src/sections/collection-prestige/views/collection-prestige-page";
+import JsonLd from "src/components/seo/JsonLd";
+import Breadcrumb from "src/components/seo/Breadcrumb";
+import {
+  webPageSchema,
+  breadcrumbSchema,
+  organizationSchema,
+} from "src/lib/schema";
 import theImage from "src/assets/images/SPC-Catalogue-1975x1318-1.jpg";
 import { CONFIG } from "src/config-global";
 
 const pageTitle = "Collection Prestige- Guide des Plus Beaux Spas de France";
 const pageDescription =
-  "Découvrez Collection Prestige, le guide annuel haut de gamme édité par Spa & Prestige Collection. Une sélection exclusive des meilleures adresses bien-être et spas d’exception en France. Édition limitée bientôt disponible.";
+  "Découvrez Collection Prestige, le guide annuel haut de gamme édité par Spa & Prestige Collection. Une sélection exclusive des meilleures adresses bien-être et spas d'exception en France. Édition limitée bientôt disponible.";
 const pageKeywords =
   "collection prestige, guide spa france, magazine bien-être, spas d'exception, catalogue spa prestige collection, guide spas,isabelle charrier, sense of wellness";
 const imageUrl = theImage;
@@ -15,6 +22,25 @@ const imageUrl = theImage;
 export default function Page() {
   const location = useLocation();
   const canonicalUrl = `${CONFIG.frontUrl}${location.pathname}`;
+
+  const breadcrumbItems = [
+    { label: "Accueil", path: "/" },
+    { label: "Collection Prestige", path: location.pathname },
+  ];
+
+  const creativeWorkSchema = {
+    "@context": "https://schema.org",
+    "@type": "CreativeWork",
+    name: "Collection Prestige",
+    description:
+      "Guide annuel des plus beaux spas et adresses bien-être sélectionnés par Spa & Prestige Collection et Isabelle Charrier (Sense of Wellness).",
+    genre: "Bien-être, Spa, Luxe",
+    publisher: { "@type": "Organization", name: "Spa & Prestige Collection" },
+    creator: { "@type": "Person", name: "Isabelle Charrier" },
+    inLanguage: "fr-FR",
+    image: imageUrl,
+    url: canonicalUrl,
+  };
 
   return (
     <>
@@ -41,54 +67,23 @@ export default function Page() {
         <meta name="twitter:title" content={pageTitle} />
         <meta name="twitter:description" content={pageDescription} />
         <meta name="twitter:image" content={imageUrl} />
-
-        {/* JSON-LD Breadcrumb */}
-        <script type="application/ld+json">
-          {JSON.stringify({
-            "@context": "https://schema.org",
-            "@type": "BreadcrumbList",
-            "itemListElement": [
-              { "@type": "ListItem", "position": 1, "name": "Accueil", "item": CONFIG.frontUrl },
-              { "@type": "ListItem", "position": 2, "name": "Collection Prestige", "item": canonicalUrl }
-            ]
-          })}
-        </script>
-
-        {/* JSON-LD WebPage */}
-        <script type="application/ld+json">
-          {JSON.stringify({
-            "@context": "https://schema.org",
-            "@type": "WebPage",
-            "name": pageTitle,
-            "description": pageDescription,
-            "url": canonicalUrl,
-            "image": imageUrl,
-            "publisher": {
-              "@type": "Organization",
-              "name": "Spa & Prestige Collection",
-              "logo": { "@type": "ImageObject", "url": `${CONFIG.frontUrl}/logo.png` }
-            },
-            "author": { "@type": "Person", "name": "Isabelle Charrier" },
-            "inLanguage": "fr-FR"
-          })}
-        </script>
-
-        {/* JSON-LD CreativeWork */}
-        <script type="application/ld+json">
-          {JSON.stringify({
-            "@context": "https://schema.org",
-            "@type": "CreativeWork",
-            "name": "Collection Prestige ",
-            "description": "Guide annuel des plus beaux spas et adresses bien-être sélectionnés par Spa & Prestige Collection et Isabelle Charrier (Sense of Wellness).",
-            "genre": "Bien-être, Spa, Luxe",
-            "publisher": { "@type": "Organization", "name": "Spa & Prestige Collection" },
-            "creator": { "@type": "Person", "name": "Isabelle Charrier" },
-            "inLanguage": "fr-FR",
-            "image": imageUrl,
-            "url": canonicalUrl
-          })}
-        </script>
       </Helmet>
+
+      <JsonLd
+        data={[
+          webPageSchema({
+            title: pageTitle,
+            description: pageDescription,
+            url: location.pathname,
+            image: imageUrl,
+          }),
+          creativeWorkSchema,
+          organizationSchema(),
+          breadcrumbSchema(breadcrumbItems),
+        ].filter(Boolean)}
+      />
+
+      <Breadcrumb items={breadcrumbItems} className="container mx-auto px-4" />
 
       <CollectionPrestigePage />
     </>

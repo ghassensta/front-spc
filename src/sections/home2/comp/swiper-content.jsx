@@ -4,6 +4,7 @@ import { CONFIG } from "src/config-global";
 import { useTranslation } from "src/context/translation-context";
 import PropTypes from "prop-types";
 import Card from "src/components/card/card";
+import { FaArrowLeft, FaArrowRight } from "react-icons/fa"; // ← même import que card.jsx
 
 const SwiperContent = ({ slidesPerView = 3, data = [] }) => {
   const [Swiper, setSwiper] = useState(null);
@@ -11,8 +12,6 @@ const SwiperContent = ({ slidesPerView = 3, data = [] }) => {
   const nextRef = useRef(null);
   const swiperRef = useRef(null);
   const { translateSync } = useTranslation();
-
-  //console.log("xxxxxxxxxxxxxxxxxxxxxxx", data);
 
   // Lazy charger Swiper seulement si nécessaire
   useEffect(() => {
@@ -87,7 +86,6 @@ const SwiperContent = ({ slidesPerView = 3, data = [] }) => {
               key={item.id ? `item-${item.id}` : `slide-${index}`}
               className="pt-8"
             >
-              {/* Card component here - simplifié pour le fallback */}
               <div className="bg-white rounded-lg shadow-md p-4">
                 <div className="w-full h-48 bg-gray-200 rounded mb-4"></div>
                 <h3 className="text-lg font-semibold mb-2">
@@ -102,13 +100,10 @@ const SwiperContent = ({ slidesPerView = 3, data = [] }) => {
   }
 
   if (data.length === 1) {
-    // Single item - no Swiper needed
     const item = data[0];
-
     return (
       <div className="relative max-w-[1200px] mx-auto px-4 md:px-12">
         <div className="pt-8">
-          {/* Card component here */}
           <Card
             to={item.slug ? paths.product(item.slug) : "#"}
             title={translateSync(item.name || "Produit")}
@@ -152,7 +147,6 @@ const SwiperContent = ({ slidesPerView = 3, data = [] }) => {
       >
         {data.map((item, index) => {
           if (!item) return null;
-
           return (
             <Swiper.SwiperSlide
               className="pt-8 h-auto"
@@ -190,25 +184,25 @@ const SwiperContent = ({ slidesPerView = 3, data = [] }) => {
         })}
       </Swiper.Swiper>
 
-      {/* Navigation buttons */}
+      {/* Navigation buttons — mêmes icônes que card.jsx */}
       {data.length > 1 && (
         <>
           <button
             ref={prevRef}
             onClick={handlePrev}
             aria-label={translateSync("Précédent")}
-            className="absolute left-0 top-[35%] -translate-y-1/2 bg-[#b8955a] hover:bg-[#9a977d] rounded-full w-8 h-8 z-10 cursor-pointer flex items-center justify-center transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-[#b8955a] text-white focus:ring-opacity-50"
+            className="absolute left-0 top-[35%] -translate-y-1/2 bg-[#1a1a1a] hover:bg-[#b8955a] rounded-full w-8 h-8 z-10 cursor-pointer flex items-center justify-center transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-[#1a1a1a] text-white focus:ring-opacity-50"
           >
-            ←
+            <FaArrowLeft className="text-xs" />
           </button>
 
           <button
             ref={nextRef}
             onClick={handleNext}
             aria-label={translateSync("Suivant")}
-            className="absolute right-0 top-[35%] -translate-y-1/2 bg-[#b8955a] hover:bg-[#9a977d] rounded-full w-8 h-8 z-10 cursor-pointer flex items-center justify-center transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-[#b8955a] text-white focus:ring-opacity-50"
+            className="absolute right-0 top-[35%] -translate-y-1/2 bg-[#1a1a1a] hover:bg-[#b8955a] rounded-full w-8 h-8 z-10 cursor-pointer flex items-center justify-center transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-[#1a1a1a] text-white focus:ring-opacity-50"
           >
-            →
+            <FaArrowRight className="text-xs" />
           </button>
         </>
       )}
@@ -218,7 +212,6 @@ const SwiperContent = ({ slidesPerView = 3, data = [] }) => {
         .swiper-button-next:after {
           display: none !important;
         }
-
         .swiper-slide:focus {
           outline: none;
         }

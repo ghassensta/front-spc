@@ -141,16 +141,63 @@ export function faqSchema(faqs) {
   };
 }
 
-export function articleSchema(article) {
-  if (!article) return null;
-  const image = resolveImage(article.image || article.photo);
+export function webPageSchema({ title, description, url, image, type = "WebPage" } = {}) {
+  if (!title) return null;
+  const resolvedImage = resolveImage(image);
   return {
     "@context": "https://schema.org",
-    "@type": "Article",
+    "@type": type,
+    name: title,
+    description,
+    url: absUrl(url),
+    inLanguage: "fr-FR",
+    ...(resolvedImage && { image: resolvedImage }),
+    isPartOf: {
+      "@type": "WebSite",
+      name: ORG_NAME,
+      url: BASE,
+    },
+    publisher: {
+      "@type": "Organization",
+      name: ORG_NAME,
+      logo: { "@type": "ImageObject", url: LOGO },
+    },
+  };
+}
+
+export function itemListSchema(items = [], { name } = {}) {
+  if (!items.length) return null;
+  return {
+    "@context": "https://schema.org",
+    "@type": "ItemList",
+    ...(name && { name }),
+    numberOfItems: items.length,
+    itemListElement: items.map((it, i) => ({
+      "@type": "ListItem",
+      position: i + 1,
+      name: it.name,
+      url: absUrl(it.url),
+    })),
+  };
+}
+
+export function articleSchema(article, { type = "Article", url } = {}) {
+  if (!article) return null;
+  const rawImage =
+    article.image ||
+    article.photo ||
+    (article.thumbnail_path ? `/storage/${article.thumbnail_path}` : null);
+  const image = resolveImage(rawImage) || rawImage;
+  const authorName = article.user?.name || article.author || ORG_NAME;
+  const mainUrl = absUrl(url || `/actualites/${article.slug || ""}`);
+  return {
+    "@context": "https://schema.org",
+    "@type": type,
     headline: article.titre || article.title,
-    description: article.description || article.meta_description,
+    description:
+      article.description || article.meta_description || article.excerpt,
     ...(image && { image }),
-    author: { "@type": "Organization", name: ORG_NAME },
+    author: { "@type": "Person", name: authorName },
     publisher: {
       "@type": "Organization",
       name: ORG_NAME,
@@ -158,6 +205,7 @@ export function articleSchema(article) {
     },
     datePublished: article.published_at || article.created_at,
     dateModified: article.updated_at || article.created_at,
-    mainEntityOfPage: absUrl(`/actualites/${article.slug}`),
+    mainEntityOfPage: { "@type": "WebPage", "@id": mainUrl },
+    ...(article.meta_keywords && { keywords: article.meta_keywords }),
   };
 }

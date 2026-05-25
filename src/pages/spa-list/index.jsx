@@ -4,11 +4,14 @@ import SeoHead from "../../components/seo/SeoHead";
 import JsonLd from "../../components/seo/JsonLd";
 import Breadcrumb from "../../components/seo/Breadcrumb";
 import { breadcrumbSchema, faqSchema } from "../../lib/schema";
+import { usePrerenderReady } from "../../hooks/use-prerender-ready";
 import theImage from "src/assets/images/SPA-images-1975x1318-Qui-Sommes-Nous-02.jpg";
 
 export default function Page() {
   const { villes, types, services, filtersLoading } =
     useGetFiltersEtablissements();
+
+  usePrerenderReady(!filtersLoading);
 
   const pageTitle = "Nos Établissements Spa";
   const pageDescription =

@@ -73,7 +73,7 @@ const Search = () => {
           asH1
         />
 
-        <h2 className="mb-8 font-light text-2xl md:text-3xl text-[#b8955a]">
+        <h2 className="mb-8 font-light text-2xl md:text-3xl text-black">
           {translateSync(section.description)}
         </h2>
 
@@ -200,7 +200,7 @@ const Search = () => {
             ) : (
               <button
                 disabled
-                className="bg-gray-300 text-gray-500 p-3 rounded-md w-full uppercase tracking-wider text-sm font-medium cursor-not-allowed"
+                className="bg-black text-white p-3 rounded-md w-full uppercase tracking-wider text-sm font-medium cursor-not-allowed"
               >
                 {translateSync("Rechercher")}
               </button>

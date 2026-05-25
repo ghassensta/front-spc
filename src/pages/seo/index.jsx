@@ -5,10 +5,13 @@ import SeoHead from "../../components/seo/SeoHead";
 import JsonLd from "../../components/seo/JsonLd";
 import Breadcrumb from "../../components/seo/Breadcrumb";
 import { breadcrumbSchema } from "../../lib/schema";
+import { usePrerenderReady } from "../../hooks/use-prerender-ready";
 
 export default function Page() {
   const location = useLocation();
   const { pageseo, pageseoLoading } = useGetList();
+
+  usePrerenderReady(!pageseoLoading);
 
   const pageTitle = "Secteurs d'Activités Spa";
   const pageDescription =

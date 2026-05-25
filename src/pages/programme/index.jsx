@@ -2,32 +2,36 @@ import React from "react";
 import { Helmet } from "react-helmet-async";
 import { useLocation } from "react-router-dom";
 import ProgrammePageView from "src/sections/programme/programme-page-view";
+import JsonLd from "src/components/seo/JsonLd";
+import Breadcrumb from "src/components/seo/Breadcrumb";
+import {
+  webPageSchema,
+  breadcrumbSchema,
+  organizationSchema,
+} from "src/lib/schema";
 import theImage from "src/assets/images/SPC-coeur-1975x1318-01.jpg";
 
 export default function Page() {
   const location = useLocation();
-  const currentUrl = `${window.location.origin}${location.pathname}`; // URL dynamique
+  const currentUrl = `${window.location.origin}${location.pathname}`;
 
   const pageTitle = "Programme de Parrainage - Spa & Prestige Collection";
   const pageDescription =
     "Gagnez 5€ en bon d'achat en parrainant vos amis ! Programme de parrainage simple et généreux pour partager vos adresses bien-être préférées.";
   const imageUrl = theImage;
 
-  const schemaData = {
+  const breadcrumbItems = [
+    { label: "Accueil", path: "/" },
+    { label: "Programme de Parrainage", path: location.pathname },
+  ];
+
+  const referralProgramSchema = {
     "@context": "https://schema.org",
     "@type": "WebPage",
     name: pageTitle,
     description: pageDescription,
     url: currentUrl,
     image: imageUrl,
-    publisher: {
-      "@type": "Organization",
-      name: "Spa & Prestige Collection",
-      logo: {
-        "@type": "ImageObject",
-        url: `${window.location.origin}/logo.png`, // logo dynamique
-      },
-    },
     mainEntity: {
       "@type": "ReferralProgram",
       name: "Spa & Prestige Collection - Programme de Parrainage",
@@ -47,25 +51,6 @@ export default function Page() {
         description: "5€ offerts sur la première commande du filleul",
       },
     },
-  };
-
-  const breadcrumbSchema = {
-    "@context": "https://schema.org",
-    "@type": "BreadcrumbList",
-    itemListElement: [
-      {
-        "@type": "ListItem",
-        position: 1,
-        name: "Accueil",
-        item: window.location.origin, // dynamique
-      },
-      {
-        "@type": "ListItem",
-        position: 2,
-        name: "Programme de Parrainage",
-        item: currentUrl, // dynamique
-      },
-    ],
   };
 
   return (
@@ -91,15 +76,23 @@ export default function Page() {
         <meta name="twitter:title" content={pageTitle} />
         <meta name="twitter:description" content={pageDescription} />
         <meta name="twitter:image" content={imageUrl} />
-
-        <script type="application/ld+json">
-          {JSON.stringify(schemaData)}
-        </script>
-
-        <script type="application/ld+json">
-          {JSON.stringify(breadcrumbSchema)}
-        </script>
       </Helmet>
+
+      <JsonLd
+        data={[
+          referralProgramSchema,
+          webPageSchema({
+            title: pageTitle,
+            description: pageDescription,
+            url: location.pathname,
+            image: imageUrl,
+          }),
+          organizationSchema(),
+          breadcrumbSchema(breadcrumbItems),
+        ].filter(Boolean)}
+      />
+
+      <Breadcrumb items={breadcrumbItems} className="container mx-auto px-4" />
 
       <ProgrammePageView />
     </>

@@ -121,18 +121,20 @@ export default function PageCagnotte() {
         opacity={45}
       >
         <div className="flex flex-col gap-3 mt-2">
+          {/* CTA Principal Hero — même forme + hover doré que le reste du site */}
           <Link
             to={paths.cagnotte.create}
-            className="inline-flex items-center gap-2 px-8 py-3 rounded-full text-sm font-semibold uppercase text-white transition-colors w-fit"
+            className="inline-flex items-center gap-2 uppercase tracking-widest rounded-full px-6 py-3 text-sm font-normal text-white transition-all duration-300 w-fit"
             style={{
-              backgroundColor: GOLD,
-              letterSpacing: "0.08em",
+              backgroundColor: "#1a1a1a",
               fontFamily: FONT,
             }}
             onMouseEnter={(e) =>
+              (e.currentTarget.style.backgroundColor = GOLD)
+            }
+            onMouseLeave={(e) =>
               (e.currentTarget.style.backgroundColor = "#1a1a1a")
             }
-            onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = GOLD)}
           >
             <TranslatedText text="Créer ma cagnotte" />
             <FaArrowRight className="text-xs" />
@@ -323,10 +325,10 @@ export default function PageCagnotte() {
             ))}
           </div>
           <div className="flex justify-center">
+            {/* CTA Principal — création de cagnotte (conversion) */}
             <ButtonLink
               to={paths.cagnotte.create}
               text="Créer ma cagnotte"
-              hoverColor={GOLD}
               icon={<FaArrowRight className="text-xs" />}
             />
           </div>
@@ -415,13 +417,13 @@ export default function PageCagnotte() {
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           {[
             {
-              title: "Découvrir nos spas",
+              title: "Decouvrir nos etablissements",
               desc: "Explorez notre sélection d'établissements partenaires de prestige.",
               link: paths.spa.list,
             },
             {
-              title: "Cartes cadeaux",
-              desc: "Offrez une carte cadeau individuelle pour un moment de bien-être.",
+              title: "La Carte Cadeau",
+              desc: "offrez un moment de détente à choisir parmi nos adresses",
               link: paths.cadeau,
             },
           ].map((item, i) => (
@@ -483,17 +485,17 @@ export default function PageCagnotte() {
           <p className="text-sm mb-8 opacity-90" style={{ fontFamily: FONT }}>
             <TranslatedText text="Quelques clics suffisent pour offrir ensemble un moment d'exception" />
           </p>
+          {/* CTA Principal final — même forme + hover doré que le système */}
           <Link
             to={paths.cagnotte.create}
-            className="inline-flex items-center gap-3 px-10 py-3 rounded-full text-sm font-semibold uppercase transition-colors"
+            className="inline-flex items-center gap-3 uppercase tracking-widest rounded-full px-6 py-3 text-sm font-normal transition-all duration-300"
             style={{
               backgroundColor: "#1a1a1a",
               color: "#fff",
-              letterSpacing: "0.08em",
               fontFamily: FONT,
             }}
             onMouseEnter={(e) =>
-              (e.currentTarget.style.backgroundColor = "#333")
+              (e.currentTarget.style.backgroundColor = GOLD)
             }
             onMouseLeave={(e) =>
               (e.currentTarget.style.backgroundColor = "#1a1a1a")
