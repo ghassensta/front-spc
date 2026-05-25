@@ -1,11 +1,15 @@
 import { useParams, useLocation } from "react-router-dom";
-import { toast } from "react-toastify";
 import { useGetFiltersEtablissements } from "src/actions/etablissements";
 import { useCategoryProducts } from "src/hooks/useCategoryProducts";
-import { useRouter } from "src/hooks";
-import { paths } from "src/router/paths";
 import CategoriesPageView from "src/sections/categories/view/categories-page-view";
 import { Helmet } from "react-helmet-async";
+import JsonLd from "../../components/seo/JsonLd";
+import Breadcrumb from "../../components/seo/Breadcrumb";
+import {
+  webPageSchema,
+  breadcrumbSchema,
+  organizationSchema,
+} from "../../lib/schema";
 
 export default function Page() {
   const { slug }   = useParams();
@@ -25,6 +29,15 @@ export default function Page() {
   const pageKeywords = slug
     ? (category?.meta_keywords || `${category?.nom || ""}, SPA, bien-être`)
     : "catégories spa, hôtel spa, thermes, institut beauté, day spa, bien-être";
+
+  const canonical = `${window.location.origin}${location.pathname}`;
+
+  const breadcrumbItems = [
+    { label: "Accueil", path: "/" },
+    { label: "Catégories", path: "/categories" },
+    ...(slug ? [{ label: category?.nom || slug, path: location.pathname }] : []),
+  ];
+
   return (
     <>
       <Helmet htmlAttributes={{ lang: "fr" }}>
@@ -35,13 +48,28 @@ export default function Page() {
         <meta property="og:title" content={pageTitle} />
         <meta property="og:description" content={pageDescription} />
         <meta property="og:type"  content="website" />
-        <meta property="og:url"   content={`${window.location.origin}${location.pathname}`} />
+        <meta property="og:url"   content={canonical} />
         <meta name="twitter:card" content="summary_large_image" />
-        <link rel="canonical"     href={`${window.location.origin}${location.pathname}`} />
+        <link rel="canonical"     href={canonical} />
       </Helmet>
 
+      <JsonLd
+        data={[
+          webPageSchema({
+            title: pageTitle,
+            description: pageDescription,
+            url: location.pathname,
+            type: "CollectionPage",
+          }),
+          breadcrumbSchema(breadcrumbItems),
+          organizationSchema(),
+        ].filter(Boolean)}
+      />
+
+      <Breadcrumb items={breadcrumbItems} className="container mx-auto px-4" />
+
       <CategoriesPageView
-        {...categoryData}   
+        {...categoryData}
         slug_categorie={slug}
         description={category?.description}
         nomcat={category?.nom}

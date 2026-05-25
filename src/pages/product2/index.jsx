@@ -4,6 +4,7 @@ import ProductDetailsView from "src/sections/product-details/product-details-vie
 import SeoHead from "../../components/seo/SeoHead";
 import JsonLd from "../../components/seo/JsonLd";
 import Breadcrumb from "../../components/seo/Breadcrumb";
+import NotFound from "../not-found/NotFound";
 import { productSchema, breadcrumbSchema } from "../../lib/schema";
 import { usePrerenderReady } from "../../hooks/use-prerender-ready";
 
@@ -22,6 +23,10 @@ export default function Page() {
   // Pour le prérendu : attendre que le produit soit RÉELLEMENT chargé
   // (et pas juste que loading=false avec product=null).
   usePrerenderReady(!productLoading && !!product);
+
+  if (!productLoading && !product) {
+    return <NotFound />;
+  }
 
   const nom = product?.nom || product?.name || "Produit";
   const pageTitle = product?.meta_title || nom;

@@ -2,6 +2,13 @@ import { useLocation } from "react-router-dom";
 import ShowCagnotte from "src/sections/cagnotte/view/show-cagnotte";
 import { Helmet } from "react-helmet-async";
 import { CONFIG } from "src/config-global";
+import JsonLd from "src/components/seo/JsonLd";
+import Breadcrumb from "src/components/seo/Breadcrumb";
+import {
+  webPageSchema,
+  breadcrumbSchema,
+  organizationSchema,
+} from "src/lib/schema";
 
 export default function Page() {
   const location = useLocation();
@@ -13,7 +20,11 @@ export default function Page() {
     "Découvrez notre sélection de cartes cadeaux. Offrez la liberté de choisir avec nos cartes cadeaux disponibles en plusieurs montants.";
   const imageUrl = `${CONFIG.frontUrl}/og-carte-cadeau.jpg`;
 
- 
+  const breadcrumbItems = [
+    { label: "Accueil", path: "/" },
+    { label: "Cagnotte", path: "/cagnotte" },
+    { label: "Détails", path: location.pathname },
+  ];
 
   return (
     <>
@@ -33,6 +44,21 @@ export default function Page() {
         <meta property="og:url" content={canonicalUrl} />
         <meta property="og:site_name" content="Spa & Prestige Collection" />
       </Helmet>
+
+      <JsonLd
+        data={[
+          webPageSchema({
+            title: pageTitle,
+            description: pageDescription,
+            url: location.pathname,
+            image: imageUrl,
+          }),
+          breadcrumbSchema(breadcrumbItems),
+          organizationSchema(),
+        ].filter(Boolean)}
+      />
+
+      <Breadcrumb items={breadcrumbItems} className="container mx-auto px-4" />
 
       <ShowCagnotte />
     </>

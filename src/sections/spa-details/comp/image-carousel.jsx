@@ -110,6 +110,33 @@ export default function ImageCarousel({ images = [] }) {
           <IoImageOutline className="text-xl" />
           {translateSync("Voir les photos")}
         </button>
+
+        {/* ── Dots (indicateurs de slide) ── */}
+        {imgLength > 1 && (
+          <div
+            className="absolute bottom-4 left-1/2 -translate-x-1/2 z-10 flex items-center gap-2"
+            role="tablist"
+            aria-label={translateSync("Navigation des images")}
+          >
+            {images.map((_, index) => (
+              <button
+                key={index}
+                onClick={() => {
+                  setCurrentSlide(index);
+                  resetTimer();
+                }}
+                role="tab"
+                aria-selected={index === currentSlide}
+                aria-label={translateSync(`Aller à l'image ${index + 1}`)}
+                className={`rounded-full transition-all duration-300 ${
+                  index === currentSlide
+                    ? "bg-white w-6 h-2"
+                    : "bg-white/60 hover:bg-white/90 w-2 h-2"
+                }`}
+              />
+            ))}
+          </div>
+        )}
       </div>
 
       {/* ── MODAL GALERIE MASONRY ─────────────────────────────────────────── */}

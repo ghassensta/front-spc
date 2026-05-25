@@ -1,12 +1,12 @@
 import { Helmet } from "react-helmet-async";
 import HomeViewPage from "../../sections/home2/home-view-page2";
+import JsonLd from "../../components/seo/JsonLd";
 import {
   websiteSchema,
   organizationSchema,
   faqSchema,
 } from "../../lib/schema";
 import { usePrerenderReady } from "../../hooks/use-prerender-ready";
-import theImage from "src/assets/images/SPA-images-1975x1318-Qui-Sommes-Nous-02.jpg";
 
 const FAQS = [
   {
@@ -68,17 +68,15 @@ export default function Page() {
         <meta name="twitter:title" content={pageTitle} />
         <meta name="twitter:description" content={pageDescription} />
         <meta name="twitter:image" content={`${BASE}/spa-prestige-logo.png`} />
-
-        <script type="application/ld+json">
-          {JSON.stringify(websiteSchema())}
-        </script>
-        <script type="application/ld+json">
-          {JSON.stringify(organizationSchema())}
-        </script>
-        <script type="application/ld+json">
-          {JSON.stringify(faqSchema(FAQS))}
-        </script>
       </Helmet>
+
+      <JsonLd
+        data={[
+          websiteSchema(),
+          organizationSchema(),
+          faqSchema(FAQS),
+        ].filter(Boolean)}
+      />
 
       <HomeViewPage />
     </>

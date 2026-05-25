@@ -4,6 +4,7 @@ import { useGetEtablissement } from "src/actions/etablissements";
 import SeoHead from "../../components/seo/SeoHead";
 import JsonLd from "../../components/seo/JsonLd";
 import Breadcrumb from "../../components/seo/Breadcrumb";
+import NotFound from "../not-found/NotFound";
 import { localBusinessSchema, breadcrumbSchema } from "../../lib/schema";
 import { usePrerenderReady } from "../../hooks/use-prerender-ready";
 
@@ -30,33 +31,7 @@ export default function Page() {
   usePrerenderReady(!loading && (!!etablissement || !!error));
 
   if (error || (!etablissement && !loading)) {
-    return (
-      <>
-        <SeoHead
-          title="Établissement non trouvé"
-          description="L'établissement recherché est introuvable ou n'est plus disponible."
-          canonical={location.pathname}
-          noindex
-        />
-        <div className="flex flex-col items-center justify-center min-h-[60vh] text-center px-4">
-          <div className="bg-red-100 border border-red-400 text-red-700 px-6 py-8 rounded-lg shadow-md max-w-md w-full">
-            <h1 className="text-2xl font-semibold mb-2">
-              Oups ! Établissement non trouvé
-            </h1>
-            <p className="text-gray-700 mb-4">
-              L’établissement que vous cherchez n’existe pas ou n’est pas encore
-              publié.
-            </p>
-            <a
-              href="/liste-des-spas"
-              className="inline-block bg-red-600 text-white px-5 py-2 rounded-md shadow hover:bg-red-700 transition"
-            >
-              Voir la liste des spas
-            </a>
-          </div>
-        </div>
-      </>
-    );
+    return <NotFound />;
   }
 
   // SEO fallbacks

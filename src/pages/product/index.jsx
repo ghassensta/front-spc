@@ -4,6 +4,7 @@ import { useGetProduct } from "src/actions/products";
 import SeoHead from "../../components/seo/SeoHead";
 import JsonLd from "../../components/seo/JsonLd";
 import Breadcrumb from "../../components/seo/Breadcrumb";
+import NotFound from "../not-found/NotFound";
 import { productSchema, breadcrumbSchema } from "../../lib/schema";
 import { usePrerenderReady } from "../../hooks/use-prerender-ready";
 
@@ -14,6 +15,10 @@ export default function Page() {
     useGetProduct(slug);
 
   usePrerenderReady(!productLoading && !!product);
+
+  if (!productLoading && !product) {
+    return <NotFound />;
+  }
 
   const nom = product?.nom || product?.name || "Produit";
   const pageTitle = product?.meta_title || nom;

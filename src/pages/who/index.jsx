@@ -1,6 +1,13 @@
 import { useLocation } from "react-router-dom";
 import WhoPageView from "src/sections/who/view/who-page-view";
 import { Helmet } from "react-helmet-async";
+import JsonLd from "src/components/seo/JsonLd";
+import Breadcrumb from "src/components/seo/Breadcrumb";
+import {
+  organizationSchema,
+  breadcrumbSchema,
+  webPageSchema,
+} from "src/lib/schema";
 import theImage from "src/assets/images/SPA-images-1975x1318-Qui-Sommes-Nous-02.jpg";
 
 export default function Page() {
@@ -14,51 +21,10 @@ export default function Page() {
     "spa prestige, bien-être, spa collection, relaxation, thermes, expérience spa, établissement spa";
   const imageUrl = theImage;
 
-  const schemaData = {
-    "@context": "https://schema.org",
-    "@type": "Organization",
-    "name": "Spa & Prestige Collection",
-    "description": pageDescription,
-    "url": "https://spa-prestige-collection.com",
-    "logo": "https://spa-prestige-collection.com/logo.png",
-    "image": imageUrl,
-    "sameAs": [
-      "https://www.facebook.com/spaPrestigeCollection",
-      "https://www.instagram.com/spaPrestigeCollection",
-      "https://www.linkedin.com/company/spa-prestige-collection"
-    ],
-    "contactPoint": {
-      "@type": "ContactPoint",
-      "contactType": "Customer Support",
-      "email": "contact@spa-prestige-collection.com"
-    },
-    "knowsAbout": ["Spa", "Bien-être", "Relaxation", "Thermes", "Massages"],
-    "areaServed": ["FR", "IT", "ES", "DE"],
-    "foundingDate": "2024",
-    "founder": {
-      "@type": "Person",
-      "name": "Spa & Prestige Collection"
-    }
-  };
-
-  const breadcrumbSchema = {
-    "@context": "https://schema.org",
-    "@type": "BreadcrumbList",
-    "itemListElement": [
-      {
-        "@type": "ListItem",
-        "position": 1,
-        "name": "Accueil",
-        "item": window.location.origin
-      },
-      {
-        "@type": "ListItem",
-        "position": 2,
-        "name": "Qui Sommes-Nous",
-        "item": canonicalUrl
-      }
-    ]
-  };
+  const breadcrumbItems = [
+    { label: "Accueil", path: "/" },
+    { label: "Qui Sommes-Nous", path: location.pathname },
+  ];
 
   return (
     <>
@@ -71,10 +37,8 @@ export default function Page() {
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <meta name="language" content="fr-FR" />
 
-        {/* Canonical dynamique */}
         <link rel="canonical" href={canonicalUrl} />
 
-        {/* Open Graph */}
         <meta property="og:type" content="website" />
         <meta property="og:title" content={pageTitle} />
         <meta property="og:description" content={pageDescription} />
@@ -82,16 +46,27 @@ export default function Page() {
         <meta property="og:url" content={canonicalUrl} />
         <meta property="og:site_name" content="Spa & Prestige Collection" />
 
-        {/* Twitter Card */}
         <meta name="twitter:card" content="summary_large_image" />
         <meta name="twitter:title" content={pageTitle} />
         <meta name="twitter:description" content={pageDescription} />
         <meta name="twitter:image" content={imageUrl} />
-
-        {/* JSON-LD */}
-        <script type="application/ld+json">{JSON.stringify(schemaData)}</script>
-        <script type="application/ld+json">{JSON.stringify(breadcrumbSchema)}</script>
       </Helmet>
+
+      <JsonLd
+        data={[
+          organizationSchema(),
+          webPageSchema({
+            title: pageTitle,
+            description: pageDescription,
+            url: location.pathname,
+            image: imageUrl,
+            type: "AboutPage",
+          }),
+          breadcrumbSchema(breadcrumbItems),
+        ].filter(Boolean)}
+      />
+
+      <Breadcrumb items={breadcrumbItems} className="container mx-auto px-4" />
 
       <WhoPageView />
     </>

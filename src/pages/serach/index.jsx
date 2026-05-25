@@ -4,12 +4,18 @@ import { Helmet } from "react-helmet-async";
 import { useSearchProduits } from "src/actions/serach";
 import SearchPageView from "src/sections/serach/view/view-serach";
 import { useRouter } from "src/hooks";
+import JsonLd from "src/components/seo/JsonLd";
+import Breadcrumb from "src/components/seo/Breadcrumb";
+import {
+  breadcrumbSchema,
+  organizationSchema,
+} from "src/lib/schema";
 import theImage from "src/assets/images/SPA-images-1975x1318-Qui-Sommes-Nous-02.jpg";
 
 export default function SearchPage() {
   const { catSlug, villeSlug } = useParams();
   const location = useLocation();
-  const currentUrl = `${window.location.origin}${location.pathname}`; // URL dynamique
+  const currentUrl = `${window.location.origin}${location.pathname}`;
   const router = useRouter();
 
   const { data, loading } = useSearchProduits(catSlug, villeSlug);
@@ -19,19 +25,30 @@ export default function SearchPage() {
     return null;
   }
 
-  const pageTitle = villeSlug && catSlug 
+  const pageTitle = villeSlug && catSlug
     ? `${data?.categorie || catSlug} à ${data?.ville || villeSlug} - Spa & Prestige Collection`
     : villeSlug
     ? `Spas à ${data?.ville || villeSlug} - Spa & Prestige Collection`
     : `${data?.categorie || catSlug} - Spa & Prestige Collection`;
 
   const pageDescription = villeSlug && catSlug
-    ? `Découvrez nos ${data?.categorie || catSlug} à ${data?.ville || villeSlug} (${data?.code_postal || ''}). ${data?.total || 0} établissements de prestige sélectionnés pour vous.`
+    ? `Découvrez nos ${data?.categorie || catSlug} à ${data?.ville || villeSlug} (${data?.code_postal || ""}). ${data?.total || 0} établissements de prestige sélectionnés pour vous.`
     : villeSlug
     ? `Trouvez les meilleurs spas et établissements de bien-être à ${data?.ville || villeSlug}. ${data?.total || 0} lieux d'exception à explorer.`
     : `Découvrez nos ${data?.categorie || catSlug} - établissements de prestige pour votre bien-être. ${data?.total || 0} options disponibles.`;
 
   const imageUrl = theImage;
+
+  const breadcrumbItems = [
+    { label: "Accueil", path: "/" },
+    { label: "Établissements", path: "/etablissements" },
+    ...(catSlug
+      ? [{ label: data?.categorie || catSlug, path: `/search/${catSlug}` }]
+      : []),
+    ...(villeSlug
+      ? [{ label: data?.ville || villeSlug, path: location.pathname }]
+      : []),
+  ];
 
   const searchResultsSchema = {
     "@context": "https://schema.org",
@@ -49,41 +66,9 @@ export default function SearchPage() {
         name: item.name || "Établissement",
         description: item.description || "Établissement de prestige",
         image: item.image || imageUrl,
-        url: `${window.location.origin}/etablissements/${item.id || item.slug}` // URL dynamique
-      }))
-    }
-  };
-
-  // Breadcrumbs Schema
-  const breadcrumbSchema = {
-    "@context": "https://schema.org",
-    "@type": "BreadcrumbList",
-    itemListElement: [
-      {
-        "@type": "ListItem",
-        position: 1,
-        name: "Accueil",
-        item: window.location.origin // dynamique
-      },
-      {
-        "@type": "ListItem",
-        position: 2,
-        name: "Établissements",
-        item: `${window.location.origin}/etablissements`
-      },
-      ...(catSlug ? [{
-        "@type": "ListItem",
-        position: 3,
-        name: data?.categorie || catSlug,
-        item: `${window.location.origin}/search/${catSlug}`
-      }] : []),
-      ...(villeSlug ? [{
-        "@type": "ListItem",
-        position: catSlug ? 4 : 3,
-        name: data?.ville || villeSlug,
-        item: currentUrl
-      }] : [])
-    ]
+        url: `${window.location.origin}/etablissements/${item.id || item.slug}`,
+      })),
+    },
   };
 
   return (
@@ -93,7 +78,7 @@ export default function SearchPage() {
         <meta name="description" content={pageDescription} />
         <meta
           name="keywords"
-          content={`spa ${villeSlug || ''}, ${catSlug || ''}, bien-être, prestige, massage, relaxation, établissements`}
+          content={`spa ${villeSlug || ""}, ${catSlug || ""}, bien-être, prestige, massage, relaxation, établissements`}
         />
 
         <link rel="canonical" href={currentUrl} />
@@ -110,13 +95,20 @@ export default function SearchPage() {
         <meta name="twitter:description" content={pageDescription} />
         <meta name="twitter:image" content={imageUrl} />
 
-        <script type="application/ld+json">{JSON.stringify(searchResultsSchema)}</script>
-        <script type="application/ld+json">{JSON.stringify(breadcrumbSchema)}</script>
-
         <meta name="language" content="fr-FR" />
         <meta name="author" content="Spa & Prestige Collection" />
         <meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large" />
       </Helmet>
+
+      <JsonLd
+        data={[
+          searchResultsSchema,
+          organizationSchema(),
+          breadcrumbSchema(breadcrumbItems),
+        ].filter(Boolean)}
+      />
+
+      <Breadcrumb items={breadcrumbItems} className="container mx-auto px-4" />
 
       <SearchPageView
         produits={data?.results || []}
