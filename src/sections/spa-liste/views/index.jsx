@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef, useCallback } from "react";
+import React, { useState, useEffect, useRef, useCallback, useMemo } from "react";
 import SpaCard from "src/components/spa-card/spa-card";
 import { paths } from "src/router/paths";
 import CategoriesSkeleton from "../categories-skeleton";
@@ -86,7 +86,7 @@ export default function CategoriesPageView({
     total,
     loadMore,
   } = useGetAllEtablissementsInfinite(filters);
-  console.log("etablissements", etablissements);
+  // console.log("etablissements", etablissements);
   const loaderRef = useRef(null);
   const observerRef = useRef(null);
 
@@ -106,20 +106,24 @@ export default function CategoriesPageView({
     return () => observerRef.current?.disconnect();
   }, [handleIntersect]);
 
-  const typeOptions = types.map((t) => ({
-    value: t.id,
-    label: translateSync(t.name),
-  }));
-  const villeOptions = villes.map((v) => ({
-    value: v.id,
-    label: translateSync(v.name),
-  }));
-  const serviceOptions = services.map((s) => ({
-    value: s.id,
-    label: translateSync(s.name),
-  }));
-  const handleSelectChange = (name) => (selected) =>
-    setFilters((prev) => ({ ...prev, [name]: selected?.value ?? null }));
+  const typeOptions = useMemo(
+    () => types.map((t) => ({ value: t.id, label: translateSync(t.name) })),
+    [types, translateSync]
+  );
+  const villeOptions = useMemo(
+    () => villes.map((v) => ({ value: v.id, label: translateSync(v.name) })),
+    [villes, translateSync]
+  );
+  const serviceOptions = useMemo(
+    () => services.map((s) => ({ value: s.id, label: translateSync(s.name) })),
+    [services, translateSync]
+  );
+
+  const handleSelectChange = useCallback(
+    (name) => (selected) =>
+      setFilters((prev) => ({ ...prev, [name]: selected?.value ?? null })),
+    []
+  );
 
   if (filterLoading) return <FiltersSkeleton />;
 

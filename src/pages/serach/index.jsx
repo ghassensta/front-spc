@@ -25,17 +25,26 @@ export default function SearchPage() {
     return null;
   }
 
+  const categorieName =
+    typeof data?.categorie === "string"
+      ? data.categorie
+      : data?.categorie?.name || data?.categorie?.nom;
+  const villeName =
+    typeof data?.ville === "string"
+      ? data.ville
+      : data?.ville?.name || data?.ville?.nom;
+
   const pageTitle = villeSlug && catSlug
-    ? `${data?.categorie || catSlug} à ${data?.ville || villeSlug} - Spa & Prestige Collection`
+    ? `${categorieName || catSlug} à ${villeName || villeSlug} - Spa & Prestige Collection`
     : villeSlug
-    ? `Spas à ${data?.ville || villeSlug} - Spa & Prestige Collection`
-    : `${data?.categorie || catSlug} - Spa & Prestige Collection`;
+    ? `Spas à ${villeName || villeSlug} - Spa & Prestige Collection`
+    : `${categorieName || catSlug} - Spa & Prestige Collection`;
 
   const pageDescription = villeSlug && catSlug
-    ? `Découvrez nos ${data?.categorie || catSlug} à ${data?.ville || villeSlug} (${data?.code_postal || ""}). ${data?.total || 0} établissements de prestige sélectionnés pour vous.`
+    ? `Découvrez nos ${categorieName || catSlug} à ${villeName || villeSlug} (${data?.code_postal || ""}). ${data?.total || 0} établissements de prestige sélectionnés pour vous.`
     : villeSlug
-    ? `Trouvez les meilleurs spas et établissements de bien-être à ${data?.ville || villeSlug}. ${data?.total || 0} lieux d'exception à explorer.`
-    : `Découvrez nos ${data?.categorie || catSlug} - établissements de prestige pour votre bien-être. ${data?.total || 0} options disponibles.`;
+    ? `Trouvez les meilleurs spas et établissements de bien-être à ${villeName || villeSlug}. ${data?.total || 0} lieux d'exception à explorer.`
+    : `Découvrez nos ${categorieName || catSlug} - établissements de prestige pour votre bien-être. ${data?.total || 0} options disponibles.`;
 
   const imageUrl = theImage;
 
@@ -43,10 +52,10 @@ export default function SearchPage() {
     { label: "Accueil", path: "/" },
     { label: "Établissements", path: "/etablissements" },
     ...(catSlug
-      ? [{ label: data?.categorie || catSlug, path: `/search/${catSlug}` }]
+      ? [{ label: categorieName || catSlug, path: `/search/${catSlug}` }]
       : []),
     ...(villeSlug
-      ? [{ label: data?.ville || villeSlug, path: location.pathname }]
+      ? [{ label: villeName || villeSlug, path: location.pathname }]
       : []),
   ];
 
@@ -58,7 +67,7 @@ export default function SearchPage() {
     description: pageDescription,
     mainEntity: {
       "@type": "ItemList",
-      name: `Résultats - ${data?.categorie || catSlug}`,
+      name: `Résultats - ${categorieName || catSlug}`,
       numberOfItems: data?.total || 0,
       itemListElement: (data?.results || []).slice(0, 10).map((item, index) => ({
         "@type": "ListItem",

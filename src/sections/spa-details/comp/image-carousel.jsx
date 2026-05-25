@@ -103,18 +103,33 @@ export default function ImageCarousel({ images = [] }) {
           <FaChevronRight size={20} />
         </button>
 
+        {/* Mobile : icône ronde compacte */}
         <button
           onClick={() => setGalleryOpen(true)}
-          className="absolute bottom-3 right-3 z-10 px-2 py-2 opacity-80 bg-white text-black uppercase font-normal text-xs tracking-[2px] hover:bg-gray-200 transition font-tahoma flex items-center gap-2"
+          aria-label={translateSync("Voir les photos")}
+          className="md:hidden absolute bottom-3 right-3 z-10 w-10 h-10 rounded-full bg-white/90 text-black shadow-md flex items-center justify-center hover:bg-white transition"
+        >
+          <IoImageOutline className="text-xl" />
+          {imgLength > 1 && (
+            <span className="absolute -top-1 -right-1 min-w-[18px] h-[18px] px-1 rounded-full bg-black text-white text-[10px] font-tahoma flex items-center justify-center">
+              {imgLength}
+            </span>
+          )}
+        </button>
+
+        {/* Desktop : bouton avec texte */}
+        <button
+          onClick={() => setGalleryOpen(true)}
+          className="hidden md:flex absolute bottom-3 right-3 z-10 px-2 py-2 opacity-80 bg-white text-black uppercase font-normal text-xs tracking-[2px] hover:bg-gray-200 transition font-tahoma items-center gap-2"
         >
           <IoImageOutline className="text-xl" />
           {translateSync("Voir les photos")}
         </button>
 
-        {/* ── Dots (indicateurs de slide) ── */}
+        {/* ── Dots (indicateurs de slide) — cachés sur mobile ── */}
         {imgLength > 1 && (
           <div
-            className="absolute bottom-4 left-1/2 -translate-x-1/2 z-10 flex items-center gap-2"
+            className="hidden md:flex absolute bottom-4 left-1/2 -translate-x-1/2 z-10 items-center gap-2"
             role="tablist"
             aria-label={translateSync("Navigation des images")}
           >

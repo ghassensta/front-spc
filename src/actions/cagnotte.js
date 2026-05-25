@@ -8,8 +8,8 @@ export const createCagnotte = async (data) => {
     const url = endpoints.cagnottes.create;
 
     const response = await poster(url, data);
-    console.log("Response from createCagnotte:", response.data);
-    return response.data; 
+    // console.log("Response from createCagnotte:", response.data);
+    return response.data;
   } catch (error) {
     throw error?.response?.data || error;
   }

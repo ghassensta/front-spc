@@ -131,7 +131,7 @@ export default function CreerCagnotte() {
 
     try {
       const data = await createCagnotte(formData);
-      console.log("Cagnotte créée:", data);
+      // console.log("Cagnotte créée:", data);
 
       toast.success(t("Cagnotte créée avec succès !"));
       navigate(`/cagnotte/${data.slug}?token=${data.manage_token}`);

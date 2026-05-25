@@ -24,14 +24,27 @@ export default function SearchPageView() {
   });
 
   React.useEffect(() => {
-    if (data?.results) {
-      if (page === 1) {
-        setAllProduits(data.results);
-      } else {
-        setAllProduits((prev) => [...prev, ...data.results]);
-      }
+    if (!data?.results) return;
+
+    if (page === 1) {
+      setAllProduits(data.results);
+      return;
     }
+
+    setAllProduits((prev) => {
+      const seen = new Set(prev.map((p) => p.id ?? p.produit_id));
+      const fresh = data.results.filter(
+        (p) => !seen.has(p.id ?? p.produit_id)
+      );
+      return [...prev, ...fresh];
+    });
   }, [data, page]);
+
+  // Reset à la page 1 quand la recherche change
+  React.useEffect(() => {
+    setPage(1);
+    setAllProduits([]);
+  }, [catSlug, villeSlug]);
 
   const produits = allProduits;
   const total = data?.total || 0;
@@ -82,25 +95,30 @@ export default function SearchPageView() {
         <>
           {/* Grille des cartes */}
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-3 gap-6 md:gap-8">
-            {produits.map((p, index) => (
-              <Card
-                key={`${p.id ?? p.produit_id}-${index}`}
-                id={p.id ?? p.produit_id}
-                to={p.url}
-                headTitle={p.etablissement}
-                image={p.image}
-                title={p.label}
-                description={p.adresse_complete}
-                location={p.adresse_complete}
-                offreValue={p.remise_produit}
-                price={p.prix}
-                remise_desc_produit={p.remise_desc_produit}
-                exclusivite_image={p.exclusivite_image}
-                offre_flash={p.offre_flash}
-                date_debut={p.date_debut}
-                date_fin={p.date_fin}
-              />
-            ))}
+            {produits.map((p) => {
+              const cityCountry = [p.ville, p.pays || "France"]
+                .filter(Boolean)
+                .join(" - ");
+              return (
+                <Card
+                  key={p.id ?? p.produit_id}
+                  id={p.id ?? p.produit_id}
+                  to={p.url}
+                  headTitle={p.etablissement}
+                  image={p.image}
+                  title={p.label}
+                  description={cityCountry}
+                  location={cityCountry}
+                  offreValue={p.remise_produit}
+                  price={p.prix}
+                  remise_desc_produit={p.remise_desc_produit}
+                  exclusivite_image={p.exclusivite_image}
+                  offre_flash={p.offre_flash}
+                  date_debut={p.date_debut}
+                  date_fin={p.date_fin}
+                />
+              );
+            })}
           </div>
 
           {/* Bouton Charger plus */}

@@ -14,7 +14,7 @@ export default function Section({
   max = 3,
 }) {
   const { translateSync } = useTranslation();
-  console.log("Section data:", data);
+  // console.log("Section data:", data);
   return (
     <div
       className={`relative w-screen left-[calc(-50vw+50%)] overflow-hidden py-6 ${

@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState } from "react";
+import React, { useCallback, useEffect, useMemo, useState } from "react";
 import ImageCarousel from "../spa-details/comp/image-carousel";
 import ProductCarousel from "./comp/product-carousel";
 import { Link, useNavigate } from "react-router-dom";
@@ -29,13 +29,17 @@ export default function ({
   loading,
   servicesEquipements = [],
 }) {
-  console.log("etablissement", etablissement);
-  const gallery = [
-    ...(etablissement?.image_avant ? [etablissement.image_avant] : []),
-    ...(etablissement?.gallerie?.length > 0
-      ? etablissement.gallerie.map((img) => img)
-      : []),
-  ].filter(Boolean);
+  // console.log("etablissement", etablissement);
+  const gallery = useMemo(
+    () =>
+      [
+        ...(etablissement?.image_avant ? [etablissement.image_avant] : []),
+        ...(etablissement?.gallerie?.length > 0
+          ? etablissement.gallerie
+          : []),
+      ].filter(Boolean),
+    [etablissement?.image_avant, etablissement?.gallerie]
+  );
 
   const { translateSync } = useTranslation();
   const navigate = useNavigate();
