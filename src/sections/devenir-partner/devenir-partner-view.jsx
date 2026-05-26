@@ -10,6 +10,7 @@ import SectionHeader from "src/components/section-header/SectionHeader";
 import ButtonLink from "src/components/button-link/ButtonLink";
 import ContactInfo from "src/components/contact-info/ContactInfo";
 import Select from "react-select";
+import { paths } from "src/router/paths";
 import {
   FaBullseye,
   FaUsers,
@@ -17,6 +18,7 @@ import {
   FaEye,
   FaUserCheck,
   FaHandshake,
+  FaArrowRight,
 } from "react-icons/fa";
 
 const GOLD = "#b8955a";
@@ -190,7 +192,15 @@ export default function DevenirPartnerView() {
         image={theImage}
         label="Spa & Prestige Collection"
         title="Élevez votre établissement au rang de référence avec Spa & Prestige Collection."
-      />
+      >
+        <ButtonLink
+          to={paths.contact}
+          text="Nous contacter"
+          variant="primary"
+          icon={<FaArrowRight />}
+          className="!mt-4 !justify-start"
+        />
+      </HeroImage>
 
       {/* ── Pourquoi nous rejoindre ── */}
       <section className="max-w-6xl mx-auto px-4 py-16">

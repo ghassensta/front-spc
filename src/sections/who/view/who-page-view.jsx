@@ -1,7 +1,6 @@
 import React, { useEffect, useRef, useState } from "react";
 import { FaShieldAlt, FaEnvelope, FaStar, FaCheckCircle } from "react-icons/fa";
 import { Link } from "react-router-dom";
-import ButtonIcon from "src/components/button-icon/button-icon";
 import { paths } from "src/router/paths";
 import theImage from "src/assets/images/SPA-images-1975x1318-Qui-Sommes-Nous-02.jpg";
 import theImage2 from "src/assets/images/SPA-images-1975x1318-Qui-Sommes-Nous-01.jpg";
@@ -128,42 +127,36 @@ export default function WhoPageView() {
     {
       label: "Vivez",
       subtitle: "Des expériences pensées pour vous, au cœur de nos établissements.",
-      desc: "Des expériences personnalisées, créées spécialement pour vous",
       link: paths.spa.list,
       linkLabel: "Page établissements",
     },
     {
       label: "Accédez",
       subtitle: "A des adresses sélectionnées avec attention par nos équipes.",
-      desc: "A des établissements prestigieux, rigoureusement sélectionnés par nos équipes",
       link: paths.spa.list,
       linkLabel: "Page établissements",
     },
     {
       label: "Cumulez",
       subtitle: "Gagnez des points à chaque commande et transformez-les en récompenses.",
-      desc: "De tarifs préférentiels pour des instants de bien-être inoubliables",
       link: paths.recompense,
       linkLabel: "Page fidélité",
     },
     {
       label: "Offrez",
       subtitle: "Des cartes cadeaux élégantes, à offrir en toute simplicité.",
-      desc: "Des cartes cadeaux élégantes, disponibles en version numérique ou physique",
       link: paths.cadeau,
       linkLabel: "Page carte cadeau",
     },
     {
       label: "Partagez",
       subtitle: "Invitez vos proches à découvrir ces moments en les parrainant.",
-      desc: "Ces moments d'exception en parrainant vos proches",
       link: paths.programme,
       linkLabel: "Page parrainage",
     },
     {
       label: "Recevez",
       subtitle: "Restez informé(e) de nos nouveautés et avantages",
-      desc: "Des conseils exclusifs de Spa & Prestige Collection pour enrichir votre expérience",
       link: paths.programme,
       linkLabel: "Page newsletter",
     },
@@ -259,6 +252,13 @@ export default function WhoPageView() {
               >
                 Noélie &amp; Romain
               </p>
+
+              {/* CTA — Nous contacter */}
+              <ButtonLink
+                to={paths.contact}
+                text="Nous Contacter"
+                className="!mt-6 !justify-center md:!justify-start"
+              />
             </div>
 
             {/* ── Colonne droite : photo fondateurs ── */}
@@ -306,10 +306,6 @@ export default function WhoPageView() {
             </div>
           </div>
 
-          {/* Bouton */}
-          <div className="flex items-center justify-center mt-8">
-            <ButtonLink to={paths.contact} text="Nous Contacter" />
-          </div>
         </div>
       </div>
 
@@ -349,6 +345,8 @@ export default function WhoPageView() {
             />
           </div>
         </div>
+
+        <ButtonLink to={paths.contact} text="Nous Contacter" />
       </div>
 
       {/* ══════════════════════════════════════════

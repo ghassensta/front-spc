@@ -36,11 +36,10 @@ export default function Section({
           <div className="hidden md:block absolute top-0 right-0">
             <ButtonLink
               to={link}
-              className="scale-75 origin-right"  
               text={
-                <span className="flex items-center gap-2 text-xs whitespace-nowrap">
+                <span className="flex items-center gap-2 text-sm whitespace-nowrap">
                   VOIR TOUTES LES OFFRES
-                  <FaArrowRight className="text-xs" />
+                  <FaArrowRight className="text-sm" />
                 </span>
               }
             />

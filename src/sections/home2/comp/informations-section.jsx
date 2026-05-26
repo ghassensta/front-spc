@@ -9,9 +9,9 @@ import {
 } from "react-icons/fi";
 import { Link } from "react-router-dom";
 import { paths } from "src/router/paths";
-import theImage from "src/assets/images/SPC-Essence-1975x1318-02.jpg";
-import theImage2 from "src/assets/images/6901d96653fb8_1761728870.webp";
-import theImage3 from "src/assets/images/SPA-images-1975x1318-Qui-Sommes-Nous-03.jpg";
+import theImage from "src/assets/images/offrir-une carte-cadeau-spa-prestige-collection.png";
+import theImage2 from "src/assets/images/SPC-images-1975x1318-Programme-Parrainage-01-1024x683.jpg";
+import theImageFounder from "src/assets/images/SPC-qui-sommes-nous.jpg";
 import { useTranslation } from "src/context/translation-context";
 import ButtonLink from "src/components/button-link/ButtonLink";
 
@@ -23,17 +23,17 @@ export default function InformationsSection() {
 
   const data = [
     {
-      header: "L'Essence de Spa & Prestige Collection",
+      header: "Qui sommes-nous ?",
       link: paths.who,
       title: "Qui sommes-nous ?",
       description:
         "Spa & Prestige Collection réunit des établissements d'exception, soigneusement sélectionnés pour leur confort, leur ambiance singulière et leur service sur-mesure.",
-      image: theImage3,
+      image: theImageFounder,
       ctaLabel: "En savoir plus",
       ctaVariant: "primary",
     },
     {
-      header: "Récompenses Spa & Prestige Collection",
+      header: "Programme de Fidélité",
       link: paths.referentiel,
       title: "Points fidélité",
       description:
@@ -49,7 +49,7 @@ export default function InformationsSection() {
       description:
         "Offrez un moment de sérénité immédiate, sans attente ni contrainte, grâce à des prestations variées pour toutes les occasions.",
       image: theImage,
-      ctaLabel: "Ajouter au panier",
+      ctaLabel: "Offrir une carte cadeau",
       ctaVariant: "primary",
       badges: [
         { icon: <FiMail />, label: "Envoi immédiat" },
@@ -109,7 +109,7 @@ export default function InformationsSection() {
                     animate={{ opacity: 1 }}
                     exit={{ opacity: 0 }}
                     transition={{ duration: 0.5 }}
-                    className="w-full min-h-[300px] object-cover"
+                    className="w-full aspect-[4/3] object-cover"
                     alt={translateSync(current.title)}
                   />
                 </Link>

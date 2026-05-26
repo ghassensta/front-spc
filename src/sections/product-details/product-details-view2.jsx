@@ -278,13 +278,6 @@ export default function ({
                     {translateSync(etablissement?.nom)}
                   </h2>
 
-                  {/* Sous-titre = nom du produit */}
-                  {product?.nom && (
-                    <p className="text-white/95 text-sm md:text-lg mb-4 font-light font-tahoma">
-                      {translateSync(product.nom)}
-                    </p>
-                  )}
-
                   {/* Adresse */}
                   {(etablissement?.ville || etablissement?.pays) && (
                     <div className="flex items-center gap-2 text-white text-xs md:text-sm mb-5 font-tahoma">
@@ -303,7 +296,7 @@ export default function ({
                     className="inline-flex items-center gap-2 bg-[#FBF6EC] text-[#1a1a1a] no-underline px-5 py-3 rounded-full text-xs font-bold uppercase tracking-wider hover:bg-white transition font-tahoma"
                     style={{ letterSpacing: "0.12em" }}
                   >
-                    {translateSync("Découvrir l'expérience")}
+                    {translateSync("Découvrir l’établissement")}
                     <FaArrowRight className="text-xs" />
                   </Link>
                 </div>
@@ -311,7 +304,7 @@ export default function ({
             </div>
           </div>
 
-          <div className="bg-[#F3EBDD] px-8 py-4 col-span-2 lg:col-span-1 rounded-2xl">
+          <div className="bg-[#F3EBDD] px-4 md:px-8 py-4 col-span-2 lg:col-span-1 rounded-2xl">
           
 
             <div className="relative">
@@ -342,7 +335,7 @@ export default function ({
               </span>
             )}
             <GlobalShare url={window.location.href} title={product?.nom} />
-            <h1 className="text-4xl font-bold mb-4 text-[#333] my-2">
+            <h1 className="text-2xl md:text-4xl font-bold mb-4 text-[#333] my-2">
               {translateSync(product?.nom)}
             </h1>
 
@@ -428,7 +421,7 @@ export default function ({
 
           {/* Colonne droite — 2 cartes beiges empilées */}
           <div className="col-span-2 lg:col-span-1 flex flex-col gap-4">
-          <div className="bg-[#F3EBDD] px-8 py-4 rounded-2xl">
+          <div className="bg-[#F3EBDD] px-4 md:px-8 py-4 rounded-2xl">
             <div>
               {/* Prix barré */}
               {!!product?.prix_barre && (
@@ -672,7 +665,7 @@ export default function ({
           </div>
 
           {/* Carte 2 — Établissement (même bg beige, sous la carte prix) */}
-          <div className="bg-[#F3EBDD] px-8 py-4 rounded-2xl">
+          <div className="bg-[#F3EBDD] px-4 md:px-8 py-4 rounded-2xl">
             <LocationSection data={spaData} />
           </div>
           </div>

@@ -20,6 +20,7 @@ import {
   FaPaperPlane,
   FaSpa,
 } from "react-icons/fa";
+import ButtonLink from "src/components/button-link/ButtonLink";
 const GOLD = "#b8955a";
 const FONT = "Calibri, 'Segoe UI', sans-serif";
 const inputClass =
@@ -165,6 +166,18 @@ export default function CarteCadeau() {
                   <TranslatedText text="Offrez une expérience bien-être unique, simple à envoyer, agréable à recevoir." />
                 </p>
               </div>
+
+              <ButtonLink
+                to="#offrir-carte-cadeau"
+                text="Offrir une carte cadeau"
+                variant="primary"
+                className="!mt-2 !justify-center md:!justify-start"
+                onClick={(e) => {
+                  e.preventDefault();
+                  const el = document.getElementById("offrir-carte-cadeau");
+                  if (el) el.scrollIntoView({ behavior: "smooth", block: "start" });
+                }}
+              />
             </div>
 
             {/* Image droite */}
@@ -180,7 +193,7 @@ export default function CarteCadeau() {
         </div>
       </div>
       <CarteBadges />
-      <div className="max-w-6xl mx-auto py-12 px-6">
+      <div id="offrir-carte-cadeau" className="max-w-6xl mx-auto py-12 px-6 scroll-mt-24">
         <SectionHeader
           label="Offrir une carte cadeau"
           title="OFFRIR UNE CARTE CADEAU"
@@ -445,7 +458,7 @@ export default function CarteCadeau() {
               <button
                 onClick={addProductToCheckout}
                 disabled={submitting || !amount}
-                className="inline-flex items-center gap-2 uppercase tracking-widest rounded-full px-6 py-3 text-sm font-normal text-white transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed"
+                className="inline-flex items-center gap-2 uppercase tracking-widest rounded-full px-6 py-3 text-sm font-normal text-white transition-all duration-300 disabled:cursor-not-allowed"
                 style={{
                   backgroundColor: "#1a1a1a",
                   fontFamily: FONT,

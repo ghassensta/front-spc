@@ -257,7 +257,7 @@ export default function ProgrammePageView() {
 
         {/* ── Bouton CTA ── */}
         <div className="py-10 flex justify-center">
-          <ButtonLink to={paths.spa.list} text="COUP DE CŒUR" />
+          <ButtonLink to={paths.spa.list} text="Découvrir nos établissements" />
         </div>
       </div>
     </div>

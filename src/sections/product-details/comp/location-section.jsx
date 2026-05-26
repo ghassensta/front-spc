@@ -25,41 +25,41 @@ export default function LocationSection({ data }) {
 
   return (
     <div className="flex flex-col md:flex-row gap-4 items-stretch py-2 max-w-6xl mx-auto ">
-      
+
       {/* LEFT — Map */}
-      
+
 
       {/* RIGHT — Info */}
       <motion.div
-        className="flex-1 p-6 rounded-lg flex items-center "
+        className="flex-1 min-w-0 p-6 rounded-lg flex items-center "
         initial={{ opacity: 0, x: 50 }}
         whileInView={{ opacity: 1, x: 0 }}
         transition={{ duration: 0.6, delay: 0.2 }}
         viewport={{ once: true }}
       >
         <div className="text-gray-800 space-y-1 w-full font-tahoma">
-          <h2 className="text-2xl mb-2">{data?.nom}</h2>
+          <h2 className="text-2xl mb-2 break-words">{data?.nom}</h2>
 
           <div className="flex items-start gap-3 uppercase border-b text-black py-2">
             <FaMapMarkerAlt className="text-secondary mt-1 flex-shrink-0" />
-            <p className="text-base font-normal tracking-wide">{data?.adresse}</p>
+            <p className="text-base font-normal tracking-wide break-words min-w-0">{data?.adresse}</p>
           </div>
 
           <div className="flex items-start gap-3 uppercase border-b text-black py-2">
             <MdAccessTime className="text-secondary mt-1 flex-shrink-0" />
-            <p className="text-base font-normal tracking-wide">
+            <p className="text-base font-normal tracking-wide break-words min-w-0">
               {data?.horaires_ouverture || "Horaires non spécifiés"}
             </p>
           </div>
 
           <div className="flex items-start gap-3 uppercase border-b text-black py-2">
             <FaPhone className="text-secondary mt-1 flex-shrink-0" />
-            <p className="text-base font-normal tracking-wide">{data?.telephone}</p>
+            <p className="text-base font-normal tracking-wide break-words min-w-0">{data?.telephone}</p>
           </div>
 
           <div className="flex items-start gap-3 uppercase border-b text-black py-2">
             <FaEnvelope className="text-secondary mt-1 flex-shrink-0" />
-            <p className="text-base font-normal tracking-wide">{data?.email}</p>
+            <p className="text-base font-normal tracking-wide break-all min-w-0">{data?.email}</p>
           </div>
         </div>
       </motion.div>

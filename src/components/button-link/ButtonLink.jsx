@@ -58,6 +58,7 @@ export default function ButtonLink({
   icon,
   iconPosition = "after",
   className = "",
+  onClick,
 }) {
   const v = BUTTON_VARIANTS[variant] ?? BUTTON_VARIANTS.primary;
   const finalBg = bgColor ?? v.bgColor;
@@ -68,6 +69,7 @@ export default function ButtonLink({
     <div className={`mt-10 flex justify-center ${className}`}>
       <Link
         to={to}
+        onClick={onClick}
         className="inline-flex items-center gap-2 uppercase tracking-widest rounded-full px-6 py-3 text-sm font-normal transition-all duration-300"
         style={{ backgroundColor: finalBg, color: finalText, fontFamily: FONT }}
         onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = finalHover)}

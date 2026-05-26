@@ -69,6 +69,7 @@ export default function Header() {
       className="relative w-screen left-[calc(-50vw+50%)] overflow-hidden"
       style={{
         minHeight: "500px",
+        maxHeight: "calc(100vh - 90px)",
         aspectRatio: "16/9",
         contain: "layout",
       }}
@@ -121,10 +122,10 @@ export default function Header() {
 
       {/* ── Overlay texte + boutons directement sur l'image ── */}
       {!!current && (
-        <div className="absolute bottom-16 md:bottom-10 left-6 md:left-14 z-40 max-w-md">
+        <div className="absolute bottom-8 md:bottom-8 left-6 md:left-14 z-40 max-w-md">
           {/* Badge remise */}
           {current.remise_offres > 0 && (
-            <span className="inline-flex items-center gap-1.5 bg-[#b8955a] text-white font-roboto font-bold px-4 py-1.5 rounded-full text-xs mb-3">
+            <span className="inline-flex items-center gap-1.5 bg-[#b8955a] text-white font-roboto font-bold px-4 py-1.5 rounded-full text-xs mb-2">
               <Tag className="w-3 h-3" aria-hidden="true" />
               {translateSync("Jusqu'à")} {current.remise_offres}%{" "}
               {translateSync("de remise")}
@@ -133,19 +134,19 @@ export default function Header() {
 
           {/* Titre marque — statique */}
           <p
-            className="text-4xl md:text-5xl font-medium text-white leading-[1.1] mb-3"
+            className="text-4xl md:text-5xl font-medium text-white leading-[1.1] mb-2"
             style={{ fontFamily: "Cormorant Garamond" }}
           >
             {translateSync("Des expériences dédiées à votre bien-être")}
           </p>
 
           {/* Sous-titre marque — statique */}
-          <p className="text-sm text-white/90 mb-5 leading-snug max-w-sm">
+          <p className="text-sm text-white/90 mb-3 leading-snug max-w-sm">
             {translateSync("Une sélection d'adresses d'exception pour vivre des expériences uniques.")}
           </p>
 
           {/* ── Deux boutons côte à côte ── */}
-          <div className="flex flex-col sm:flex-row gap-2 sm:gap-3 mb-5">
+          <div className="flex flex-col sm:flex-row gap-2 sm:gap-3 mb-3">
             {/* Bouton 1 — doré plein */}
             <Link
               to={paths.spa.list}
@@ -203,7 +204,7 @@ export default function Header() {
             </Link>
           </div>
           {/* Établissement actif + adresse */}
-          <div className="flex items-start gap-2 mb-3 text-white font-tahoma">
+          <div className="flex items-start gap-2 mb-2 text-white font-tahoma">
             <MapPin
               className="w-3.5 h-3.5 text-white flex-shrink-0 mt-[3px]"
               aria-hidden="true"

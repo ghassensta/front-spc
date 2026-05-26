@@ -1,7 +1,7 @@
 import React from "react";
 import { paths } from "src/router/paths";
-import theImageWeb from "src/assets/images/referentiel-de-candidature.webp";
-import theImageMobile from "src/assets/images/referentiel-de-candidature.png";
+import theImageWeb from "src/assets/images/referentiel-de-candidature-image.webp";
+import theImageMobile from "src/assets/images/referentiel-de-candidature-image.webp";
 import theImage2 from "src/assets/images/SPC-Catalogue-1975x1318-1.jpg";
 import { useTranslation } from "src/context/translation-context";
 import HeroImage from "src/components/hero-image/HeroImage";
@@ -92,7 +92,6 @@ export default function ReferentielViewPage() {
         description="Notre référentiel de candidature définit les critères d'excellence attendus pour intégrer notre collection. "
         descBold="Il garantit une expérience"
         descAfter=" cliente d'exception et une qualité cohérente au sein de notre réseau."
-        darkText={true}
       >
         <ButtonLink
           to={paths.contact}
